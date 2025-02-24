@@ -1,0 +1,62 @@
+apiVersion: 'nais.io/v1alpha1'
+kind: 'Application'
+metadata:
+  name: oppfolgingsplan
+  namespace: team-esyfo
+  labels:
+    team: team-esyfo
+spec:
+  image: {{image}}
+  replicas:
+    min: 3
+    max: 6
+    cpuThresholdPercentage: 90
+  port: 3000
+  tokenx:
+    enabled: true
+  idporten:
+    enabled: true
+    sidecar:
+      enabled: true
+      autoLogin: true
+      level: Level4
+      autoLoginIgnorePaths:
+        - /syk/oppfolgingsplan/api/isAlive
+        - /syk/oppfolgingsplan/api/isReady
+  liveness:
+    path: syk/oppfolgingsplan/api/isAlive
+    initialDelay: 20
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: syk/oppfolgingsplan/api/isReady
+    initialDelay: 20
+    periodSeconds: 5
+    timeout: 5
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
+  prometheus:
+    enabled: true
+    path: actuator/metrics
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  ingresses:
+    - 'https://www.nav.no/syk/oppfolgingsplan'
+  env:
+    - name: FLEXJAR_HOST
+      value: "http://flexjar-backend.flex"
+    - name: FLEXJAR_BACKEND_CLIENT_ID
+      value: prod-gcp:flex:flexjar-backend
+  accessPolicy:
+    outbound:
+      rules:
+        - application: nav-dekoratoren
+          namespace: personbruker
