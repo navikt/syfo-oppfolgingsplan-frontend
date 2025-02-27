@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+const nextConfig = {
+    reactStrictMode: true,
+    output: 'standalone',
+    basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+    assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
+    productionBrowserSourceMaps: true,
+}
 
-export default nextConfig;
+module.exports = nextConfig
