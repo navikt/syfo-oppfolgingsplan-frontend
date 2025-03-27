@@ -23,6 +23,10 @@ spec:
       autoLoginIgnorePaths:
         - /syk/oppfolgingsplan/api/isAlive
         - /syk/oppfolgingsplan/api/isReady
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
   liveness:
     path: syk/oppfolgingsplan/api/isAlive
     initialDelay: 20
@@ -51,8 +55,13 @@ spec:
       value: "http://flexjar-backend.flex"
     - name: FLEXJAR_BACKEND_CLIENT_ID
       value: dev-gcp:flex:flexjar-backend
+    - name: DINESYKMELDTE_BACKEND_HOST
+      value: http://dinesykmeldte-backend
+    - name: DINESYKMELDTE_BACKEND_CLIENT_ID
+      value: "dev-gcp:team-esyfo:dinesykmeldte-backend"
   accessPolicy:
     outbound:
       rules:
+        - application: dinesykmeldte-backend
         - application: nav-dekoratoren
           namespace: personbruker

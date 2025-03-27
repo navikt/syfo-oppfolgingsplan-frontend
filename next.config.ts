@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-import { isLocalOrDemo } from "@/constants/envs";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { buildCspHeader } = require("@navikt/nav-dekoratoren-moduler/ssr");
@@ -16,10 +15,20 @@ const appDirectives = {
     "https://uxsignals-frontend.uxsignals.app.iterate.no",
   ],
   "style-src": ["'self'"],
+  "style-src-elem": [
+    "'self'",
+    "http://localhost:3000",
+    "https://uxsignals-frontend.uxsignals.app.iterate.no",
+  ],
   "img-src": ["'self'", "data:"],
   "font-src": ["'self'", "https://cdn.nav.no"],
   "worker-src": ["'self'"],
-  "connect-src": ["'self'", "https://*.nav.no", "https://*.uxsignals.com"],
+  "connect-src": [
+    "'self'",
+    "https://*.nav.no",
+    "https://*.uxsignals.com",
+    "https://navtest.boost.ai",
+  ],
 };
 
 const nextConfig = {
@@ -36,6 +45,10 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: cspValue,
           },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "cross-origin",
+          },
         ],
       },
     ];
@@ -44,7 +57,7 @@ const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
-  assetPrefix: isLocalOrDemo ? "" : process.env.NEXT_PUBLIC_ASSET_PREFIX,
+  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX ?? "",
   productionBrowserSourceMaps: true,
   serverExternalPackages: [
     "@navikt/next-logger",
