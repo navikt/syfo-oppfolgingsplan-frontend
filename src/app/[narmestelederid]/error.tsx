@@ -20,11 +20,7 @@ export default function Error({
   const errorText = "Beklager! Det har oppstått en uventet feil";
 
   return (
-    <div
-      className="flex max-w-3xl max-[960px]:flex-col"
-      role="status"
-      aria-live="polite"
-    >
+    <div className="flex max-w-3xl flex-col" role="status" aria-live="polite">
       <Image
         src={pageErrorDad}
         alt=""
@@ -40,7 +36,6 @@ export default function Error({
         </Heading>
 
         <BodyLong spacing>
-          {" "}
           Sannsynligvis jobber vi med saken allerede, men ta kontakt med oss
           hvis det ikke har løst seg til i morgen.
         </BodyLong>
