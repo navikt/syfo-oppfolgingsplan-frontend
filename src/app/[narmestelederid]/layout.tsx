@@ -5,7 +5,6 @@ import Script from "next/script";
 import { publicEnv } from "@/constants/envs";
 import { createBreadcrumbsAG } from "@/components/breadcrumbs/breadcrumbs";
 import { fetchSykmeldt } from "@/server/fetch/fetchSykmeldt";
-import { Providers } from "@/app/[narmestelederid]/providers";
 
 function createDecoratorEnv(): "dev" | "prod" {
   switch (publicEnv.NEXT_PUBLIC_RUNTIME_ENVIRONMENT) {
@@ -60,7 +59,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Decorator.Header />
-        <Providers>{children}</Providers>
+        {children}
         <Decorator.Footer />
         <Decorator.Scripts loader={Script} />
       </body>
