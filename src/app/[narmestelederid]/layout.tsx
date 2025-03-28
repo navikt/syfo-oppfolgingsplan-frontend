@@ -22,7 +22,7 @@ async function fetchDecorator(narmestelederid: string, sykmeldtNavn: string) {
     env: createDecoratorEnv(),
     params: {
       language: "nb",
-      context: "privatperson",
+      context: "arbeidsgiver",
       logoutWarning: true,
       chatbot: true,
       chatbotVisible: true,
