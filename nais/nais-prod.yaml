@@ -55,8 +55,13 @@ spec:
       value: "http://flexjar-backend.flex"
     - name: FLEXJAR_BACKEND_CLIENT_ID
       value: prod-gcp:flex:flexjar-backend
+    - name: DINESYKMELDTE_BACKEND_HOST
+      value: http://dinesykmeldte-backend
+    - name: DINESYKMELDTE_BACKEND_CLIENT_ID
+      value: "prod-gcp:team-esyfo:dinesykmeldte-backend"
   accessPolicy:
     outbound:
       rules:
+        - application: dinesykmeldte-backend
         - application: nav-dekoratoren
           namespace: personbruker
