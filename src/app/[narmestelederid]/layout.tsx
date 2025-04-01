@@ -5,6 +5,8 @@ import Script from "next/script";
 import { publicEnv } from "@/constants/envs";
 import { createBreadcrumbsAG } from "@/components/breadcrumbs/breadcrumbs";
 import { fetchSykmeldt } from "@/server/fetch/fetchSykmeldt";
+import { logger } from "@navikt/next-logger";
+import { redirectToLogin } from "@/auth/redirectToLogin";
 
 function createDecoratorEnv(): "dev" | "prod" {
   switch (publicEnv.NEXT_PUBLIC_RUNTIME_ENVIRONMENT) {
@@ -46,10 +48,25 @@ export default async function RootLayout({
 }) {
   const resolvedParams = params instanceof Promise ? await params : params;
   const narmestelederid = resolvedParams.narmestelederid;
-  const sykmeldt = await fetchSykmeldt(narmestelederid);
+  const sykmeldtResult = await fetchSykmeldt(narmestelederid);
+
+  if (!sykmeldtResult.success) {
+    logger.error(
+      `Failed to fetch sykmeldt: ${sykmeldtResult.errorType} - ${sykmeldtResult.errorMessage}`,
+    );
+
+    if (sykmeldtResult.errorType === "UNAUTHORIZED") {
+      redirectToLogin(narmestelederid);
+    }
+
+    throw new Error(
+      `Failed to fetch data: ${sykmeldtResult.errorType} - ${sykmeldtResult.errorMessage}`,
+    );
+  }
+
   const Decorator = await fetchDecorator(
     narmestelederid,
-    sykmeldt.navn || "Sykmeldt",
+    sykmeldtResult.data.navn || "Sykmeldt",
   );
 
   return (

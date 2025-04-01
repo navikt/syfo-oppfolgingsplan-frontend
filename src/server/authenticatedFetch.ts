@@ -4,10 +4,8 @@ import { nanoid } from "nanoid";
 import { requestOboToken } from "@navikt/oasis";
 import { logger } from "@navikt/next-logger";
 import { z } from "zod";
-
-export type FetchResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };
+import { FetchResult } from "@/server/FetchResult";
+import { validateIdPortenToken } from "@/auth/validateIdPortenToken";
 
 export async function authenticatedFetch<
   TResponseData,
@@ -15,25 +13,35 @@ export async function authenticatedFetch<
 >({
   endpoint,
   clientId,
-  idportenToken,
   method = "GET",
   body,
   schema,
 }: {
   endpoint: string;
   clientId: string;
-  idportenToken: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: TRequestBody;
   schema?: z.ZodType<TResponseData>;
 }): Promise<FetchResult<TResponseData>> {
   try {
-    const tokenxGrant = await requestOboToken(idportenToken, clientId);
+    const tokenValidationResult = await validateIdPortenToken();
+    if (!tokenValidationResult.success) {
+      return {
+        success: false,
+        errorType: "UNAUTHORIZED",
+        errorMessage: tokenValidationResult.reason,
+      };
+    }
+
+    const tokenxGrant = await requestOboToken(
+      tokenValidationResult.token,
+      clientId,
+    );
 
     if (!tokenxGrant.ok) {
       const error = `Failed to exchange idporten token: ${tokenxGrant.error}`;
       logger.error(error);
-      return { success: false, error };
+      return { success: false, errorType: "FAILED_GRANT", errorMessage: error };
     }
 
     const response = await fetch(endpoint, {
@@ -50,7 +58,7 @@ export async function authenticatedFetch<
     if (!response.ok) {
       const error = `Failed to fetch data from ${endpoint}: ${response.statusText}`;
       logger.error(error);
-      return { success: false, error };
+      return { success: false, errorType: "FETCH_FAILED", errorMessage: error };
     }
 
     const data = await response.json();
@@ -60,7 +68,11 @@ export async function authenticatedFetch<
       if (!parsed.success) {
         const error = "Failed to parse result! " + parsed.error;
         logger.error(error);
-        return { success: false, error };
+        return {
+          success: false,
+          errorType: "SCHEMA_PARSING_FAILED",
+          errorMessage: error,
+        };
       }
       return { success: true, data: parsed.data };
     }
@@ -69,6 +81,10 @@ export async function authenticatedFetch<
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     logger.error(`Unexpected error in authenticatedFetch: ${message}`);
-    return { success: false, error: `Request failed: ${message}` };
+    return {
+      success: false,
+      errorType: "UNEXPECTED_ERROR",
+      errorMessage: message,
+    };
   }
 }

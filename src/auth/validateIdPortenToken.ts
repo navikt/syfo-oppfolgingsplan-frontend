@@ -2,22 +2,27 @@ import { logger } from "@navikt/next-logger";
 import { getToken, validateIdportenToken } from "@navikt/oasis";
 import { headers } from "next/headers";
 
-export const validateIdPortenToken = async (): Promise<string | null> => {
-  const headersList = await headers();
-  const idportenToken = getToken(headersList);
+export type TokenValidationResult =
+  | { success: true; token: string }
+  | { success: false; reason: string };
 
-  if (!idportenToken) {
-    logger.warn("Missing idporten token");
-    return null;
-  }
+export const validateIdPortenToken =
+  async (): Promise<TokenValidationResult> => {
+    const headersList = await headers();
+    const idportenToken = getToken(headersList);
 
-  const validationResult = await validateIdportenToken(idportenToken);
-  if (!validationResult.ok) {
-    logger.warn(
-      `Invalid JWT token found, cause: ${validationResult.errorType} ${validationResult.error}`,
-    );
-    return null;
-  }
+    if (!idportenToken) {
+      const error = "Missing idporten token";
+      logger.warn(error);
+      return { success: false, reason: error };
+    }
 
-  return idportenToken;
-};
+    const validationResult = await validateIdportenToken(idportenToken);
+    if (!validationResult.ok) {
+      const error = `Invalid JWT token found, cause: ${validationResult.errorType} ${validationResult.error}`;
+      logger.warn(error);
+      return { success: false, reason: error };
+    }
+
+    return { success: true, token: idportenToken };
+  };
