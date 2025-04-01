@@ -37,7 +37,7 @@ export default function Error({
 
         <BodyLong spacing>
           Sannsynligvis jobber vi med saken allerede, men ta kontakt med oss
-          hvis det ikke har løst seg til i morgen.
+          hvis det ikke har løst seg til neste virkedag.
         </BodyLong>
       </div>
 

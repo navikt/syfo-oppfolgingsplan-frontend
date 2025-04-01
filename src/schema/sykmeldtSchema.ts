@@ -47,10 +47,6 @@ export const dineSykmeldteSykmeldingSchema = object({
   innspillTilArbeidsgiver: string().nullish(),
 });
 
-export type DineSykmeldteSykmelding = z.infer<
-  typeof dineSykmeldteSykmeldingSchema
->;
-
 export const sykmeldtSchema = object({
   narmestelederId: string(),
   orgnummer: string(),
