@@ -2,3 +2,4 @@
 @import '@navikt/ds-css';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import '@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css';
