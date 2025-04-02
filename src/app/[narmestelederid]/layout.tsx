@@ -5,6 +5,7 @@ import Script from "next/script";
 import { publicEnv } from "@/constants/envs";
 import { createBreadcrumbsAG } from "@/components/breadcrumbs/breadcrumbs";
 import { fetchSykmeldt } from "@/server/fetch/fetchSykmeldt";
+import { SideMenuContainer } from "@/components/sideMenuContainer/sideMenuContainer";
 import { logger } from "@navikt/next-logger";
 import { redirectToLogin } from "@/auth/redirectToLogin";
 
@@ -76,7 +77,9 @@ export default async function RootLayout({
       </head>
       <body>
         <Decorator.Header />
-        {children}
+        <SideMenuContainer sykmeldtData={sykmeldtResult.data}>
+          {children}
+        </SideMenuContainer>
         <Decorator.Footer />
         <Decorator.Scripts loader={Script} />
       </body>
