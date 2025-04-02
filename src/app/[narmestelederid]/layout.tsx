@@ -1,3 +1,4 @@
+import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import "@/app/globals.css";
 import React from "react";
 import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
