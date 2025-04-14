@@ -1,11 +1,14 @@
-import { Box } from "@navikt/ds-react";
+import React from "react";
+import { OppfolgingsplanStepper } from "@/components/oppfolgingsplanStepper/oppfolgingsplanStepper";
+import { VStack } from "@navikt/ds-react";
+import { OppfolgingsplanForm } from "@/components/form/oppfolgingsplan/oppfolgingsplanForm.tsx";
 
 export default function Home() {
   return (
-    <div>
-      <Box padding="4" background="surface-success-subtle" className="h-56">
-        TODO: Insert amazing plan here
-      </Box>
-    </div>
+    <VStack gap="8">
+      <OppfolgingsplanStepper />
+
+      <OppfolgingsplanForm />
+    </VStack>
   );
 }

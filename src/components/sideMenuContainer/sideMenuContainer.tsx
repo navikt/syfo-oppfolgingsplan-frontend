@@ -23,7 +23,7 @@ export const SideMenuContainer = ({ sykmeldtData, children }: Props) => {
         fnr: sykmeldtData.fnr,
       }}
       header={{
-        title: sykmeldtNavn,
+        title: "Oppfølgingsplan for " + sykmeldtNavn,
         subtitle: "Todo: Her kan vi legge inn f.eks sykmeldingsgrad og periode",
         Icon: PersonIcon,
       }}
