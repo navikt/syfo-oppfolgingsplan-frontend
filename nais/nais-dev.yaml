@@ -24,6 +24,10 @@ spec:
         - /syk/oppfolgingsplan/api/isAlive
         - /syk/oppfolgingsplan/api/isReady
   observability:
+    logging:
+      destinations:
+        - id: elastic
+        - id: loki
     autoInstrumentation:
       enabled: true
       runtime: nodejs
