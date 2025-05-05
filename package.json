@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "^1.16.0",
+    "@grafana/faro-web-sdk": "^1.18.0",
     "@grafana/faro-web-tracing": "^1.17.2",
     "@navikt/ds-css": "^7.21.0",
     "@navikt/ds-react": "^7.21.0",
