@@ -16,7 +16,7 @@
     "@navikt/ds-react": "^7.25.1",
     "@navikt/dinesykmeldte-sidemeny": "^7.0.5",
     "@navikt/nav-dekoratoren-moduler": "^3.4.0",
-    "@navikt/next-logger": "^2.1.0",
+    "@navikt/next-logger": "^4.1.5",
     "@tanstack/react-form": "^1.15.1",
     "@navikt/oasis": "^3.8.0",
     "next": "^15.4.5",
