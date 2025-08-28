@@ -1,27 +1,32 @@
-import { z } from "zod";
+import { array, boolean, date, object, string, z } from "zod";
 
-const requireFieldErrorMessage = "Feltet er påkrevd";
-
-export const OppfolgingsplanFormSchema = z.object({
-  typiskArbeidshverdag: z.string().nonempty(requireFieldErrorMessage),
-  arbeidsoppgaverSomKanUtfores: z.string().nonempty(requireFieldErrorMessage),
-  arbeidsoppgaverSomIkkeKanUtfores: z
-    .string()
-    .nonempty(requireFieldErrorMessage),
-  tidligereTilretteleggingBeskrivelse: z
-    .string()
-    .nonempty(requireFieldErrorMessage),
-  tilretteleggingIDennePerioden: z.string().nonempty(requireFieldErrorMessage),
-  sykmeldtesVurdering: z.string().nonempty(requireFieldErrorMessage),
-  oppfolging: z.string().nonempty(requireFieldErrorMessage),
-  evalueringsdato: z
-    .date()
-    .nullable()
-    .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
-      message: requireFieldErrorMessage,
-    }),
+export const utkastMetadataSchema = object({
+  uuid: string(),
+  sykmeldtFnr: string(),
+  narmesteLederFnr: string(),
+  organisasjonsnummer: string(),
+  sluttDato: date().nullish(),
 });
 
-export type OppfolgingsplanFormFields = z.infer<
-  typeof OppfolgingsplanFormSchema
+export const oppfolgingsplanMetadataSchema = object({
+  uuid: string(),
+  sykmeldtFnr: string(),
+  narmesteLederFnr: string(),
+  organisasjonsnummer: string(),
+  sluttDato: date(),
+  skalDelesMedVeileder: boolean(),
+  deltMedVeilederTidspunkt: date().nullish(),
+  skalDelesMedLege: boolean(),
+  deltMedLegeTidspunkt: date().nullish(),
+  createdAt: date(),
+});
+
+export const oppfolgingsplanOverviewSchema = object({
+  utkast: utkastMetadataSchema.nullish(),
+  oppfolgingsplan: oppfolgingsplanMetadataSchema.nullish(),
+  previousOppfolgingsplaner: array(oppfolgingsplanMetadataSchema),
+});
+
+export type OppfolgingsplanOverview = z.infer<
+  typeof oppfolgingsplanOverviewSchema
 >;

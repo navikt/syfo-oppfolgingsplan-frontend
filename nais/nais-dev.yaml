@@ -63,9 +63,14 @@ spec:
       value: http://dinesykmeldte-backend
     - name: DINESYKMELDTE_BACKEND_CLIENT_ID
       value: "dev-gcp:team-esyfo:dinesykmeldte-backend"
+    - name: SYFO_OPPFOLGINGSPLAN_BACKEND_HOST
+      value: http://syfo-oppfolgingsplan-backend
+    - name: SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID
+      value: "dev-gcp:team-esyfo:syfo-oppfolgingsplan-backend"
   accessPolicy:
     outbound:
       rules:
+        - application: syfo-oppfolgingsplan-backend
         - application: dinesykmeldte-backend
         - application: nav-dekoratoren
           namespace: personbruker
