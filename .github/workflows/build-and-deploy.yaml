@@ -12,5 +12,5 @@ jobs:
       packages: write
     secrets: inherit
     with:
-      app: oppfolgingsplan
+      app: syfo-oppfolgingsplan-frontend
       base-path: /syk/oppfolgingsplan
