@@ -1,5 +1,5 @@
 import { formOptions } from "@tanstack/react-form";
-import { OppfolgingsplanFormFields } from "@/schema/oppfolgingsplanSchema.ts";
+import { OppfolgingsplanFormFields } from "@/schema/oppfolgingsplanFormSchema.ts";
 
 const defaultOppfolgingsplanValues: OppfolgingsplanFormFields = {
   typiskArbeidshverdag: "",
