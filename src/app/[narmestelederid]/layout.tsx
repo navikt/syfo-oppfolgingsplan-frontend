@@ -52,12 +52,13 @@ export default async function RootLayout({
   const resolvedParams = params instanceof Promise ? await params : params;
   const narmestelederid = resolvedParams.narmestelederid;
   const sykmeldtResult = await fetchSykmeldt(narmestelederid);
+
+  // TODO: Just for testing. Remove this later
   const oppfolgingsplanResult =
     await fetchOppfolgingsplanOverviewForArbeidsgiver(narmestelederid);
-
   if (oppfolgingsplanResult.success) {
     logger.info(
-      `Fetched oppfolgingsplan overview:\n ${oppfolgingsplanResult.data}`,
+      `Fetched oppfolgingsplan overview:\n ${JSON.stringify(oppfolgingsplanResult.data)}`,
     );
   }
 
