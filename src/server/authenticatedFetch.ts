@@ -48,7 +48,7 @@ export async function authenticatedFetch<
       method,
       headers: {
         Authorization: `Bearer ${tokenxGrant.token}`,
-        "Nav-Consumer-Id": "oppfolgingsplan",
+        "Nav-Consumer-Id": "syfo-oppfolgingsplan-frontend",
         "Nav-Call-Id": nanoid(),
         "Content-Type": "application/json",
       },
