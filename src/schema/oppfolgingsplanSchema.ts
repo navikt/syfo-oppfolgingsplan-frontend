@@ -5,7 +5,7 @@ export const utkastMetadataSchema = object({
   sykmeldtFnr: string(),
   narmesteLederFnr: string(),
   organisasjonsnummer: string(),
-  sluttDato: date().nullish(),
+  sluttdato: date().nullish(),
 });
 
 export const oppfolgingsplanMetadataSchema = object({
@@ -13,7 +13,7 @@ export const oppfolgingsplanMetadataSchema = object({
   sykmeldtFnr: string(),
   narmesteLederFnr: string(),
   organisasjonsnummer: string(),
-  sluttDato: date(),
+  sluttdato: date(),
   skalDelesMedVeileder: boolean(),
   deltMedVeilederTidspunkt: date().nullish(),
   skalDelesMedLege: boolean(),
