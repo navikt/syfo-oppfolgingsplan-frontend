@@ -1,4 +1,4 @@
-import { array, boolean, date, object, string, z } from "zod";
+import { array, boolean, object, string, z } from "zod";
 
 export const utkastMetadataSchema = object({
   uuid: string(),
@@ -15,9 +15,9 @@ export const oppfolgingsplanMetadataSchema = object({
   organisasjonsnummer: string(),
   sluttdato: string().date(),
   skalDelesMedVeileder: boolean(),
-  deltMedVeilederTidspunkt: date().nullish(),
+  deltMedVeilederTidspunkt: string().date().nullish(),
   skalDelesMedLege: boolean(),
-  deltMedLegeTidspunkt: date().nullish(),
+  deltMedLegeTidspunkt: string().date().nullish(),
   createdAt: string().datetime(),
 });
 
