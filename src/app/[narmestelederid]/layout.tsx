@@ -9,7 +9,6 @@ import { fetchSykmeldt } from "@/server/fetch/fetchSykmeldt";
 import { SideMenuContainer } from "@/components/sideMenuContainer/sideMenuContainer";
 import { logger } from "@navikt/next-logger";
 import { redirectToLogin } from "@/auth/redirectToLogin";
-import { fetchOppfolgingsplanOverviewForArbeidsgiver } from "@/server/fetch/fetchOppfolgingsplanOverview.ts";
 
 function createDecoratorEnv(): "dev" | "prod" {
   switch (publicEnv.NEXT_PUBLIC_RUNTIME_ENVIRONMENT) {
@@ -52,15 +51,6 @@ export default async function RootLayout({
   const resolvedParams = params instanceof Promise ? await params : params;
   const narmestelederid = resolvedParams.narmestelederid;
   const sykmeldtResult = await fetchSykmeldt(narmestelederid);
-
-  // TODO: Just for testing. Remove this later
-  const oppfolgingsplanResult =
-    await fetchOppfolgingsplanOverviewForArbeidsgiver(narmestelederid);
-  if (oppfolgingsplanResult.success) {
-    logger.info(
-      `Fetched oppfolgingsplan overview:\n ${JSON.stringify(oppfolgingsplanResult.data)}`,
-    );
-  }
 
   if (!sykmeldtResult.success) {
     logger.error(
