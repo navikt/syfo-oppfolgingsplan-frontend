@@ -6,7 +6,7 @@ import React from "react";
 import { useAppForm } from "../hooks/form.tsx";
 import { oppfolgingsplanFormOpts } from "@/components/form/form-options.tsx";
 import { Arbeidssituasjon } from "@/components/form/oppfolgingsplan/arbeidssituasjon.tsx";
-import { OppfolgingsplanFormSchema } from "@/schema/oppfolgingsplanSchema.ts";
+import { OppfolgingsplanFormSchema } from "@/schema/oppfolgingsplanFormSchema.ts";
 import { VStack } from "@navikt/ds-react";
 
 export const OppfolgingsplanForm = () => {
