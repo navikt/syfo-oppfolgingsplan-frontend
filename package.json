@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "test": "",
-    "lint": "next lint"
+    "lint": "eslint"
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "^1.19.0",
