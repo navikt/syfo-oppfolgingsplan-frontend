@@ -12,9 +12,10 @@
   "dependencies": {
     "@grafana/faro-web-sdk": "^1.19.0",
     "@grafana/faro-web-tracing": "^1.19.0",
+    "@navikt/dinesykmeldte-sidemeny": "^7.0.6",
     "@navikt/ds-css": "^7.32.1",
     "@navikt/ds-react": "^7.32.1",
-    "@navikt/dinesykmeldte-sidemeny": "^7.0.6",
+    "@navikt/flexjar-widget": "^0.1.4",
     "@navikt/nav-dekoratoren-moduler": "^3.4.0",
     "@navikt/next-logger": "^2.1.0",
     "@tanstack/react-form": "^1.23.7",
