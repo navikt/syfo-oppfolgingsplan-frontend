@@ -6,7 +6,7 @@ import {
 } from "@navikt/flexjar-widget";
 
 const ratingQuestion: RatingQuestion = {
-  id: "experience",
+  id: "svar",
   type: "rating",
   prompt: "Hvordan var opplevelsen?",
 };
