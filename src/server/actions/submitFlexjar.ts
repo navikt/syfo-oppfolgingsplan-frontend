@@ -9,6 +9,7 @@ export async function submitFlexjar(
   payload: FlexJarTransportPayload,
 ): Promise<FetchResult<void>> {
   if (isLocalOrDemo) {
+    console.log(JSON.stringify(payload));
     return { success: true, data: undefined };
   }
 
@@ -16,6 +17,6 @@ export async function submitFlexjar(
     method: "POST",
     endpoint: `${getServerEnv().FLEXJAR_HOST}/api/v2/feedback`,
     clientId: getServerEnv().FLEXJAR_BACKEND_CLIENT_ID,
-    body: JSON.stringify(payload),
+    body: payload,
   });
 }
