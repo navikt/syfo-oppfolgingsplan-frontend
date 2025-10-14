@@ -12,6 +12,9 @@ const transport: FlexJarTransport = {
     const response = await submitFlexjar(submission.transportPayload);
 
     if (!response.success) {
+      console.log("Could not submit to Flexjar");
+      console.log(response.errorType);
+      console.log(response.errorMessage);
       throw new Error("Failed to send feedback");
     }
   },
