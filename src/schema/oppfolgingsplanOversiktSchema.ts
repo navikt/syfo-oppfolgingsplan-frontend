@@ -1,6 +1,6 @@
 import { array, boolean, object, string, z } from "zod";
 
-export const utkastMetadataSchema = object({
+export const utkastDataForOversiktSchema = object({
   uuid: string(),
   sykmeldtFnr: string(),
   narmesteLederFnr: string(),
@@ -21,12 +21,19 @@ export const oppfolgingsplanMetadataSchema = object({
   createdAt: string().datetime(),
 });
 
+// TODO: vurdere skjemaet
 export const oppfolgingsplanOverviewSchema = object({
-  utkast: utkastMetadataSchema.nullish(),
-  oppfolgingsplan: oppfolgingsplanMetadataSchema.nullish(),
+  utkast: utkastDataForOversiktSchema.nullable(),
+  oppfolgingsplan: oppfolgingsplanMetadataSchema.nullable(),
   previousOppfolgingsplaner: array(oppfolgingsplanMetadataSchema),
 });
 
-export type OppfolgingsplanOverview = z.infer<
+export type OppfolgingsplanDataForOversikt = z.infer<
+  typeof oppfolgingsplanMetadataSchema
+>;
+
+export type UtkastDataForOversikt = z.infer<typeof utkastDataForOversiktSchema>;
+
+export type OppfolgingsplanerDataForOversikt = z.infer<
   typeof oppfolgingsplanOverviewSchema
 >;
