@@ -8,7 +8,7 @@ export const mockOversiktData: OppfolgingsplanerOversikt = {
     updatedAt: "2025-10-28T10:17:31Z",
   },
   oppfolgingsplan: {
-    uuid: "223e4567-e89b-12d3-a456-426614174000",
+    uuid: "223e4567-e89b-12d3-a456-426614174002",
     sykmeldtFnr: "01010112345",
     narmesteLederFnr: "01010154321",
     organisasjonsnummer: "987654321",
@@ -19,5 +19,36 @@ export const mockOversiktData: OppfolgingsplanerOversikt = {
     deltMedLegeTidspunkt: "2025-10-25T14:30:00Z",
     createdAt: "2025-10-25T09:00:00Z",
   },
+  previousOppfolgingsplaner: [
+    {
+      uuid: "223e4567-e89b-12d3-a456-426614174001",
+      sykmeldtFnr: "01010112345",
+      narmesteLederFnr: "01010154321",
+      organisasjonsnummer: "987654321",
+      evalueringsdato: "2025-12-31",
+      skalDelesMedVeileder: true,
+      deltMedVeilederTidspunkt: null,
+      skalDelesMedLege: false,
+      deltMedLegeTidspunkt: "2024-01-20T14:30:00Z",
+      createdAt: "2025-10-15T09:00:00Z",
+    },
+    {
+      uuid: "223e4567-e89b-12d3-a456-426614174000",
+      sykmeldtFnr: "01010112345",
+      narmesteLederFnr: "01010154321",
+      organisasjonsnummer: "987654321",
+      evalueringsdato: "2025-12-31",
+      skalDelesMedVeileder: true,
+      deltMedVeilederTidspunkt: "2024-01-15T10:00:00Z",
+      skalDelesMedLege: false,
+      deltMedLegeTidspunkt: null,
+      createdAt: "2025-10-05T09:00:00Z",
+    },
+  ],
+};
+
+export const mockOversiktDataTom: OppfolgingsplanerOversikt = {
+  utkast: null,
+  oppfolgingsplan: null,
   previousOppfolgingsplaner: [],
 };

@@ -1,12 +1,9 @@
 "use server";
 
-import { OppfolgingsplanFormKanLagresSomUtkast } from "@/schema/oppfolgingsplanFormSchemas";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 
-export async function lagrePlanUtkast(
-  oppfolgingsplanUnderUtfylling: OppfolgingsplanFormKanLagresSomUtkast
-) {
+export async function lagrePlanUtkast(oppfolgingsplanUnderUtfylling: unknown) {
   // validere mot zod skjema hvis ikke allerede gjort
 
   // lage formSnapshot
