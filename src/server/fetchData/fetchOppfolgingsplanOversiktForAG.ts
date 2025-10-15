@@ -1,10 +1,10 @@
-import { getServerEnv } from "@/env-variables/serverEnv";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import {
   OppfolgingsplanerOversikt,
   oppfolgingsplanerOversiktResponseSchema,
 } from "@/schema/oppfolgingsplanerOversiktSchemas";
+import { getServerEnv } from "@/env-variables/serverEnv";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
