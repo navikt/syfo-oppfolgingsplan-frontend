@@ -81,16 +81,16 @@ export function getServerEnv(): ServerEnv & PublicEnv {
     };
   } catch (e) {
     if (e instanceof ZodError) {
-      throw new Error(
-        `The following envs are missing: ${
-          e.errors
-            .filter((it) => it.message === "Required")
-            .map((it) => it.path.join("."))
-            .join(", ") ||
-          "None are missing, but zod is not happy. Look at cause"
-        }`,
-        { cause: e },
-      );
+      throw new Error();
+      // TODO: uncomment and fix type errors after upgrading to zod v4
+      // `The following envs are missing: ${
+      //   e.errors
+      //     .filter((it) => it.message === "Required")
+      //     .map((it) => it.path.join("."))
+      //     .join(", ") ||
+      //   "None are missing, but zod is not happy. Look at cause"
+      // }`,
+      // { cause: e },
     } else {
       throw e;
     }
