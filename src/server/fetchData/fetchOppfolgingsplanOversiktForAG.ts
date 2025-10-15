@@ -1,9 +1,9 @@
-import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  OppfolgingsplanOverview,
-  oppfolgingsplanOverviewSchema,
-} from "@/schema/oppfolgingsplanSchema";
+  OppfolgingsplanerOversikt,
+  oppfolgingsplanerOversiktSchema,
+} from "@/schema/oppfolgingsplanOversiktSchema";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXAudience } from "./helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
@@ -13,7 +13,7 @@ const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>
 
 export async function fetchOppfolgingsplanOversiktForAG(
   narmesteLederId: string
-): Promise<OppfolgingsplanOverview> {
+): Promise<OppfolgingsplanerOversikt> {
   if (isLocalOrDemo) {
     return mockOversiktData;
   }
@@ -21,7 +21,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
   return await tokenXFetchGet({
     audience: TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerOversiktForAG(narmesteLederId),
-    responseDataSchema: oppfolgingsplanOverviewSchema,
+    responseDataSchema: oppfolgingsplanerOversiktSchema,
     narmesteLederIdIfAG: narmesteLederId,
   });
 }

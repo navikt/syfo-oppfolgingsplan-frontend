@@ -1,14 +1,16 @@
 "use server";
 
+import { UtfyltOppfolgingsplan } from "@/schema/oppfolgingsplanFormSchema";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 import { TokenXAudience } from "../fetchData/helpers";
-import { OppfolgingsplanFormFields } from "@/schema/oppfolgingsplanFormSchema";
 
-export async function opprettPlan(nyPlanInnhold: OppfolgingsplanFormFields) {
-  // validere mot zod skjema
+export async function opprettPlan(
+  utfyltOppfolgingsplan: UtfyltOppfolgingsplan
+) {
+  // validere mot zod skjema hvis ikke allerede gjort
 
   // lage formSnapshot
-  const formSnapshot = nyPlanInnhold; // TODO: lage snapshot
+  const formSnapshot = utfyltOppfolgingsplan; // TODO: lage snapshot
 
   tokenXFetchUpdate({
     audience: TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND,
