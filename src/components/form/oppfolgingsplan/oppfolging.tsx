@@ -14,7 +14,7 @@ export const Oppfolging = withForm({
         title="Evaluering av oppfølgingsplanen"
         description="Hvordan skal dere følge opp avtalt tilrettelegging på arbeidsplassen?"
       >
-        <form.AppField name="oppfolging">
+        <form.AppField name="hvordanFolgeOpp">
           {(field) => (
             <field.BoundTextArea
               label="Hvordan skal dere følge opp avtalt tilrettelegging?"
@@ -24,7 +24,7 @@ export const Oppfolging = withForm({
           )}
         </form.AppField>
 
-        <form.AppField name="evalueringsdato">
+        <form.AppField name="evalueringDato">
           {(field) => (
             <field.BoundDatePicker
               label="Dato for evaluering"

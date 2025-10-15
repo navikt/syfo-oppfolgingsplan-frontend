@@ -7,7 +7,7 @@ import { z } from "zod";
 import { FetchResult } from "@/server/FetchResult";
 import { validateIdPortenToken } from "@/auth/validateIdPortenToken";
 
-export async function authenticatedFetch<
+export async function authenticatedFetchOld<
   TResponseData,
   TRequestBody = unknown,
 >({
@@ -35,7 +35,7 @@ export async function authenticatedFetch<
 
     const tokenxGrant = await requestOboToken(
       tokenValidationResult.token,
-      clientId,
+      clientId
     );
 
     if (!tokenxGrant.ok) {

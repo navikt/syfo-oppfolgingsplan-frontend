@@ -1,5 +1,7 @@
 'use client'
 
+// TODO: Hva er dette? Finner ikke next-dokumentasjon for preload.tsx. Er det meningen å kalle funksjonen manuelt?
+
 import ReactDOM from 'react-dom'
 
 function Preload(): null {

@@ -11,7 +11,7 @@ export const Tilrettelegging = withForm({
         title="Tilrettelegging for å være i arbeid"
         description="Vi ønsker å vite litt om tilretteleggingsmuligheter på arbeidsplassen"
       >
-        <form.AppField name="tidligereTilretteleggingBeskrivelse">
+        <form.AppField name="tidligereTilrettelegging">
           {(field) => (
             <field.BoundTextArea
               label="Tilrettelegging tidligere i sykefraværet"
@@ -20,20 +20,11 @@ export const Tilrettelegging = withForm({
             />
           )}
         </form.AppField>
-        <form.AppField name="tilretteleggingIDennePerioden">
+        <form.AppField name="tilretteleggingFremover">
           {(field) => (
             <field.BoundTextArea
               label="Har dere andre muligheter for tilrettelegging som ikke prøves ut nå? (valgfritt)"
               description="For eksempel involvering av bedriftshelsetjeneste, eller utføre andre typer arbeidsoppgaver"
-              maxLength={500}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="sykmeldtesVurdering">
-          {(field) => (
-            <field.BoundTextArea
-              label="Hva tenker den sykmeldte om arbeidsevne og muligheter fremover?"
-              description="Er arbeidstaker positiv til å prøve tiltak?  Hvor lenge ser den sykemeldte for seg å være sykmeldt eller delvis sykmeldt?"
               maxLength={500}
             />
           )}
