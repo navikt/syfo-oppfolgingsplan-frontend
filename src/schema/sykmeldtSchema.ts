@@ -47,7 +47,7 @@ export const dineSykmeldteSykmeldingSchema = object({
   innspillTilArbeidsgiver: string().nullish(),
 });
 
-export const sykmeldtSchema = object({
+export const sykmeldtInfoSchema = object({
   narmestelederId: string(),
   orgnummer: string(),
   fnr: string(),
@@ -56,4 +56,4 @@ export const sykmeldtSchema = object({
   aktivSykmelding: boolean().nullish(),
 });
 
-export type Sykmeldt = z.infer<typeof sykmeldtSchema>;
+export type SykmeldtInfo = z.infer<typeof sykmeldtInfoSchema>;
