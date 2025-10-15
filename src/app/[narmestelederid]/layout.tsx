@@ -1,74 +1,30 @@
+import React from "react";
+import { Metadata } from "next";
+import Script from "next/script";
+import { Theme } from "@navikt/ds-react";
+import { fetchSykmeldtInfo } from "@/server/fetchData/fetchSykmeldtInfo";
+import { SideMenuContainer } from "@/components/sideMenuContainer/sideMenuContainer";
+import { fetchDecorator } from "./fetchDecorator";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import "@/app/globals.css";
-import React from "react";
-import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
-import Script from "next/script";
-import { publicEnv } from "@/constants/envs";
-import { createBreadcrumbsAG } from "@/components/breadcrumbs/breadcrumbs";
-import { fetchSykmeldt } from "@/server/fetch/fetchSykmeldt";
-import { SideMenuContainer } from "@/components/sideMenuContainer/sideMenuContainer";
-import { logger } from "@navikt/next-logger";
-import { redirectToLogin } from "@/auth/redirectToLogin";
 
-function createDecoratorEnv(): "dev" | "prod" {
-  switch (publicEnv.NEXT_PUBLIC_RUNTIME_ENVIRONMENT) {
-    case "local":
-    case "test":
-    case "dev":
-      return "dev";
-    default:
-      return "prod";
-  }
-}
+export const metadata: Metadata = {
+  title: "Oppfølgingsplan",
+};
 
-async function fetchDecorator(narmestelederid: string, sykmeldtNavn: string) {
-  return await fetchDecoratorReact({
-    env: createDecoratorEnv(),
-    params: {
-      language: "nb",
-      context: "arbeidsgiver",
-      logoutWarning: true,
-      chatbot: true,
-      chatbotVisible: true,
-      feedback: false,
-      redirectToApp: true,
-      breadcrumbs: createBreadcrumbsAG(sykmeldtNavn, narmestelederid),
-    },
-  });
-}
-
-interface LayoutParams {
-  narmestelederid: string;
-}
-
-export default async function RootLayout({
+export default async function RootLayoutForNL({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<LayoutParams>;
+  params: Promise<{ narmesteLederId: string }>;
 }) {
-  const resolvedParams = params instanceof Promise ? await params : params;
-  const narmestelederid = resolvedParams.narmestelederid;
-  const sykmeldtResult = await fetchSykmeldt(narmestelederid);
-
-  if (!sykmeldtResult.success) {
-    logger.error(
-      `Failed to fetch sykmeldt: ${sykmeldtResult.errorType} - ${sykmeldtResult.errorMessage}`,
-    );
-
-    if (sykmeldtResult.errorType === "UNAUTHORIZED") {
-      redirectToLogin(narmestelederid);
-    }
-
-    throw new Error(
-      `Failed to fetch data: ${sykmeldtResult.errorType} - ${sykmeldtResult.errorMessage}`,
-    );
-  }
+  const { narmesteLederId } = await params;
+  const sykmeldtInfo = await fetchSykmeldtInfo(narmesteLederId);
 
   const Decorator = await fetchDecorator(
-    narmestelederid,
-    sykmeldtResult.data.navn || "Sykmeldt",
+    narmesteLederId,
+    sykmeldtInfo.navn || "Sykmeldt"
   );
 
   return (
@@ -78,8 +34,10 @@ export default async function RootLayout({
       </head>
       <body>
         <Decorator.Header />
-        <SideMenuContainer sykmeldtData={sykmeldtResult.data}>
-          {children}
+        <SideMenuContainer sykmeldtInfo={sykmeldtInfo}>
+          <Theme>
+            <main className="w-[730px]">{children}</main>
+          </Theme>
         </SideMenuContainer>
         <Decorator.Footer />
         <Decorator.Scripts loader={Script} />
@@ -87,7 +45,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
-export const metadata = {
-  title: "Oppfølgingsplan",
-};
