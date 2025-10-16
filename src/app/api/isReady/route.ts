@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerEnv } from "@/constants/envs";
 import { logger } from "@navikt/next-logger";
+import { getServerEnv } from "@/env-variables/serverEnv";
 
 export async function GET(): Promise<NextResponse> {
   try {
