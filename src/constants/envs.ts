@@ -1,4 +1,4 @@
-import { z, ZodError } from "zod";
+import { z } from "zod";
 
 export type PublicEnv = z.infer<typeof publicEnvSchema>;
 export const publicEnvSchema = z.object({
@@ -80,16 +80,20 @@ export function getServerEnv(): ServerEnv & PublicEnv {
       ...publicEnvSchema.parse(publicEnv),
     };
   } catch (e) {
-    if (e instanceof ZodError) {
+    if (e instanceof z.ZodError) {
       throw new Error(
         `The following envs are missing: ${
-          e.errors
-            .filter((it) => it.message === "Required")
+          e.issues
+            .filter(
+              (it) =>
+                it.code === "invalid_type" &&
+                it.message.includes("received undefined")
+            )
             .map((it) => it.path.join("."))
             .join(", ") ||
           "None are missing, but zod is not happy. Look at cause"
         }`,
-        { cause: e },
+        { cause: e }
       );
     } else {
       throw e;
