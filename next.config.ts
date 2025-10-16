@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+import { NextConfig } from "next";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { buildCspHeader } = require("@navikt/nav-dekoratoren-moduler/ssr");
@@ -31,7 +31,7 @@ const appDirectives = {
   ],
 };
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   async headers() {
     const environment =
       process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT === "prod" ? "prod" : "dev";
