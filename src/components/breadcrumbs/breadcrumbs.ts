@@ -1,8 +1,8 @@
-import { publicEnv } from "@/constants/envs";
+import { publicEnv } from "@/env-variables/publicEnv";
 
 export function createBreadcrumbsAG(
   sykmeldtName: string,
-  narmestelederid: string,
+  narmestelederid: string
 ) {
   return [
     {

@@ -1,12 +1,13 @@
 "use server";
 
-import { getServerEnv, isLocalOrDemo } from "@/constants/envs";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { getServerEnv } from "@/env-variables/serverEnv";
 import { Sykmeldt, sykmeldtSchema } from "@/schema/sykmeldtSchema";
 import { authenticatedFetch } from "@/server/authenticatedFetch";
 import { FetchResult } from "@/server/FetchResult";
 
 export async function fetchSykmeldt(
-  narmestelederid: string,
+  narmestelederid: string
 ): Promise<FetchResult<Sykmeldt>> {
   if (isLocalOrDemo) {
     return {
