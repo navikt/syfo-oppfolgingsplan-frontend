@@ -1,10 +1,10 @@
-@import 'tailwindcss';
-@import '@navikt/ds-css' layer(base);
+@import "tailwindcss";
 
-@theme {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-}
+/* TODO: Hvis vi får oppdatert dinesykmeldte-sidemeny til å bruke darkside kan dette forenkles */
+/* Dette oppsettet var en måte å få styling til å bli riktig i sidemeny og app */
+@import "@navikt/ds-css/dist/components.css" layer(components); /* Ikke-darkside for d.s.-sidemeny */
+@import "@navikt/ds-css/darkside" layer(components); /* Darkside */
+@config '../../tailwind.config.ts';
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -14,12 +14,13 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+/* TODO: Trenger vi dette? */
 @layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }

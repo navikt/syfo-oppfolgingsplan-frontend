@@ -1,6 +1,7 @@
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import "@/app/globals.css";
 import React from "react";
+import { Theme } from "@navikt/ds-react";
 import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
 import Script from "next/script";
 import { publicEnv } from "@/constants/envs";
@@ -79,7 +80,7 @@ export default async function RootLayout({
       <body>
         <Decorator.Header />
         <SideMenuContainer sykmeldtData={sykmeldtResult.data}>
-          {children}
+          <Theme>{children}</Theme>
         </SideMenuContainer>
         <Decorator.Footer />
         <Decorator.Scripts loader={Script} />
