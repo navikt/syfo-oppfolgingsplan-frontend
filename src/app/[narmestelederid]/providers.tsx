@@ -3,7 +3,7 @@
 import React from "react";
 import { configureLogger } from "@navikt/next-logger";
 import { initFaro } from "@/app/faro/faro/faro";
-import { publicEnv } from "@/constants/envs";
+import { publicEnv } from "@/env-variables/publicEnv";
 
 configureLogger({
   basePath: publicEnv.NEXT_PUBLIC_BASE_PATH,

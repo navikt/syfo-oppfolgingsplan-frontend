@@ -4,7 +4,7 @@ import React from "react";
 import { Theme } from "@navikt/ds-react";
 import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
 import Script from "next/script";
-import { publicEnv } from "@/constants/envs";
+import { publicEnv } from "@/env-variables/publicEnv";
 import { createBreadcrumbsAG } from "@/components/breadcrumbs/breadcrumbs";
 import { fetchSykmeldt } from "@/server/fetch/fetchSykmeldt";
 import { SideMenuContainer } from "@/components/sideMenuContainer/sideMenuContainer";
