@@ -22,7 +22,7 @@
     "@navikt/oasis": "^3.8.0",
     "@tanstack/react-form": "^1.23.7",
     "next": "^15.5.6",
-    "pino": "^9.13.0",
+    "pino": "^10.0.0",
     "pino-pretty": "^13.1.2",
     "pino-roll": "^3.1.0",
     "react": "^19.2.0",
