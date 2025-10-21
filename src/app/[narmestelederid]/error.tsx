@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import Image from "next/image";
 import { logger } from "@navikt/next-logger";
-import Image from "next/legacy/image";
-import pageErrorDad from "@/images/error-page-dad.svg";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
+import { publicEnv } from "@/constants/envs";
+
+const ERROR_DAD_SVG_PUBLIC_PATH = `${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/error-page-dad.svg`;
+
+// TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.
 
 export default function Error({
   error,
@@ -22,7 +26,9 @@ export default function Error({
   return (
     <div className="flex max-w-3xl flex-col" role="status" aria-live="polite">
       <Image
-        src={pageErrorDad}
+        src={ERROR_DAD_SVG_PUBLIC_PATH}
+        width={200}
+        height={237}
         alt=""
         className="max-[960px]:max-h[240px] mr-8 flex-[1_1_50%] max-[960px]:mb-4"
       />
