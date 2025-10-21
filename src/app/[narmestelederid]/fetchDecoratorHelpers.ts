@@ -12,7 +12,7 @@ export async function fetchDecorator(
       context: "arbeidsgiver",
       logoutWarning: true,
       chatbot: true,
-      chatbotVisible: true,
+      chatbotVisible: false,
       feedback: false,
       redirectToApp: true,
       breadcrumbs: createBreadcrumbsForAG(sykmeldtNavn, narmesteLederId),
