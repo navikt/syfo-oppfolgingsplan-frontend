@@ -4,7 +4,8 @@ import {
 } from "@/schema/oppfolgingsplanSchema.ts";
 import { FetchResult } from "@/server/FetchResult.ts";
 import { authenticatedFetch } from "@/server/authenticatedFetch.ts";
-import { getServerEnv, isLocalOrDemo } from "@/constants/envs.ts";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { getServerEnv } from "@/env-variables/serverEnv";
 
 const demoOverview: FetchResult<OppfolgingsplanOverview> = {
   success: true,
@@ -33,7 +34,7 @@ const demoOverview: FetchResult<OppfolgingsplanOverview> = {
 };
 
 export async function fetchOppfolgingsplanOverviewForArbeidsgiver(
-  narmesteLederId: string,
+  narmesteLederId: string
 ): Promise<FetchResult<OppfolgingsplanOverview>> {
   if (isLocalOrDemo) {
     return demoOverview;
