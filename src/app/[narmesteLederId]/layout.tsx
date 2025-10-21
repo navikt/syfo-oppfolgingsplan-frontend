@@ -16,13 +16,13 @@ export default async function RootLayoutForNL({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ narmestelederid: string }>;
+  params: Promise<{ narmesteLederId: string }>;
 }) {
-  const { narmestelederid } = await params;
-  const sykmeldtInfo = await fetchSykmeldtInfo(narmestelederid);
+  const { narmesteLederId } = await params;
+  const sykmeldtInfo = await fetchSykmeldtInfo(narmesteLederId);
 
   const Decorator = await fetchDecorator(
-    narmestelederid,
+    narmesteLederId,
     sykmeldtInfo.navn || "Sykmeldt"
   );
 
