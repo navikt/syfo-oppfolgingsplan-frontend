@@ -1,9 +1,9 @@
-import { getServerEnv } from "@/env-variables/serverEnv";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   OppfolgingsplanerOversikt,
   oppfolgingsplanerOversiktSchema,
 } from "@/schema/oppfolgingsplanOversiktSchema";
+import { getServerEnv } from "@/env-variables/serverEnv";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXAudience } from "./helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
