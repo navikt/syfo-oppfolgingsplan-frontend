@@ -1,3 +1,4 @@
+import { getServerEnv } from "@/env-variables/serverEnv";
 import { nanoid } from "nanoid";
 
 const NAV_CONSUMER_ID_REQUEST_HEADER = "syfo-oppfolgingsplan-frontend";
@@ -18,7 +19,7 @@ export const getBackendRequestHeaders = (oboToken: string) => ({
 
 export const audienceClientIdMap: Record<TokenXAudience, string> = {
   [TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND]:
-    process.env.NEXT_PUBLIC_SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID || "",
+    getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID,
   [TokenXAudience.SYFO_DINE_SYKMELDTE_BACKEND]:
-    process.env.NEXT_PUBLIC_DINESYKMELDTE_BACKEND_CLIENT_ID || "",
+    getServerEnv().DINESYKMELDTE_BACKEND_CLIENT_ID,
 };
