@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server'
-
-export function GET(): NextResponse {
-  return NextResponse.json({ message: 'I am alive :)' })
+export function GET() {
+  return Response.json({ message: "I am alive :)" });
 }
