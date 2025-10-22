@@ -1,7 +1,7 @@
 "use server";
 
 import { tokenXFetchUpdate } from "../tokenXFetch";
-import { TokenXAudience } from "../fetchData/helpers";
+import { TokenXAudience } from "../helpers";
 
 export async function delPlanMedVeileder(planUuid: string) {
   // validere mot zod skjema

@@ -10,10 +10,10 @@ import {
   redirectToLoginForSM,
 } from "@/auth/redirectToLogin";
 import {
-  audienceClientIdMap,
   getBackendRequestHeaders,
+  getClientIdForTokenXAudience,
   TokenXAudience,
-} from "./fetchData/helpers";
+} from "./helpers";
 
 /**
  * Redirects users to login if validation is unsuccessful.
@@ -62,7 +62,7 @@ const exchangeIdPortenTokenForTokenXOboToken = cache(
   async (idPortenToken: string, audience: TokenXAudience) => {
     const tokenXGrant = await requestOboToken(
       idPortenToken,
-      audienceClientIdMap[audience]
+      getClientIdForTokenXAudience(audience)
     );
 
     if (!tokenXGrant.ok) {

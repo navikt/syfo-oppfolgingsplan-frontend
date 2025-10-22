@@ -5,7 +5,7 @@ import {
   oppfolgingsplanOverviewSchema,
 } from "@/schema/oppfolgingsplanSchema";
 import { tokenXFetchGet } from "../tokenXFetch";
-import { TokenXAudience } from "./helpers";
+import { TokenXAudience } from "../helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
 
 const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>

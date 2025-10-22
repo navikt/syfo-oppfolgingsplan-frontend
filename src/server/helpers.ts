@@ -5,7 +5,7 @@ const NAV_CONSUMER_ID_REQUEST_HEADER = "syfo-oppfolgingsplan-frontend";
 
 export enum TokenXAudience {
   SYFO_OPPFOLGINGSPLAN_BACKEND = "SYFO_OPPFOLGINGSPLAN_BACKEND",
-  SYFO_DINE_SYKMELDTE_BACKEND = "SYFO_DINE_SYKMELDTE_BACKEND",
+  DINE_SYKMELDTE_BACKEND = "DINE_SYKMELDTE_BACKEND",
 }
 
 export const getBackendRequestHeaders = (oboToken: string) => ({
@@ -17,9 +17,12 @@ export const getBackendRequestHeaders = (oboToken: string) => ({
   "Content-Type": "application/json",
 });
 
-export const audienceClientIdMap: Record<TokenXAudience, string> = {
-  [TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND]:
-    getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID,
-  [TokenXAudience.SYFO_DINE_SYKMELDTE_BACKEND]:
-    getServerEnv().DINESYKMELDTE_BACKEND_CLIENT_ID,
-};
+export function getClientIdForTokenXAudience(audience: TokenXAudience): string {
+  if (audience === TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND) {
+    return getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID;
+  } else if (audience === TokenXAudience.DINE_SYKMELDTE_BACKEND) {
+    return getServerEnv().DINESYKMELDTE_BACKEND_CLIENT_ID;
+  } else {
+    return "" as never;
+  }
+}

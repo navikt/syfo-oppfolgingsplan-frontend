@@ -1,7 +1,7 @@
 "use server";
 
 import { tokenXFetchUpdate } from "../tokenXFetch";
-import { TokenXAudience } from "../fetchData/helpers";
+import { TokenXAudience } from "../helpers";
 import { OppfolgingsplanFormFields } from "@/schema/oppfolgingsplanFormSchema";
 
 export async function lagrePlanUtkast(

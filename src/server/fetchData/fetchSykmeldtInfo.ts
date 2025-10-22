@@ -2,8 +2,8 @@ import { getServerEnv } from "@/env-variables/serverEnv";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { SykmeldtInfo, sykmeldtInfoSchema } from "@/schema/sykmeldtSchema";
 import { tokenXFetchGet } from "../tokenXFetch";
-import { TokenXAudience } from "./helpers";
 import { getMockSykmeldtData } from "./demoMockData/mockSykmeldtData";
+import { TokenXAudience } from "../helpers";
 
 export async function fetchSykmeldtInfo(
   narmestelederid: string
@@ -16,7 +16,7 @@ export async function fetchSykmeldtInfo(
   // denne appen skal snakke med flere backend-tjenester.
 
   return await tokenXFetchGet({
-    audience: TokenXAudience.SYFO_DINE_SYKMELDTE_BACKEND,
+    audience: TokenXAudience.DINE_SYKMELDTE_BACKEND,
     endpoint: `${getServerEnv().DINESYKMELDTE_BACKEND_HOST}/api/v2/dinesykmeldte/${narmestelederid}`,
     responseDataSchema: sykmeldtInfoSchema,
     narmesteLederIdIfAG: narmestelederid,
