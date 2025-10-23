@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 const NAV_CONSUMER_ID_REQUEST_HEADER = "syfo-oppfolgingsplan-frontend";
 
-export enum TokenXAudience {
+export enum TokenXTargetApi {
   SYFO_OPPFOLGINGSPLAN_BACKEND = "SYFO_OPPFOLGINGSPLAN_BACKEND",
   DINE_SYKMELDTE_BACKEND = "DINE_SYKMELDTE_BACKEND",
 }
@@ -17,10 +17,12 @@ export const getBackendRequestHeaders = (oboToken: string) => ({
   "Content-Type": "application/json",
 });
 
-export function getClientIdForTokenXAudience(audience: TokenXAudience): string {
-  if (audience === TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND) {
+export function getClientIdForTokenXTargetApi(
+  targetApi: TokenXTargetApi
+): string {
+  if (targetApi === TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND) {
     return getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID;
-  } else if (audience === TokenXAudience.DINE_SYKMELDTE_BACKEND) {
+  } else if (targetApi === TokenXTargetApi.DINE_SYKMELDTE_BACKEND) {
     return getServerEnv().DINESYKMELDTE_BACKEND_CLIENT_ID;
   } else {
     return "" as never;

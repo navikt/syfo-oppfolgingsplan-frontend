@@ -1,7 +1,7 @@
 "use server";
 
 import { tokenXFetchUpdate } from "../tokenXFetch";
-import { TokenXAudience } from "../helpers";
+import { TokenXTargetApi } from "../helpers";
 import { OppfolgingsplanFormFields } from "@/schema/oppfolgingsplanFormSchema";
 
 export async function lagrePlanUtkast(
@@ -13,7 +13,7 @@ export async function lagrePlanUtkast(
   const formSnapshot = utkastInnhold; // TODO: lage snapshot
 
   tokenXFetchUpdate({
-    audience: TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND,
+    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: "TODO",
     method: "PUT",
     requestBody: { formSnapshot },

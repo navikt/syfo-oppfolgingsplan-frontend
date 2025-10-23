@@ -5,7 +5,7 @@ import {
   oppfolgingsplanOverviewSchema,
 } from "@/schema/oppfolgingsplanSchema";
 import { tokenXFetchGet } from "../tokenXFetch";
-import { TokenXAudience } from "../helpers";
+import { TokenXTargetApi } from "../helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
 
 const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>
@@ -19,7 +19,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
   }
 
   return await tokenXFetchGet({
-    audience: TokenXAudience.SYFO_OPPFOLGINGSPLAN_BACKEND,
+    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerOversiktForAG(narmesteLederId),
     responseDataSchema: oppfolgingsplanOverviewSchema,
     narmesteLederIdIfAG: narmesteLederId,

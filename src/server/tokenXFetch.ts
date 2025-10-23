@@ -11,8 +11,8 @@ import {
 } from "@/auth/redirectToLogin";
 import {
   getBackendRequestHeaders,
-  getClientIdForTokenXAudience,
-  TokenXAudience,
+  getClientIdForTokenXTargetApi,
+  TokenXTargetApi,
 } from "./helpers";
 
 /**
@@ -59,10 +59,10 @@ const validateAndGetIdPortenToken = async () => {
 };
 
 const exchangeIdPortenTokenForTokenXOboToken = cache(
-  async (idPortenToken: string, audience: TokenXAudience) => {
+  async (idPortenToken: string, targetApi: TokenXTargetApi) => {
     const tokenXGrant = await requestOboToken(
       idPortenToken,
-      getClientIdForTokenXAudience(audience)
+      getClientIdForTokenXTargetApi(targetApi)
     );
 
     if (!tokenXGrant.ok) {
@@ -97,12 +97,12 @@ async function logFailedFetchAndThrowError(
 }
 
 export async function tokenXFetchGet<S extends z.ZodType>({
-  audience,
+  targetApi,
   endpoint,
   responseDataSchema,
   narmesteLederIdIfAG,
 }: {
-  audience: TokenXAudience;
+  targetApi: TokenXTargetApi;
   endpoint: string;
   responseDataSchema: S;
   narmesteLederIdIfAG: string | false;
@@ -113,7 +113,7 @@ export async function tokenXFetchGet<S extends z.ZodType>({
 
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idPortenToken,
-    audience
+    targetApi
   );
 
   const response = await fetch(endpoint, {
@@ -141,12 +141,12 @@ export async function tokenXFetchGet<S extends z.ZodType>({
 }
 
 export async function tokenXFetchUpdate({
-  audience,
+  targetApi,
   endpoint,
   requestBody,
   method = "POST",
 }: {
-  audience: TokenXAudience;
+  targetApi: TokenXTargetApi;
   endpoint: string;
   requestBody: unknown;
   method?: "POST" | "PUT" | "DELETE";
@@ -155,7 +155,7 @@ export async function tokenXFetchUpdate({
 
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idPortenToken,
-    audience
+    targetApi
   );
 
   const response = await fetch(endpoint, {
