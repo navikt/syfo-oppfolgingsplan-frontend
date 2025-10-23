@@ -4,6 +4,7 @@ import {
   OppfolgingsplanOverview,
   oppfolgingsplanOverviewSchema,
 } from "@/schema/oppfolgingsplanSchema";
+import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
@@ -22,6 +23,6 @@ export async function fetchOppfolgingsplanOversiktForAG(
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerOversiktForAG(narmesteLederId),
     responseDataSchema: oppfolgingsplanOverviewSchema,
-    narmesteLederIdIfAG: narmesteLederId,
+    redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 }

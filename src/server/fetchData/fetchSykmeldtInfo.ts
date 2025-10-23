@@ -1,6 +1,7 @@
 import { getServerEnv } from "@/env-variables/serverEnv";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { SykmeldtInfo, sykmeldtInfoSchema } from "@/schema/sykmeldtSchema";
+import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { getMockSykmeldtData } from "./demoMockData/mockSykmeldtData";
 import { TokenXTargetApi } from "../helpers";
@@ -19,6 +20,6 @@ export async function fetchSykmeldtInfo(
     targetApi: TokenXTargetApi.DINE_SYKMELDTE_BACKEND,
     endpoint: `${getServerEnv().DINESYKMELDTE_BACKEND_HOST}/api/v2/dinesykmeldte/${narmestelederid}`,
     responseDataSchema: sykmeldtInfoSchema,
-    narmesteLederIdIfAG: narmestelederid,
+    redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmestelederid),
   });
 }

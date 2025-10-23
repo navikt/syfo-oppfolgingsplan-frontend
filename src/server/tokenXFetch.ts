@@ -5,10 +5,7 @@ import z from "zod";
 import { logger } from "@navikt/next-logger";
 import { requestOboToken } from "@navikt/oasis";
 import { validateIdPortenToken } from "@/auth/validateIdPortenToken";
-import {
-  redirectToLoginForAG,
-  redirectToLoginForSM,
-} from "@/auth/redirectToLogin";
+import { redirectToLogin } from "@/auth/redirectToLogin";
 import {
   getBackendRequestHeaders,
   getClientIdForTokenXTargetApi,
@@ -17,28 +14,14 @@ import {
 
 /**
  * Redirects users to login if validation is unsuccessful.
- * narmesteLederId is needed to provide correct redirect URL for AG users.
  */
-const validateAndGetIdPortenTokenOrRedirectForAG = async (
-  narmesteLederId: string
+const validateAndGetIdPortenTokenOrRedirectToLogin = async (
+  redirectAfterLoginUrl: string
 ) => {
   const validationResult = await validateIdPortenToken();
 
   if (!validationResult.success) {
-    return redirectToLoginForAG(narmesteLederId);
-  }
-
-  return validationResult.token;
-};
-
-/**
- * Redirects users to login if validation is unsuccessful.
- */
-const validateAndGetIdPortenTokenOrRedirectForSM = async () => {
-  const validationResult = await validateIdPortenToken();
-
-  if (!validationResult.success) {
-    return redirectToLoginForSM();
+    return redirectToLogin(redirectAfterLoginUrl);
   }
 
   return validationResult.token;
@@ -100,16 +83,16 @@ export async function tokenXFetchGet<S extends z.ZodType>({
   targetApi,
   endpoint,
   responseDataSchema,
-  narmesteLederIdIfAG,
+  redirectAfterLoginUrl,
 }: {
   targetApi: TokenXTargetApi;
   endpoint: string;
   responseDataSchema: S;
-  narmesteLederIdIfAG: string | false;
+  redirectAfterLoginUrl: string;
 }): Promise<z.infer<S>> {
-  const idPortenToken = narmesteLederIdIfAG
-    ? await validateAndGetIdPortenTokenOrRedirectForAG(narmesteLederIdIfAG)
-    : await validateAndGetIdPortenTokenOrRedirectForSM();
+  const idPortenToken = await validateAndGetIdPortenTokenOrRedirectToLogin(
+    redirectAfterLoginUrl
+  );
 
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idPortenToken,
