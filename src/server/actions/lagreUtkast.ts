@@ -1,11 +1,11 @@
 "use server";
 
-import { OppfolgingsplanUnderUtfylling } from "@/schema/oppfolgingsplanFormSchema";
+import { OppfolgingsplanFormKanLagresSomUtkast } from "@/schema/oppfolgingsplanFormSchemas";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 
 export async function lagrePlanUtkast(
-  oppfolgingsplanUnderUtfylling: OppfolgingsplanUnderUtfylling
+  oppfolgingsplanUnderUtfylling: OppfolgingsplanFormKanLagresSomUtkast
 ) {
   // validere mot zod skjema hvis ikke allerede gjort
 

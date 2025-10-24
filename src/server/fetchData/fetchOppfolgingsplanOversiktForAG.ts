@@ -4,7 +4,7 @@ import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import {
   OppfolgingsplanerOversikt,
   oppfolgingsplanerOversiktSchema,
-} from "@/schema/oppfolgingsplanOversiktSchema";
+} from "@/schema/oppfolgingsplanerOversiktSchemas";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";

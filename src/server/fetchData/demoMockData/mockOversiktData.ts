@@ -1,4 +1,4 @@
-import { OppfolgingsplanerOversikt } from "@/schema/oppfolgingsplanOversiktSchema";
+import { OppfolgingsplanerOversikt } from "@/schema/oppfolgingsplanerOversiktSchemas";
 
 export const mockOversiktData: OppfolgingsplanerOversikt = {
   utkast: {
