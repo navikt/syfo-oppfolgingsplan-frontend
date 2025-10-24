@@ -1,9 +1,18 @@
 import { publicEnv } from "@/env-variables/publicEnv";
 import { redirect } from "next/navigation";
 
-export const redirectToLogin = (narmestelederid: string) => {
+export function getRedirectAfterLoginUrlForAG(narmesteLederId: string) {
+  return `${publicEnv.NEXT_PUBLIC_BASE_PATH}/oppfolgingsplan/${narmesteLederId}`;
+}
+
+export function getRedirectAfterLoginUrlForSM() {
+  return `${publicEnv.NEXT_PUBLIC_BASE_PATH}/oppfolgingsplan/sykmeldt`;
+}
+
+export const redirectToLogin = (redirectAfterLoginUrl: string) => {
   const loginPath = `/oauth2/login/redirect?redirect=${encodeURIComponent(
-    `${publicEnv.NEXT_PUBLIC_BASE_PATH}/oppfolgingsplan/${narmestelederid}`
+    redirectAfterLoginUrl
   )}`;
+
   return redirect(loginPath);
 };

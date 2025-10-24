@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { logger } from "@navikt/next-logger";
 import { getToken, validateIdportenToken } from "@navikt/oasis";
 import { headers } from "next/headers";
@@ -6,7 +7,7 @@ export type TokenValidationResult =
   | { success: true; token: string }
   | { success: false; reason: string };
 
-export const validateIdPortenToken =
+export const validateIdPortenToken = cache(
   async (): Promise<TokenValidationResult> => {
     const headersList = await headers();
     const idportenToken = getToken(headersList);
@@ -25,4 +26,5 @@ export const validateIdPortenToken =
     }
 
     return { success: true, token: idportenToken };
-  };
+  }
+);
