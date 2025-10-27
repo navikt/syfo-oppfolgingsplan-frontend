@@ -1,7 +1,7 @@
 import { publicEnv } from "@/env-variables/publicEnv";
 import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
 
-export async function fetchDecorator(
+export async function fetchDecoratorForAG(
   narmesteLederId: string,
   sykmeldtNavn: string
 ) {

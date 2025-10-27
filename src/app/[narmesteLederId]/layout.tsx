@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import Script from "next/script";
 import { Theme } from "@navikt/ds-react";
 import { fetchSykmeldtInfo } from "@/server/fetchData/fetchSykmeldtInfo";
-import { SideMenuContainer } from "@/components/sideMenuContainer/sideMenuContainer";
-import { fetchDecorator } from "./fetchDecoratorHelpers";
+import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
+import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import "@/app/globals.css";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Oppfølgingsplan",
 };
 
-export default async function RootLayoutForNL({
+export default async function RootLayoutForAG({
   children,
   params,
 }: {
@@ -21,7 +21,7 @@ export default async function RootLayoutForNL({
   const { narmesteLederId } = await params;
   const sykmeldtInfo = await fetchSykmeldtInfo(narmesteLederId);
 
-  const Decorator = await fetchDecorator(
+  const Decorator = await fetchDecoratorForAG(
     narmesteLederId,
     sykmeldtInfo.navn || "Sykmeldt"
   );
@@ -33,11 +33,11 @@ export default async function RootLayoutForNL({
       </head>
       <body>
         <Decorator.Header />
-        <SideMenuContainer sykmeldtInfo={sykmeldtInfo}>
+        <ArbeidsgiverPageContainer sykmeldtInfo={sykmeldtInfo}>
           <Theme>
             <main className="w-[730px]">{children}</main>
           </Theme>
-        </SideMenuContainer>
+        </ArbeidsgiverPageContainer>
         <Decorator.Footer />
         <Decorator.Scripts loader={Script} />
       </body>

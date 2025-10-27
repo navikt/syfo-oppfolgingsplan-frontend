@@ -14,7 +14,10 @@ interface Props {
   children: ReactNode;
 }
 
-export const SideMenuContainer = ({ sykmeldtInfo, children }: Props) => {
+export const ArbeidsgiverPageContainer = ({
+  sykmeldtInfo,
+  children,
+}: Props) => {
   const sykmeldtNavn = sykmeldtInfo.navn || "Sykmeldt";
   return (
     <PageContainer
