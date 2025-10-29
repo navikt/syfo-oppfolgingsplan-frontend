@@ -3,6 +3,7 @@ import { Box, Button } from "@navikt/ds-react";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/fetchOppfolgingsplanOversiktForAG";
 import { getAGNyPlanHref } from "@/constants/route-hrefs";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListe";
+import KanIkkeLageOppfolgingsplanForAnsattAlert from "./IkkeSykmeldtAlert";
 
 function LagNyOppfolgingsplanButton({
   narmesteLederId,
@@ -35,14 +36,20 @@ export default async function LagNyPlanKnappOgPlanListe({
 
   // TODO: Hent fra backend
   const arbeidsstedNavn = "Arbeidssted AS";
+  // TODO: Hent fra backend
+  const kanLageOppfolgingsplanForAnsatt = true;
 
   const harMinstEnPlanEllerUtkast =
     aktivPlan || tidligerePlaner.length > 0 || utkast;
 
   return (
     <section>
-      {!harMinstEnPlanEllerUtkast && (
+      {kanLageOppfolgingsplanForAnsatt && !harMinstEnPlanEllerUtkast && (
         <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      )}
+
+      {!kanLageOppfolgingsplanForAnsatt && (
+        <KanIkkeLageOppfolgingsplanForAnsattAlert className="mb-12" />
       )}
 
       {harMinstEnPlanEllerUtkast && (
