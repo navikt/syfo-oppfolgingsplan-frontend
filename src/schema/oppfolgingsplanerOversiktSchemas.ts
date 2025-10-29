@@ -1,11 +1,10 @@
 import { array, boolean, object, string, z } from "zod";
 
 export const utkastMetadataSchema = object({
-  uuid: string(),
   sykmeldtFnr: string(),
   narmesteLederFnr: string(),
   organisasjonsnummer: string(),
-  evalueringsdato: z.iso.date().nullish(),
+  updatedAt: z.iso.datetime(),
 });
 
 export type UtkastMetadata = z.infer<typeof utkastMetadataSchema>;
@@ -27,12 +26,12 @@ export type OppfolgingsplanMetadata = z.infer<
   typeof oppfolgingsplanMetadataSchema
 >;
 
-export const oppfolgingsplanerOversiktSchema = object({
+export const oppfolgingsplanerOversiktResponseSchema = object({
   utkast: utkastMetadataSchema.nullable(),
   oppfolgingsplan: oppfolgingsplanMetadataSchema.nullable(),
   previousOppfolgingsplaner: array(oppfolgingsplanMetadataSchema),
 });
 
 export type OppfolgingsplanerOversikt = z.infer<
-  typeof oppfolgingsplanerOversiktSchema
+  typeof oppfolgingsplanerOversiktResponseSchema
 >;

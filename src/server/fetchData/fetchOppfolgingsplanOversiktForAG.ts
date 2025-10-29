@@ -3,7 +3,7 @@ import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import {
   OppfolgingsplanerOversikt,
-  oppfolgingsplanerOversiktSchema,
+  oppfolgingsplanerOversiktResponseSchema,
 } from "@/schema/oppfolgingsplanerOversiktSchemas";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
@@ -22,7 +22,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerOversiktForAG(narmesteLederId),
-    responseDataSchema: oppfolgingsplanerOversiktSchema,
+    responseDataSchema: oppfolgingsplanerOversiktResponseSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 }
