@@ -1,17 +1,20 @@
 import { formOptions } from "@tanstack/react-form";
-import { OppfolgingsplanFormFields } from "@/schema/oppfolgingsplanFormSchema.ts";
+import { OppfolgingsplanFormKanLagresSomUtkast } from "@/schema/oppfolgingsplanFormSchemas";
 
-const defaultOppfolgingsplanValues: OppfolgingsplanFormFields = {
-  typiskArbeidshverdag: "",
-  arbeidsoppgaverSomKanUtfores: "",
-  arbeidsoppgaverSomIkkeKanUtfores: "",
-  tidligereTilretteleggingBeskrivelse: "",
-  tilretteleggingIDennePerioden: "",
-  sykmeldtesVurdering: "",
-  oppfolging: "",
-  evalueringsdato: null,
-};
+const initialOppfolgingsplanFormValues: OppfolgingsplanFormKanLagresSomUtkast =
+  {
+    typiskArbeidshverdag: "",
+    arbeidsoppgaverSomKanUtfores: "",
+    arbeidsoppgaverSomIkkeKanUtfores: "",
+    tidligereTilrettelegging: "",
+    tilretteleggingFremover: "",
+    annenTilrettelegging: "",
+    hvordanFolgeOpp: "",
+    evalueringDato: null,
+    harDenAnsatteMedvirket: null,
+    denAnsatteHarIkkeMedvirketBegrunnelse: "",
+  };
 
 export const oppfolgingsplanFormOpts = formOptions({
-  defaultValues: defaultOppfolgingsplanValues,
+  defaultValues: initialOppfolgingsplanFormValues,
 });

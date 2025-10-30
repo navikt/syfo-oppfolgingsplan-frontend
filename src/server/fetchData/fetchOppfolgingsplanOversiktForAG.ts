@@ -1,10 +1,10 @@
-import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
-import {
-  OppfolgingsplanOverview,
-  oppfolgingsplanOverviewSchema,
-} from "@/schema/oppfolgingsplanSchema";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
+import {
+  OppfolgingsplanerOversikt,
+  oppfolgingsplanerOversiktResponseSchema,
+} from "@/schema/oppfolgingsplanerOversiktSchemas";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 import { mockOversiktData } from "./demoMockData/mockOversiktData";
@@ -14,7 +14,7 @@ const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>
 
 export async function fetchOppfolgingsplanOversiktForAG(
   narmesteLederId: string
-): Promise<OppfolgingsplanOverview> {
+): Promise<OppfolgingsplanerOversikt> {
   if (isLocalOrDemo) {
     return mockOversiktData;
   }
@@ -22,7 +22,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerOversiktForAG(narmesteLederId),
-    responseDataSchema: oppfolgingsplanOverviewSchema,
+    responseDataSchema: oppfolgingsplanerOversiktResponseSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 }
