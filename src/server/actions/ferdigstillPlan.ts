@@ -1,11 +1,10 @@
 "use server";
 
-import { OppfolgingsplanFormKlarTilFerdigstilling } from "@/schema/oppfolgingsplanFormSchemas";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 import { TokenXTargetApi } from "../helpers";
 
 export async function ferdigstillPlan(
-  oppfolgingsplanTilFerdigstilling: OppfolgingsplanFormKlarTilFerdigstilling
+  oppfolgingsplanTilFerdigstilling: unknown
 ) {
   // validere mot zod skjema hvis ikke allerede gjort
 

@@ -16,7 +16,7 @@ const maxEvalueringDato = new Date(
   today.getDate()
 );
 
-export const OppfolgingsplanFormKanLagresSomUtkastSchema = z.strictObject({
+export const OppfolgingsplanFormLagreUtkastValidering = z.strictObject({
   typiskArbeidshverdag: z
     .string()
     .max(TEXT_FIELD_MAX_LENGTH, maxLengthExeededErrorMessage)
@@ -53,12 +53,8 @@ export const OppfolgingsplanFormKanLagresSomUtkastSchema = z.strictObject({
     .nullable(),
 });
 
-export type OppfolgingsplanFormKanLagresSomUtkast = z.infer<
-  typeof OppfolgingsplanFormKanLagresSomUtkastSchema
->;
-
-export const OppfolgingsplanFormKlarTilFerdigstillingSchema =
-  OppfolgingsplanFormKanLagresSomUtkastSchema.safeExtend({
+export const OppfolgingsplanFormFerdigstillValidering =
+  OppfolgingsplanFormLagreUtkastValidering.safeExtend({
     typiskArbeidshverdag: z
       .string()
       .nonempty(requireFieldErrorMessage)
@@ -112,10 +108,6 @@ export const OppfolgingsplanFormKlarTilFerdigstillingSchema =
       message: requireFieldErrorMessage,
     }
   );
-
-export type OppfolgingsplanFormKlarTilFerdigstilling = z.infer<
-  typeof OppfolgingsplanFormKlarTilFerdigstillingSchema
->;
 
 function checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
   harDenAnsatteMedvirket: string,

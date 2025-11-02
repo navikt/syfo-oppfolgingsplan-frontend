@@ -10,7 +10,7 @@ export function getRedirectAfterLoginUrlForSM() {
 }
 
 export const redirectToLogin = (redirectAfterLoginUrl: string) => {
-  const loginPath = `/oauth2/login/redirect?redirect=${encodeURIComponent(
+  const loginPath = `/oauth2/login?redirect=${encodeURIComponent(
     redirectAfterLoginUrl
   )}`;
 
