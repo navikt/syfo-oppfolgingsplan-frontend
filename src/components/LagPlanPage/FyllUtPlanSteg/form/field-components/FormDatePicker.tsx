@@ -1,24 +1,27 @@
+"use client";
+
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
-import { useFieldContext } from "@/components/form/hooks/form-context.tsx";
-import React from "react";
+import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
   label: string;
-  description: string;
+  description?: React.ReactNode;
   fromDate: Date;
   toDate: Date;
+  className?: string;
 }
 
-export const BoundDatePicker = ({
+export default function FormDatePicker({
   label,
   description,
   fromDate,
   toDate,
-}: Props) => {
+  className,
+}: Props) {
   const field = useFieldContext<Date | undefined>();
   const { datepickerProps, inputProps } = useDatepicker({
-    fromDate: fromDate,
-    toDate: toDate,
+    fromDate,
+    toDate,
     allowTwoDigitYear: false,
     defaultSelected: field.state.value,
     onDateChange: (date: Date | undefined) => {
@@ -26,10 +29,11 @@ export const BoundDatePicker = ({
     },
   });
 
-  const errorMessages =
-    field.state.meta.isTouched &&
-    field.state.meta.errors.map((err) => err.message).join(",");
+  const errorMessages = field.state.meta.errors
+    .map((err) => err.message)
+    .join(",");
 
+  // TODO: Fiks så endring av dato med tekst-input til dato utenfor range håndteres fornuftig, nå bare ignoreres det
   return (
     <>
       <DatePicker {...datepickerProps}>
@@ -38,8 +42,9 @@ export const BoundDatePicker = ({
           label={label}
           description={description}
           error={errorMessages}
+          className={className}
         />
       </DatePicker>
     </>
   );
-};
+}

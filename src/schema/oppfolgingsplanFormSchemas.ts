@@ -16,6 +16,10 @@ const maxEvalueringDato = new Date(
   today.getDate()
 );
 
+export type OppfolgingsplanForm = z.infer<
+  typeof OppfolgingsplanFormLagreUtkastValidering
+>;
+
 export const OppfolgingsplanFormLagreUtkastValidering = z.strictObject({
   typiskArbeidshverdag: z
     .string()
@@ -96,7 +100,9 @@ export const OppfolgingsplanFormFerdigstillValidering =
         maxEvalueringDato,
         "Dato for evaluering kan ikke være mer enn ett år frem i tid"
       ),
-    harDenAnsatteMedvirket: z.enum(["ja", "nei"]),
+    harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
+      error: "Du må svare ja eller nei",
+    }),
   }).refine(
     ({ harDenAnsatteMedvirket, denAnsatteHarIkkeMedvirketBegrunnelse }) =>
       checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(

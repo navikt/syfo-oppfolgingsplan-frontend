@@ -1,0 +1,1 @@
+export const LAGRE_UTKAST_DEBOUNCE_DELAY = 1200;
