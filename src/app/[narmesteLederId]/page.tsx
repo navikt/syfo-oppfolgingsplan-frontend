@@ -1,16 +1,14 @@
 import { Suspense } from "react";
 import { BodyLong, Heading } from "@navikt/ds-react";
-import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
-import TextContentBox from "@/components/layout/TextContentBox";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
+import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
+import TextContentBox from "@/components/layout/TextContentBox";
 
 export default async function NarmesteLederOversiktPage({
   params,
-}: {
-  params: Promise<{ narmesteLederId: string }>;
-}) {
+}: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
 
   return (
