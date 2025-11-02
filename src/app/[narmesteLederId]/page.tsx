@@ -14,7 +14,7 @@ export default async function NarmesteLederOversiktPage({
   const { narmesteLederId } = await params;
 
   return (
-    <main>
+    <>
       <Heading level="2" size="xlarge" spacing>
         Oppfølgingsplaner
       </Heading>
@@ -33,6 +33,6 @@ export default async function NarmesteLederOversiktPage({
       </Suspense>
 
       <OversiktSideInformasjon />
-    </main>
+    </>
   );
 }

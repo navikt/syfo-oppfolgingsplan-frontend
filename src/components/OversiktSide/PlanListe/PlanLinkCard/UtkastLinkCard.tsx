@@ -6,9 +6,9 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
-import { getDatoStringWithTime } from "@/ui-helpers/dateAndTime";
+import { getAGOpprettNyPlanHref } from "@/constants/route-hrefs";
 import { UtkastMetadata } from "@/schema/oppfolgingsplanerOversiktSchemas";
-import { getAGNyPlanHref } from "@/constants/route-hrefs";
+import { getDatoStringWithTime } from "@/ui-helpers/dateAndTime";
 
 interface Props {
   utkast: UtkastMetadata;
@@ -29,7 +29,7 @@ export default function UtkastLinkPanel({
     <LinkCard className="bg-ax-bg-brand-beige-soft">
       <LinkCardTitle>
         <LinkCardAnchor asChild>
-          <NextLink href={getAGNyPlanHref(narmesteLederId)}>
+          <NextLink href={getAGOpprettNyPlanHref(narmesteLederId)}>
             {arbeidsstedNavn}
           </NextLink>
         </LinkCardAnchor>

@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import Script from "next/script";
-import { Theme } from "@navikt/ds-react";
-import { fetchSykmeldtInfo } from "@/server/fetchData/fetchSykmeldtInfo";
-import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
-import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
+import { Theme } from "@navikt/ds-react";
 import "@/app/globals.css";
+import { fetchSykmeldtInfo } from "@/server/fetchData/fetchSykmeldtInfo";
+import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
+import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
 
 export const metadata: Metadata = {
   title: "Oppfølgingsplan",

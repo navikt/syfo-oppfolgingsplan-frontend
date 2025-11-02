@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
-import { logger } from "@navikt/next-logger";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
+import { logger } from "@navikt/next-logger";
 import { publicEnv } from "@/env-variables/publicEnv";
 
 const ERROR_DAD_SVG_PUBLIC_PATH = `${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/error-page-dad.svg`;
