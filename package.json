@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "test": "",
@@ -18,28 +18,32 @@
     "@navikt/ds-react": "^7.32.5",
     "@navikt/ds-tailwind": "^7.32.5",
     "@navikt/nav-dekoratoren-moduler": "^3.4.0",
-    "@navikt/next-logger": "^2.1.0",
+    "@navikt/next-logger": "^4.4.1",
     "@navikt/oasis": "^3.8.0",
     "@tanstack/react-form": "^1.23.7",
-    "next": "^15.5.6",
+    "next": "16.0.1",
     "pino": "^9.13.0",
     "pino-pretty": "^13.1.2",
     "pino-roll": "^3.1.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/node": "^24.9.2",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
     "eslint": "^9.38.0",
-    "eslint-config-next": "^15.5.6",
+    "eslint-config-next": "16.0.1",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2"
   }
 }
