@@ -8,9 +8,10 @@ import { withForm } from "./form/hooks/form";
 interface Props {
   sistLagretUtkastTidspunkt: Date | null;
   isSavingUtkast: boolean;
+  isGoingToOppsummering: boolean;
   errorSummaryRef: React.RefObject<HTMLDivElement | null>;
   onAvsluttOgFortsettSenereClick: () => Promise<void>;
-  onGoToOppsummeringClick: () => Promise<void>;
+  onGoToOppsummeringClick: () => void;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -19,6 +20,7 @@ const FyllUtPlanSteg = withForm({
   render: ({
     form,
     isSavingUtkast,
+    isGoingToOppsummering,
     sistLagretUtkastTidspunkt,
     errorSummaryRef,
     onAvsluttOgFortsettSenereClick,
@@ -33,10 +35,11 @@ const FyllUtPlanSteg = withForm({
         <FormErrorSummary form={form} errorSummaryRef={errorSummaryRef} />
 
         <KnapperOgUtkastLagringInfo
+          isSavingUtkast={isSavingUtkast}
+          isGoingToOppsummering={isGoingToOppsummering}
+          sistLagretUtkastTidspunkt={sistLagretUtkastTidspunkt}
           handleAvsluttOgFortsettSenere={onAvsluttOgFortsettSenereClick}
           handleGoToOppsummering={onGoToOppsummeringClick}
-          isSavingUtkast={isSavingUtkast}
-          sistLagretUtkastTidspunkt={sistLagretUtkastTidspunkt}
         />
 
         <form.Subscribe selector={(state) => state.values}>

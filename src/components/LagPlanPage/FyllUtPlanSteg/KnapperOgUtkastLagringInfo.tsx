@@ -4,13 +4,15 @@ import UtkastSistLagretInfo from "./UtkastLagringInfo";
 
 interface Props {
   isSavingUtkast: boolean;
+  isGoingToOppsummering: boolean;
   sistLagretUtkastTidspunkt: Date | null;
-  handleGoToOppsummering: () => Promise<void>;
+  handleGoToOppsummering: () => void;
   handleAvsluttOgFortsettSenere: () => Promise<void>;
 }
 
 export default function KnapperOgUtkastLagringInfo({
   isSavingUtkast,
+  isGoingToOppsummering,
   sistLagretUtkastTidspunkt,
   handleGoToOppsummering,
   handleAvsluttOgFortsettSenere,
@@ -18,9 +20,10 @@ export default function KnapperOgUtkastLagringInfo({
   return (
     <VStack gap="8" align="start" className="mt-10">
       <HStack gap="8">
-        {/* TODO: legg til loading state hvis utkast blir lagret */}
+        {/* TODO: legg til loading state hvis utkast blir lagret under gå til oppsummering */}
         <Button
           variant="primary"
+          loading={isGoingToOppsummering}
           iconPosition="right"
           icon={<ArrowRightIcon aria-hidden />}
           onClick={handleGoToOppsummering}

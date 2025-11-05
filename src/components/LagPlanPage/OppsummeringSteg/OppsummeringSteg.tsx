@@ -1,18 +1,24 @@
+import { Button } from "@navikt/ds-react";
 import { oppfolgingsplanFormDefaultValues } from "../FyllUtPlanSteg/form/form-options";
 import { withForm } from "../FyllUtPlanSteg/form/hooks/form";
 
 interface Props {
-  foo?: string;
+  onGoBackClick: () => void;
 }
 
 const OppsummeringSteg = withForm({
   defaultValues: oppfolgingsplanFormDefaultValues,
   props: {} as Props,
-  render: ({ form }) => {
+  render: ({ form, onGoBackClick }) => {
     return (
-      <form.Subscribe selector={(state) => state.values}>
-        {(values) => <pre>{JSON.stringify(values, null, 2)}</pre>}
-      </form.Subscribe>
+      <section>
+        <form.Subscribe selector={(state) => state.values}>
+          {(values) => <pre>{JSON.stringify(values, null, 2)}</pre>}
+        </form.Subscribe>
+        <Button variant="secondary" onClick={onGoBackClick}>
+          Tilbake
+        </Button>
+      </section>
     );
   },
 });

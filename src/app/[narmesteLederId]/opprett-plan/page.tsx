@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Heading } from "@navikt/ds-react";
 import LagPlanVeiviser from "@/components/LagPlanPage/LagPlanVeiviser";
 import { getAGOversiktHref } from "@/constants/route-hrefs";
-import { fetchUtkastPlanForAGAndMapToPrefill } from "@/server/fetchData/fetchUtkastPlan";
+import { fetchUtkastDataForAG } from "@/server/fetchData/fetchUtkastPlan";
 import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 
@@ -11,7 +11,7 @@ export default async function NyPlanPage({
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
 
-  const lagretUtkast = fetchUtkastPlanForAGAndMapToPrefill(narmesteLederId);
+  const lagretUtkast = fetchUtkastDataForAG(narmesteLederId);
 
   return (
     <section>
@@ -26,7 +26,7 @@ export default async function NyPlanPage({
       </Heading>
 
       <Suspense fallback={<BigLoadingSpinner />}>
-        <LagPlanVeiviser lagretUtkast={lagretUtkast} />
+        <LagPlanVeiviser lagretUtkastPromise={lagretUtkast} />
       </Suspense>
     </section>
   );

@@ -1,51 +1,52 @@
-import { useRef, useState } from "react";
+import { startTransition, useActionState, useRef } from "react";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { lagreUtkast } from "@/server/actions/lagreUtkast";
 
-export default function useOppfolgingsplanLagring() {
-  const { isChangedSinceBookmark, setBookmark } = useFormValuesBookmark();
-  const [isSavingUtkast, setIsSavingUtkast] = useState(false);
-  const [utkastSistLagretTid, SetUtkastSistLagretTid] = useState<Date | null>(
-    null
-  );
-  const [isAutoSavingEnabled, setIsAutoSavingEnabled] = useState(true);
+export type LagreUtkastActionState = {
+  isLastUtkastSaveSuccess: boolean;
+  utkastLastSavedTime: Date | null;
+  lastSavedValues: OppfolgingsplanForm | null;
+};
+
+// TODO: object parameter
+export default function useOppfolgingsplanLagring(
+  initialLastSavedValues: OppfolgingsplanForm | null,
+  initialLastSavedDate: Date | null
+) {
+  // const { isChangedSinceBookmark, setBookmark } = useFormValuesBookmark();
+
+  const [
+    { isLastUtkastSaveSuccess, utkastLastSavedTime, lastSavedValues },
+    autoLagreUtkastAction,
+    isSavingUtkast,
+  ] = useActionState(lagreUtkast, {
+    isLastUtkastSaveSuccess: true,
+    utkastLastSavedTime: initialLastSavedDate,
+    lastSavedValues: initialLastSavedValues,
+  });
 
   async function lagreUtkastHvisEndringer(values: OppfolgingsplanForm) {
-    if (isChangedSinceBookmark(values)) {
-      setIsSavingUtkast(true);
-
-      // Implementation for auto-saving draft
-      await new Promise((resolve) => setTimeout(resolve, 500)); // simulate async save
-
-      setIsSavingUtkast(false);
-      setBookmark(values);
-      SetUtkastSistLagretTid(new Date());
+    if (!lastSavedValues || !areSimpleObjectsEqual(lastSavedValues, values)) {
+      await lagreUtkast(
+        {
+          isLastUtkastSaveSuccess: true,
+          lastSavedValues,
+          utkastLastSavedTime,
+        },
+        values
+      );
     }
-  }
-
-  async function autolagreUtkastHvisEndringer(values: OppfolgingsplanForm) {
-    if (isAutoSavingEnabled) {
-      await lagreUtkastHvisEndringer(values);
-    }
-  }
-
-  async function skruAvAutoLagringOgLagreUtkast(values: OppfolgingsplanForm) {
-    setIsAutoSavingEnabled(false);
-    await lagreUtkastHvisEndringer(values);
-  }
-
-  async function skruPaAutoLagring() {
-    setIsAutoSavingEnabled(true);
   }
 
   async function ferdigstillPlan() {}
 
   return {
     isSavingUtkast,
-    autolagreUtkastHvisEndringer,
-    skruAvAutoLagringOgLagreUtkast,
-    skruPaAutoLagring,
+    isLastUtkastSaveSuccess,
+    utkastLastSavedTime,
+    autoLagreUtkastAction,
+    lagreUtkastHvisEndringer,
     ferdigstillPlan,
-    utkastSistLagretTid,
   };
 }
 
@@ -53,6 +54,7 @@ function useFormValuesBookmark() {
   const bookmarkedValuesRef = useRef<OppfolgingsplanForm>(null);
 
   const setBookmark = (formValues: OppfolgingsplanForm) => {
+    console.log("setBookmark called with:", formValues);
     bookmarkedValuesRef.current = structuredClone(formValues);
   };
 
@@ -66,7 +68,7 @@ function useFormValuesBookmark() {
   };
 }
 
-function areSimpleObjectsEqual<
+export function areSimpleObjectsEqual<
   T extends Record<string, Date | string | number | boolean | null | undefined>,
 >(a: T, b: T): boolean {
   if (!a || !b) return false;

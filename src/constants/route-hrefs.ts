@@ -1,7 +1,7 @@
 export const getAGOversiktHref = (narmesteLederId: string) =>
   `/${narmesteLederId}`;
 
-export const lagPlanRouteSegment = "lag-plan";
+export const lagPlanRouteSegment = "opprett-plan";
 
 export const getAGNyPlanHref = (narmesteLederId: string) =>
   `/${narmesteLederId}/${lagPlanRouteSegment}`;

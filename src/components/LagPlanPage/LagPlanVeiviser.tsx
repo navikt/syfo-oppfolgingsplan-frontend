@@ -1,7 +1,7 @@
 "use client";
 
-import { Activity, use, useState } from "react";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { Activity, startTransition, use, useState, useTransition } from "react";
+import { UtkastData } from "@/server/fetchData/fetchUtkastPlan";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import useOppfolgingsplanLagring from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanLagring";
@@ -13,41 +13,50 @@ enum Steg {
 }
 
 interface Props {
-  lagretUtkast: Promise<Partial<OppfolgingsplanForm> | null>;
+  lagretUtkastPromise: Promise<UtkastData>;
 }
 
-export default function LagPlanVeiviser({ lagretUtkast }: Props) {
-  const lagretUtkastToBeInitialFormValues = use(lagretUtkast);
+export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
+  const { lagretUtkast, sistLagretTid } = use(lagretUtkastPromise);
+
+  const { form, validateAndSubmitIfValid, focusThisOnValidationErrorsRef } =
+    useOppfolgingsplanForm({
+      initialValues: lagretUtkast,
+      onDebouncedChange: autolagreUtkast,
+      onSubmitAfterValidationPassed:
+        lagreUtkastHvisEndringerOgGaTilOppsummering,
+    });
 
   const {
-    form,
-    triggerValidationAndGetIsValid,
-    focusThisOnValidationErrorsRef,
-  } = useOppfolgingsplanForm({
-    initialValues: lagretUtkastToBeInitialFormValues,
-    onDebouncedChange: handleAutolagreUtkastHvisEndringer,
-  });
-
-  const {
-    autolagreUtkastHvisEndringer,
-    skruAvAutoLagringOgLagreUtkast,
-    ferdigstillPlan,
     isSavingUtkast,
-    utkastSistLagretTid,
-  } = useOppfolgingsplanLagring();
+    utkastLastSavedTime,
+    autoLagreUtkastAction,
+    lagreUtkastHvisEndringer,
+  } = useOppfolgingsplanLagring(lagretUtkast, sistLagretTid);
 
-  function handleAutolagreUtkastHvisEndringer() {
-    autolagreUtkastHvisEndringer(form.state.values);
-  }
+  const [isGoingToOppsummering, startGoToOppsummeringTransition] =
+    useTransition();
 
-  async function lagreUtkastAndGoToOppsummeringIfValid() {
-    const isValid = triggerValidationAndGetIsValid();
-
-    if (isValid) {
-      await skruAvAutoLagringOgLagreUtkast(form.state.values);
-      setSteg(Steg.OPPSUMMERING);
+  function autolagreUtkast() {
+    if (steg === Steg.FYLL_UT_PLAN && !isGoingToOppsummering) {
+      startTransition(() => {
+        autoLagreUtkastAction(form.state.values);
+      });
     }
   }
+
+  console.log("Rerender LagPlanVeiviser");
+
+  async function lagreUtkastHvisEndringerOgGaTilOppsummering() {
+    startGoToOppsummeringTransition(async () => {
+      await lagreUtkastHvisEndringer(form.state.values);
+      setSteg(Steg.OPPSUMMERING);
+    });
+  }
+
+  const handleGoBackToRedigering = () => {
+    setSteg(Steg.FYLL_UT_PLAN);
+  };
 
   const [steg, setSteg] = useState(Steg.FYLL_UT_PLAN);
 
@@ -57,15 +66,19 @@ export default function LagPlanVeiviser({ lagretUtkast }: Props) {
         <FyllUtPlanSteg
           form={form}
           isSavingUtkast={isSavingUtkast}
-          sistLagretUtkastTidspunkt={utkastSistLagretTid}
+          isGoingToOppsummering={isGoingToOppsummering}
+          sistLagretUtkastTidspunkt={utkastLastSavedTime}
           errorSummaryRef={focusThisOnValidationErrorsRef}
           onAvsluttOgFortsettSenereClick={async () => {}}
-          onGoToOppsummeringClick={lagreUtkastAndGoToOppsummeringIfValid}
+          onGoToOppsummeringClick={validateAndSubmitIfValid}
         />
       </Activity>
 
       <Activity mode={steg === Steg.OPPSUMMERING ? "visible" : "hidden"}>
-        <OppsummeringSteg form={form} />
+        <OppsummeringSteg
+          form={form}
+          onGoBackClick={handleGoBackToRedigering}
+        />
       </Activity>
     </section>
   );

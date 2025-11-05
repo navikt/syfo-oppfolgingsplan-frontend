@@ -9,13 +9,16 @@ import { tokenXFetchGet } from "../tokenXFetch";
 const getEndpointUtkastForAG = (narmesteLederId: string) =>
   `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/utkast`; // TODO
 
-export async function fetchUtkastPlanForAGAndMapToPrefill(
+export type UtkastData = {
+  lagretUtkast: OppfolgingsplanForm | null;
+  sistLagretTid: Date | null;
+};
+
+export async function fetchUtkastDataForAG(
   narmesteLederId: string
-): Promise<Partial<OppfolgingsplanForm> | null> {
+): Promise<UtkastData> {
   if (isLocalOrDemo) {
-    return {
-      annenTilrettelegging: "utkast tekst",
-    }; //TODO
+    return mockLagretUtkastData;
   }
 
   const utkastResponse = await tokenXFetchGet({
@@ -27,7 +30,23 @@ export async function fetchUtkastPlanForAGAndMapToPrefill(
 
   // map utkastResponse to OppfolgingsplanForm
 
-  return {
-    annenTilrettelegging: "utkast tekst",
-  };
+  return mockLagretUtkastData;
 }
+
+const mockLagretUtkast: OppfolgingsplanForm = {
+  typiskArbeidshverdag: null,
+  arbeidsoppgaverSomKanUtfores: "utkast tekst",
+  arbeidsoppgaverSomIkkeKanUtfores: null,
+  tidligereTilrettelegging: null,
+  tilretteleggingFremover: null,
+  annenTilrettelegging: null,
+  hvordanFolgeOpp: null,
+  evalueringDato: null,
+  harDenAnsatteMedvirket: null,
+  denAnsatteHarIkkeMedvirketBegrunnelse: null,
+};
+
+const mockLagretUtkastData: UtkastData = {
+  lagretUtkast: mockLagretUtkast,
+  sistLagretTid: new Date(Date.now() - 30 * 60 * 1000),
+};

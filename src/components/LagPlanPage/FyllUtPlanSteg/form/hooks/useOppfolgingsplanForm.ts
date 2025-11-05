@@ -11,9 +11,11 @@ import { useAppForm } from "./form";
 export default function useOppfolgingsplanForm({
   initialValues,
   onDebouncedChange,
+  onSubmitAfterValidationPassed,
 }: {
-  initialValues: Partial<OppfolgingsplanForm> | null;
+  initialValues: OppfolgingsplanForm | null;
   onDebouncedChange: () => void;
+  onSubmitAfterValidationPassed: () => void;
 }) {
   const form = useAppForm({
     defaultValues: {
@@ -28,26 +30,27 @@ export default function useOppfolgingsplanForm({
       onChange: onDebouncedChange,
       onChangeDebounceMs: LAGRE_UTKAST_DEBOUNCE_DELAY,
     },
-    onSubmit: async () => {
+    onSubmit: () => {
       // will not run if form is invalid
+      onSubmitAfterValidationPassed();
     },
   });
 
   const focusThisOnValidationErrorsRef = useRef<HTMLDivElement>(null);
 
-  function triggerValidationAndGetIsValid() {
-    form.validate("submit");
-    if (!form.state.isValid) {
-      setTimeout(() => {
+  function validateAndSubmitIfValid() {
+    form.handleSubmit();
+    setTimeout(() => {
+      // maybe this should be done differently
+      if (!form.state.isValid) {
         focusThisOnValidationErrorsRef.current?.focus();
-      });
-    }
-    return form.state.isValid;
+      }
+    }, 0);
   }
 
   return {
     form,
-    triggerValidationAndGetIsValid,
+    validateAndSubmitIfValid,
     focusThisOnValidationErrorsRef,
   };
 }
