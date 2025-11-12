@@ -79,7 +79,7 @@ export default function useOppfolgingsplanLagring({
 
   async function startFerdigstillPlan(values: OppfolgingsplanForm) {
     startFerdigstillPlanTransition(async () => {
-      ferdigstillPlanServerAction(values, narmesteLederId);
+      await ferdigstillPlanServerAction(values, narmesteLederId);
     });
   }
 

@@ -7,7 +7,7 @@ interface Props {
   onEditPlan: () => void;
 }
 
-export default function PlanFormSummary({ formValues, onEditPlan }: Props) {
+export default function PlanFormSummary({ formValues }: Props) {
   return (
     <Box.New>
       {/* whitespace-pre-line er for å vise linjeskift i brukers svar */}

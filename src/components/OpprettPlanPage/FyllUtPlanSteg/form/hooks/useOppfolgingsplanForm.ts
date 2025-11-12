@@ -33,7 +33,6 @@ export default function useOppfolgingsplanForm({
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [veiviserSteg, setVeiviserSteg] = useState(VeiviserSteg.FYLL_UT_PLAN);
-  useState(false);
 
   const [isPendingProceedToOppsummering, startProceedToOppsummeringTransition] =
     useTransition();
