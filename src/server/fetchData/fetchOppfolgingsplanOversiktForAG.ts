@@ -7,8 +7,11 @@ import {
 } from "@/schema/oppfolgingsplanerOversiktSchemas";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchGet } from "../tokenXFetch";
-import { mockOversiktData } from "./demoMockData/mockOversiktData";
-import { simulateNetworkWait } from "./demoMockData/simulateNetworkWait";
+import {
+  mockOversiktData,
+  mockOversiktDataTom,
+} from "./demoMockData/mockOversiktData";
+import { simulateBackendDelay } from "./demoMockData/simulateBackendDelay";
 
 const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>
   `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/oversikt`;
@@ -17,8 +20,8 @@ export async function fetchOppfolgingsplanOversiktForAG(
   narmesteLederId: string
 ): Promise<OppfolgingsplanerOversikt> {
   if (isLocalOrDemo) {
-    await simulateNetworkWait();
-    return mockOversiktData;
+    await simulateBackendDelay();
+    return mockOversiktDataTom;
   }
 
   return await tokenXFetchGet({

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getAGOppfolgingplanHref } from "@/constants/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { simulateNetworkWait } from "../fetchData/demoMockData/simulateNetworkWait";
+import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 
@@ -15,7 +15,7 @@ export async function ferdigstillPlanServerAction(
   // validere mot zod skjema
 
   if (isLocalOrDemo) {
-    await simulateNetworkWait();
+    await simulateBackendDelay();
     const planId = "12345";
 
     redirect(getAGOppfolgingplanHref(narmesteLederId, planId));

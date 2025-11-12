@@ -6,7 +6,7 @@ import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchGet } from "../tokenXFetch";
 import { mockUtkastData } from "./demoMockData/mockUtkastData";
-import { simulateNetworkWait } from "./demoMockData/simulateNetworkWait";
+import { simulateBackendDelay } from "./demoMockData/simulateBackendDelay";
 
 const getEndpointUtkastForAG = (narmesteLederId: string) =>
   `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/utkast`; // TODO
@@ -20,7 +20,7 @@ export async function fetchUtkastDataForAG(
   narmesteLederId: string
 ): Promise<UtkastData> {
   if (isLocalOrDemo) {
-    await simulateNetworkWait();
+    await simulateBackendDelay();
     return mockUtkastData;
   }
 

@@ -3,7 +3,7 @@
 import { LagreUtkastActionState } from "@/components/OpprettPlanPage/FyllUtPlanSteg/form/hooks/useOppfolgingsplanLagring";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { simulateNetworkWait } from "../fetchData/demoMockData/simulateNetworkWait";
+import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 
@@ -11,7 +11,7 @@ export async function lagreUtkastServerAction(
   values: OppfolgingsplanForm
 ): Promise<LagreUtkastActionState> {
   if (isLocalOrDemo) {
-    await simulateNetworkWait();
+    await simulateBackendDelay();
 
     return {
       isLastUtkastSaveSuccess: true,
