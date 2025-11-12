@@ -29,9 +29,11 @@ export function Breadcrumbs({
             Oppfølgingsplaner
           </Link>
         </li>
-        <li aria-hidden="true">
-          <ChevronRightIcon title="a11y-title" fontSize="1.2rem" />
+
+        <li aria-hidden>
+          <ChevronRightIcon aria-hidden fontSize="1.2rem" />
         </li>
+
         <li>
           <span aria-current="page">{secondCrumbText}</span>
         </li>
