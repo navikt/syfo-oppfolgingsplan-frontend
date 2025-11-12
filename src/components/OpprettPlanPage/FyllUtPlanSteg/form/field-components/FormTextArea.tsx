@@ -1,6 +1,7 @@
 "use client";
 
 import { Textarea } from "@navikt/ds-react";
+import { TEXT_FIELD_MAX_LENGTH } from "@/constants/app-config";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
@@ -15,7 +16,7 @@ export default function FormTextArea({
   label,
   description,
   minRows,
-  maxLength = 2000,
+  maxLength = TEXT_FIELD_MAX_LENGTH,
   isChangeDisabled = false,
 }: Props) {
   const field = useFieldContext<string>();

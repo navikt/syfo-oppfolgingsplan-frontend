@@ -6,6 +6,12 @@ import { oppfolgingsplanFormDefaultValues } from "./form-options";
 import { withForm } from "./hooks/form";
 
 interface Props {
+  /**
+   * This prop is used to "disable" input fields during "saving while exiting or proceeding" states.
+   * The props `disabled` or `readOnly` on the aksel input components are not currently used
+   * because they cause layout shift. The layout shift happens because the "1000 tegn igjen" text
+   * is removed in these states.
+   */
   isChangeDisabled: boolean;
 }
 

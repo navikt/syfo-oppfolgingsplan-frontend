@@ -1,7 +1,7 @@
 import { z } from "zod";
+import { TEXT_FIELD_MAX_LENGTH } from "@/constants/app-config";
 
 const requireFieldErrorMessage = "Feltet må fylles ut";
-const TEXT_FIELD_MAX_LENGTH = 2000;
 const maxLengthExeededErrorMessage = `Feltet kan ikke ha mer enn ${TEXT_FIELD_MAX_LENGTH} tegn`;
 
 const today = new Date();

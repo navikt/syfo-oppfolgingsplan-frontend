@@ -1,1 +1,2 @@
 export const SAVE_UTKAST_DEBOUNCE_DELAY = 1200;
+export const TEXT_FIELD_MAX_LENGTH = 2000;
