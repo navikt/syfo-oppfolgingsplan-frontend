@@ -1,7 +1,5 @@
-import NextLink from "next/link";
-import { Box, Button } from "@navikt/ds-react";
-import { getAGOpprettNyPlanHref } from "@/constants/route-hrefs";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/fetchOppfolgingsplanOversiktForAG";
+import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
@@ -15,29 +13,11 @@ export default async function NyPlanButtonHvisTomListe({
   } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   const harTomListe =
-    aktivPlan === null || tidligerePlaner.length === 0 || utkast === null;
+    aktivPlan === null && tidligerePlaner.length === 0 && utkast === null;
 
   return (
     harTomListe && (
       <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
     )
-  );
-}
-
-function LagNyOppfolgingsplanButton({
-  narmesteLederId,
-}: {
-  narmesteLederId: string;
-}) {
-  return (
-    <Box className="mb-12">
-      <Button
-        variant="primary"
-        as={NextLink}
-        href={getAGOpprettNyPlanHref(narmesteLederId)}
-      >
-        Lag en ny oppfølgingsplan
-      </Button>
-    </Box>
   );
 }
