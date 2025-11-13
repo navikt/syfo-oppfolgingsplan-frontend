@@ -53,7 +53,7 @@ function createDecoratorBreadcrumbsForAG(
     },
     {
       url: `${publicEnv.NEXT_PUBLIC_BASE_PATH}/${narmesteLederId}`,
-      title: "Oppfølgingsplan",
+      title: "Oppfølgingsplaner",
     },
   ];
 }
