@@ -5,11 +5,12 @@ import { formHeadings, formLabels } from "../form-labels";
 interface Props {
   formValues: OppfolgingsplanForm;
   onEditPlan: () => void;
+  className?: string;
 }
 
-export default function PlanFormSummary({ formValues }: Props) {
+export default function PlanFormSummary({ formValues, className }: Props) {
   return (
-    <Box.New>
+    <Box.New className={className}>
       {/* whitespace-pre-line er for å vise linjeskift i brukers svar */}
       <FormSummary className="mb-8 whitespace-pre-line">
         <FormSummary.Header>
@@ -48,7 +49,7 @@ export default function PlanFormSummary({ formValues }: Props) {
         </FormSummary.Answers>
       </FormSummary>
 
-      <FormSummary className="mb-8">
+      <FormSummary>
         <FormSummary.Header>
           <FormSummary.Heading level="3">
             {formHeadings.tilrettelegging}

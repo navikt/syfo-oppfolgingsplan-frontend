@@ -1,8 +1,12 @@
 import { Alert, BodyLong, Heading } from "@navikt/ds-react";
 
-export default function NarDuFerdigstillerPlanenAlert() {
+interface Props {
+  className?: string;
+}
+
+export default function NarDuFerdigstillerPlanenAlert({ className }: Props) {
   return (
-    <Alert variant="info" className="mb-12">
+    <Alert variant="info" className={className}>
       <Heading level="3" size="small" spacing>
         Når du ferdigstiller planen
       </Heading>

@@ -39,18 +39,16 @@ export default function FormDatePicker({
     .join(", ");
 
   return (
-    <>
-      <DatePicker {...datepickerProps}>
-        <DatePicker.Input
-          {...inputProps}
-          id={field.name}
-          onBlur={field.handleBlur}
-          label={label}
-          description={description}
-          error={errorMessages}
-          className={className}
-        />
-      </DatePicker>
-    </>
+    <DatePicker {...datepickerProps}>
+      <DatePicker.Input
+        {...inputProps}
+        id={field.name}
+        onBlur={field.handleBlur}
+        label={label}
+        description={description}
+        error={errorMessages}
+        className={className}
+      />
+    </DatePicker>
   );
 }

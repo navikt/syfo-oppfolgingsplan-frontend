@@ -30,7 +30,7 @@ export const formLabels: Record<
     label:
       "Har dere andre muligheter for tilrettelegging som ikke prøves ut nå?",
     description:
-      "For eksempel involvering av bedriftshelsetjeneste, eller utføre andre typer arbeidsoppgaver",
+      "For eksempel involvering av bedriftshelsetjeneste, eller utføre andre typer arbeidsoppgaver.",
   },
   hvordanFolgeOpp: {
     label: "Hvordan skal dere følge opp avtalt tilrettelegging?",

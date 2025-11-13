@@ -32,11 +32,15 @@ const OppsummeringSteg = withForm({
 
         <form.Subscribe selector={(state) => state.values}>
           {(formValues) => (
-            <PlanFormSummary formValues={formValues} onEditPlan={onGoBack} />
+            <PlanFormSummary
+              formValues={formValues}
+              onEditPlan={onGoBack}
+              className="mb-8"
+            />
           )}
         </form.Subscribe>
 
-        <NarDuFerdigstillerPlanenAlert />
+        <NarDuFerdigstillerPlanenAlert className="mb-12" />
 
         <OppsummeringButtons
           isPendingFerdigstill={isPendingFerdigstillPlan}

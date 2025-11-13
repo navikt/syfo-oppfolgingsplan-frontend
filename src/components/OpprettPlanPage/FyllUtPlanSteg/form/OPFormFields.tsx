@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { BodyLong, Heading, ReadMore, VStack } from "@navikt/ds-react";
+import { BodyLong, Heading, Link, ReadMore } from "@navikt/ds-react";
 import TextContentBox from "@/components/layout/TextContentBox";
+import { getOneYearFromNowDate, getTomorrowDate } from "@/utils/dateUtils";
 import { formHeadings, formLabels } from "../../form-labels";
 import { oppfolgingsplanFormDefaultValues } from "./form-options";
 import { withForm } from "./hooks/form";
@@ -101,64 +101,33 @@ const OPFormFields = withForm({
         )}
       </form.AppField>
 
-      <VStack gap="2">
-        <form.AppField name="hvordanFolgeOpp">
-          {(field) => (
-            <field.FormTextArea
-              label={formLabels.hvordanFolgeOpp.label}
-              minRows={3}
-              isChangeDisabled={isChangeDisabled}
-            />
-          )}
-        </form.AppField>
+      <form.AppField name="hvordanFolgeOpp">
+        {(field) => (
+          <field.FormTextArea
+            label={formLabels.hvordanFolgeOpp.label}
+            isChangeDisabled={isChangeDisabled}
+          />
+        )}
+      </form.AppField>
 
-        <form.AppField name="evalueringDato">
-          {(field) => (
-            <field.FormDatePicker
-              label={formLabels.evalueringDato.label}
-              description={
-                <ReadMore header="Mer om å evaluere planen" className="mb-0">
-                  <BodyLong className="mb-2">
-                    Etter at dere har prøvd ut de foreslåtte tilpasningene en
-                    stund, er det viktig å ta et steg tilbake og se hvordan det
-                    faktisk har gått. Har det blitt lettere å jobbe? Fungerer
-                    tilpasningene som ønsket? Eller er det behov for mer støtte
-                    eller justeringer?
-                  </BodyLong>
-
-                  <BodyLong className="mb-2">
-                    For å sikre at planen fortsatt er relevant og nyttig for
-                    dere, anbefaler vi at dere evaluerer den innen{" "}
-                    <strong>fire uker</strong>. Dette gir nok tid til å erfare
-                    hva som fungerer – og hva som kanskje må endres. En god
-                    evaluering gir dere bedre støtte og øker sjansen for en
-                    tryggere vei tilbake til arbeid.
-                  </BodyLong>
-                </ReadMore>
-              }
-              fromDate={tomorrow}
-              toDate={oneYearFromNow}
-              isChangeDisabled={isChangeDisabled}
-              className="mb-8"
-            />
-          )}
-        </form.AppField>
-      </VStack>
+      <form.AppField name="evalueringDato">
+        {(field) => (
+          <field.FormDatePicker
+            label={formLabels.evalueringDato.label}
+            description={readMoreOmAEvaluerePlanen}
+            fromDate={getTomorrowDate()}
+            toDate={getOneYearFromNowDate()}
+            isChangeDisabled={isChangeDisabled}
+            className="mb-8"
+          />
+        )}
+      </form.AppField>
 
       <form.AppField name="harDenAnsatteMedvirket">
         {(field) => (
           <field.FormRadioGroup
             label={formLabels.harDenAnsatteMedvirket.label}
-            description={
-              <ReadMore header="Hvorfor spør vi om dette?" className="mb-0">
-                Medarbeideren har rett til å være med og påvirke hvordan
-                arbeidsgiveren kan tilrettelegge ved sykefravær.
-                Arbeidsmiljøloven §4-6 sier at både du og medarbeideren skal
-                bistå til å finne løsninger, og at dere skal utarbeide
-                oppfølgingsplanen sammen. Medarbeideren skal, så langt det er
-                mulig, gi relevante opplysninger om arbeidsevnen.
-              </ReadMore>
-            }
+            description={readMoreOmHvorforViSporOmDenAnsatteHarMedvirket}
             options={[
               {
                 value: "ja",
@@ -196,16 +165,33 @@ const OPFormFields = withForm({
   ),
 });
 
-const tomorrow = (() => {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d;
-})();
+const readMoreOmAEvaluerePlanen = (
+  <ReadMore header="Mer om å evaluere planen">
+    <BodyLong className="mb-2">
+      Etter at dere har prøvd ut de foreslåtte tilpasningene en stund, er det
+      viktig å ta et steg tilbake og se hvordan det faktisk har gått. Har det
+      blitt lettere å jobbe? Fungerer tilpasningene som ønsket? Eller er det
+      behov for mer støtte eller justeringer?
+    </BodyLong>
 
-const oneYearFromNow = (() => {
-  const d = new Date();
-  d.setFullYear(d.getFullYear() + 1);
-  return d;
-})();
+    <BodyLong className="mb-2">
+      For å sikre at planen fortsatt er relevant og nyttig for dere, anbefaler
+      vi at dere evaluerer den innen <strong>fire uker</strong>. Dette gir nok
+      tid til å erfare hva som fungerer – og hva som kanskje må endres. En god
+      evaluering gir dere bedre støtte og øker sjansen for en tryggere vei
+      tilbake til arbeid.
+    </BodyLong>
+  </ReadMore>
+);
+
+const readMoreOmHvorforViSporOmDenAnsatteHarMedvirket = (
+  <ReadMore header="Hvorfor spør vi om dette?" className="mb-2">
+    Medarbeideren har rett til å være med og påvirke hvordan arbeidsgiveren kan
+    tilrettelegge ved sykefravær. Arbeidsmiljøloven §4-6 sier at både du og
+    medarbeideren skal bistå til å finne løsninger, og at dere skal utarbeide
+    oppfølgingsplanen sammen. Medarbeideren skal, så langt det er mulig, gi
+    relevante opplysninger om arbeidsevnen.
+  </ReadMore>
+);
 
 export default OPFormFields;

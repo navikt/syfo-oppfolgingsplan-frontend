@@ -1,20 +1,9 @@
 import { z } from "zod";
 import { TEXT_FIELD_MAX_LENGTH } from "@/constants/app-config";
+import { getOneYearFromNowDate, getTomorrowDate } from "@/utils/dateUtils";
 
 const requireFieldErrorMessage = "Feltet må fylles ut";
 const maxLengthExeededErrorMessage = `Feltet kan ikke ha mer enn ${TEXT_FIELD_MAX_LENGTH} tegn`;
-
-const today = new Date();
-const tomorrow = new Date(
-  today.getFullYear(),
-  today.getMonth(),
-  today.getDate() + 1
-);
-const oneYearFromNow = new Date(
-  today.getFullYear() + 1,
-  today.getMonth(),
-  today.getDate()
-);
 
 export type OppfolgingsplanForm = z.infer<
   typeof OppfolgingsplanFormLagreUtkastValidering
@@ -57,16 +46,19 @@ export const OppfolgingsplanFormFerdigstillValidering =
         error: (issue) =>
           issue.input === null ? requireFieldErrorMessage : "Ugyldig dato",
       })
-      .min(tomorrow, "Dato for evaluering kan ikke være i dag eller tidligere")
+      .min(
+        getTomorrowDate(),
+        "Dato for evaluering kan ikke være i dag eller tidligere"
+      )
       .max(
-        oneYearFromNow,
+        getOneYearFromNowDate(),
         "Dato for evaluering kan ikke være mer enn ett år frem i tid"
       ),
     harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
       error: "Du må svare ja eller nei",
     }),
     denAnsatteHarIkkeMedvirketBegrunnelse:
-      schemaForNonRequiredMaxLengthTextField, // TODO: test
+      schemaForNonRequiredMaxLengthTextField,
   }).refine(
     ({ harDenAnsatteMedvirket, denAnsatteHarIkkeMedvirketBegrunnelse }) =>
       checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
