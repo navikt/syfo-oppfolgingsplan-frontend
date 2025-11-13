@@ -7,10 +7,7 @@ import {
 } from "@/schema/oppfolgingsplanerOversiktSchemas";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchGet } from "../tokenXFetch";
-import {
-  mockOversiktData,
-  mockOversiktDataTom,
-} from "./demoMockData/mockOversiktData";
+import { mockOversiktData } from "./demoMockData/mockOversiktData";
 import { simulateBackendDelay } from "./demoMockData/simulateBackendDelay";
 
 const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>
@@ -21,7 +18,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
 ): Promise<OppfolgingsplanerOversikt> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-    return mockOversiktDataTom;
+    return mockOversiktData;
   }
 
   return await tokenXFetchGet({
