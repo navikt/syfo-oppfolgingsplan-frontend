@@ -2,8 +2,9 @@ import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { UtkastData } from "../fetchUtkastPlan";
 
 const mockSavedFormValues: OppfolgingsplanForm = {
-  typiskArbeidshverdag: "",
-  arbeidsoppgaverSomKanUtfores: "utkast tekst",
+  typiskArbeidshverdag:
+    "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast!",
+  arbeidsoppgaverSomKanUtfores: "",
   arbeidsoppgaverSomIkkeKanUtfores: "",
   tidligereTilrettelegging: "",
   tilretteleggingFremover: "",

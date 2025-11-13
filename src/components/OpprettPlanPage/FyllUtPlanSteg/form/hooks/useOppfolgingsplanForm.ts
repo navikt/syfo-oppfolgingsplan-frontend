@@ -10,7 +10,8 @@ import {
 } from "@/schema/oppfolgingsplanFormSchemas";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
 import { useAppForm } from "./form";
-import useOppfolgingsplanLagring from "./useOppfolgingsplanLagring";
+import useOppfolgingsplanFerdigstilling from "./useOppfolgingsplanFerdigstilling";
+import useOppfolgingsplanUtkastLagring from "./useOppfolgingsplanUtkastLagring";
 
 type FormMeta = {
   submitAction:
@@ -24,11 +25,11 @@ const defaultMeta: FormMeta = {
 };
 
 export default function useOppfolgingsplanForm({
-  initialSavedValues,
-  initialLastSavedTime,
+  savedFormValues,
+  lastSavedTime,
 }: {
-  initialSavedValues: OppfolgingsplanForm | null;
-  initialLastSavedTime: Date | null;
+  savedFormValues: OppfolgingsplanForm | null;
+  lastSavedTime: Date | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
@@ -45,7 +46,7 @@ export default function useOppfolgingsplanForm({
 
   const initialFormValues: OppfolgingsplanForm = {
     ...oppfolgingsplanFormDefaultValues,
-    ...initialSavedValues,
+    ...savedFormValues,
   };
 
   const form = useAppForm({
@@ -56,7 +57,7 @@ export default function useOppfolgingsplanForm({
     },
     listeners: {
       onChange: ({ formApi }) =>
-        startSaveUtkast({ values: formApi.state.values }),
+        startLagreUtkastIfChanges({ values: formApi.state.values }),
       onChangeDebounceMs: SAVE_UTKAST_DEBOUNCE_DELAY,
     },
     onSubmitInvalid: () => {
@@ -76,18 +77,19 @@ export default function useOppfolgingsplanForm({
 
   const {
     isSavingUtkast,
-    utkastLastSavedTime,
-    startSaveUtkast,
-    startFerdigstillPlan,
-    isPendingFerdigstillPlan,
-  } = useOppfolgingsplanLagring({
+    lastSavedTime: utkastLastSavedTime,
+    startLagreUtkastIfChanges,
+  } = useOppfolgingsplanUtkastLagring({
     initialFormValues,
-    initialLastSavedTime,
+    initialLastSavedTime: lastSavedTime,
   });
+
+  const { isPendingFerdigstillPlan, startFerdigstillPlan } =
+    useOppfolgingsplanFerdigstilling();
 
   function saveIfChangesAndProceedToOppsummering(values: OppfolgingsplanForm) {
     startProceedToOppsummeringTransition(() => {
-      startSaveUtkast({
+      startLagreUtkastIfChanges({
         values,
         onSuccess: () => {
           proceedToOppsummeringSteg();
@@ -98,7 +100,7 @@ export default function useOppfolgingsplanForm({
 
   function saveIfChangesAndExit() {
     startExitAndContinueLaterTransition(() => {
-      startSaveUtkast({
+      startLagreUtkastIfChanges({
         values: form.state.values,
         onSuccess: () => {
           push(getAGOversiktHref(narmesteLederId));
@@ -111,12 +113,14 @@ export default function useOppfolgingsplanForm({
     startTransition(() => {
       setVeiviserSteg(VeiviserSteg.OPPSUMMERING);
     });
+    scrollToVeiviserTop();
   }
 
   function goBackToFyllUtPlanSteg() {
     startTransition(() => {
       setVeiviserSteg(VeiviserSteg.FYLL_UT_PLAN);
     });
+    scrollToVeiviserTop();
   }
 
   return {
@@ -131,4 +135,14 @@ export default function useOppfolgingsplanForm({
     saveIfChangesAndExit,
     goBackToFyllUtPlanSteg,
   };
+}
+
+function scrollToVeiviserTop() {
+  const HEIGHT_DECORATOR = 160;
+  const HEIGHT_DINE_SYKMELDTE_HEADER = 128;
+
+  window.scrollTo({
+    top: HEIGHT_DECORATOR + HEIGHT_DINE_SYKMELDTE_HEADER,
+    behavior: "smooth",
+  });
 }

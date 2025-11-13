@@ -8,10 +8,14 @@ import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendD
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 
+export type FerdistillPlanActionState = {
+  error: string | null;
+};
+
 export async function ferdigstillPlanServerAction(
   oppfolgingsplanFormValues: OppfolgingsplanForm,
   narmesteLederId: string
-) {
+): Promise<FerdistillPlanActionState> {
   // validere mot zod skjema
 
   if (isLocalOrDemo) {
@@ -24,11 +28,16 @@ export async function ferdigstillPlanServerAction(
   // lage formSnapshot
   const formSnapshot = oppfolgingsplanFormValues; // TODO: lage snapshot
 
-  tokenXFetchUpdate({
+  await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: "TODO",
     requestBody: { formSnapshot },
   });
 
-  // redirect?
+  // only here to satisfy typescript for now
+  return {
+    error: null,
+  };
+
+  // redirect on success instead
 }

@@ -1,11 +1,16 @@
 "use server";
 
-import { LagreUtkastActionState } from "@/components/OpprettPlanPage/FyllUtPlanSteg/form/hooks/useOppfolgingsplanLagring";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchUpdate } from "../tokenXFetch";
+
+export type LagreUtkastActionState = {
+  isLastSaveSuccess: boolean;
+  lastSavedTime: Date | null;
+  lastSavedValues: OppfolgingsplanForm | null;
+};
 
 export async function lagreUtkastServerAction(
   values: OppfolgingsplanForm
@@ -14,8 +19,8 @@ export async function lagreUtkastServerAction(
     await simulateBackendDelay();
 
     return {
-      isLastUtkastSaveSuccess: true,
-      utkastLastSavedTime: new Date(),
+      isLastSaveSuccess: true,
+      lastSavedTime: new Date(),
       lastSavedValues: values,
     };
   }
@@ -24,7 +29,7 @@ export async function lagreUtkastServerAction(
 
   // maybe map values to backend format
 
-  tokenXFetchUpdate({
+  await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: "TODO",
     method: "PUT",
@@ -33,8 +38,8 @@ export async function lagreUtkastServerAction(
 
   // TODO
   return {
-    isLastUtkastSaveSuccess: true,
-    utkastLastSavedTime: new Date(),
+    isLastSaveSuccess: true,
+    lastSavedTime: new Date(),
     lastSavedValues: values,
   };
 }

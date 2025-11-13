@@ -30,8 +30,8 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
     saveIfChangesAndExit,
     goBackToFyllUtPlanSteg,
   } = useOppfolgingsplanForm({
-    initialSavedValues: savedFormValues,
-    initialLastSavedTime: lastSavedTime,
+    savedFormValues,
+    lastSavedTime,
   });
 
   return (
