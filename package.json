@@ -23,7 +23,7 @@
     "@navikt/nav-dekoratoren-moduler": "^3.5.0",
     "@navikt/next-logger": "^4.4.1",
     "@navikt/oasis": "^3.8.0",
-    "@tanstack/react-form": "^1.23.8",
+    "@tanstack/react-form": "^1.23.9",
     "next": "16.0.3",
     "pino": "^9.13.0",
     "pino-pretty": "^13.1.2",
