@@ -14,10 +14,7 @@ import useOppfolgingsplanFerdigstilling from "./useOppfolgingsplanFerdigstilling
 import useOppfolgingsplanUtkastLagring from "./useOppfolgingsplanUtkastLagring";
 
 type FormMeta = {
-  submitAction:
-    | "avsluttOgFortsettSenere"
-    | "fortsettTilOppsummering"
-    | "ferdigstill";
+  submitAction: "fortsettTilOppsummering" | "ferdigstill";
 };
 
 const defaultMeta: FormMeta = {
