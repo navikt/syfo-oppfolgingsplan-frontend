@@ -7,7 +7,7 @@ import {
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
 import { getAGOpprettNyPlanHref } from "@/constants/route-hrefs";
-import { UtkastMetadata } from "@/schema/oppfolgingsplanerOversiktSchemas";
+import { UtkastMetadata } from "@/schema/oversiktResponseSchemas";
 import { getDatoStringWithTime } from "@/ui-helpers/dateAndTime";
 
 interface Props {
@@ -22,7 +22,7 @@ export default function UtkastLinkPanel({
   narmesteLederId,
 }: Props) {
   const utkastSistLagretTidspunkt = getDatoStringWithTime(
-    new Date(utkast.updatedAt)
+    new Date(utkast.updatedAt),
   );
 
   return (

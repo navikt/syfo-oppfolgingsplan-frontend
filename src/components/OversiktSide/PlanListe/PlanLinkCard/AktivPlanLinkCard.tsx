@@ -1,4 +1,4 @@
-import { OppfolgingsplanMetadata } from "@/schema/oppfolgingsplanerOversiktSchemas";
+import { OppfolgingsplanMetadata } from "@/schema/oversiktResponseSchemas";
 import PlanLinkCard from "./PlanLinkCard";
 import PlanLinkCardDelingStatusFooterTags from "./PlanLinkCardFooterTags";
 

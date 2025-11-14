@@ -1,11 +1,11 @@
 import { VStack } from "@navikt/ds-react";
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/fetchOppfolgingsplanOversiktForAG";
 import { getAGOppfolgingplanHref } from "@/constants/route-hrefs";
-import PlanListeDel from "./PlanListeDel";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
-import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
-import SlettUtkastButton from "./SlettUtkastButton";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
+import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
+import PlanListeDel from "./PlanListeDel";
+import SlettUtkastButton from "./SlettUtkastButton";
 
 interface Props {
   narmesteLederId: string;

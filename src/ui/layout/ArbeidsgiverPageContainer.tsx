@@ -1,39 +1,39 @@
-"use client";
-
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
+import { PersonIcon } from "@navikt/aksel-icons";
 import {
   PageContainer,
   RootPages,
   SideMenu,
 } from "@navikt/dinesykmeldte-sidemeny";
-import { PersonIcon } from "@navikt/aksel-icons";
-import { SykmeldtInfo } from "@/schema/sykmeldtSchema";
 
 interface Props {
-  sykmeldtInfo: SykmeldtInfo;
+  narmesteLederId: string;
+  employeeFnr: string;
+  employeeName: string;
   children: ReactNode;
 }
 
 export const ArbeidsgiverPageContainer = ({
-  sykmeldtInfo,
+  narmesteLederId,
+  employeeFnr,
+  employeeName,
   children,
 }: Props) => {
-  const sykmeldtNavn = sykmeldtInfo.navn || "Sykmeldt";
   return (
     <PageContainer
       sykmeldt={{
-        navn: sykmeldtNavn,
-        fnr: sykmeldtInfo.fnr,
+        fnr: employeeFnr,
+        navn: employeeName,
       }}
       header={{
-        title: sykmeldtNavn,
+        title: employeeName,
         subtitle: "70 % sykmeldt fra 19. september til 6. november 2025",
         Icon: PersonIcon,
       }}
       navigation={
         <SideMenu
-          sykmeldtName={sykmeldtNavn}
-          sykmeldtId={sykmeldtInfo.narmestelederId}
+          sykmeldtName={employeeName}
+          sykmeldtId={narmesteLederId}
           activePage={RootPages.Oppfolgingsplaner}
           routes={{
             Soknader: 0,

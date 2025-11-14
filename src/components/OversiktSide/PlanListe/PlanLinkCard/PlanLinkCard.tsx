@@ -6,8 +6,8 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
+import { OppfolgingsplanMetadata } from "@/schema/oversiktResponseSchemas";
 import { getDatoString } from "@/ui-helpers/dateAndTime";
-import { OppfolgingsplanMetadata } from "@/schema/oppfolgingsplanerOversiktSchemas";
 
 interface Props {
   href: string;

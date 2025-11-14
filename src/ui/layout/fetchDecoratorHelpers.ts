@@ -3,7 +3,7 @@ import { publicEnv } from "@/env-variables/publicEnv";
 
 export async function fetchDecoratorForAG(
   narmesteLederId: string,
-  sykmeldtNavn: string
+  employeeName: string,
 ) {
   return await fetchDecoratorReact({
     env: createDecoratorEnv(),
@@ -16,8 +16,8 @@ export async function fetchDecoratorForAG(
       feedback: false,
       redirectToApp: true,
       breadcrumbs: createDecoratorBreadcrumbsForAG(
-        sykmeldtNavn,
-        narmesteLederId
+        employeeName,
+        narmesteLederId,
       ),
     },
   });
@@ -35,8 +35,8 @@ function createDecoratorEnv(): "dev" | "prod" {
 }
 
 function createDecoratorBreadcrumbsForAG(
-  sykmeldtNavn: string,
-  narmesteLederId: string
+  employeeName: string,
+  narmesteLederId: string,
 ) {
   return [
     {
@@ -49,7 +49,7 @@ function createDecoratorBreadcrumbsForAG(
     },
     {
       url: `${publicEnv.NEXT_PUBLIC_DINE_SYKMELDTE_URL}/${narmesteLederId}`,
-      title: sykmeldtNavn,
+      title: employeeName,
     },
     {
       url: `${publicEnv.NEXT_PUBLIC_BASE_PATH}/${narmesteLederId}`,
