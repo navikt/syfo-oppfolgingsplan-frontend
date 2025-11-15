@@ -14,11 +14,8 @@ interface Props {
 export default async function PlanListeForArbeidsgiver({
   narmesteLederId,
 }: Props) {
-  const {
-    oppfolgingsplan: aktivPlan,
-    previousOppfolgingsplaner: tidligerePlaner,
-    utkast,
-  } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  const { aktivPlan, tidligerePlaner, utkast } =
+    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
 
@@ -32,7 +29,7 @@ export default async function PlanListeForArbeidsgiver({
           <AktivPlanLinkCard
             aktivPlan={aktivPlan}
             arbeidsstedNavn={arbeidsstedNavn}
-            href={getAGOppfolgingplanHref(narmesteLederId, aktivPlan.uuid)}
+            href={getAGOppfolgingplanHref(narmesteLederId, aktivPlan.id)}
           />
         </PlanListeDel>
       )}
@@ -56,10 +53,10 @@ export default async function PlanListeForArbeidsgiver({
           <VStack gap="4">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
-                key={plan.uuid}
+                key={plan.id}
                 tidligerePlan={plan}
                 arbeidsstedNavn={arbeidsstedNavn}
-                href={getAGOppfolgingplanHref(narmesteLederId, plan.uuid)}
+                href={getAGOppfolgingplanHref(narmesteLederId, plan.id)}
               />
             ))}
           </VStack>

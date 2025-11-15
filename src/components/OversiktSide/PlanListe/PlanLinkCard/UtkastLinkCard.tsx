@@ -22,7 +22,7 @@ export default function UtkastLinkPanel({
   narmesteLederId,
 }: Props) {
   const utkastSistLagretTidspunkt = getDatoStringWithTime(
-    new Date(utkast.updatedAt),
+    new Date(utkast.sistLagretTidspunkt),
   );
 
   return (

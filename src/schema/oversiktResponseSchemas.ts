@@ -2,25 +2,27 @@ import { array, object, string, z } from "zod";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
 
 export const utkastMetadataSchema = object({
-  // sykmeldtFnr: string(),
-  // narmesteLederFnr: string(),
-  // organisasjonsnummer: string(),
-  updatedAt: z.iso.datetime(),
+  sistLagretTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString)),
 });
 
 export type UtkastMetadata = z.infer<typeof utkastMetadataSchema>;
 
 export const oppfolgingsplanMetadataSchema = object({
-  uuid: string(),
-  // sykmeldtFnr: string(),
-  // narmesteLederFnr: string(),
-  // organisasjonsnummer: string(),
-  evalueringsdato: z.iso.date(),
-  // skalDelesMedVeileder: boolean(),
-  deltMedVeilederTidspunkt: z.iso.date().nullish(),
-  // skalDelesMedLege: boolean(),
-  deltMedLegeTidspunkt: z.iso.date().nullish(),
-  createdAt: z.iso.datetime(),
+  id: string(),
+  opprettetTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString)),
+  evalueringsDato: z.iso.date().transform((dateString) => new Date(dateString)),
+  deltMedLegeTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString))
+    .nullable(),
+  deltMedVeilederTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString))
+    .nullable(),
 });
 
 export type OppfolgingsplanMetadata = z.infer<
@@ -30,8 +32,8 @@ export type OppfolgingsplanMetadata = z.infer<
 export const OppfolgingsplanerOversiktResponseSchemaForAG = object({
   ...commonResponseFieldsForAGSchema.shape,
   utkast: utkastMetadataSchema.nullable(),
-  oppfolgingsplan: oppfolgingsplanMetadataSchema.nullable(),
-  previousOppfolgingsplaner: array(oppfolgingsplanMetadataSchema),
+  aktivPlan: oppfolgingsplanMetadataSchema.nullable(),
+  tidligerePlaner: array(oppfolgingsplanMetadataSchema),
 });
 
 export type OppfolgingsplanerOversiktForAG = z.infer<

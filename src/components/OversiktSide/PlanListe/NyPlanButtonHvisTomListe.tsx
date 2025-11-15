@@ -7,8 +7,8 @@ export default async function NyPlanButtonHvisTomListe({
   narmesteLederId: string;
 }) {
   const {
-    oppfolgingsplan: aktivPlan,
-    previousOppfolgingsplaner: tidligerePlaner,
+    aktivPlan: aktivPlan,
+    tidligerePlaner: tidligerePlaner,
     utkast,
   } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 

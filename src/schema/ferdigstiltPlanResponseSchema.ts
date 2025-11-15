@@ -8,10 +8,18 @@ export const ferdigstiltPlanResponseForAGSchema = z.object({
   ...commonResponseFieldsForAGSchema.shape,
   isAktivPlan: z.boolean(),
   content: FormSnapshotSchema,
-  evalueringsDato: z.iso.datetime(),
-  deltMedLegeTidspunkt: z.iso.datetime().nullable(),
-  deltMedVeilederTidspunkt: z.iso.datetime().nullable(),
-  ferdistiltTidspunkt: z.iso.datetime(),
+  opprettetTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString)),
+  evalueringsDato: z.iso.date().transform((dateString) => new Date(dateString)),
+  deltMedLegeTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString))
+    .nullable(),
+  deltMedVeilederTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString))
+    .nullable(),
 });
 
 export type FerdigstiltPlanResponseForAG = z.infer<
