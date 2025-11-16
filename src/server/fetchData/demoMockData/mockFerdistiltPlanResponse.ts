@@ -3,7 +3,6 @@ import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 
 export const mockFerdigstiltPlanResponse: FerdigstiltPlanResponseForAG = {
   ...mockCommonAGResponseFields,
-  isAktivPlan: true,
   content: {},
   opprettetTidspunkt: new Date("2025-10-28T10:17:31Z"),
   evalueringsDato: new Date("2025-12-31"),
