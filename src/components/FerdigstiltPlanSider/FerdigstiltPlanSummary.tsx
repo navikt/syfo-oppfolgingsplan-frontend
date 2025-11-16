@@ -8,7 +8,7 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { formHeadings, formLabels } from "../OpprettPlanPage/form-labels";
+import { formHeadings, formLabels } from "../NyPlanSide/form-labels";
 
 // TODO: Rewrite for FormSnapshot
 
@@ -103,11 +103,11 @@ export default function FerdigstiltPlanSummary({
 
           <FormSummaryAnswer>
             <FormSummaryLabel>
-              {formLabels.evalueringDato.label}
+              {formLabels.evalueringsDato.label}
             </FormSummaryLabel>
             <FormSummaryValue>
-              {formValues.evalueringDato &&
-                new Date(formValues.evalueringDato).toLocaleDateString(
+              {formValues.evalueringsDato &&
+                new Date(formValues.evalueringsDato).toLocaleDateString(
                   "nb-NO",
                   {
                     year: "numeric",

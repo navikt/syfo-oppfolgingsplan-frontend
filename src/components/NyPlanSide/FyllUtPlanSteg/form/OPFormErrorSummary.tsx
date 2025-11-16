@@ -39,7 +39,7 @@ export const FormErrorSummary = withForm({
             ([fieldId, errors]) => ({
               fieldId,
               errorMessages: errors.map((error) => error.message),
-            })
+            }),
           );
 
           const errorSummaryItemData = fieldIdAndErrorMessages.flatMap(
@@ -48,7 +48,7 @@ export const FormErrorSummary = withForm({
                 fieldId,
                 fieldLabel: getLabelForFormField(fieldId),
                 errorMessage,
-              }))
+              })),
           );
 
           return (
@@ -62,7 +62,7 @@ export const FormErrorSummary = withForm({
                     {errorMessage}
                     {fieldLabel ? ` - ${fieldLabel}` : ""}
                   </ErrorSummary.Item>
-                )
+                ),
               )}
             </ErrorSummary>
           );

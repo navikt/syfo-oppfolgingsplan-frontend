@@ -1,5 +1,6 @@
 import { Box, FormSummary } from "@navikt/ds-react";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
 import { formHeadings, formLabels } from "../form-labels";
 
 interface Props {
@@ -97,14 +98,7 @@ export default function PlanFormSummary({ formValues, className }: Props) {
             </FormSummary.Label>
             <FormSummary.Value>
               {formValues.evalueringsDato &&
-                new Date(formValues.evalueringsDato).toLocaleDateString(
-                  "nb-NO",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  },
-                )}
+                getLocaleDateString(formValues.evalueringsDato, "long")}
             </FormSummary.Value>
           </FormSummary.Answer>
 

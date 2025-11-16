@@ -16,7 +16,7 @@ export default function useOppfolgingsplanFerdigstilling() {
 
   async function ferdigstillPlanAction(
     previousReturnedValue: FerdistillPlanActionState,
-    values: OppfolgingsplanForm
+    values: OppfolgingsplanForm,
   ) {
     return await ferdigstillPlanServerAction(values, narmesteLederId);
   }
