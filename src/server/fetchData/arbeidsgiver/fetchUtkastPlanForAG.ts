@@ -1,15 +1,12 @@
 import z from "zod";
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
+import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { getServerEnv } from "@/env-variables/serverEnv";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { TokenXTargetApi } from "@/server/helpers";
 import { tokenXFetchGet } from "@/server/tokenXFetch";
 import { mockUtkastData } from "../demoMockData/mockUtkastData";
 import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
-
-const getEndpointUtkastForAG = (narmesteLederId: string) =>
-  `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/utkast`; // TODO
 
 export type UtkastData = {
   savedFormValues: OppfolgingsplanForm | null;

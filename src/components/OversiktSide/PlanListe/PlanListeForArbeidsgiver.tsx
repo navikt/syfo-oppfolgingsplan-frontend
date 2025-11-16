@@ -1,5 +1,5 @@
 import { VStack } from "@navikt/ds-react";
-import { getAGOppfolgingplanHref } from "@/constants/route-hrefs";
+import { getAGOppfolgingplanHref } from "@/common/route-hrefs";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";

@@ -1,9 +1,9 @@
 import { startTransition, useRef, useState, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { revalidateLogic } from "@tanstack/react-form";
+import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
+import { getAGOversiktHref } from "@/common/route-hrefs";
 import { VeiviserSteg } from "@/components/OpprettPlanPage/LagPlanVeiviser";
-import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/constants/app-config";
-import { getAGOversiktHref } from "@/constants/route-hrefs";
 import {
   OppfolgingsplanForm,
   OppfolgingsplanFormFerdigstillValidering,

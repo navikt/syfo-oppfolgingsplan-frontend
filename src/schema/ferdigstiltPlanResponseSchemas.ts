@@ -6,7 +6,6 @@ const FormSnapshotSchema = z.object({});
 
 export const ferdigstiltPlanResponseForAGSchema = z.object({
   ...commonResponseFieldsForAGSchema.shape,
-  isAktivPlan: z.boolean(),
   content: FormSnapshotSchema,
   opprettetTidspunkt: z.iso
     .datetime()

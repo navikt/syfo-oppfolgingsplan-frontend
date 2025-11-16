@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getAGOppfolgingplanHref } from "@/constants/route-hrefs";
+import { getAGOppfolgingplanHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
@@ -14,7 +14,7 @@ export type FerdistillPlanActionState = {
 
 export async function ferdigstillPlanServerAction(
   oppfolgingsplanFormValues: OppfolgingsplanForm,
-  narmesteLederId: string
+  narmesteLederId: string,
 ): Promise<FerdistillPlanActionState> {
   // validere mot zod skjema
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Textarea } from "@navikt/ds-react";
-import { TEXT_FIELD_MAX_LENGTH } from "@/constants/app-config";
+import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {

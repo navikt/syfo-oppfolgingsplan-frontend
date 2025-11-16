@@ -1,22 +1,35 @@
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
+import {
+  getEndpointAktivPlanForAG,
+  getEndpointTidligerePlanForAG,
+} from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { getServerEnv } from "@/env-variables/serverEnv";
 import {
   FerdigstiltPlanResponseForAG,
   ferdigstiltPlanResponseForAGSchema,
-} from "@/schema/ferdigstiltPlanResponseSchema";
+} from "@/schema/ferdigstiltPlanResponseSchemas";
 import { TokenXTargetApi } from "../../helpers";
 import { tokenXFetchGet } from "../../tokenXFetch";
 import { mockFerdigstiltPlanResponse } from "../demoMockData/mockFerdistiltPlanResponse";
 import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
 
-const getEndpointFerdigstiltPlanForAG = (
+export async function fetchAktivPlanForAG(
   narmesteLederId: string,
-  planId: string,
-) =>
-  `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/${planId}`;
+): Promise<FerdigstiltPlanResponseForAG> {
+  if (isLocalOrDemo) {
+    await simulateBackendDelay();
+    return mockFerdigstiltPlanResponse;
+  }
 
-export async function fetchFerdigstiltPlanForAG(
+  return await tokenXFetchGet({
+    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
+    endpoint: getEndpointAktivPlanForAG(narmesteLederId),
+    responseDataSchema: ferdigstiltPlanResponseForAGSchema,
+    redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
+  });
+}
+
+export async function fetchTidligerePlanForAG(
   narmesteLederId: string,
   planId: string,
 ): Promise<FerdigstiltPlanResponseForAG> {
@@ -27,7 +40,7 @@ export async function fetchFerdigstiltPlanForAG(
 
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: getEndpointFerdigstiltPlanForAG(narmesteLederId, planId),
+    endpoint: getEndpointTidligerePlanForAG(narmesteLederId, planId),
     responseDataSchema: ferdigstiltPlanResponseForAGSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });

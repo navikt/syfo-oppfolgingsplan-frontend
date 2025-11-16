@@ -1,6 +1,6 @@
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
+import { getEndpointOversiktForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { getServerEnv } from "@/env-variables/serverEnv";
 import {
   OppfolgingsplanerOversiktForAG,
   OppfolgingsplanerOversiktResponseSchemaForAG,
@@ -9,9 +9,6 @@ import { TokenXTargetApi } from "../../helpers";
 import { tokenXFetchGet } from "../../tokenXFetch";
 import { mockOversiktData } from "../demoMockData/mockOversiktData";
 import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
-
-const getEndpointOppfolgingsplanerOversiktForAG = (narmesteLederId: string) =>
-  `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/oversikt`;
 
 export async function fetchOppfolgingsplanOversiktForAG(
   narmesteLederId: string,
@@ -23,7 +20,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
 
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: getEndpointOppfolgingsplanerOversiktForAG(narmesteLederId),
+    endpoint: getEndpointOversiktForAG(narmesteLederId),
     responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });

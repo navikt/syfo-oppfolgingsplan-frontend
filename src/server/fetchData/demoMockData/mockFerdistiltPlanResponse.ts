@@ -1,4 +1,4 @@
-import { FerdigstiltPlanResponseForAG } from "@/schema/ferdigstiltPlanResponseSchema";
+import { FerdigstiltPlanResponseForAG } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 
 export const mockFerdigstiltPlanResponse: FerdigstiltPlanResponseForAG = {

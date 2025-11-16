@@ -6,7 +6,7 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
-import { getAGOpprettNyPlanHref } from "@/constants/route-hrefs";
+import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { UtkastMetadata } from "@/schema/oversiktResponseSchemas";
 import { getDatoStringWithTime } from "@/ui-helpers/dateAndTime";
 
