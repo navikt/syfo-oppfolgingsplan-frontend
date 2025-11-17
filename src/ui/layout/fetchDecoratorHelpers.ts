@@ -1,5 +1,5 @@
-import { publicEnv } from "@/env-variables/publicEnv";
 import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
+import { publicEnv } from "@/env-variables/publicEnv";
 
 export async function fetchDecoratorForAG(
   narmesteLederId: string,
@@ -15,7 +15,10 @@ export async function fetchDecoratorForAG(
       chatbotVisible: false,
       feedback: false,
       redirectToApp: true,
-      breadcrumbs: createBreadcrumbsForAG(sykmeldtNavn, narmesteLederId),
+      breadcrumbs: createDecoratorBreadcrumbsForAG(
+        sykmeldtNavn,
+        narmesteLederId
+      ),
     },
   });
 }
@@ -31,7 +34,10 @@ function createDecoratorEnv(): "dev" | "prod" {
   }
 }
 
-function createBreadcrumbsForAG(sykmeldtNavn: string, narmesteLederId: string) {
+function createDecoratorBreadcrumbsForAG(
+  sykmeldtNavn: string,
+  narmesteLederId: string
+) {
   return [
     {
       url: publicEnv.NEXT_PUBLIC_MIN_SIDE_ARBEIDSGIVER_URL,
@@ -47,7 +53,7 @@ function createBreadcrumbsForAG(sykmeldtNavn: string, narmesteLederId: string) {
     },
     {
       url: `${publicEnv.NEXT_PUBLIC_BASE_PATH}/${narmesteLederId}`,
-      title: "Oppfølgingsplan",
+      title: "Oppfølgingsplaner",
     },
   ];
 }

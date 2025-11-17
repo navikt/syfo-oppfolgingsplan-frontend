@@ -1,21 +1,43 @@
 "use server";
 
-import { tokenXFetchUpdate } from "../tokenXFetch";
+import { redirect } from "next/navigation";
+import { getAGOppfolgingplanHref } from "@/constants/route-hrefs";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
+import { tokenXFetchUpdate } from "../tokenXFetch";
 
-export async function ferdigstillPlan(
-  oppfolgingsplanTilFerdigstilling: unknown
-) {
-  // validere mot zod skjema hvis ikke allerede gjort
+export type FerdistillPlanActionState = {
+  error: string | null;
+};
+
+export async function ferdigstillPlanServerAction(
+  oppfolgingsplanFormValues: OppfolgingsplanForm,
+  narmesteLederId: string
+): Promise<FerdistillPlanActionState> {
+  // validere mot zod skjema
+
+  if (isLocalOrDemo) {
+    await simulateBackendDelay();
+    const planId = "12345";
+
+    redirect(getAGOppfolgingplanHref(narmesteLederId, planId));
+  }
 
   // lage formSnapshot
-  const formSnapshot = oppfolgingsplanTilFerdigstilling; // TODO: lage snapshot
+  const formSnapshot = oppfolgingsplanFormValues; // TODO: lage snapshot
 
-  tokenXFetchUpdate({
+  await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: "TODO",
     requestBody: { formSnapshot },
   });
 
-  // redirect?
+  // only here to satisfy typescript for now
+  return {
+    error: null,
+  };
+
+  // redirect on success instead
 }

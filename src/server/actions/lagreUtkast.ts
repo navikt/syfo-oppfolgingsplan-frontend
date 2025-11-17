@@ -1,18 +1,45 @@
 "use server";
 
-import { tokenXFetchUpdate } from "../tokenXFetch";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
+import { tokenXFetchUpdate } from "../tokenXFetch";
 
-export async function lagrePlanUtkast(oppfolgingsplanUnderUtfylling: unknown) {
-  // validere mot zod skjema hvis ikke allerede gjort
+export type LagreUtkastActionState = {
+  isLastSaveSuccess: boolean;
+  lastSavedTime: Date | null;
+  lastSavedValues: OppfolgingsplanForm | null;
+};
 
-  // lage formSnapshot
-  const formSnapshot = oppfolgingsplanUnderUtfylling; // TODO: lage snapshot
+export async function lagreUtkastServerAction(
+  values: OppfolgingsplanForm
+): Promise<LagreUtkastActionState> {
+  if (isLocalOrDemo) {
+    await simulateBackendDelay();
 
-  tokenXFetchUpdate({
+    return {
+      isLastSaveSuccess: true,
+      lastSavedTime: new Date(),
+      lastSavedValues: values,
+    };
+  }
+
+  // validere mot zod skjema
+
+  // maybe map values to backend format
+
+  await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: "TODO",
     method: "PUT",
-    requestBody: { formSnapshot },
+    requestBody: { values },
   });
+
+  // TODO
+  return {
+    isLastSaveSuccess: true,
+    lastSavedTime: new Date(),
+    lastSavedValues: values,
+  };
 }
