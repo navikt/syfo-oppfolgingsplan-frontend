@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getAGOppfolgingplanHref } from "@/common/route-hrefs";
+import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -20,9 +20,8 @@ export async function ferdigstillPlanServerAction(
 
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-    const planId = "12345";
 
-    redirect(getAGOppfolgingplanHref(narmesteLederId, planId));
+    redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
   }
 
   // lage formSnapshot

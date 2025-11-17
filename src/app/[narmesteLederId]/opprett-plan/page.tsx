@@ -18,7 +18,6 @@ export default async function NyPlanPage({
       <Breadcrumbs
         firstCrumbOppfolgingsplanerHref={getAGOversiktHref(narmesteLederId)}
         secondCrumbText="Lag oppfølgingsplan"
-        className="mb-6"
       />
 
       <Heading level="2" size="large" spacing>
