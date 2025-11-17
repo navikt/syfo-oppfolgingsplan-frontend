@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Heading } from "@navikt/ds-react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import LagPlanVeiviser from "@/components/OpprettPlanPage/LagPlanVeiviser";
-import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlanForAG";
+import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 
