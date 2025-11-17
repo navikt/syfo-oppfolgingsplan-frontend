@@ -15,7 +15,7 @@ export const mockOpprettetPlanContent: OppfolgingsplanForm = {
     "Mulighet for fysioterapiøvelser i et stille rom 2 x 10 minutter i løpet av dagen. Kan bruke støttende knebandasje ved behov. Åpen for å teste roterende oppgaveplan slik at tunge økter fordeles bedre i teamet. Dersom situasjonen bedres kan gradvis økning i fysisk deltakelse prøves etter avtale.",
   hvordanFolgeOpp:
     "Kort daglig sjekk (2–3 minutter) første to uker for å fange opp justeringsbehov. Deretter ukentlig strukturert gjennomgang av hvordan fordelingen av oppgaver fungerer. Evaluering av smertebelastning og funksjon ved hjelp av enkel egenrapportering. Justering av planen ved endringer i medisinske anbefalinger eller når progresjon tilsier det. Kontakt med bedriftshelsetjenesten ved behov.",
-  evalueringDato: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+  evalueringsDato: new Date(new Date().setMonth(new Date().getMonth() + 1)),
   harDenAnsatteMedvirket: "ja",
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };

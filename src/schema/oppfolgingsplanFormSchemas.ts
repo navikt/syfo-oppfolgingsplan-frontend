@@ -27,7 +27,7 @@ export const OppfolgingsplanFormLagreUtkastValidering = z.object({
   tilretteleggingFremover: schemaForNonRequiredMaxLengthTextField,
   annenTilrettelegging: schemaForNonRequiredMaxLengthTextField,
   hvordanFolgeOpp: schemaForNonRequiredMaxLengthTextField,
-  evalueringDato: z.date().nullable(),
+  evalueringsDato: z.date().nullable(),
   harDenAnsatteMedvirket: z.enum(["ja", "nei"]).nullable(),
   denAnsatteHarIkkeMedvirketBegrunnelse: schemaForNonRequiredMaxLengthTextField,
 });
@@ -41,7 +41,7 @@ export const OppfolgingsplanFormFerdigstillValidering =
     tilretteleggingFremover: schemaForRequiredMaxLengthTextField,
     annenTilrettelegging: schemaForRequiredMaxLengthTextField,
     hvordanFolgeOpp: schemaForRequiredMaxLengthTextField,
-    evalueringDato: z
+    evalueringsDato: z
       .date({
         error: (issue) =>
           issue.input === null ? requireFieldErrorMessage : "Ugyldig dato",

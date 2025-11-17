@@ -8,7 +8,7 @@ export const oppfolgingsplanFormDefaultValues: OppfolgingsplanForm = {
   tilretteleggingFremover: "",
   annenTilrettelegging: "",
   hvordanFolgeOpp: "",
-  evalueringDato: null,
+  evalueringsDato: null,
   harDenAnsatteMedvirket: null,
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };
