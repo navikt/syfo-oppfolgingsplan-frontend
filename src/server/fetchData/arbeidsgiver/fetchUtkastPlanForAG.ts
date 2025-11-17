@@ -1,8 +1,8 @@
-import z from "zod";
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { utkastResponseForAGSchema } from "@/schema/utkastResponseSchema";
 import { TokenXTargetApi } from "@/server/helpers";
 import { tokenXFetchGet } from "@/server/tokenXFetch";
 import { mockUtkastData } from "../demoMockData/mockUtkastData";
@@ -24,7 +24,7 @@ export async function fetchUtkastDataForAG(
   await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
-    responseDataSchema: z.object({}), // TODO: define schema
+    responseDataSchema: utkastResponseForAGSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 

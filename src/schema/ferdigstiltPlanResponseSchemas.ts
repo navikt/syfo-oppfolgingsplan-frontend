@@ -2,11 +2,10 @@ import z from "zod";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
 
 // TODO
-const FormSnapshotSchema = z.object({});
+const formSnapshotSchema = z.object({});
 
-export const ferdigstiltPlanResponseForAGSchema = z.object({
-  ...commonResponseFieldsForAGSchema.shape,
-  content: FormSnapshotSchema,
+const oppfolgingsplanSchema = z.object({
+  content: formSnapshotSchema,
   opprettetTidspunkt: z.iso
     .datetime()
     .transform((dateString) => new Date(dateString)),
@@ -19,6 +18,11 @@ export const ferdigstiltPlanResponseForAGSchema = z.object({
     .datetime()
     .transform((dateString) => new Date(dateString))
     .nullable(),
+});
+
+export const ferdigstiltPlanResponseForAGSchema = z.object({
+  ...commonResponseFieldsForAGSchema.shape,
+  oppfolgingsplan: oppfolgingsplanSchema,
 });
 
 export type FerdigstiltPlanResponseForAG = z.infer<

@@ -1,7 +1,7 @@
-import { array, object, string, z } from "zod";
+import { z } from "zod";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
 
-export const utkastMetadataSchema = object({
+export const utkastMetadataSchema = z.object({
   sistLagretTidspunkt: z.iso
     .datetime()
     .transform((dateString) => new Date(dateString)),
@@ -9,8 +9,8 @@ export const utkastMetadataSchema = object({
 
 export type UtkastMetadata = z.infer<typeof utkastMetadataSchema>;
 
-export const oppfolgingsplanMetadataSchema = object({
-  id: string(),
+export const oppfolgingsplanMetadataSchema = z.object({
+  id: z.string(),
   opprettetTidspunkt: z.iso
     .datetime()
     .transform((dateString) => new Date(dateString)),
@@ -29,11 +29,13 @@ export type OppfolgingsplanMetadata = z.infer<
   typeof oppfolgingsplanMetadataSchema
 >;
 
-export const OppfolgingsplanerOversiktResponseSchemaForAG = object({
+export const OppfolgingsplanerOversiktResponseSchemaForAG = z.object({
   ...commonResponseFieldsForAGSchema.shape,
-  utkast: utkastMetadataSchema.nullable(),
-  aktivPlan: oppfolgingsplanMetadataSchema.nullable(),
-  tidligerePlaner: array(oppfolgingsplanMetadataSchema),
+  oversikt: z.object({
+    utkast: utkastMetadataSchema.nullable(),
+    aktivPlan: oppfolgingsplanMetadataSchema.nullable(),
+    tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
+  }),
 });
 
 export type OppfolgingsplanerOversiktForAG = z.infer<

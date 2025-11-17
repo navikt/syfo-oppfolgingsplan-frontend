@@ -14,8 +14,9 @@ interface Props {
 export default async function PlanListeForArbeidsgiver({
   narmesteLederId,
 }: Props) {
-  const { aktivPlan, tidligerePlaner, utkast } =
-    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  const {
+    oversikt: { aktivPlan, tidligerePlaner, utkast },
+  } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
 
