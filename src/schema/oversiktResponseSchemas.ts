@@ -1,40 +1,19 @@
 import { z } from "zod";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
+import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
+import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
-export const utkastMetadataSchema = z.object({
-  sistLagretTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString)),
-});
-
-export type UtkastMetadata = z.infer<typeof utkastMetadataSchema>;
-
-export const oppfolgingsplanMetadataSchema = z.object({
+const ferdigstiltPlanIdAndMetadataSchema = z.object({
   id: z.string(),
-  opprettetTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString)),
-  evalueringsDato: z.iso.date().transform((dateString) => new Date(dateString)),
-  deltMedLegeTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString))
-    .nullable(),
-  deltMedVeilederTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString))
-    .nullable(),
+  ...ferdigstiltPlanMetadataSchema.shape,
 });
-
-export type OppfolgingsplanMetadata = z.infer<
-  typeof oppfolgingsplanMetadataSchema
->;
 
 export const OppfolgingsplanerOversiktResponseSchemaForAG = z.object({
   ...commonResponseFieldsForAGSchema.shape,
   oversikt: z.object({
     utkast: utkastMetadataSchema.nullable(),
-    aktivPlan: oppfolgingsplanMetadataSchema.nullable(),
-    tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
+    aktivPlan: ferdigstiltPlanIdAndMetadataSchema.nullable(),
+    tidligerePlaner: z.array(ferdigstiltPlanIdAndMetadataSchema),
   }),
 });
 

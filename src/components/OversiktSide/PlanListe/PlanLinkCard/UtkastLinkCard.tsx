@@ -7,7 +7,7 @@ import {
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
-import { UtkastMetadata } from "@/schema/oversiktResponseSchemas";
+import { UtkastMetadata } from "@/schema/utkastMetadataSchema";
 import { getDatoStringWithTime } from "@/ui-helpers/dateAndTime";
 
 interface Props {

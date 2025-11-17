@@ -1,14 +1,13 @@
 import z from "zod";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
+import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
 // TODO
 const UtkastContentSchema = z.record(z.string(), z.string());
 
 const utkastSchema = z.object({
+  ...utkastMetadataSchema.shape,
   content: UtkastContentSchema,
-  sistLagretTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString)),
 });
 
 export const utkastResponseForAGSchema = z.object({

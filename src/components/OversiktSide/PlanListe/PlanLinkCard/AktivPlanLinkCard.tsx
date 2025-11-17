@@ -1,9 +1,9 @@
-import { OppfolgingsplanMetadata } from "@/schema/oversiktResponseSchemas";
+import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
 import PlanLinkCard from "./PlanLinkCard";
 import PlanLinkCardDelingStatusFooterTags from "./PlanLinkCardFooterTags";
 
 interface Props {
-  aktivPlan: OppfolgingsplanMetadata;
+  aktivPlan: FerdigstiltPlanMetadata;
   arbeidsstedNavn: string;
   href: string;
 }
