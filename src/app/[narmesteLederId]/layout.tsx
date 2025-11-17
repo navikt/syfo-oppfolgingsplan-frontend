@@ -3,7 +3,7 @@ import Script from "next/script";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import { Theme } from "@navikt/ds-react";
 import "@/app/globals.css";
-import { fetchEmployeeDetailsForAG } from "@/server/fetchData/arbeidsgiver/fetchEmployeeDetailsForAG";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
 import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
 
@@ -17,9 +17,13 @@ export default async function RootLayoutForAG({
 }: LayoutProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
 
-  const { fnr, name } = await fetchEmployeeDetailsForAG(narmesteLederId);
+  // This fetch is also done in server components for the oversikt page, so when
+  // visiting the oversikt page first, all these fetch calls made from different
+  // server components (this component included) will be deduplicated by
+  // Next.js.
+  const { employee } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
-  const employeeName = name || "Sykmeldt";
+  const employeeName = employee.name || "Sykmeldt";
 
   const Decorator = await fetchDecoratorForAG(narmesteLederId, employeeName);
 
@@ -34,7 +38,7 @@ export default async function RootLayoutForAG({
 
         <ArbeidsgiverPageContainer
           narmesteLederId={narmesteLederId}
-          employeeFnr={fnr}
+          employeeFnr={employee.fnr}
           employeeName={employeeName}
         >
           <Theme>

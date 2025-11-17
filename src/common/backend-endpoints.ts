@@ -10,10 +10,9 @@ export const getEndpointUtkastForAG = (narmesteLederId: string) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/utkast`;
 
 export const getEndpointAktivPlanForAG = (narmesteLederId: string) =>
-  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/aktivPlan`;
+  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/aktiv-plan`;
 
 export const getEndpointTidligerePlanForAG = (
   narmesteLederId: string,
   planId: string,
-) =>
-  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/tidligerePlan/${planId}`;
+) => `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${planId}`;
