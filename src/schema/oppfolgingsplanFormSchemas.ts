@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TEXT_FIELD_MAX_LENGTH } from "@/constants/app-config";
+import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
 import { getOneYearFromNowDate, getTomorrowDate } from "@/utils/dateUtils";
 
 const requireFieldErrorMessage = "Feltet må fylles ut";
@@ -48,11 +48,11 @@ export const OppfolgingsplanFormFerdigstillValidering =
       })
       .min(
         getTomorrowDate(),
-        "Dato for evaluering kan ikke være i dag eller tidligere"
+        "Dato for evaluering kan ikke være i dag eller tidligere",
       )
       .max(
         getOneYearFromNowDate(),
-        "Dato for evaluering kan ikke være mer enn ett år frem i tid"
+        "Dato for evaluering kan ikke være mer enn ett år frem i tid",
       ),
     harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
       error: "Du må svare ja eller nei",
@@ -63,7 +63,7 @@ export const OppfolgingsplanFormFerdigstillValidering =
     ({ harDenAnsatteMedvirket, denAnsatteHarIkkeMedvirketBegrunnelse }) =>
       checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
         harDenAnsatteMedvirket,
-        denAnsatteHarIkkeMedvirketBegrunnelse
+        denAnsatteHarIkkeMedvirketBegrunnelse,
       ),
     {
       message: requireFieldErrorMessage,
@@ -73,12 +73,12 @@ export const OppfolgingsplanFormFerdigstillValidering =
           harDenAnsatteMedvirket: true,
         }).safeParse(payload.value).success;
       },
-    }
+    },
   );
 
 function checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
   harDenAnsatteMedvirket: string,
-  denAnsatteHarIkkeMedvirketBegrunnelse: string
+  denAnsatteHarIkkeMedvirketBegrunnelse: string,
 ): boolean {
   return (
     harDenAnsatteMedvirket === "ja" ||

@@ -8,5 +8,5 @@ export const getAGOpprettNyPlanHref = (narmesteLederId: string) =>
 
 export const getAGOppfolgingplanHref = (
   narmesteLederId: string,
-  oppfolgingsplanUuid: string
+  oppfolgingsplanUuid: string,
 ) => `/${narmesteLederId}/${oppfolgingsplanUuid}`;

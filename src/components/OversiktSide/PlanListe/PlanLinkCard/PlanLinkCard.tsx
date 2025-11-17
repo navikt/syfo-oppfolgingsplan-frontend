@@ -6,8 +6,8 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
+import { OppfolgingsplanMetadata } from "@/schema/oversiktResponseSchemas";
 import { getDatoString } from "@/ui-helpers/dateAndTime";
-import { OppfolgingsplanMetadata } from "@/schema/oppfolgingsplanerOversiktSchemas";
 
 interface Props {
   href: string;
@@ -24,8 +24,8 @@ export default function PlanLinkCard({
   footerContent,
   className,
 }: Props) {
-  const opprettetDato = new Date(planMetadata.createdAt);
-  const evalueringsDato = new Date(planMetadata.evalueringsdato);
+  const opprettetDato = new Date(planMetadata.opprettetTidspunkt);
+  const evalueringsDato = new Date(planMetadata.evalueringsDato);
 
   return (
     <LinkCard className={className}>
