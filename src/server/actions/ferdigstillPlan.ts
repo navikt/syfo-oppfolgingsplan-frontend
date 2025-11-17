@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getAGOppfolgingplanHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
+import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 

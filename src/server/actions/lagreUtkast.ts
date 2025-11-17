@@ -2,7 +2,7 @@
 
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { simulateBackendDelay } from "../fetchData/demoMockData/simulateBackendDelay";
+import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
 import { tokenXFetchUpdate } from "../tokenXFetch";
 
@@ -13,7 +13,7 @@ export type LagreUtkastActionState = {
 };
 
 export async function lagreUtkastServerAction(
-  values: OppfolgingsplanForm
+  values: OppfolgingsplanForm,
 ): Promise<LagreUtkastActionState> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();

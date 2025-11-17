@@ -10,15 +10,18 @@ import {
 } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { TokenXTargetApi } from "../../helpers";
 import { tokenXFetchGet } from "../../tokenXFetch";
-import { mockFerdigstiltPlanResponse } from "../demoMockData/mockFerdistiltPlanResponse";
-import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
+import {
+  getMockAktivPlanData,
+  getMockTidligerePlanData,
+} from "../mockData/mockHelpers";
+import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 export async function fetchAktivPlanForAG(
   narmesteLederId: string,
 ): Promise<FerdigstiltPlanResponseForAG> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-    return mockFerdigstiltPlanResponse;
+    return getMockAktivPlanData();
   }
 
   return await tokenXFetchGet({
@@ -35,7 +38,7 @@ export async function fetchTidligerePlanForAG(
 ): Promise<FerdigstiltPlanResponseForAG> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-    return mockFerdigstiltPlanResponse;
+    return getMockTidligerePlanData(planId);
   }
 
   return await tokenXFetchGet({
