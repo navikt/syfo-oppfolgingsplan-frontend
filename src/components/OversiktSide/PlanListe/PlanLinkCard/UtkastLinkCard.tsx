@@ -12,13 +12,13 @@ import { getLocaleDateAndTimeString } from "@/ui-helpers/dateAndTime";
 
 interface Props {
   utkast: UtkastMetadata;
-  arbeidsstedNavn: string;
+  linkCardTitle: string;
   narmesteLederId: string;
 }
 
 export default function UtkastLinkPanel({
   utkast: { sistLagretTidspunkt },
-  arbeidsstedNavn,
+  linkCardTitle,
   narmesteLederId,
 }: Props) {
   const utkastSistLagretTidspunkt = getLocaleDateAndTimeString(
@@ -31,14 +31,14 @@ export default function UtkastLinkPanel({
       <LinkCardTitle>
         <LinkCardAnchor asChild>
           <NextLink href={getAGOpprettNyPlanHref(narmesteLederId)}>
-            {arbeidsstedNavn}
+            {linkCardTitle}
           </NextLink>
         </LinkCardAnchor>
       </LinkCardTitle>
 
       <LinkCardDescription>
-        <BodyShort size="small" spacing>
-          <em>Sist lagret {utkastSistLagretTidspunkt}</em>
+        <BodyShort size="small">
+          <em>Sist lagret {utkastSistLagretTidspunkt}.</em>
         </BodyShort>
       </LinkCardDescription>
 
