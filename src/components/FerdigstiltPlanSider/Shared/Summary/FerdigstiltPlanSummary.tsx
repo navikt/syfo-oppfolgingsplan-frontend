@@ -7,8 +7,8 @@ import {
   FormSummaryLabel,
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
+import { formHeadings, formLabels } from "@/components/NyPlanSide/form-labels";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { formHeadings, formLabels } from "../NyPlanSide/form-labels";
 
 // TODO: Rewrite for FormSnapshot
 

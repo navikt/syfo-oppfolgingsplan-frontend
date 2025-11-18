@@ -21,7 +21,7 @@ export default function TidligerePlanLinkCard({
       footerContent={
         <PlanLinkCardDelingStatusFooterTags
           isDeltMedLege={tidligerePlan.deltMedLegeTidspunkt !== null}
-          isDeltMedNav={tidligerePlan.deltMedVeilederTidspunkt !== null}
+          isDeltMedVeileder={tidligerePlan.deltMedVeilederTidspunkt !== null}
           tagVariantHvisDelt="success-moderate"
           tagVariantHvisIkkeDelt="info-moderate"
           tagSize="small"

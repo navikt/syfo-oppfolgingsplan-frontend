@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
-import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/FerdigstiltPlanSkeleton";
+import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
 import TidligerePlanForAG from "@/components/FerdigstiltPlanSider/TidligerePlanSide/TidligerePlanForAG";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 

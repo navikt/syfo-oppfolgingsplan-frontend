@@ -3,14 +3,14 @@ import { Tag, TagProps } from "@navikt/ds-react";
 interface Props {
   tagSize: TagProps["size"];
   isDeltMedLege: boolean;
-  isDeltMedNav: boolean;
+  isDeltMedVeileder: boolean;
   tagVariantHvisDelt?: TagProps["variant"];
   tagVariantHvisIkkeDelt?: TagProps["variant"];
 }
 
 export default function PlanDelingStatusTags({
   isDeltMedLege,
-  isDeltMedNav,
+  isDeltMedVeileder,
   tagVariantHvisDelt = "success-moderate",
   tagVariantHvisIkkeDelt = "neutral-moderate",
   tagSize: size,
@@ -30,7 +30,7 @@ export default function PlanDelingStatusTags({
           Ikke delt med fastlege
         </Tag>
       )}
-      {isDeltMedNav ? (
+      {isDeltMedVeileder ? (
         <Tag variant={tagVariantHvisDelt} size={size}>
           Delt med Nav
         </Tag>

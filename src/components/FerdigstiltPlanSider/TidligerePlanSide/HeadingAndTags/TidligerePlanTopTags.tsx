@@ -3,16 +3,19 @@ import PlanDelingStatusTags from "@/components/OversiktSide/PlanListe/PlanLinkCa
 
 interface Props {
   isDeltMedLege: boolean;
-  isDeltMedNav: boolean;
+  isDeltMedVeileder: boolean;
 }
 
-export function TopTagsOpprettetPlan({ isDeltMedLege, isDeltMedNav }: Props) {
+export function TidligerePlanTopTags({
+  isDeltMedLege,
+  isDeltMedVeileder,
+}: Props) {
   return (
     <HStack gap="2">
       <PlanDelingStatusTags
         tagSize="small"
         isDeltMedLege={isDeltMedLege}
-        isDeltMedNav={isDeltMedNav}
+        isDeltMedVeileder={isDeltMedVeileder}
       />
     </HStack>
   );

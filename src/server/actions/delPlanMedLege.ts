@@ -1,14 +1,37 @@
 "use server";
 
-import { tokenXFetchUpdate } from "../tokenXFetch";
+import { getEndpointDelMedLegeForAG } from "@/common/backend-endpoints";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { TokenXTargetApi } from "../helpers";
+import { tokenXFetchUpdate } from "../tokenXFetch";
 
-export async function delPlanMedLege(planUuid: string) {
-  // validere mot zod skjema
+export interface DelPlanMedLegeActionState {
+  deltMedLegeTidspunkt: Date | null;
+  errorDelMedLege: string | null;
+}
 
-  tokenXFetchUpdate({
+export async function delPlanMedLegeServerAction(
+  narmesteLederId: string,
+  planId: string,
+): Promise<DelPlanMedLegeActionState> {
+  if (isLocalOrDemo) {
+    await simulateBackendDelay();
+
+    return {
+      deltMedLegeTidspunkt: new Date(),
+      errorDelMedLege: null,
+    };
+  }
+
+  await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: `TODO/${planUuid}`,
-    requestBody: "TODO",
+    endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
   });
+
+  // satisfy typescript for now
+  return {
+    deltMedLegeTidspunkt: new Date(),
+    errorDelMedLege: null,
+  };
 }
