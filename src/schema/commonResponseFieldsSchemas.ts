@@ -2,7 +2,7 @@ import z from "zod";
 
 const organizationDetailsSchema = z.object({
   orgNumber: z.string(), // brukes ikke foreløpig
-  orgName: z.string(),
+  orgName: z.string().nullable(),
 });
 
 export const employeeDetailsSchema = z.object({
