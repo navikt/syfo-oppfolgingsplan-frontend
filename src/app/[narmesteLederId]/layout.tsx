@@ -23,7 +23,7 @@ export default async function RootLayoutForAG({
   // Next.js.
   const { employee } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
-  const employeeName = employee.name || "Sykmeldt";
+  const employeeName = employee.name;
 
   const Decorator = await fetchDecoratorForAG(narmesteLederId, employeeName);
 

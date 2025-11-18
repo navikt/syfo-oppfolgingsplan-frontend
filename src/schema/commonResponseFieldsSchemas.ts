@@ -7,7 +7,7 @@ const organizationDetailsSchema = z.object({
 
 export const employeeDetailsSchema = z.object({
   fnr: z.string(),
-  name: z.string().nullable(), // kan det hende vi ikke får navn?
+  name: z.string(),
 });
 
 export type EmployeeDetails = z.infer<typeof employeeDetailsSchema>;
