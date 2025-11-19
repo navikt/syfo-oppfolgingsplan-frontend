@@ -1,5 +1,5 @@
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
-import { getEndpointTidligerePlanForAG } from "@/common/backend-endpoints";
+import { getEndpointFerdigstiltPlanForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   FerdigstiltPlanResponseForAG,
@@ -21,7 +21,7 @@ export async function fetchTidligerePlanForAG(
 
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: getEndpointTidligerePlanForAG(narmesteLederId, planId),
+    endpoint: getEndpointFerdigstiltPlanForAG(narmesteLederId, planId),
     responseDataSchema: ferdigstiltPlanResponseForAGSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });

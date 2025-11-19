@@ -13,7 +13,7 @@ export const getEndpointUtkastForAG = (narmesteLederId: string) =>
 export const getEndpointAktivPlanForAG = (narmesteLederId: string) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/aktiv-plan`;
 
-export const getEndpointTidligerePlanForAG = (
+export const getEndpointFerdigstiltPlanForAG = (
   narmesteLederId: string,
   planId: string,
 ) => `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${planId}`;
