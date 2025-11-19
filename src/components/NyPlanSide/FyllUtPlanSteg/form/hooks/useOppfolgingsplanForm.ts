@@ -11,7 +11,7 @@ import {
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
 import { useAppForm } from "./form";
-import useOppfolgingsplanFerdigstilling from "./useOppfolgingsplanFerdigstilling";
+import useFerdigstillOppfolgingsplanAction from "./useFerdigstillOppfolgingsplanAction";
 import useOppfolgingsplanUtkastLagring from "./useOppfolgingsplanUtkastLagring";
 
 type FormMeta = {
@@ -68,7 +68,7 @@ export default function useOppfolgingsplanForm({
       if (meta.submitAction === "fortsettTilOppsummering") {
         saveIfChangesAndProceedToOppsummering(value);
       } else if (meta.submitAction === "ferdigstill") {
-        startFerdigstillPlan(value);
+        startFerdigstillPlanAction(value);
       }
     },
   });
@@ -82,8 +82,8 @@ export default function useOppfolgingsplanForm({
     initialLastSavedTime: lastSavedTime,
   });
 
-  const { isPendingFerdigstillPlan, startFerdigstillPlan } =
-    useOppfolgingsplanFerdigstilling();
+  const { startFerdigstillPlanAction, isPendingFerdigstillPlan } =
+    useFerdigstillOppfolgingsplanAction();
 
   function saveIfChangesAndProceedToOppsummering(values: OppfolgingsplanForm) {
     startProceedToOppsummeringTransition(() => {
