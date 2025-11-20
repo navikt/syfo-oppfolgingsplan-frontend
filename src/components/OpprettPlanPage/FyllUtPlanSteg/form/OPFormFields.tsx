@@ -110,10 +110,10 @@ const OPFormFields = withForm({
         )}
       </form.AppField>
 
-      <form.AppField name="evalueringDato">
+      <form.AppField name="evalueringsDato">
         {(field) => (
           <field.FormDatePicker
-            label={formLabels.evalueringDato.label}
+            label={formLabels.evalueringsDato.label}
             description={readMoreOmAEvaluerePlanen}
             fromDate={getTomorrowDate()}
             toDate={getOneYearFromNowDate()}

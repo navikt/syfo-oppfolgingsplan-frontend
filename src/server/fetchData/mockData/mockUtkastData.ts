@@ -10,7 +10,7 @@ const mockSavedFormValues: OppfolgingsplanForm = {
   tilretteleggingFremover: "",
   annenTilrettelegging: "",
   hvordanFolgeOpp: "",
-  evalueringDato: null,
+  evalueringsDato: null,
   harDenAnsatteMedvirket: null,
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };
@@ -29,7 +29,7 @@ const mockSavedFormValuesFilled: OppfolgingsplanForm = {
   tilretteleggingFremover: ".",
   annenTilrettelegging: ".",
   hvordanFolgeOpp: ".",
-  evalueringDato: (() => {
+  evalueringsDato: (() => {
     const d = new Date();
     d.setMonth(d.getMonth() + 2);
     return d;

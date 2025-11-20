@@ -93,17 +93,17 @@ export default function PlanFormSummary({ formValues, className }: Props) {
 
           <FormSummary.Answer>
             <FormSummary.Label>
-              {formLabels.evalueringDato.label}
+              {formLabels.evalueringsDato.label}
             </FormSummary.Label>
             <FormSummary.Value>
-              {formValues.evalueringDato &&
-                new Date(formValues.evalueringDato).toLocaleDateString(
+              {formValues.evalueringsDato &&
+                new Date(formValues.evalueringsDato).toLocaleDateString(
                   "nb-NO",
                   {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
-                  }
+                  },
                 )}
             </FormSummary.Value>
           </FormSummary.Answer>

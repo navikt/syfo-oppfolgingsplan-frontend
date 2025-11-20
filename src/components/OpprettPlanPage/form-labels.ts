@@ -45,7 +45,7 @@ export const formLabels: Record<
     description:
       "Du kan for eksempel opplyse om at den ansatte er for syk, eller at den ansatte er utilgjengelig.",
   },
-  evalueringDato: {
+  evalueringsDato: {
     label: "Når skal dere evaluere planen og eventuelt justere den?",
     description:
       "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Arbeidstakeren skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
