@@ -1,30 +1,41 @@
 "use client";
 
+import { useRef } from "react";
 import NextLink from "next/link";
+import { useParams } from "next/navigation";
 import { Button, HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
+import { SlettUtkastVedOppdaterPlanModal } from "./SlettUtkastVedOppdaterPlanModal";
 
-interface Props {
-  narmesteLederId: string;
-}
+export function AktivPlanButtons() {
+  const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
+  const modalRef = useRef<HTMLDialogElement | null>(null);
 
-export function AktivPlanButtons({ narmesteLederId }: Props) {
   return (
-    <HStack justify="space-between">
-      <HStack gap="4">
-        <Button
-          variant="primary"
-          as={NextLink}
-          href={getAGOpprettNyPlanHref(narmesteLederId)}
-        >
-          Endre oppfølgingsplanen
-        </Button>
+    <>
+      <SlettUtkastVedOppdaterPlanModal ref={modalRef} />
 
-        <Button variant="secondary">Lag en ny plan</Button>
+      <HStack justify="space-between">
+        <HStack gap="4">
+          <Button
+            variant="primary"
+            onClick={() => modalRef.current?.showModal()}
+          >
+            Endre oppfølgingsplanen
+          </Button>
+
+          <Button
+            variant="secondary"
+            as={NextLink}
+            href={getAGOpprettNyPlanHref(narmesteLederId)}
+          >
+            Lag en ny plan
+          </Button>
+        </HStack>
+
+        <LastNedSomPdfButton />
       </HStack>
-
-      <LastNedSomPdfButton />
-    </HStack>
+    </>
   );
 }
