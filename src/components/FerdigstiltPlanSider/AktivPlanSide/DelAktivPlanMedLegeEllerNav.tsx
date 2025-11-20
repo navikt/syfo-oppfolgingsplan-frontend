@@ -1,6 +1,5 @@
 "use client";
 
-import { CheckmarkCircleIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -9,7 +8,6 @@ import {
   Button,
   HStack,
   Heading,
-  Tag,
 } from "@navikt/ds-react";
 import { getLocaleDateAndTimeString } from "@/ui-helpers/dateAndTime";
 
@@ -79,28 +77,3 @@ export default function DelAktivPlanMedLegeEllerNav({
     </Box>
   );
 }
-
-function SuccessfullySentTag({ children }: { children: React.ReactNode }) {
-  return (
-    <Tag variant="success-moderate">
-      <CheckmarkCircleIcon
-        aria-hidden
-        fontSize="1.3rem"
-        className="mr-1 relative -top-px"
-      />
-      {children}
-    </Tag>
-  );
-}
-
-// <HStack align="center">
-//   {/* TODO: Responsive design considerations */}
-//   <BoxNew minWidth="230px">
-//     <SuccessfullySentTag>Delt med fastlege</SuccessfullySentTag>
-//   </BoxNew>
-
-//   <BodyShort>
-//     Planen ble sendt til fastlege{" "}
-//     {getLocaleDateString(deltMedLegeTidspunkt, "long")}.
-//   </BodyShort>
-// </HStack>
