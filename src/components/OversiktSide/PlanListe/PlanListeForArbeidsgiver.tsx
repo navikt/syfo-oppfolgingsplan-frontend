@@ -1,5 +1,8 @@
 import { VStack } from "@navikt/ds-react";
-import { getAGOppfolgingplanHref } from "@/common/route-hrefs";
+import {
+  getAGAktivPlanHref,
+  getAGTidligerePlanHref,
+} from "@/common/route-hrefs";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
@@ -30,7 +33,7 @@ export default async function PlanListeForArbeidsgiver({
           <AktivPlanLinkCard
             aktivPlan={aktivPlan}
             arbeidsstedNavn={arbeidsstedNavn}
-            href={getAGOppfolgingplanHref(narmesteLederId, aktivPlan.id)}
+            href={getAGAktivPlanHref(narmesteLederId)}
           />
         </PlanListeDel>
       )}
@@ -57,7 +60,7 @@ export default async function PlanListeForArbeidsgiver({
                 key={plan.id}
                 tidligerePlan={plan}
                 arbeidsstedNavn={arbeidsstedNavn}
-                href={getAGOppfolgingplanHref(narmesteLederId, plan.id)}
+                href={getAGTidligerePlanHref(narmesteLederId, plan.id)}
               />
             ))}
           </VStack>

@@ -9,7 +9,6 @@ interface Props {
   firstCrumbOppfolgingsplanerHref: string;
   /** Text for the second (current) level */
   secondCrumbText: string;
-  className?: string;
 }
 
 /**
@@ -19,10 +18,9 @@ interface Props {
 export function Breadcrumbs({
   firstCrumbOppfolgingsplanerHref,
   secondCrumbText,
-  className,
 }: Props) {
   return (
-    <nav aria-label="Brødsmulesti" className={className}>
+    <nav aria-label="Brødsmulesti" className="mb-6">
       <ol className="flex flex-wrap items-center gap-2">
         <li>
           <Link as={NextLink} href={firstCrumbOppfolgingsplanerHref}>

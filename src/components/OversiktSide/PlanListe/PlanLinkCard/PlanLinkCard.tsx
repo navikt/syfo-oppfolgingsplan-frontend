@@ -7,7 +7,7 @@ import {
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
 import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
-import { getDatoString } from "@/ui-helpers/dateAndTime";
+import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
 
 interface Props {
   href: string;
@@ -19,14 +19,11 @@ interface Props {
 
 export default function PlanLinkCard({
   href,
-  planMetadata,
+  planMetadata: { ferdigstiltTidspunkt, evalueringsDato },
   arbeidsstedNavn,
   footerContent,
   className,
 }: Props) {
-  const opprettetDato = new Date(planMetadata.ferdigstiltTidspunkt);
-  const evalueringsDato = new Date(planMetadata.evalueringsDato);
-
   return (
     <LinkCard className={className}>
       <LinkCardTitle>
@@ -37,11 +34,11 @@ export default function PlanLinkCard({
 
       <LinkCardDescription>
         <BodyShort size="small">
-          Opprettet dato: {getDatoString(opprettetDato)}
+          Opprettet dato: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
         </BodyShort>
         {evalueringsDato && (
           <BodyShort size="small">
-            Evalueringsdato: {getDatoString(evalueringsDato)}
+            Evalueringsdato: {getLocaleDateString(evalueringsDato, "long")}
           </BodyShort>
         )}
       </LinkCardDescription>

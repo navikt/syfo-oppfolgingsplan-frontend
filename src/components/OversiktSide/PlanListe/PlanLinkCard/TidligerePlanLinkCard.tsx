@@ -24,6 +24,7 @@ export default function TidligerePlanLinkCard({
           isDeltMedNav={tidligerePlan.deltMedVeilederTidspunkt !== null}
           tagVariantHvisDelt="success-moderate"
           tagVariantHvisIkkeDelt="info-moderate"
+          tagSize="small"
         />
       }
       className="bg-ax-bg-neutral-soft"

@@ -24,6 +24,7 @@ export default function AktivPlanLinkCard({
           isDeltMedNav={aktivPlan.deltMedVeilederTidspunkt !== null}
           tagVariantHvisDelt="success-moderate"
           tagVariantHvisIkkeDelt="neutral-moderate"
+          tagSize="small"
         />
       }
       className="bg-ax-bg-success-soft"
