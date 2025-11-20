@@ -2,7 +2,7 @@ import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeftIcon } from "@navikt/aksel-icons";
 import { Button, HStack, VStack } from "@navikt/ds-react";
-import { getAGOversiktHref } from "@/constants/route-hrefs";
+import { getAGOversiktHref } from "@/common/route-hrefs";
 
 interface Props {
   isPendingFerdigstill: boolean;

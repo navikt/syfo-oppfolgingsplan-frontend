@@ -1,15 +1,12 @@
-import z from "zod";
 import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
+import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { getServerEnv } from "@/env-variables/serverEnv";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { TokenXTargetApi } from "../helpers";
-import { tokenXFetchGet } from "../tokenXFetch";
-import { mockUtkastData } from "./demoMockData/mockUtkastData";
-import { simulateBackendDelay } from "./demoMockData/simulateBackendDelay";
-
-const getEndpointUtkastForAG = (narmesteLederId: string) =>
-  `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}/oppfolgingsplaner/utkast`; // TODO
+import { utkastResponseForAGSchema } from "@/schema/utkastResponseSchema";
+import { TokenXTargetApi } from "@/server/helpers";
+import { tokenXFetchGet } from "@/server/tokenXFetch";
+import { mockUtkastData } from "../demoMockData/mockUtkastData";
+import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
 
 export type UtkastData = {
   savedFormValues: OppfolgingsplanForm | null;
@@ -17,7 +14,7 @@ export type UtkastData = {
 };
 
 export async function fetchUtkastDataForAG(
-  narmesteLederId: string
+  narmesteLederId: string,
 ): Promise<UtkastData> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
@@ -27,7 +24,7 @@ export async function fetchUtkastDataForAG(
   await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
-    responseDataSchema: z.object({}), // TODO: define schema
+    responseDataSchema: utkastResponseForAGSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 

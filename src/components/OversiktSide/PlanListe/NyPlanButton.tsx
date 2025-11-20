@@ -2,7 +2,7 @@
 
 import NextLink from "next/link";
 import { Box, Button } from "@navikt/ds-react";
-import { getAGOpprettNyPlanHref } from "@/constants/route-hrefs";
+import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 
 export function LagNyOppfolgingsplanButton({
   narmesteLederId,

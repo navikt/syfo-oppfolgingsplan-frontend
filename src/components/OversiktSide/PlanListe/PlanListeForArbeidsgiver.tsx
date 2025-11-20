@@ -1,11 +1,11 @@
 import { VStack } from "@navikt/ds-react";
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/fetchOppfolgingsplanOversiktForAG";
-import { getAGOppfolgingplanHref } from "@/constants/route-hrefs";
-import PlanListeDel from "./PlanListeDel";
+import { getAGOppfolgingplanHref } from "@/common/route-hrefs";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
-import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
-import SlettUtkastButton from "./SlettUtkastButton";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
+import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
+import PlanListeDel from "./PlanListeDel";
+import SlettUtkastButton from "./SlettUtkastButton";
 
 interface Props {
   narmesteLederId: string;
@@ -15,9 +15,7 @@ export default async function PlanListeForArbeidsgiver({
   narmesteLederId,
 }: Props) {
   const {
-    oppfolgingsplan: aktivPlan,
-    previousOppfolgingsplaner: tidligerePlaner,
-    utkast,
+    oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
@@ -32,7 +30,7 @@ export default async function PlanListeForArbeidsgiver({
           <AktivPlanLinkCard
             aktivPlan={aktivPlan}
             arbeidsstedNavn={arbeidsstedNavn}
-            href={getAGOppfolgingplanHref(narmesteLederId, aktivPlan.uuid)}
+            href={getAGOppfolgingplanHref(narmesteLederId, aktivPlan.id)}
           />
         </PlanListeDel>
       )}
@@ -56,10 +54,10 @@ export default async function PlanListeForArbeidsgiver({
           <VStack gap="4">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
-                key={plan.uuid}
+                key={plan.id}
                 tidligerePlan={plan}
                 arbeidsstedNavn={arbeidsstedNavn}
-                href={getAGOppfolgingplanHref(narmesteLederId, plan.uuid)}
+                href={getAGOppfolgingplanHref(narmesteLederId, plan.id)}
               />
             ))}
           </VStack>

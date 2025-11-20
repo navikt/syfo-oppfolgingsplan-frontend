@@ -1,5 +1,5 @@
 import { BodyLong, Heading } from "@navikt/ds-react";
-import { getAGOversiktHref } from "@/constants/route-hrefs";
+import { getAGOversiktHref } from "@/common/route-hrefs";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 
 export default async function NarmesteLederOversiktPage({

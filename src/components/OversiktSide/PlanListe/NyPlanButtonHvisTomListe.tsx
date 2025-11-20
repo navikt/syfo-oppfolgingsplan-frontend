@@ -1,4 +1,4 @@
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/fetchOppfolgingsplanOversiktForAG";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
@@ -7,9 +7,7 @@ export default async function NyPlanButtonHvisTomListe({
   narmesteLederId: string;
 }) {
   const {
-    oppfolgingsplan: aktivPlan,
-    previousOppfolgingsplaner: tidligerePlaner,
-    utkast,
+    oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   const harTomListe =
