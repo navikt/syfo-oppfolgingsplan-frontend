@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button, HStack } from "@navikt/ds-react";
+import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
 import { getLocaleDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
@@ -18,28 +18,38 @@ export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
   } = usePlanDelingContext();
 
   return (
-    <HStack gap="8" align="center">
-      <DelPlanButtonFlexGrowContainer>
-        <form action={() => delMedLegeAction({ planId })}>
-          <Button
-            type="submit"
-            variant="primary"
-            loading={isPendingDelMedLege}
-            disabled={Boolean(deltMedLegeTidspunkt)}
-          >
-            Send til fastlege
-          </Button>
-        </form>
-      </DelPlanButtonFlexGrowContainer>
+    <VStack gap="4">
+      <HStack gap="8" align="center">
+        <DelPlanButtonFlexGrowContainer>
+          <form action={() => delMedLegeAction({ planId })}>
+            <Button
+              type="submit"
+              variant="primary"
+              loading={isPendingDelMedLege}
+              disabled={Boolean(deltMedLegeTidspunkt)}
+            >
+              Send til fastlege
+            </Button>
+          </form>
+        </DelPlanButtonFlexGrowContainer>
 
-      {deltMedLegeTidspunkt ? (
-        <Alert variant="success" inline>
-          Delt med fastlege{" "}
-          {getLocaleDateAndTimeString(deltMedLegeTidspunkt, "long")}.
+        {deltMedLegeTidspunkt && (
+          <Alert variant="success" inline>
+            Delt med fastlege{" "}
+            {getLocaleDateAndTimeString(deltMedLegeTidspunkt, "long")}.
+          </Alert>
+        )}
+      </HStack>
+
+      {errorDelMedLege && (
+        // TODO: Show this error message for specific error codes only
+        <Alert variant="error">
+          Du får dessverre ikke delt denne planen med legen herfra. Det kan
+          hende at den ansatte ikke har en fastlege, eller at fastlegen ikke kan
+          ta imot elektroniske meldinger. I dette tilfellet må dere laste ned og
+          skrive ut planen slik at dere får delt den med legen manuelt.
         </Alert>
-      ) : (
-        errorDelMedLege && <>{/* TODO: Show some error message */}</>
       )}
-    </HStack>
+    </VStack>
   );
 }
