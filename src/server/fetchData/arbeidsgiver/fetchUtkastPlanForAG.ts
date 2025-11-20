@@ -5,8 +5,8 @@ import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 import { utkastResponseForAGSchema } from "@/schema/utkastResponseSchema";
 import { TokenXTargetApi } from "@/server/helpers";
 import { tokenXFetchGet } from "@/server/tokenXFetch";
-import { mockUtkastData } from "../demoMockData/mockUtkastData";
-import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
+import { mockUtkastData } from "../mockData/mockUtkastData";
+import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 export type UtkastData = {
   savedFormValues: OppfolgingsplanForm | null;

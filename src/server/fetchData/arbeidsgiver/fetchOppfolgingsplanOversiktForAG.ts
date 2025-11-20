@@ -7,15 +7,15 @@ import {
 } from "@/schema/oversiktResponseSchemas";
 import { TokenXTargetApi } from "../../helpers";
 import { tokenXFetchGet } from "../../tokenXFetch";
-import { mockOversiktData } from "../demoMockData/mockOversiktData";
-import { simulateBackendDelay } from "../demoMockData/simulateBackendDelay";
+import { mockOversiktDataMedPlaner } from "../mockData/mockOversiktData";
+import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 export async function fetchOppfolgingsplanOversiktForAG(
   narmesteLederId: string,
 ): Promise<OppfolgingsplanerOversiktForAG> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-    return mockOversiktData;
+    return mockOversiktDataMedPlaner;
   }
 
   return await tokenXFetchGet({
