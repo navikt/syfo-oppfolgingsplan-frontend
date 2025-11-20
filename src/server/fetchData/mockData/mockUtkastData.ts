@@ -1,5 +1,5 @@
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { UtkastData } from "../arbeidsgiver/fetchUtkastPlanForAG";
+import { UtkastData } from "../arbeidsgiver/fetchUtkastPlan";
 
 const mockSavedFormValues: OppfolgingsplanForm = {
   typiskArbeidshverdag:

@@ -1,7 +1,7 @@
 "use client";
 
 import { Activity, use } from "react";
-import { UtkastData } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlanForAG";
+import { UtkastData } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";
