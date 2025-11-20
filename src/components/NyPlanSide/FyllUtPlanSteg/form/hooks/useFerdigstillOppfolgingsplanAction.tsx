@@ -6,30 +6,30 @@ import {
   ferdigstillPlanServerAction,
 } from "@/server/actions/ferdigstillPlan";
 
-export default function useOppfolgingsplanFerdigstilling() {
+export default function useFerdigstillOppfolgingsplanAction() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const initialFerdigstillState = { error: null };
 
-  const [{ error }, ferdigstillPlanDispatchAction, isPendingFerdigstillPlan] =
-    useActionState(ferdigstillPlanAction, initialFerdigstillState);
+  const [{ error }, ferdigstillPlanAction, isPendingFerdigstillPlan] =
+    useActionState(innerFerdigstillPlanAction, initialFerdigstillState);
 
-  async function ferdigstillPlanAction(
+  function innerFerdigstillPlanAction(
     _previousState: FerdistillPlanActionState,
     values: OppfolgingsplanForm,
-  ) {
-    return await ferdigstillPlanServerAction(values, narmesteLederId);
+  ): Promise<FerdistillPlanActionState> {
+    return ferdigstillPlanServerAction(values, narmesteLederId);
   }
 
-  function startFerdigstillPlan(values: OppfolgingsplanForm) {
+  function startFerdigstillPlanAction(values: OppfolgingsplanForm) {
     startTransition(() => {
-      ferdigstillPlanDispatchAction(values);
+      ferdigstillPlanAction(values);
     });
   }
 
   return {
-    error,
-    startFerdigstillPlan,
+    startFerdigstillPlanAction,
     isPendingFerdigstillPlan,
+    error,
   };
 }

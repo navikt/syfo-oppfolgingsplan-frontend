@@ -20,24 +20,24 @@ export default function useOppfolgingsplanUtkastLagring({
 
   const [
     { isLastSaveSuccess, lastSavedTime },
-    // If this returned "dispatch" function is called while the action is already running,
+    // If this returned action function is called while the action is already running,
     // the call is queued and will run after the ongoing action is finished.
     //
     // Gotcha: This returned "dispatch" function must be called in a transition
     // (or from an action prop) in order not to suspend the calling component during the action.
     // Suspending would show the fallback UI of the nearest <Suspense> boundary during the action.
-    lagreUtkastIfChangesDispatchAction,
+    lagreUtkastIfChangesAction,
     isSavingUtkast,
-  ] = useActionState(lagreUtkastIfChangesAction, initialLagreUtkastState);
+  ] = useActionState(lagreUtkastIfChangesInnerAction, initialLagreUtkastState);
 
   /**
-   * This underlying action function `lagreUtkastIfChangesAction` is provided the
-   * values is returned last time (or the initial state) automatically by
-   * `useActionState` (see above).
+   * This underlying action function `lagreUtkastIfChangesInnerAction` is
+   * provided the values it returned last time (or the initial state)
+   * automatically by `useActionState` (see above).
    * This way, it can compare the new `values` with the previously saved values.
    */
-  async function lagreUtkastIfChangesAction(
-    previouslyReturnedValues: LagreUtkastActionState,
+  async function lagreUtkastIfChangesInnerAction(
+    previousState: LagreUtkastActionState,
     {
       values,
       onSuccess,
@@ -57,13 +57,13 @@ export default function useOppfolgingsplanUtkastLagring({
      * "Sammenlign med sist"-sjekken løser alle disse tingene på et sted. */
     const hasValuesChangedFromPreviousSave = !areFormStateObjectsEqual(
       values,
-      previouslyReturnedValues.lastSavedValues,
+      previousState.lastSavedValues,
     );
 
     const { isLastSaveSuccess, lastSavedValues, lastSavedTime } =
       hasValuesChangedFromPreviousSave
         ? await lagreUtkastServerAction(values)
-        : previouslyReturnedValues;
+        : previousState;
 
     if (isLastSaveSuccess) {
       onSuccess?.();
@@ -84,7 +84,7 @@ export default function useOppfolgingsplanUtkastLagring({
     onSuccess?: () => void;
   }) {
     startTransition(() => {
-      lagreUtkastIfChangesDispatchAction({ values, onSuccess });
+      lagreUtkastIfChangesAction({ values, onSuccess });
     });
   }
 
