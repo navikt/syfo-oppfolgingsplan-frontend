@@ -3,11 +3,12 @@ import { useParams, useRouter } from "next/navigation";
 import { revalidateLogic } from "@tanstack/react-form";
 import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
 import { getAGOversiktHref } from "@/common/route-hrefs";
-import { VeiviserSteg } from "@/components/OpprettPlanPage/LagPlanVeiviser";
+import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
   OppfolgingsplanForm,
   OppfolgingsplanFormFerdigstillValidering,
 } from "@/schema/oppfolgingsplanFormSchemas";
+import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
 import { useAppForm } from "./form";
 import useOppfolgingsplanFerdigstilling from "./useOppfolgingsplanFerdigstilling";
@@ -110,14 +111,14 @@ export default function useOppfolgingsplanForm({
     startTransition(() => {
       setVeiviserSteg(VeiviserSteg.OPPSUMMERING);
     });
-    scrollToVeiviserTop();
+    scrollToAppTopForAG();
   }
 
   function goBackToFyllUtPlanSteg() {
     startTransition(() => {
       setVeiviserSteg(VeiviserSteg.FYLL_UT_PLAN);
     });
-    scrollToVeiviserTop();
+    scrollToAppTopForAG();
   }
 
   return {
@@ -132,14 +133,4 @@ export default function useOppfolgingsplanForm({
     saveIfChangesAndExit,
     goBackToFyllUtPlanSteg,
   };
-}
-
-function scrollToVeiviserTop() {
-  const HEIGHT_DECORATOR = 160;
-  const HEIGHT_DINE_SYKMELDTE_HEADER = 128;
-
-  window.scrollTo({
-    top: HEIGHT_DECORATOR + HEIGHT_DINE_SYKMELDTE_HEADER,
-    behavior: "smooth",
-  });
 }

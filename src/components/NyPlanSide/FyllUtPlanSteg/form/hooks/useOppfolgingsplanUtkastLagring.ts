@@ -44,7 +44,7 @@ export default function useOppfolgingsplanUtkastLagring({
     }: {
       values: OppfolgingsplanForm;
       onSuccess?: () => void;
-    }
+    },
   ) {
     /* Uten denne sjekken, slik det er satt opp nå, vil det alltid bli trigget
      * en lagring når bruker klikker på "Fortsett til oppsummering" eller
@@ -57,7 +57,7 @@ export default function useOppfolgingsplanUtkastLagring({
      * "Sammenlign med sist"-sjekken løser alle disse tingene på et sted. */
     const hasValuesChangedFromPreviousSave = !areFormStateObjectsEqual(
       values,
-      previouslyReturnedValues.lastSavedValues
+      previouslyReturnedValues.lastSavedValues,
     );
 
     const { isLastSaveSuccess, lastSavedValues, lastSavedTime } =
@@ -109,7 +109,7 @@ type FormFieldValue = OppfolgingsplanForm[keyof OppfolgingsplanForm];
 
 function areFormStateObjectsEqual(
   a: Record<string, FormFieldValue> | null,
-  b: Record<string, FormFieldValue> | null
+  b: Record<string, FormFieldValue> | null,
 ): boolean {
   if (!a || !b) return false;
 
