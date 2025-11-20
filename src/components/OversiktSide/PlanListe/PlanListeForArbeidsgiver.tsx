@@ -8,7 +8,7 @@ import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
 import PlanListeDel from "./PlanListeDel";
-import SlettUtkastButton from "./SlettUtkastButton";
+import { SlettUtkastButtonAndModal } from "./SlettUtkast/SlettUtkastButtonAndModal";
 
 interface Props {
   narmesteLederId: string;
@@ -47,7 +47,7 @@ export default async function PlanListeForArbeidsgiver({
               narmesteLederId={narmesteLederId}
             />
 
-            <SlettUtkastButton />
+            <SlettUtkastButtonAndModal />
           </VStack>
         </PlanListeDel>
       )}

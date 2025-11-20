@@ -15,6 +15,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
 ): Promise<OppfolgingsplanerOversiktForAG> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
+
     return mockOversiktDataMedPlaner;
   }
 

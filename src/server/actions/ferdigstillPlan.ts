@@ -21,7 +21,7 @@ export async function ferdigstillPlanServerAction(
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
-    redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
+    return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
   }
 
   // lage formSnapshot
@@ -33,10 +33,5 @@ export async function ferdigstillPlanServerAction(
     requestBody: { formSnapshot },
   });
 
-  // only here to satisfy typescript for now
-  return {
-    error: null,
-  };
-
-  // redirect on success instead
+  return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
 }
