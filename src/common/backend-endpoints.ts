@@ -1,3 +1,4 @@
+import "server-only";
 import { getServerEnv } from "@/env-variables/serverEnv";
 
 const getAGEndpointPrefix = (narmesteLederId: string) =>
