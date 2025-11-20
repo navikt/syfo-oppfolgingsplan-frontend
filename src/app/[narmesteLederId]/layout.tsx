@@ -42,7 +42,7 @@ export default async function RootLayoutForAG({
           employeeName={employeeName}
         >
           <Theme>
-            <main className="w-[730px]">{children}</main>
+            <main className="max-w-[730px]">{children}</main>
           </Theme>
         </ArbeidsgiverPageContainer>
 

@@ -1,22 +1,21 @@
-import "server-only";
-
 import { cache } from "react";
+import "server-only";
 import z from "zod";
 import { logger } from "@navikt/next-logger";
 import { requestOboToken } from "@navikt/oasis";
-import { validateIdPortenToken } from "@/auth/validateIdPortenToken";
 import { redirectToLogin } from "@/auth/redirectToLogin";
+import { validateIdPortenToken } from "@/auth/validateIdPortenToken";
 import {
+  TokenXTargetApi,
   getBackendRequestHeaders,
   getClientIdForTokenXTargetApi,
-  TokenXTargetApi,
 } from "./helpers";
 
 /**
  * Redirects users to login if validation is unsuccessful.
  */
 const validateAndGetIdPortenTokenOrRedirectToLogin = async (
-  redirectAfterLoginUrl: string
+  redirectAfterLoginUrl: string,
 ) => {
   const validationResult = await validateIdPortenToken();
 
@@ -45,7 +44,7 @@ const exchangeIdPortenTokenForTokenXOboToken = cache(
   async (idPortenToken: string, targetApi: TokenXTargetApi) => {
     const tokenXGrant = await requestOboToken(
       idPortenToken,
-      getClientIdForTokenXTargetApi(targetApi)
+      getClientIdForTokenXTargetApi(targetApi),
     );
 
     if (!tokenXGrant.ok) {
@@ -54,7 +53,7 @@ const exchangeIdPortenTokenForTokenXOboToken = cache(
     }
 
     return tokenXGrant.token;
-  }
+  },
 );
 
 function logErrorMessageAndThrowError(logMessage: string): never {
@@ -65,7 +64,7 @@ function logErrorMessageAndThrowError(logMessage: string): never {
 async function logFailedFetchAndThrowError(
   response: Response,
   calledEnpoint: string,
-  calledMethod: string = "GET"
+  calledMethod: string = "GET",
 ): Promise<never> {
   let bodySnippet: string | undefined;
   try {
@@ -91,12 +90,12 @@ export async function tokenXFetchGet<S extends z.ZodType>({
   redirectAfterLoginUrl: string;
 }): Promise<z.infer<S>> {
   const idPortenToken = await validateAndGetIdPortenTokenOrRedirectToLogin(
-    redirectAfterLoginUrl
+    redirectAfterLoginUrl,
   );
 
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idPortenToken,
-    targetApi
+    targetApi,
   );
 
   const response = await fetch(endpoint, {
@@ -131,19 +130,19 @@ export async function tokenXFetchUpdate({
 }: {
   targetApi: TokenXTargetApi;
   endpoint: string;
-  requestBody: unknown;
+  requestBody?: unknown;
   method?: "POST" | "PUT" | "DELETE";
 }) {
   const idPortenToken = await validateAndGetIdPortenToken();
 
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idPortenToken,
-    targetApi
+    targetApi,
   );
 
   const response = await fetch(endpoint, {
     method,
-    body: JSON.stringify(requestBody),
+    body: requestBody ? JSON.stringify(requestBody) : undefined,
     headers: getBackendRequestHeaders(oboToken),
   });
 

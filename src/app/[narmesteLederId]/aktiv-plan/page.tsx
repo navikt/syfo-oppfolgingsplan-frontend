@@ -4,7 +4,7 @@ import {
   getAGOversiktHref,
 } from "@/common/route-hrefs";
 import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
-import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/FerdigstiltPlanSkeleton";
+import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 
 export default async function AktivPlanPageForAG({

@@ -1,10 +1,10 @@
 import { HStack, VStack } from "@navikt/ds-react";
 import { fetchTidligerePlanForAG } from "@/server/fetchData/arbeidsgiver/fetchTidligerePlan";
-import { FerdigstiltPlanHeadingAndTags } from "../FerdigstiltPlanHeadingAndTags";
-import { LastNedSomPdfButton } from "../LastNedSomPdfButton";
-import { MockOpprettetPlanSummary } from "../MockFerdigstiltPlanSummary";
-import TilbakeTilOversiktButtonForAG from "../TilbakeTilOversiktButtonForAG";
-import { TidligerePlanDetails } from "./TidligerePlanDetails";
+import { LastNedSomPdfButton } from "../Shared/Buttons/LastNedSomPdfButton";
+import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
+import { MockOpprettetPlanSummary } from "../Shared/Summary/MockFerdigstiltPlanSummary";
+import { TidligerePlanDetails } from "./Details/TidligerePlanDetails";
+import { TidligerePlanHeadingAndTags } from "./HeadingAndTags/TidligerePlanHeadingAndTags";
 
 interface Props {
   narmesteLederId: string;
@@ -28,10 +28,10 @@ export default async function TidligerePlanForAG({
   return (
     <section>
       <VStack gap="8">
-        <FerdigstiltPlanHeadingAndTags
+        <TidligerePlanHeadingAndTags
           employeeName={employee.name}
           isDeltMedLege={Boolean(deltMedLegeTidspunkt)}
-          isDeltMedNav={Boolean(deltMedVeilederTidspunkt)}
+          isDeltMedVeileder={Boolean(deltMedVeilederTidspunkt)}
         />
 
         <VStack gap="4">

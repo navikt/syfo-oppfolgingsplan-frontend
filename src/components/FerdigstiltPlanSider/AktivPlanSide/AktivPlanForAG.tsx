@@ -1,12 +1,13 @@
 import { VStack } from "@navikt/ds-react";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
-import { FerdigstiltPlanHeadingAndTags } from "../FerdigstiltPlanHeadingAndTags";
-import { MockOpprettetPlanSummary } from "../MockFerdigstiltPlanSummary";
-import TilbakeTilOversiktButtonForAG from "../TilbakeTilOversiktButtonForAG";
-import { AktivPlanButtons } from "./AktivPlanButtons";
-import { AktivPlanDetails } from "./AktivPlanDetails";
-import DelAktivPlanMedLegeEllerNav from "./DelAktivPlanMedLegeEllerNav";
+import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
+import { MockOpprettetPlanSummary } from "../Shared/Summary/MockFerdigstiltPlanSummary";
+import { AktivPlanButtons } from "./Buttons/AktivPlanButtons";
+import DelAktivPlanMedLegeEllerNav from "./DelAktivPlan/DelAktivPlanMedLegeEllerNav";
+import { AktivPlanDetails } from "./Details/AktivPlanDetails";
+import { AktivPlanHeadingAndTags } from "./HeadingAndTags/AktivPlanHeadingAndTags";
+import { PlanDelingProvider } from "./PlanDelingContext";
 
 interface Props {
   narmesteLederId: string;
@@ -20,6 +21,7 @@ export default async function AktivPlanForAG({
   const {
     employee,
     oppfolgingsplan: {
+      id: planId,
       evalueringsDato,
       ferdigstiltTidspunkt,
       deltMedLegeTidspunkt,
@@ -32,29 +34,27 @@ export default async function AktivPlanForAG({
       {nyligOpprettet && <ScrollToTopHelper />}
 
       <VStack gap="8">
-        <FerdigstiltPlanHeadingAndTags
-          employeeName={employee.name}
-          isDeltMedLege={Boolean(deltMedLegeTidspunkt)}
-          isDeltMedNav={Boolean(deltMedVeilederTidspunkt)}
-        />
+        <PlanDelingProvider
+          initialDeltMedLegeTidspunkt={deltMedLegeTidspunkt}
+          initialDeltMedVeilederTidspunkt={deltMedVeilederTidspunkt}
+        >
+          <AktivPlanHeadingAndTags employeeName={employee.name} />
 
-        <AktivPlanDetails
-          nyligOprettet={nyligOpprettet}
-          ferdigstiltTidspunkt={ferdigstiltTidspunkt}
-          evalueringsDato={evalueringsDato}
-        />
+          <AktivPlanDetails
+            nyligOprettet={nyligOpprettet}
+            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
+            evalueringsDato={evalueringsDato}
+          />
 
-        <DelAktivPlanMedLegeEllerNav
-          deltMedLegeTidspunkt={deltMedLegeTidspunkt}
-          deltMedVeilederTidspunkt={deltMedVeilederTidspunkt}
-        />
+          <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-        <AktivPlanButtons narmesteLederId={narmesteLederId} />
+          <AktivPlanButtons narmesteLederId={narmesteLederId} />
 
-        {/* TODO */}
-        <MockOpprettetPlanSummary />
+          {/* TODO */}
+          <MockOpprettetPlanSummary />
 
-        <TilbakeTilOversiktButtonForAG />
+          <TilbakeTilOversiktButtonForAG />
+        </PlanDelingProvider>
       </VStack>
     </section>
   );

@@ -17,3 +17,15 @@ export const getEndpointTidligerePlanForAG = (
   narmesteLederId: string,
   planId: string,
 ) => `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${planId}`;
+
+export const getEndpointDelMedLegeForAG = (
+  narmesteLederId: string,
+  planId: string,
+) =>
+  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${planId}/del-med-lege`;
+
+export const getEndpointDelMedVeilederForAG = (
+  narmesteLederId: string,
+  planId: string,
+) =>
+  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${planId}/del-med-veileder`;

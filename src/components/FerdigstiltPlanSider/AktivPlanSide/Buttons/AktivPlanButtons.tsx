@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import { Button, HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
-import { LastNedSomPdfButton } from "../LastNedSomPdfButton";
+import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
 
 interface Props {
   narmesteLederId: string;
