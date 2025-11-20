@@ -2,8 +2,8 @@ FROM gcr.io/distroless/nodejs20-debian12@sha256:a6c0e95f6f70fb21586757a846d8b8d2
 
 WORKDIR /app
 
-COPY package.json /app/
 COPY .next/standalone /app/
+COPY public /app/public
 
 EXPOSE 3000
 
