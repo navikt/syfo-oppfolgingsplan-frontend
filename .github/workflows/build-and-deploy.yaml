@@ -14,3 +14,4 @@ jobs:
     with:
       app: syfo-oppfolgingsplan-frontend
       base-path: /syk/oppfolgingsplan
+      node-version: 24.x
