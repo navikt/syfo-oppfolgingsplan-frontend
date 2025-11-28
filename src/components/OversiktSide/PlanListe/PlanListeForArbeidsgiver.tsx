@@ -18,13 +18,13 @@ export default async function PlanListeForArbeidsgiver({
   narmesteLederId,
 }: Props) {
   const {
+    organization: { orgName },
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
 
-  // TODO: Hent fra backend
-  const arbeidsstedNavn = "Arbeidssted AS";
+  const linkCardTitle = orgName || "Oppfølgingsplan";
 
   return (
     <section className="mb-12">
@@ -32,7 +32,7 @@ export default async function PlanListeForArbeidsgiver({
         <PlanListeDel heading="Aktiv plan">
           <AktivPlanLinkCard
             aktivPlan={aktivPlan}
-            arbeidsstedNavn={arbeidsstedNavn}
+            linkCardTitle={linkCardTitle}
             href={getAGAktivPlanHref(narmesteLederId)}
           />
         </PlanListeDel>
@@ -43,7 +43,7 @@ export default async function PlanListeForArbeidsgiver({
           <VStack gap="4">
             <UtkastLinkPanel
               utkast={utkast}
-              arbeidsstedNavn={arbeidsstedNavn}
+              linkCardTitle={linkCardTitle}
               narmesteLederId={narmesteLederId}
             />
 
@@ -59,7 +59,7 @@ export default async function PlanListeForArbeidsgiver({
               <TidligerePlanLinkCard
                 key={plan.id}
                 tidligerePlan={plan}
-                arbeidsstedNavn={arbeidsstedNavn}
+                linkCardTitle={linkCardTitle}
                 href={getAGTidligerePlanHref(narmesteLederId, plan.id)}
               />
             ))}
