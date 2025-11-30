@@ -1,20 +1,28 @@
 import z from "zod";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
+import { OppfolgingsplanForm } from "./oppfolgingsplanFormSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
-// TODO
-const UtkastContentSchema = z.record(z.string(), z.string());
-
-const utkastSchema = z.object({
-  ...utkastMetadataSchema.shape,
-  content: UtkastContentSchema,
-});
+const utkastResponseContentSchema = z.record(
+  z.string(),
+  z.union([z.string(), z.null()]),
+);
 
 export const utkastResponseForAGSchema = z.object({
   ...commonResponseFieldsForAGSchema.shape,
-  utkast: utkastSchema.nullable(),
+  utkast: z
+    .object({
+      ...utkastMetadataSchema.shape,
+      content: utkastResponseContentSchema,
+    })
+    .nullable(),
 });
 
-export type FerdigstiltPlanResponseForAG = z.infer<
+export type ConvertedLagretUtkastData = z.infer<
   typeof utkastResponseForAGSchema
->;
+> & {
+  utkast: {
+    sistLagretTidspunkt: Date;
+    content: Partial<OppfolgingsplanForm>;
+  } | null;
+};

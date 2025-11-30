@@ -2,9 +2,9 @@
 
 import { getEndpointDelMedLegeForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { TokenXTargetApi } from "../helpers";
-import { tokenXFetchUpdate } from "../tokenXFetch";
+import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export interface DelPlanMedLegeActionState {
   deltMedLegeTidspunkt: Date | null;

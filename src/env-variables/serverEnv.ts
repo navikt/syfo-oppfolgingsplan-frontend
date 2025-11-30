@@ -1,8 +1,7 @@
 import "server-only";
-
 import { z } from "zod";
-import { PublicEnv, publicEnvSchema, rawPublicEnv } from "./publicEnv";
 import { throwEnvSchemaParsingError } from "./envHelpers";
+import { PublicEnv, publicEnvSchema, rawPublicEnv } from "./publicEnv";
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 export const serverEnvSchema = z.object({

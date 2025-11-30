@@ -1,9 +1,6 @@
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
 
-export const formLabels: Record<
-  keyof OppfolgingsplanForm,
-  { label: string; description?: string }
-> = {
+export const formLabels = {
   typiskArbeidshverdag: {
     label: "Hvordan ser en vanlig arbeidsdag ut?",
     description: "Beskriv hvilke arbeidsoppgaver den ansatte gjør på jobben.",
@@ -50,7 +47,10 @@ export const formLabels: Record<
     description:
       "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Arbeidstakeren skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
   },
-} as const;
+} satisfies Record<
+  keyof OppfolgingsplanForm,
+  { label: string; description?: string }
+>;
 
 export const formHeadings = {
   arbeidsoppgaver: "Arbeidsoppgaver",

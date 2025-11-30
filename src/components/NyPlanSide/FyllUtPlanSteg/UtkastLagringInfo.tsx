@@ -2,14 +2,14 @@ import { BodyLong, HStack, HelpText, Loader } from "@navikt/ds-react";
 
 interface Props {
   isSavingUtkast: boolean;
-  sistLagretUtkastTidspunkt: Date | null;
+  utkastSistLagretTidspunkt: Date | null;
 }
 
 export default function UtkastLagringInfo({
   isSavingUtkast,
-  sistLagretUtkastTidspunkt,
+  utkastSistLagretTidspunkt,
 }: Props) {
-  if (!isSavingUtkast && !sistLagretUtkastTidspunkt) {
+  if (!isSavingUtkast && !utkastSistLagretTidspunkt) {
     return null;
   }
 
@@ -31,7 +31,7 @@ export default function UtkastLagringInfo({
       <BodyLong size="medium" className="text-ax-text-neutral-subtle">
         <span>
           Utkast sist lagret kl.{" "}
-          {sistLagretUtkastTidspunkt?.toLocaleTimeString("no-NB", {
+          {utkastSistLagretTidspunkt?.toLocaleTimeString("no-NB", {
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",

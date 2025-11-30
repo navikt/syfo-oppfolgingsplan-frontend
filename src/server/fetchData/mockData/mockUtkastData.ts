@@ -1,26 +1,22 @@
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { UtkastData } from "../arbeidsgiver/fetchUtkastPlan";
+import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
+import { toLocalDateStringInIsoFormat } from "@/utils/dateUtils";
+import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 
-const mockSavedFormValues: OppfolgingsplanForm = {
+const mockLagretUtkast: Partial<OppfolgingsplanForm> = {
   typiskArbeidshverdag:
     "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast.",
-  arbeidsoppgaverSomKanUtfores: "",
-  arbeidsoppgaverSomIkkeKanUtfores: "",
-  tidligereTilrettelegging: "",
-  tilretteleggingFremover: "",
-  annenTilrettelegging: "",
-  hvordanFolgeOpp: "",
-  evalueringsDato: null,
-  harDenAnsatteMedvirket: null,
-  denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };
 
-export const mockUtkastData: UtkastData = {
-  savedFormValues: mockSavedFormValues,
-  lastSavedTime: new Date(Date.now() - 30 * 60 * 1000),
+export const mockUtkastResponse: ConvertedLagretUtkastData = {
+  ...mockCommonAGResponseFields,
+  utkast: {
+    sistLagretTidspunkt: new Date(Date.now() - 30 * 60 * 1000),
+    content: mockLagretUtkast,
+  },
 };
 
-const mockSavedFormValuesFilled: OppfolgingsplanForm = {
+const mockUtfyltLagretUtkast: OppfolgingsplanForm = {
   typiskArbeidshverdag:
     "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast.",
   arbeidsoppgaverSomKanUtfores: ".",
@@ -32,13 +28,16 @@ const mockSavedFormValuesFilled: OppfolgingsplanForm = {
   evalueringsDato: (() => {
     const d = new Date();
     d.setMonth(d.getMonth() + 2);
-    return d;
+    return toLocalDateStringInIsoFormat(d);
   })(),
   harDenAnsatteMedvirket: "ja",
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };
 
-export const mockUtkastDataFilled: UtkastData = {
-  savedFormValues: mockSavedFormValuesFilled,
-  lastSavedTime: new Date(Date.now() - 5 * 60 * 1000),
+export const mockUtfyltLagretUtkastResponse: ConvertedLagretUtkastData = {
+  ...mockCommonAGResponseFields,
+  utkast: {
+    sistLagretTidspunkt: new Date(Date.now() - 5 * 60 * 1000),
+    content: mockUtfyltLagretUtkast,
+  },
 };

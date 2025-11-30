@@ -3,17 +3,14 @@
 import { refresh } from "next/cache";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { TokenXTargetApi } from "../helpers";
-import { tokenXFetchUpdate } from "../tokenXFetch";
-
-export type SlettUtkastActionState = {
-  error: string | null;
-};
+import { FetchUpdateResult } from "../tokenXFetch/FetchResult";
+import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export async function slettUtkastServerAction(
   narmesteLederId: string,
-): Promise<SlettUtkastActionState> {
+): Promise<FetchUpdateResult> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
@@ -21,12 +18,16 @@ export async function slettUtkastServerAction(
     return { error: null };
   }
 
-  await tokenXFetchUpdate({
+  const result = await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "DELETE",
     endpoint: getEndpointUtkastForAG(narmesteLederId),
   });
 
-  refresh();
-  return { error: null };
+  if (result.error) {
+    return result;
+  } else {
+    refresh();
+    return { error: null };
+  }
 }

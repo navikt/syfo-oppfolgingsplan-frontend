@@ -1,12 +1,13 @@
 import { startTransition, useRef, useState, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { revalidateLogic } from "@tanstack/react-form";
+import z from "zod";
 import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
   OppfolgingsplanForm,
-  OppfolgingsplanFormFerdigstillValidering,
+  OppfolgingsplanFormFerdigstillSchema,
 } from "@/schema/oppfolgingsplanFormSchemas";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
@@ -23,11 +24,11 @@ const defaultMeta: FormMeta = {
 };
 
 export default function useOppfolgingsplanForm({
-  savedFormValues,
-  lastSavedTime,
+  initialLagretUtkast,
+  initialSistLagretTidspunkt,
 }: {
-  savedFormValues: OppfolgingsplanForm | null;
-  lastSavedTime: Date | null;
+  initialLagretUtkast: Partial<OppfolgingsplanForm> | null;
+  initialSistLagretTidspunkt: Date | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
@@ -44,14 +45,14 @@ export default function useOppfolgingsplanForm({
 
   const initialFormValues: OppfolgingsplanForm = {
     ...oppfolgingsplanFormDefaultValues,
-    ...savedFormValues,
+    ...initialLagretUtkast,
   };
 
   const form = useAppForm({
     defaultValues: initialFormValues,
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: OppfolgingsplanFormFerdigstillValidering,
+      onDynamic: OppfolgingsplanFormFerdigstillSchema,
     },
     listeners: {
       onChange: ({ formApi }) =>
@@ -68,19 +69,25 @@ export default function useOppfolgingsplanForm({
       if (meta.submitAction === "fortsettTilOppsummering") {
         saveIfChangesAndProceedToOppsummering(value);
       } else if (meta.submitAction === "ferdigstill") {
-        startFerdigstillPlanAction(value);
+        startFerdigstillPlanAction({
+          // We now know the form is valid when onSubmit runs, so we can
+          // safely assert the type, and that evalueringsDato is defined
+          formValues: value as z.infer<
+            typeof OppfolgingsplanFormFerdigstillSchema
+          >,
+          evalueringsDatoIsoString: value.evalueringsDato!,
+          includeIkkeMedvirketBegrunnelseFieldInFormSnapshot:
+            value.harDenAnsatteMedvirket === "nei",
+        });
       }
     },
   });
 
-  const {
-    isSavingUtkast,
-    lastSavedTime: utkastLastSavedTime,
-    startLagreUtkastIfChanges,
-  } = useOppfolgingsplanUtkastLagring({
-    initialFormValues,
-    initialLastSavedTime: lastSavedTime,
-  });
+  const { isSavingUtkast, sistLagretTidspunkt, startLagreUtkastIfChanges } =
+    useOppfolgingsplanUtkastLagring({
+      initialFormValues,
+      initialSistLagretTidspunkt,
+    });
 
   const { startFerdigstillPlanAction, isPendingFerdigstillPlan } =
     useFerdigstillOppfolgingsplanAction();
@@ -126,7 +133,7 @@ export default function useOppfolgingsplanForm({
     veiviserSteg,
     focusThisOnValidationErrorsRef,
     isSavingUtkast,
-    utkastLastSavedTime,
+    utkastSistLagretTidspunkt: sistLagretTidspunkt,
     isPendingProceedToOppsummering,
     isPendingExitAndContinueLater,
     isPendingFerdigstillPlan,

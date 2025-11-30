@@ -6,7 +6,7 @@ import { oppfolgingsplanFormDefaultValues } from "./form/form-options";
 import { withForm } from "./form/hooks/form";
 
 interface Props {
-  sistLagretUtkastTidspunkt: Date | null;
+  utkastSistLagretTidspunkt: Date | null;
   isSavingUtkast: boolean;
   isPendingProceedToOppsummering: boolean;
   isPendingExitAndContinueLater: boolean;
@@ -23,7 +23,7 @@ const FyllUtPlanSteg = withForm({
     isSavingUtkast,
     isPendingProceedToOppsummering,
     isPendingExitAndContinueLater,
-    sistLagretUtkastTidspunkt,
+    utkastSistLagretTidspunkt,
     errorSummaryRef,
     onAvsluttOgFortsettSenereClick,
     onGoToOppsummeringClick,
@@ -45,7 +45,7 @@ const FyllUtPlanSteg = withForm({
           utkastLagringInfo={
             <UtkastLagringInfo
               isSavingUtkast={isSavingUtkast}
-              sistLagretUtkastTidspunkt={sistLagretUtkastTidspunkt}
+              utkastSistLagretTidspunkt={utkastSistLagretTidspunkt}
             />
           }
         />
