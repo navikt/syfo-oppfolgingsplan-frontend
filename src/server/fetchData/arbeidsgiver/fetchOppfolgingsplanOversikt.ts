@@ -7,7 +7,7 @@ import {
 import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchGet } from "../../tokenXFetch/tokenXFetchGet";
-import { mockOversiktDataMedPlaner } from "../mockData/mockOversiktData";
+import { mockOversiktDataMedPlanerForAG } from "../mockData/mockOversiktData";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 export async function fetchOppfolgingsplanOversiktForAG(
@@ -16,7 +16,7 @@ export async function fetchOppfolgingsplanOversiktForAG(
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
-    return mockOversiktDataMedPlaner;
+    return mockOversiktDataMedPlanerForAG;
   }
 
   return await tokenXFetchGet({

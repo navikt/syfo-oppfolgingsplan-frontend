@@ -12,18 +12,13 @@ export const employeeDetailsSchema = z.object({
 
 export type EmployeeDetails = z.infer<typeof employeeDetailsSchema>;
 
-export const commonResponseFieldsForAGSchema = z.object({
+export const commonResponseFieldsSchema = z.object({
   /**
    * Har AG-bruker tilgang til å ferdigstille planer, redigere utkast og
    * dele aktiv oppfølgingsplan med lege/Nav?
    * `false` hvis den ansatte ikke er eller nylig var sykmeldt.
    */
   userHasEditAccess: z.boolean(),
-  organization: organizationDetailsSchema,
-  employee: employeeDetailsSchema,
-});
-
-export const commonResponseFieldsForSMSchema = z.object({
   organization: organizationDetailsSchema,
   employee: employeeDetailsSchema,
 });

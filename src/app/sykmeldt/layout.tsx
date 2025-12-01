@@ -1,0 +1,48 @@
+import { ReactNode } from "react";
+import { Metadata } from "next";
+import Script from "next/script";
+import { Theme } from "@navikt/ds-react";
+import "@/app/globals.css";
+import { MainContent } from "@/ui/layout/MainContent";
+import { fetchDecoratorForSM } from "@/ui/layout/fetchDecoratorHelpers";
+import { BreadcrumbsUpdaterForSM } from "./_components/BreadcrumbsUpdaterForSM";
+import Preload from "./preload";
+import { Providers } from "./providers";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Oppfølgingsplan",
+};
+
+export default async function RootLayoutForSM({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const Decorator = await fetchDecoratorForSM();
+
+  return (
+    <html lang="no">
+      <head>
+        <Decorator.HeadAssets />
+        <Preload />
+      </head>
+
+      <body>
+        <Decorator.Header />
+
+        <Theme>
+          <Providers>
+            <BreadcrumbsUpdaterForSM />
+            <MainContent>{children}</MainContent>
+          </Providers>
+        </Theme>
+
+        <Decorator.Footer />
+
+        <Decorator.Scripts loader={Script} />
+      </body>
+    </html>
+  );
+}
