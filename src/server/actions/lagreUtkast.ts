@@ -1,45 +1,83 @@
 "use server";
 
+import z from "zod";
+import { logger } from "@navikt/next-logger";
+import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import {
+  OppfolgingsplanForm,
+  OppfolgingsplanFormAndUtkastSchema,
+} from "@/schema/oppfolgingsplanFormSchemas";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
+import { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
+import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
+import { FrontendErrorType } from "./FrontendErrorTypeEnum";
+import { isNonEmptyString } from "./serverActionsInputValidation";
 
-export type LagreUtkastActionState = {
-  isLastSaveSuccess: boolean;
-  lastSavedTime: Date | null;
-  lastSavedValues: OppfolgingsplanForm | null;
-};
+const lagreUtkastResponseSchema = z.object({
+  sistLagretTidspunkt: z.iso
+    .datetime()
+    .transform((dateString) => new Date(dateString))
+    .nullable(),
+});
+
+type LagreUtkastResponse = z.infer<typeof lagreUtkastResponseSchema>;
+
+interface LagreUtkastRequestBody {
+  content: OppfolgingsplanForm;
+}
 
 export async function lagreUtkastServerAction(
-  values: OppfolgingsplanForm,
-): Promise<LagreUtkastActionState> {
+  narmesteLederId: string,
+  formValues: OppfolgingsplanForm,
+): Promise<FetchUpdateResultWithResponse<LagreUtkastResponse>> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
     return {
-      isLastSaveSuccess: true,
-      lastSavedTime: new Date(),
-      lastSavedValues: values,
+      error: null,
+      data: { sistLagretTidspunkt: new Date() },
     };
   }
 
-  // validere mot zod skjema
+  // Input validation
+  const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
+  const {
+    success: isFormValuesValid,
+    data: validatedFormValues,
+    error: inputValidationError,
+  } = OppfolgingsplanFormAndUtkastSchema.safeParse(formValues);
 
-  // maybe map values to backend format
+  if (!(isNarmesteLederIdValid && isFormValuesValid)) {
+    if (!isNarmesteLederIdValid) {
+      logger.error(
+        `LagreUtkastActionState invalid narmesteLederId: ${narmesteLederId}`,
+      );
+    }
+    if (!isFormValuesValid) {
+      logger.error(
+        `LagreUtkastActionState formValues validation error: ${inputValidationError.message}`,
+      );
+    }
 
-  await tokenXFetchUpdate({
-    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: "TODO",
-    method: "PUT",
-    requestBody: { values },
-  });
+    return {
+      error: {
+        type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
+      },
+      data: null,
+    };
+  }
 
-  // TODO
-  return {
-    isLastSaveSuccess: true,
-    lastSavedTime: new Date(),
-    lastSavedValues: values,
+  const requestBody: LagreUtkastRequestBody = {
+    content: validatedFormValues,
   };
+
+  return await tokenXFetchUpdateWithResponse({
+    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
+    endpoint: getEndpointUtkastForAG(narmesteLederId),
+    method: "PUT",
+    requestBody,
+    responseDataSchema: lagreUtkastResponseSchema,
+  });
 }

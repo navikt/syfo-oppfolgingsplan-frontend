@@ -1,31 +1,41 @@
 import { startTransition, useActionState } from "react";
+import { useParams } from "next/navigation";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import {
-  LagreUtkastActionState,
-  lagreUtkastServerAction,
-} from "@/server/actions/lagreUtkast";
+import { lagreUtkastServerAction } from "@/server/actions/lagreUtkast";
+import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+
+export interface LagreUtkastActionState {
+  error: FetchResultError | null;
+  sistLagretTidspunkt: Date | null;
+  sistLagretUtkast: OppfolgingsplanForm | null;
+}
 
 export default function useOppfolgingsplanUtkastLagring({
   initialFormValues,
-  initialLastSavedTime,
+  initialSistLagretTidspunkt,
 }: {
   initialFormValues: OppfolgingsplanForm;
-  initialLastSavedTime: Date | null;
+  initialSistLagretTidspunkt: Date | null;
 }) {
+  const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
+
   const initialLagreUtkastState: LagreUtkastActionState = {
-    isLastSaveSuccess: true,
-    lastSavedTime: initialLastSavedTime,
-    lastSavedValues: initialFormValues,
+    error: null,
+    sistLagretTidspunkt: initialSistLagretTidspunkt,
+    sistLagretUtkast: initialFormValues,
   };
 
   const [
-    { isLastSaveSuccess, lastSavedTime },
-    // If this returned action function is called while the action is already running,
-    // the call is queued and will run after the ongoing action is finished.
-    //
-    // Gotcha: This returned "dispatch" function must be called in a transition
-    // (or from an action prop) in order not to suspend the calling component during the action.
-    // Suspending would show the fallback UI of the nearest <Suspense> boundary during the action.
+    { error, sistLagretTidspunkt },
+    // If this returned action function is called while the action is already
+    // running, the call is queued and will run after the ongoing action is
+    // finished.
+    // Gotcha: The returned "dispatch" function from useActionState must be
+    // called in a transition (or from an action prop) in order not to suspend
+    // the calling component during the action. Suspending would show the
+    // fallback UI of the nearest <Suspense> boundary during the action. That
+    // is why calls to these action functions returned form useActionState are
+    // wrapped in startTransition (like below) or triggered from `action` props.
     lagreUtkastIfChangesAction,
     isSavingUtkast,
   ] = useActionState(lagreUtkastIfChangesInnerAction, initialLagreUtkastState);
@@ -33,7 +43,7 @@ export default function useOppfolgingsplanUtkastLagring({
   /**
    * This underlying action function `lagreUtkastIfChangesInnerAction` is
    * provided the values it returned last time (or the initial state)
-   * automatically by `useActionState` (see above).
+   * automatically by `useActionState`.
    * This way, it can compare the new `values` with the previously saved values.
    */
   async function lagreUtkastIfChangesInnerAction(
@@ -57,23 +67,36 @@ export default function useOppfolgingsplanUtkastLagring({
      * "Sammenlign med sist"-sjekken løser alle disse tingene på et sted. */
     const hasValuesChangedFromPreviousSave = !areFormStateObjectsEqual(
       values,
-      previousState.lastSavedValues,
+      previousState.sistLagretUtkast,
     );
 
-    const { isLastSaveSuccess, lastSavedValues, lastSavedTime } =
-      hasValuesChangedFromPreviousSave
-        ? await lagreUtkastServerAction(values)
-        : previousState;
+    let newActionState: LagreUtkastActionState;
 
-    if (isLastSaveSuccess) {
+    if (hasValuesChangedFromPreviousSave) {
+      const result = await lagreUtkastServerAction(narmesteLederId, values);
+
+      if (result.error) {
+        newActionState = {
+          sistLagretUtkast: previousState.sistLagretUtkast,
+          sistLagretTidspunkt: previousState.sistLagretTidspunkt,
+          error: result.error,
+        };
+      } else {
+        newActionState = {
+          sistLagretUtkast: values,
+          sistLagretTidspunkt: result.data.sistLagretTidspunkt,
+          error: null,
+        };
+      }
+    } else {
+      newActionState = { ...previousState };
+    }
+
+    if (newActionState.error === null) {
       onSuccess?.();
     }
 
-    return {
-      isLastSaveSuccess,
-      lastSavedValues,
-      lastSavedTime,
-    };
+    return newActionState;
   }
 
   function startLagreUtkastIfChanges({
@@ -90,16 +113,17 @@ export default function useOppfolgingsplanUtkastLagring({
 
   return {
     isSavingUtkast,
-    isLastSaveSuccess,
-    lastSavedTime,
+    error,
+    sistLagretTidspunkt,
     /**
-     * Hvis `startLagreUtkastIfChanges` kalles flere etter hverandre med like `values`,
-     * blir det bare gjort (maks) en faktisk lagring, også hvis den kalles mens en lagring
-     * allerede pågår.
+     * Hvis `startLagreUtkastIfChanges` kalles flere ganger etter hverandre med
+     * like `values`, blir det bare gjort (maks) en faktisk lagring, også hvis
+     * den kalles mens en lagring allerede pågår.
      *
-     * Hvis det ikke er noen endringer i values sammenligned med `initialFormValues` vil
-     * ikke kall føre til lagring. (Det er også et ux-poeng å ikke endre
-     * "sist lagret"-tidspunktet når det ikke gjøres noen endringer.)
+     * Hvis det ikke er noen endringer i values sammenligned med
+     * `initialFormValues` vil ikke kall føre til lagring. (Det er også et
+     * ux-poeng å ikke endre "sist lagret"-tidspunktet når det ikke gjøres
+     * noen endringer.)
      */
     startLagreUtkastIfChanges,
   };
@@ -124,5 +148,6 @@ function areFormStateObjectsEqual(
 
     if (!Object.is(av, bv)) return false;
   }
+
   return true;
 }

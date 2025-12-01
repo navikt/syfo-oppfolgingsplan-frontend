@@ -1,9 +1,7 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
-import {
-  SlettUtkastActionState,
-  slettUtkastServerAction,
-} from "@/server/actions/slettUtkast";
+import { slettUtkastServerAction } from "@/server/actions/slettUtkast";
+import { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
 
 type ActionPayload = {
   onSuccess: () => void;
@@ -12,7 +10,7 @@ type ActionPayload = {
 export default function useSlettUtkastAction() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const initialSlettUtkastState: SlettUtkastActionState = { error: null };
+  const initialSlettUtkastState: FetchUpdateResult = { error: null };
 
   const [{ error }, slettUtkastAction, isPendingSlettUtkast] = useActionState(
     innerSlettUtkastAction,
@@ -20,9 +18,9 @@ export default function useSlettUtkastAction() {
   );
 
   async function innerSlettUtkastAction(
-    _previousState: SlettUtkastActionState,
+    _previousState: FetchUpdateResult,
     { onSuccess }: ActionPayload,
-  ): Promise<SlettUtkastActionState> {
+  ): Promise<FetchUpdateResult> {
     const actionState = await slettUtkastServerAction(narmesteLederId);
 
     if (actionState.error === null) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Activity, use } from "react";
-import { UtkastData } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
+import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";
@@ -12,26 +12,29 @@ export enum VeiviserSteg {
 }
 
 interface Props {
-  lagretUtkastPromise: Promise<UtkastData>;
+  lagretUtkastPromise: Promise<ConvertedLagretUtkastData>;
 }
 
 export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
-  const { savedFormValues, lastSavedTime } = use(lagretUtkastPromise);
+  const { utkast } = use(lagretUtkastPromise);
+
+  const initialLagretUtkast = utkast?.content || null;
+  const initialSistLagretTidspunkt = utkast?.sistLagretTidspunkt || null;
 
   const {
     form,
     veiviserSteg,
     focusThisOnValidationErrorsRef,
     isSavingUtkast,
-    utkastLastSavedTime,
+    utkastSistLagretTidspunkt,
     isPendingProceedToOppsummering,
     isPendingExitAndContinueLater,
     isPendingFerdigstillPlan,
     saveIfChangesAndExit,
     goBackToFyllUtPlanSteg,
   } = useOppfolgingsplanForm({
-    savedFormValues,
-    lastSavedTime,
+    initialLagretUtkast,
+    initialSistLagretTidspunkt,
   });
 
   return (
@@ -44,7 +47,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           isSavingUtkast={isSavingUtkast}
           isPendingProceedToOppsummering={isPendingProceedToOppsummering}
           isPendingExitAndContinueLater={isPendingExitAndContinueLater}
-          sistLagretUtkastTidspunkt={utkastLastSavedTime}
+          utkastSistLagretTidspunkt={utkastSistLagretTidspunkt}
           errorSummaryRef={focusThisOnValidationErrorsRef}
           onAvsluttOgFortsettSenereClick={saveIfChangesAndExit}
           onGoToOppsummeringClick={() =>
