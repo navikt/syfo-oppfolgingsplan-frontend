@@ -1,6 +1,5 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
-import { FerdistillPlanActionState } from "@/server/actions/ferdigstillPlan";
 import {
   SlettUtkastActionState,
   slettUtkastServerAction,
@@ -21,9 +20,9 @@ export default function useSlettUtkastAction() {
   );
 
   async function innerSlettUtkastAction(
-    _previousState: FerdistillPlanActionState,
+    _previousState: SlettUtkastActionState,
     { onSuccess }: ActionPayload,
-  ): Promise<FerdistillPlanActionState> {
+  ): Promise<SlettUtkastActionState> {
     const actionState = await slettUtkastServerAction(narmesteLederId);
 
     if (actionState.error === null) {

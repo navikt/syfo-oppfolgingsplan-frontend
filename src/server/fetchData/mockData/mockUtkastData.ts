@@ -1,4 +1,5 @@
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { toLocalDateStringInIsoFormat } from "@/utils/dateUtils";
 import { UtkastData } from "../arbeidsgiver/fetchUtkastPlan";
 
 const mockSavedFormValues: OppfolgingsplanForm = {
@@ -32,7 +33,7 @@ const mockSavedFormValuesFilled: OppfolgingsplanForm = {
   evalueringsDato: (() => {
     const d = new Date();
     d.setMonth(d.getMonth() + 2);
-    return d;
+    return toLocalDateStringInIsoFormat(d);
   })(),
   harDenAnsatteMedvirket: "ja",
   denAnsatteHarIkkeMedvirketBegrunnelse: "",

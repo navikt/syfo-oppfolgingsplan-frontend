@@ -9,6 +9,7 @@ import {
 } from "@navikt/ds-react/FormSummary";
 import { formHeadings, formLabels } from "@/components/NyPlanSide/form-labels";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
 
 // TODO: Rewrite for FormSnapshot
 
@@ -107,13 +108,9 @@ export default function FerdigstiltPlanSummary({
             </FormSummaryLabel>
             <FormSummaryValue>
               {formValues.evalueringsDato &&
-                new Date(formValues.evalueringsDato).toLocaleDateString(
-                  "nb-NO",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  },
+                getLocaleDateString(
+                  new Date(formValues.evalueringsDato),
+                  "long",
                 )}
             </FormSummaryValue>
           </FormSummaryAnswer>

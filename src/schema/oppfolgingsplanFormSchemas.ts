@@ -1,12 +1,16 @@
 import { z } from "zod";
 import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
-import { getOneYearFromNowDate, getTomorrowDate } from "@/utils/dateUtils";
+import {
+  getOneYearFromNowDate,
+  getTomorrowDate,
+  isValidDate,
+} from "@/utils/dateUtils";
 
 const requireFieldErrorMessage = "Feltet må fylles ut";
 const maxLengthExeededErrorMessage = `Feltet kan ikke ha mer enn ${TEXT_FIELD_MAX_LENGTH} tegn`;
 
 export type OppfolgingsplanForm = z.infer<
-  typeof OppfolgingsplanFormLagreUtkastValidering
+  typeof OppfolgingsplanFormAndUtkastSchema
 >;
 
 // Form field values for text fields will start as empty strings, so they can't be null.
@@ -19,7 +23,11 @@ const schemaForRequiredMaxLengthTextField = z
   .nonempty(requireFieldErrorMessage)
   .max(TEXT_FIELD_MAX_LENGTH, maxLengthExeededErrorMessage);
 
-export const OppfolgingsplanFormLagreUtkastValidering = z.object({
+/**
+ * Zod-schema for validering av form ved lagring av utkast.
+ * Alle felter er valgfrie fra brukerperspektiv ved lagring av utkast.
+ */
+export const OppfolgingsplanFormAndUtkastSchema = z.object({
   typiskArbeidshverdag: schemaForNonRequiredMaxLengthTextField,
   arbeidsoppgaverSomKanUtfores: schemaForNonRequiredMaxLengthTextField,
   arbeidsoppgaverSomIkkeKanUtfores: schemaForNonRequiredMaxLengthTextField,
@@ -27,13 +35,47 @@ export const OppfolgingsplanFormLagreUtkastValidering = z.object({
   tilretteleggingFremover: schemaForNonRequiredMaxLengthTextField,
   annenTilrettelegging: schemaForNonRequiredMaxLengthTextField,
   hvordanFolgeOpp: schemaForNonRequiredMaxLengthTextField,
-  evalueringsDato: z.date().nullable(),
+  evalueringsDato: z.iso.date().nullable(),
   harDenAnsatteMedvirket: z.enum(["ja", "nei"]).nullable(),
   denAnsatteHarIkkeMedvirketBegrunnelse: schemaForNonRequiredMaxLengthTextField,
 });
 
-export const OppfolgingsplanFormFerdigstillValidering =
-  OppfolgingsplanFormLagreUtkastValidering.safeExtend({
+const schemaForEvalueringsDatoVedFerdigstilling = z.iso
+  .date({
+    error: (issue) =>
+      issue.input === null ? requireFieldErrorMessage : "Ugyldig dato",
+  })
+  .refine(
+    (dateString) => {
+      const minDate = getTomorrowDate();
+      const parsedDate = new Date(dateString);
+      return (
+        isValidDate(parsedDate) && parsedDate.getTime() >= minDate.getTime()
+      );
+    },
+    {
+      message: "Dato for evaluering kan ikke være i dag eller tidligere",
+    },
+  )
+  .refine(
+    (dateString) => {
+      const maxDate = getOneYearFromNowDate();
+      const parsedDate = new Date(dateString);
+      return (
+        isValidDate(parsedDate) && parsedDate.getTime() <= maxDate.getTime()
+      );
+    },
+    {
+      message: "Dato for evaluering kan ikke være mer enn ett år frem i tid",
+    },
+  );
+
+/**
+ * Zod-schema for validering av form ved ferdigstilling av plan.
+ * Denne valideringen er strengere enn ved lagring av utkast.
+ */
+export const OppfolgingsplanFormFerdigstillSchema = z
+  .object({
     typiskArbeidshverdag: schemaForRequiredMaxLengthTextField,
     arbeidsoppgaverSomKanUtfores: schemaForRequiredMaxLengthTextField,
     arbeidsoppgaverSomIkkeKanUtfores: schemaForRequiredMaxLengthTextField,
@@ -41,25 +83,14 @@ export const OppfolgingsplanFormFerdigstillValidering =
     tilretteleggingFremover: schemaForRequiredMaxLengthTextField,
     annenTilrettelegging: schemaForRequiredMaxLengthTextField,
     hvordanFolgeOpp: schemaForRequiredMaxLengthTextField,
-    evalueringsDato: z
-      .date({
-        error: (issue) =>
-          issue.input === null ? requireFieldErrorMessage : "Ugyldig dato",
-      })
-      .min(
-        getTomorrowDate(),
-        "Dato for evaluering kan ikke være i dag eller tidligere",
-      )
-      .max(
-        getOneYearFromNowDate(),
-        "Dato for evaluering kan ikke være mer enn ett år frem i tid",
-      ),
+    evalueringsDato: schemaForEvalueringsDatoVedFerdigstilling,
     harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
       error: "Du må svare ja eller nei",
     }),
     denAnsatteHarIkkeMedvirketBegrunnelse:
       schemaForNonRequiredMaxLengthTextField,
-  }).refine(
+  })
+  .refine(
     ({ harDenAnsatteMedvirket, denAnsatteHarIkkeMedvirketBegrunnelse }) =>
       checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
         harDenAnsatteMedvirket,
@@ -69,7 +100,7 @@ export const OppfolgingsplanFormFerdigstillValidering =
       message: requireFieldErrorMessage,
       path: ["denAnsatteHarIkkeMedvirketBegrunnelse"],
       when(payload) {
-        return OppfolgingsplanFormFerdigstillValidering.pick({
+        return OppfolgingsplanFormFerdigstillSchema.pick({
           harDenAnsatteMedvirket: true,
         }).safeParse(payload.value).success;
       },
