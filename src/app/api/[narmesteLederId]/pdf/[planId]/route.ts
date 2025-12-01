@@ -1,11 +1,11 @@
 import { getEndpointPDFForAG } from "@/common/backend-endpoints.ts";
 import { isLocalOrDemo } from "@/env-variables/envHelpers.ts";
-import { mockPdf } from "@/server/fetchData/mockData/mockPdf.ts";
-import { TokenXTargetApi } from "@/server/helpers.ts";
+import { validateAndGetIdPortenToken } from "@/server/auth/idPortenToken";
 import {
+  TokenXTargetApi,
   exchangeIdPortenTokenForTokenXOboToken,
-  validateAndGetIdPortenToken,
-} from "@/server/tokenXFetch.ts";
+} from "@/server/auth/tokenXExchange";
+import { mockPdf } from "@/server/fetchData/mockData/mockPdf.ts";
 
 export async function GET(
   _: Request,

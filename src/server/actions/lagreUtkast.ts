@@ -2,9 +2,9 @@
 
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { TokenXTargetApi } from "../helpers";
-import { tokenXFetchUpdate } from "../tokenXFetch";
+import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export type LagreUtkastActionState = {
   isLastSaveSuccess: boolean;

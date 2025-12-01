@@ -1,5 +1,5 @@
-import { publicEnv } from "@/env-variables/publicEnv";
 import { redirect } from "next/navigation";
+import { publicEnv } from "@/env-variables/publicEnv";
 
 export function getRedirectAfterLoginUrlForAG(narmesteLederId: string) {
   return `${publicEnv.NEXT_PUBLIC_BASE_PATH}/oppfolgingsplan/${narmesteLederId}`;
@@ -11,7 +11,7 @@ export function getRedirectAfterLoginUrlForSM() {
 
 export const redirectToLogin = (redirectAfterLoginUrl: string) => {
   const loginPath = `/oauth2/login?redirect=${encodeURIComponent(
-    redirectAfterLoginUrl
+    redirectAfterLoginUrl,
   )}`;
 
   return redirect(loginPath);

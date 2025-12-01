@@ -3,9 +3,9 @@
 import { refresh } from "next/cache";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { TokenXTargetApi } from "../helpers";
-import { tokenXFetchUpdate } from "../tokenXFetch";
+import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export type SlettUtkastActionState = {
   error: string | null;
