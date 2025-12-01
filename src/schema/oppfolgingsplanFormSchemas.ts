@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
-import { getOneYearFromNowDate, getTomorrowDate } from "@/utils/dateUtils";
+import { getOneYearFromNowDate, getTomorrowDate } from "@/common/dateUtils";
 
 const requireFieldErrorMessage = "Feltet må fylles ut";
 const maxLengthExeededErrorMessage = `Feltet kan ikke ha mer enn ${TEXT_FIELD_MAX_LENGTH} tegn`;

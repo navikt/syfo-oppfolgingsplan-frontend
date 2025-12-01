@@ -1,9 +1,5 @@
 import z from "zod";
-
-const organizationDetailsSchema = z.object({
-  orgNumber: z.string(), // brukes ikke foreløpig
-  orgName: z.string().nullable(),
-});
+import { organizationDetailsSchema } from "./organizationDetailsSchema";
 
 export const employeeDetailsSchema = z.object({
   fnr: z.string(),

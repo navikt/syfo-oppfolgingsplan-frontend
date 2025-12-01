@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import Breadcrumbs from "@/common/components/Breadcrumbs";
+import FerdigstiltPlanSkeleton from "@/common/components/Skeletons/FerdigstiltPlanSkeleton";
 import { getAGOversiktHref } from "@/common/route-hrefs";
-import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
-import TidligerePlanForAG from "@/components/FerdigstiltPlanSider/TidligerePlanSide/TidligerePlanForAG";
-import Breadcrumbs from "@/ui/Breadcrumbs";
+import TidligerePlanForAG from "../../_components/TidligerePlan/TidligerePlanForAG";
 
 export default async function TidligerePlanPageForAG({
   params,

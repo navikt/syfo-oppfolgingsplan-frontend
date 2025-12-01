@@ -1,8 +1,14 @@
-import { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSchemas";
-import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
+import {
+  OppfolgingsplanerOversiktForAG,
+  OppfolgingsplanerOversiktForSM,
+} from "@/schema/oversiktResponseSchemas";
+import {
+  mockCommonAGResponseFields,
+  mockOrganization,
+} from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
 
-export const mockOversiktDataMedPlaner: OppfolgingsplanerOversiktForAG = {
+export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
   oversikt: {
     utkast: {
@@ -20,4 +26,14 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
     aktivPlan: null,
     tidligerePlaner: [],
   },
+};
+
+const addOrganization = <T extends object>(plan: T) => ({
+  ...plan,
+  organization: mockOrganization,
+});
+
+export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
+  aktiveOppfolgingsplaner: [addOrganization(mockAktivPlanData)],
+  tidligerePlaner: mockTidligerePlanerData.map(addOrganization),
 };

@@ -3,19 +3,22 @@ import {
   EmployeeDetails,
   commonResponseFieldsForAGSchema,
 } from "@/schema/commonResponseFieldsSchemas";
+import { OrganizationDetails } from "@/schema/organizationDetailsSchema";
 
 export const mockEmployeeDetails: EmployeeDetails = {
   fnr: "17097534212",
   name: "Kreativ Hatt",
 };
 
+export const mockOrganization: OrganizationDetails = {
+  orgNumber: "123456789",
+  orgName: "Holmen skole",
+};
+
 export const mockCommonAGResponseFields: z.infer<
   typeof commonResponseFieldsForAGSchema
 > = {
   userHasEditAccess: true,
-  organization: {
-    orgNumber: "123456789",
-    orgName: "Arbeidssted AS",
-  },
+  organization: mockOrganization,
   employee: mockEmployeeDetails,
 };

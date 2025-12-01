@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { Heading } from "@navikt/ds-react";
+import { BigLoadingSpinner } from "@/common/components/BigLoadingSpinner";
+import Breadcrumbs from "@/common/components/Breadcrumbs";
 import { getAGOversiktHref } from "@/common/route-hrefs";
-import LagPlanVeiviser from "@/components/NyPlanSide/LagPlanVeiviser";
-import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
-import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner";
-import Breadcrumbs from "@/ui/Breadcrumbs";
+import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlanForAG";
+import LagPlanVeiviser from "../_components/NyPlan/LagPlanVeiviser";
 
 export default async function NyPlanPage({
   params,

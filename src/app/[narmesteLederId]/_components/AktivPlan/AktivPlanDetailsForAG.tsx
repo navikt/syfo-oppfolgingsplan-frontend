@@ -1,0 +1,44 @@
+import { Alert, BodyShort, VStack } from "@navikt/ds-react";
+import {
+  getLocaleDateAndTimeString,
+  getLocaleDateString,
+} from "@/common/dateAndTime";
+import { isDateInPast } from "@/common/dateUtils";
+
+interface Props {
+  nyligOprettet: boolean;
+  ferdigstiltTidspunkt: Date;
+  evalueringsDato: Date;
+}
+
+export function AktivPlanDetailsForAG({
+  nyligOprettet,
+  ferdigstiltTidspunkt,
+  evalueringsDato,
+}: Props) {
+  const evalueringsDatoInfo = (
+    <BodyShort size="medium">
+      Evaluering av planen {isDateInPast(evalueringsDato) ? "var" : "er"}{" "}
+      planlagt {getLocaleDateString(evalueringsDato, "long")}.
+    </BodyShort>
+  );
+
+  return nyligOprettet ? (
+    <VStack className="gap-8">
+      <Alert variant="success" size="medium">
+        Oppfølgingsplanen er ferdigstilt og delt med den ansatte.
+      </Alert>
+
+      {evalueringsDatoInfo}
+    </VStack>
+  ) : (
+    <VStack className="gap-4">
+      <BodyShort size="medium">
+        Planen ble ferdigstilt og delt med den ansatte{" "}
+        {getLocaleDateAndTimeString(ferdigstiltTidspunkt, "long")}.
+      </BodyShort>
+
+      {evalueringsDatoInfo}
+    </VStack>
+  );
+}

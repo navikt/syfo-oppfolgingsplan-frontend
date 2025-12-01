@@ -1,11 +1,11 @@
 import { Suspense } from "react";
+import Breadcrumbs from "@/common/components/Breadcrumbs";
+import FerdigstiltPlanSkeleton from "@/common/components/Skeletons/FerdigstiltPlanSkeleton";
 import {
   NYLIG_OPPRETTET_SEARCH_PARAM,
   getAGOversiktHref,
 } from "@/common/route-hrefs";
-import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
-import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
-import Breadcrumbs from "@/ui/Breadcrumbs";
+import AktivPlanForAG from "../_components/AktivPlan/AktivPlanForAG";
 
 export default async function AktivPlanPageForAG({
   params,

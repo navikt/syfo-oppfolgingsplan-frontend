@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { BodyLong, Heading } from "@navikt/ds-react";
-import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
-import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
-import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
-import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
-import TextContentBox from "@/components/layout/TextContentBox";
+import PlanListeSkeleton from "@/common/components/Skeletons/PlanListeSkeleton";
+import TextContentBox from "@/common/components/layout/TextContentBox";
+import OversiktSideInformasjon from "./_components/Oversikt/InformasjonSection/OversiktSideInformasjon";
+import NyPlanButtonHvisTomListe from "./_components/Oversikt/NyPlanButtonHvisTomListe";
+import PlanListeForArbeidsgiver from "./_components/Oversikt/PlanListeForArbeidsgiver";
 
 export default async function OversiktPageForAG({
   params,

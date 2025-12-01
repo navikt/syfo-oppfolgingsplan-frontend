@@ -15,6 +15,4 @@ export const utkastResponseForAGSchema = z.object({
   utkast: utkastSchema.nullable(),
 });
 
-export type FerdigstiltPlanResponseForAG = z.infer<
-  typeof utkastResponseForAGSchema
->;
+export type UtkastResponseForAG = z.infer<typeof utkastResponseForAGSchema>;
