@@ -34,7 +34,7 @@ export function AktivPlanDetails({
   ) : (
     <VStack className="gap-4">
       <BodyShort size="medium">
-        Planen ble ferdigstilt og delt med den ansatte{" "}
+        Planen ble opprettet og delt med den ansatte{" "}
         {getLocaleDateAndTimeString(ferdigstiltTidspunkt, "long")}.
       </BodyShort>
 

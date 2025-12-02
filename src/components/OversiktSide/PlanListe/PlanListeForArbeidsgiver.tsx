@@ -29,7 +29,7 @@ export default async function PlanListeForArbeidsgiver({
   return (
     <section className="mb-12">
       {aktivPlan && (
-        <PlanListeDel heading="Aktiv plan">
+        <PlanListeDel>
           <AktivPlanLinkCard
             aktivPlan={aktivPlan}
             linkCardTitle={linkCardTitle}

@@ -32,7 +32,11 @@ export function SlettUtkastModal({ modalRef }: Props) {
             })
           }
         >
-          <Button type="submit" variant="danger" loading={isPendingSlettUtkast}>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={isPendingSlettUtkast}
+          >
             Slett utkast
           </Button>
         </form>

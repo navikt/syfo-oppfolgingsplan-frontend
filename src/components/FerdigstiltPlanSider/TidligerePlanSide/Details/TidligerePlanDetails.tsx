@@ -21,7 +21,7 @@ export function TidligerePlanDetails({
     <VStack className="gap-4">
       <VStack gap="2">
         <BodyShort size="medium">
-          Denne tidligere planen ble ferdigstilt og delt med den ansatte{" "}
+          Denne tidligere planen ble opprettet og delt med den ansatte{" "}
           {getLocaleDateAndTimeString(ferdigstiltTidspunkt, "long")}.
         </BodyShort>
 
