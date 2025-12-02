@@ -29,3 +29,9 @@ export const getEndpointDelMedVeilederForAG = (
   planId: string,
 ) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${planId}/del-med-veileder`;
+
+export const getEndpointPDFForAG = (
+  narmesteLederId: string,
+  documentId: string,
+) =>
+  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${documentId}/pdf`;

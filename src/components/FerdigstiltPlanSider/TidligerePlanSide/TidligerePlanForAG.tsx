@@ -43,7 +43,10 @@ export default async function TidligerePlanForAG({
           />
 
           <HStack justify="end">
-            <LastNedSomPdfButton />
+            <LastNedSomPdfButton
+              narmesteLederId={narmesteLederId}
+              planId={planId}
+            />
           </HStack>
 
           <MockOpprettetPlanSummary />

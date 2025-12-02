@@ -48,7 +48,7 @@ export default async function AktivPlanForAG({
 
           <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-          <AktivPlanButtons />
+          <AktivPlanButtons planId={planId} />
 
           {/* TODO */}
           <MockOpprettetPlanSummary />

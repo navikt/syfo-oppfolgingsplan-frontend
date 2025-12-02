@@ -8,7 +8,11 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
 import { SlettUtkastVedOppdaterPlanModal } from "./SlettUtkastVedOppdaterPlanModal";
 
-export function AktivPlanButtons() {
+interface Props {
+  planId?: string;
+}
+
+export function AktivPlanButtons({ planId }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
@@ -34,7 +38,10 @@ export function AktivPlanButtons() {
           </Button>
         </HStack>
 
-        <LastNedSomPdfButton />
+        <LastNedSomPdfButton
+          narmesteLederId={narmesteLederId}
+          planId={planId}
+        />
       </HStack>
     </>
   );
