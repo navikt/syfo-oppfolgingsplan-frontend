@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
 import { Button } from "@navikt/ds-react";
