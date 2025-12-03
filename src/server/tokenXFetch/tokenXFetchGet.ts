@@ -10,7 +10,7 @@ import {
   getAndLogFetchNetworkError,
 } from "./errorHandling";
 import { getBackendRequestHeaders } from "./helpers";
-import { validateResposeBody } from "./validateResposeBody";
+import { validateResponseBody } from "./validateResponseBody";
 
 /**
  * Makes "GET" request to backend with TokenX OBO token.
@@ -64,7 +64,7 @@ export async function tokenXFetchGet<S extends z.ZodType>({
   }
 
   // Response status is ok, parse response data
-  const { success, validatedData } = await validateResposeBody({
+  const { success, validatedData } = await validateResponseBody({
     response,
     responseDataSchema,
     endpoint,

@@ -14,7 +14,7 @@ import {
   getAndLogFetchNetworkError,
 } from "./errorHandling";
 import { getBackendRequestHeaders } from "./helpers";
-import { validateResposeBody } from "./validateResposeBody";
+import { validateResponseBody } from "./validateResponseBody";
 
 /**
  * Makes "POST", "PUT" or "DELETE" request to backend with TokenX OBO token.
@@ -131,7 +131,7 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
     return { error: errorResult, data: null };
   } else {
     // Valididate response data
-    const { success, validatedData } = await validateResposeBody({
+    const { success, validatedData } = await validateResponseBody({
       response,
       responseDataSchema,
       endpoint,

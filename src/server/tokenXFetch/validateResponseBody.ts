@@ -5,7 +5,7 @@ import { tryToExtractNameAndMessageFromError } from "./errorHandling";
 /**
  * Returns validation result, and logs error if validation fails.
  */
-export async function validateResposeBody<S extends z.ZodType>({
+export async function validateResponseBody<S extends z.ZodType>({
   response,
   responseDataSchema,
   endpoint,
