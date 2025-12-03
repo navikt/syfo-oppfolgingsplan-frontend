@@ -7,7 +7,7 @@ import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
-import { getOppfolgingsplanFormShape } from "@/utils/OppfolgingsplanFormSnapshot/getOppfolgingsplanFormShape";
+import { getOppfolgingsplanFormShape } from "@/utils/getOppfolgingsplanFormShape";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { FetchUpdateResult } from "../tokenXFetch/FetchResult";

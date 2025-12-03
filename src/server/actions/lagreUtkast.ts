@@ -30,7 +30,7 @@ interface LagreUtkastRequestBody {
 
 export async function lagreUtkastServerAction(
   narmesteLederId: string,
-  formValues: OppfolgingsplanForm,
+  formValues: Partial<OppfolgingsplanForm>,
 ): Promise<FetchUpdateResultWithResponse<LagreUtkastResponse>> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
@@ -52,12 +52,12 @@ export async function lagreUtkastServerAction(
   if (!(isNarmesteLederIdValid && isFormValuesValid)) {
     if (!isNarmesteLederIdValid) {
       logger.error(
-        `LagreUtkastActionState invalid narmesteLederId: ${narmesteLederId}`,
+        `lagreUtkastServerAction invalid narmesteLederId: ${narmesteLederId}`,
       );
     }
     if (!isFormValuesValid) {
       logger.error(
-        `LagreUtkastActionState formValues validation error: ${inputValidationError.message}`,
+        `lagreUtkastServerAction formValues validation error: ${inputValidationError.message}`,
       );
     }
 
