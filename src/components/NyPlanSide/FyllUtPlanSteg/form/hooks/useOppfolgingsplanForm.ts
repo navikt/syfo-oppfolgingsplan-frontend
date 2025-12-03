@@ -6,8 +6,8 @@ import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
-  OppfolgingsplanForm,
   OppfolgingsplanFormFerdigstillSchema,
+  OppfolgingsplanFormUnderArbeid,
 } from "@/schema/oppfolgingsplanFormSchemas";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
@@ -27,7 +27,7 @@ export default function useOppfolgingsplanForm({
   initialLagretUtkast,
   initialSistLagretTidspunkt,
 }: {
-  initialLagretUtkast: Partial<OppfolgingsplanForm> | null;
+  initialLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
   initialSistLagretTidspunkt: Date | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
@@ -43,7 +43,7 @@ export default function useOppfolgingsplanForm({
 
   const { push } = useRouter();
 
-  const initialFormValues: OppfolgingsplanForm = {
+  const initialFormValues: OppfolgingsplanFormUnderArbeid = {
     ...oppfolgingsplanFormDefaultValues,
     ...initialLagretUtkast,
   };
@@ -92,7 +92,9 @@ export default function useOppfolgingsplanForm({
   const { startFerdigstillPlanAction, isPendingFerdigstillPlan } =
     useFerdigstillOppfolgingsplanAction();
 
-  function saveIfChangesAndProceedToOppsummering(values: OppfolgingsplanForm) {
+  function saveIfChangesAndProceedToOppsummering(
+    values: OppfolgingsplanFormUnderArbeid,
+  ) {
     startProceedToOppsummeringTransition(() => {
       startLagreUtkastIfChanges({
         values,

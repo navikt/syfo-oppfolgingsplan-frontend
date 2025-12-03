@@ -9,8 +9,11 @@ import {
 const requireFieldErrorMessage = "Feltet må fylles ut";
 const maxLengthExeededErrorMessage = `Feltet kan ikke ha mer enn ${TEXT_FIELD_MAX_LENGTH} tegn`;
 
-export type OppfolgingsplanForm = z.infer<
+export type OppfolgingsplanFormUnderArbeid = z.infer<
   typeof OppfolgingsplanFormAndUtkastSchema
+>;
+export type OppfolgingsplanForm = z.infer<
+  typeof OppfolgingsplanFormFerdigstillSchema
 >;
 
 // Form field values for text fields will start as empty strings, so they can't be null.
@@ -27,18 +30,21 @@ const schemaForRequiredMaxLengthTextField = z
  * Zod-schema for validering av form ved lagring av utkast.
  * Alle felter er valgfrie fra brukerperspektiv ved lagring av utkast.
  */
-export const OppfolgingsplanFormAndUtkastSchema = z.object({
-  typiskArbeidshverdag: schemaForNonRequiredMaxLengthTextField,
-  arbeidsoppgaverSomKanUtfores: schemaForNonRequiredMaxLengthTextField,
-  arbeidsoppgaverSomIkkeKanUtfores: schemaForNonRequiredMaxLengthTextField,
-  tidligereTilrettelegging: schemaForNonRequiredMaxLengthTextField,
-  tilretteleggingFremover: schemaForNonRequiredMaxLengthTextField,
-  annenTilrettelegging: schemaForNonRequiredMaxLengthTextField,
-  hvordanFolgeOpp: schemaForNonRequiredMaxLengthTextField,
-  evalueringsDato: z.iso.date().nullable(),
-  harDenAnsatteMedvirket: z.enum(["ja", "nei"]).nullable(),
-  denAnsatteHarIkkeMedvirketBegrunnelse: schemaForNonRequiredMaxLengthTextField,
-});
+export const OppfolgingsplanFormAndUtkastSchema = z
+  .object({
+    typiskArbeidshverdag: schemaForNonRequiredMaxLengthTextField,
+    arbeidsoppgaverSomKanUtfores: schemaForNonRequiredMaxLengthTextField,
+    arbeidsoppgaverSomIkkeKanUtfores: schemaForNonRequiredMaxLengthTextField,
+    tidligereTilrettelegging: schemaForNonRequiredMaxLengthTextField,
+    tilretteleggingFremover: schemaForNonRequiredMaxLengthTextField,
+    annenTilrettelegging: schemaForNonRequiredMaxLengthTextField,
+    hvordanFolgeOpp: schemaForNonRequiredMaxLengthTextField,
+    evalueringsDato: z.iso.date().nullable(),
+    harDenAnsatteMedvirket: z.enum(["ja", "nei"]).nullable(),
+    denAnsatteHarIkkeMedvirketBegrunnelse:
+      schemaForNonRequiredMaxLengthTextField,
+  })
+  .partial();
 
 const schemaForEvalueringsDatoVedFerdigstilling = z.iso
   .date({

@@ -1,6 +1,6 @@
 import {
-  OppfolgingsplanForm,
   OppfolgingsplanFormAndUtkastSchema,
+  OppfolgingsplanFormUnderArbeid,
 } from "@/schema/oppfolgingsplanFormSchemas";
 
 /**
@@ -13,7 +13,7 @@ import {
  */
 export function convertPlanContentToCurrentSchema(
   planContent: Record<string, string | boolean | null>,
-): Partial<OppfolgingsplanForm> {
+): OppfolgingsplanFormUnderArbeid {
   const oppfolgingsplanFormSchemaShape =
     OppfolgingsplanFormAndUtkastSchema.shape;
 
@@ -36,7 +36,7 @@ export function convertPlanContentToCurrentSchema(
         return acc;
       }
     },
-    {} as Partial<OppfolgingsplanForm>,
+    {} as OppfolgingsplanFormUnderArbeid,
   );
 
   return result;
