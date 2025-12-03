@@ -29,7 +29,7 @@ const validateAndGetIdPortenTokenOrRedirectToLogin = async (
 /**
  * Throws error if validation is unsuccessful.
  */
-const validateAndGetIdPortenToken = async () => {
+export const validateAndGetIdPortenToken = async () => {
   const validationResult = await validateIdPortenToken();
 
   if (!validationResult.success) {
@@ -40,7 +40,7 @@ const validateAndGetIdPortenToken = async () => {
   return validationResult.token;
 };
 
-const exchangeIdPortenTokenForTokenXOboToken = cache(
+export const exchangeIdPortenTokenForTokenXOboToken = cache(
   async (idPortenToken: string, targetApi: TokenXTargetApi) => {
     const tokenXGrant = await requestOboToken(
       idPortenToken,
