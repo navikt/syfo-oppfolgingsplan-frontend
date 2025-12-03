@@ -12,9 +12,9 @@ export async function GET(
   }: { params: Promise<{ narmesteLederId: string; documentId: string }> },
 ) {
   const { narmesteLederId, documentId } = await params;
-
+  console.log("testing");
   const idportenToken = await validateAndGetIdPortenToken();
-  const oboToken = exchangeIdPortenTokenForTokenXOboToken(
+  const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idportenToken,
     TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
   );
