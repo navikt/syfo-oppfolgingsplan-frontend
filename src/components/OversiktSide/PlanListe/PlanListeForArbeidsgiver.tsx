@@ -3,7 +3,7 @@ import {
   getAGAktivPlanHref,
   getAGTidligerePlanHref,
 } from "@/common/route-hrefs";
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";

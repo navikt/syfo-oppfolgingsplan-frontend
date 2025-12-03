@@ -1,4 +1,4 @@
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversiktForAG";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
