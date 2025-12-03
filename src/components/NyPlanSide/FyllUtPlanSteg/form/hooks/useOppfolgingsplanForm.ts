@@ -24,11 +24,11 @@ const defaultMeta: FormMeta = {
 };
 
 export default function useOppfolgingsplanForm({
-  savedFormValues,
-  lastSavedTime,
+  initialLagretUtkast,
+  initialSistLagretTidspunkt,
 }: {
-  savedFormValues: OppfolgingsplanForm | null;
-  lastSavedTime: Date | null;
+  initialLagretUtkast: Partial<OppfolgingsplanForm> | null;
+  initialSistLagretTidspunkt: Date | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
@@ -45,7 +45,7 @@ export default function useOppfolgingsplanForm({
 
   const initialFormValues: OppfolgingsplanForm = {
     ...oppfolgingsplanFormDefaultValues,
-    ...savedFormValues,
+    ...initialLagretUtkast,
   };
 
   const form = useAppForm({
@@ -83,14 +83,11 @@ export default function useOppfolgingsplanForm({
     },
   });
 
-  const {
-    isSavingUtkast,
-    lastSavedTime: utkastLastSavedTime,
-    startLagreUtkastIfChanges,
-  } = useOppfolgingsplanUtkastLagring({
-    initialFormValues,
-    initialLastSavedTime: lastSavedTime,
-  });
+  const { isSavingUtkast, sistLagretTidspunkt, startLagreUtkastIfChanges } =
+    useOppfolgingsplanUtkastLagring({
+      initialFormValues,
+      initialSistLagretTidspunkt,
+    });
 
   const { startFerdigstillPlanAction, isPendingFerdigstillPlan } =
     useFerdigstillOppfolgingsplanAction();
@@ -136,7 +133,7 @@ export default function useOppfolgingsplanForm({
     veiviserSteg,
     focusThisOnValidationErrorsRef,
     isSavingUtkast,
-    utkastLastSavedTime,
+    utkastSistLagretTidspunkt: sistLagretTidspunkt,
     isPendingProceedToOppsummering,
     isPendingExitAndContinueLater,
     isPendingFerdigstillPlan,
