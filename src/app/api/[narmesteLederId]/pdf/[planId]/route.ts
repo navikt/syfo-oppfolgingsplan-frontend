@@ -1,4 +1,6 @@
 import { getEndpointPDFForAG } from "@/common/backend-endpoints.ts";
+import { isLocalOrDemo } from "@/env-variables/envHelpers.ts";
+import { mockPdf } from "@/server/fetchData/mockData/mockPdf.ts";
 import { TokenXTargetApi } from "@/server/helpers.ts";
 import {
   exchangeIdPortenTokenForTokenXOboToken,
@@ -9,6 +11,10 @@ export async function GET(
   _: Request,
   { params }: { params: Promise<{ narmesteLederId: string; planId: string }> },
 ) {
+  if (isLocalOrDemo) {
+    return mockPdf();
+  }
+
   const { narmesteLederId, planId } = await params;
 
   const idportenToken = await validateAndGetIdPortenToken();
