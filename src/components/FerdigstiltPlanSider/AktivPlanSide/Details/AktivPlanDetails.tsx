@@ -18,8 +18,7 @@ export function AktivPlanDetails({
 }: Props) {
   const evalueringsDatoInfo = (
     <BodyShort size="medium">
-      Evaluering av planen {isDateInPast(evalueringsDato) ? "var" : "er"}{" "}
-      planlagt {getLocaleDateString(evalueringsDato, "long")}.
+      Evalueringsdato: {getLocaleDateString(evalueringsDato, "long")}
     </BodyShort>
   );
 
@@ -34,8 +33,7 @@ export function AktivPlanDetails({
   ) : (
     <VStack className="gap-4">
       <BodyShort size="medium">
-        Planen ble ferdigstilt og delt med den ansatte{" "}
-        {getLocaleDateAndTimeString(ferdigstiltTidspunkt, "long")}.
+        Opprettet dato: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
       </BodyShort>
 
       {evalueringsDatoInfo}
