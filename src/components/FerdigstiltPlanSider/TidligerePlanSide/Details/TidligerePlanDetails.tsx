@@ -21,13 +21,18 @@ export function TidligerePlanDetails({
     <VStack className="gap-4">
       <VStack gap="2">
         <BodyShort size="medium">
-          Denne tidligere planen ble opprettet og delt med den ansatte{" "}
-          {getLocaleDateAndTimeString(ferdigstiltTidspunkt, "long")}.
+          Opprettet dato: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
         </BodyShort>
 
+        <BodyShort size="medium">
+          Evalueringsdato: {getLocaleDateString(evalueringsDato, "long")}
+        </BodyShort>
+      </VStack>
+
+      <VStack gap="2">
         {deltMedLegeTidspunkt && (
           <BodyShort size="medium">
-            Den ble delt med fastlege{" "}
+            Planen ble delt med fastlege{" "}
             {getLocaleDateAndTimeString(deltMedLegeTidspunkt, "long")}.
           </BodyShort>
         )}
@@ -39,11 +44,6 @@ export function TidligerePlanDetails({
           </BodyShort>
         )}
       </VStack>
-
-      <BodyShort size="medium">
-        Evaluering av planen var planlagt{" "}
-        {getLocaleDateString(evalueringsDato, "long")}.
-      </BodyShort>
     </VStack>
   );
 }
