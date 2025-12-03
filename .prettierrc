@@ -11,5 +11,6 @@
     "^@/(.*)$",
     "^[./]"
   ],
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "importOrderSideEffects": false
 }

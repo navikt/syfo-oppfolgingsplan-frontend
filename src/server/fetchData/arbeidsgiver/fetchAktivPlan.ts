@@ -1,12 +1,12 @@
-import { getRedirectAfterLoginUrlForAG } from "@/auth/redirectToLogin";
 import { getEndpointAktivPlanForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   FerdigstiltPlanResponseForAG,
   ferdigstiltPlanResponseForAGSchema,
 } from "@/schema/ferdigstiltPlanResponseSchemas";
-import { TokenXTargetApi } from "../../helpers";
-import { tokenXFetchGet } from "../../tokenXFetch";
+import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";
+import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
+import { tokenXFetchGet } from "../../tokenXFetch/tokenXFetchGet";
 import { getMockAktivPlanData } from "../mockData/mockHelpers";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
