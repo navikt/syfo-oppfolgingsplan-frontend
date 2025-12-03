@@ -22,7 +22,7 @@
     "@navikt/ds-tailwind": "^7.34.0",
     "@navikt/nav-dekoratoren-moduler": "^3.6.0",
     "@navikt/next-logger": "^4.4.1",
-    "@navikt/oasis": "^3.8.0",
+    "@navikt/oasis": "^4.1.1",
     "@tanstack/react-form": "^1.26.0",
     "next": "^16.0.7",
     "pino": "^9.13.0",
