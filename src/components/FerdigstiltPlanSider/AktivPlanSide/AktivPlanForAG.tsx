@@ -1,8 +1,8 @@
 import { VStack } from "@navikt/ds-react";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
+import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
 import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
-import { MockOpprettetPlanSummary } from "../Shared/Summary/MockFerdigstiltPlanSummary";
 import { AktivPlanButtons } from "./Buttons/AktivPlanButtons";
 import DelAktivPlanMedLegeEllerNav from "./DelAktivPlan/DelAktivPlanMedLegeEllerNav";
 import { AktivPlanDetails } from "./Details/AktivPlanDetails";
@@ -26,6 +26,7 @@ export default async function AktivPlanForAG({
       ferdigstiltTidspunkt,
       deltMedLegeTidspunkt,
       deltMedVeilederTidspunkt,
+      content,
     },
   } = await fetchAktivPlanForAG(narmesteLederId);
 
@@ -50,8 +51,7 @@ export default async function AktivPlanForAG({
 
           <AktivPlanButtons planId={planId} />
 
-          {/* TODO */}
-          <MockOpprettetPlanSummary />
+          <FormSummaryFromSnapshot formSnapshot={content} />
 
           <TilbakeTilOversiktButtonForAG />
         </PlanDelingProvider>

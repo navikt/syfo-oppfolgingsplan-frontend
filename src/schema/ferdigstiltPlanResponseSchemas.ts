@@ -1,9 +1,7 @@
 import z from "zod";
+import { formSnapshotSchema } from "@/utils/FormSnapshot/schemas/FormSnapshot";
 import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
 import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
-
-// TODO
-const formSnapshotSchema = z.object({});
 
 export const ferdigstiltPlanResponseForAGSchema = z.object({
   ...commonResponseFieldsForAGSchema.shape,
