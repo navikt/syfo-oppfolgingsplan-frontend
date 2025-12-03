@@ -1,9 +1,5 @@
 import { Alert, BodyShort, VStack } from "@navikt/ds-react";
-import {
-  getLocaleDateAndTimeString,
-  getLocaleDateString,
-} from "@/ui-helpers/dateAndTime";
-import { isDateInPast } from "@/utils/dateUtils";
+import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
 
 interface Props {
   nyligOprettet: boolean;
