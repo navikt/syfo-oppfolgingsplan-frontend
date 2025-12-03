@@ -98,7 +98,10 @@ export default function PlanFormSummary({ formValues, className }: Props) {
             </FormSummary.Label>
             <FormSummary.Value>
               {formValues.evalueringsDato &&
-                getLocaleDateString(formValues.evalueringsDato, "long")}
+                getLocaleDateString(
+                  new Date(formValues.evalueringsDato),
+                  "long",
+                )}
             </FormSummary.Value>
           </FormSummary.Answer>
 

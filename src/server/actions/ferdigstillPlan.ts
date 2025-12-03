@@ -1,37 +1,84 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import z from "zod";
+import { logger } from "@navikt/next-logger";
+import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
+import { getOppfolgingsplanFormShape } from "@/utils/OppfolgingsplanFormSnapshot/getOppfolgingsplanFormShape";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
+import { FetchUpdateResult } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
-
-export type FerdistillPlanActionState = {
-  error: string | null;
-};
+import { FrontendErrorType } from "./FrontendErrorTypeEnum";
+import {
+  ferdigstillPlanActionPayloadSchema,
+  isNonEmptyString,
+} from "./serverActionsInputValidation";
 
 export async function ferdigstillPlanServerAction(
-  oppfolgingsplanFormValues: OppfolgingsplanForm,
   narmesteLederId: string,
-): Promise<FerdistillPlanActionState> {
-  // validere mot zod skjema
-
+  payload: z.infer<typeof ferdigstillPlanActionPayloadSchema>,
+): Promise<FetchUpdateResult> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
     return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
   }
 
-  // lage formSnapshot
-  const formSnapshot = oppfolgingsplanFormValues; // TODO: lage snapshot
+  // Input validation
+  const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
+  const {
+    success: isPayloadValid,
+    data: validatedPayload,
+    error: inputValidationError,
+  } = ferdigstillPlanActionPayloadSchema.safeParse(payload);
 
-  await tokenXFetchUpdate({
+  if (!(isNarmesteLederIdValid && isPayloadValid)) {
+    if (!isNarmesteLederIdValid) {
+      logger.error(
+        `ferdigstillPlanServerAction invalid narmesteLederId: ${narmesteLederId}`,
+      );
+    }
+    if (!isPayloadValid) {
+      logger.error(
+        `ferdigstillPlanServerAction payload validation error: ${inputValidationError.message}`,
+      );
+      return {
+        error: {
+          type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
+        },
+      };
+    }
+  }
+
+  const {
+    formValues,
+    evalueringsDatoIsoString,
+    includeIkkeMedvirketBegrunnelseFieldInFormSnapshot,
+  } = validatedPayload;
+
+  // Create form snapshot
+  const formShape = getOppfolgingsplanFormShape(
+    includeIkkeMedvirketBegrunnelseFieldInFormSnapshot,
+  );
+  const formSnapshot = createFormSnapshot(formShape, formValues);
+
+  const fetchResult = await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: "TODO",
-    requestBody: { formSnapshot },
+    endpoint: getEndpointOppfolgingsplanerForAG(narmesteLederId),
+    requestBody: {
+      content: formSnapshot,
+      evalueringsdato: evalueringsDatoIsoString,
+    },
   });
 
-  return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
+  if (fetchResult.error) {
+    return fetchResult;
+  } else {
+    // Redirect to aktiv plan page on success
+    return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
+  }
 }

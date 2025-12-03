@@ -122,11 +122,6 @@ function areFormStateObjectsEqual(
     const av = a[key];
     const bv = b[key];
 
-    if (av instanceof Date && bv instanceof Date) {
-      if (av.getTime() !== bv.getTime()) return false;
-      continue;
-    }
-
     if (!Object.is(av, bv)) return false;
   }
   return true;

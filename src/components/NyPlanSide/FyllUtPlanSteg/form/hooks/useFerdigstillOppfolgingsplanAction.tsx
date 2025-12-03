@@ -1,10 +1,13 @@
 import { startTransition, useActionState } from "react";
 import { useParams } from "next/navigation";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import {
-  FerdistillPlanActionState,
-  ferdigstillPlanServerAction,
-} from "@/server/actions/ferdigstillPlan";
+import z from "zod";
+import { ferdigstillPlanServerAction } from "@/server/actions/ferdigstillPlan";
+import { ferdigstillPlanActionPayloadSchema } from "@/server/actions/serverActionsInputValidation";
+import { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
+
+export type FerdigstillPlanActionPayload = z.infer<
+  typeof ferdigstillPlanActionPayloadSchema
+>;
 
 export default function useFerdigstillOppfolgingsplanAction() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
@@ -15,15 +18,15 @@ export default function useFerdigstillOppfolgingsplanAction() {
     useActionState(innerFerdigstillPlanAction, initialFerdigstillState);
 
   function innerFerdigstillPlanAction(
-    _previousState: FerdistillPlanActionState,
-    values: OppfolgingsplanForm,
-  ): Promise<FerdistillPlanActionState> {
-    return ferdigstillPlanServerAction(values, narmesteLederId);
+    _previousState: FetchUpdateResult,
+    payload: FerdigstillPlanActionPayload,
+  ): Promise<FetchUpdateResult> {
+    return ferdigstillPlanServerAction(narmesteLederId, payload);
   }
 
-  function startFerdigstillPlanAction(values: OppfolgingsplanForm) {
+  function startFerdigstillPlanAction(payload: FerdigstillPlanActionPayload) {
     startTransition(() => {
-      ferdigstillPlanAction(values);
+      ferdigstillPlanAction(payload);
     });
   }
 
