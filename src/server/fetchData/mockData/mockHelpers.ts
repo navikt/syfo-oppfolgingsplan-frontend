@@ -1,5 +1,6 @@
 import { FerdigstiltPlanResponseForAG } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
+import { mockPlanFormSnapshot } from "./mockOPFormSnapshot";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
 
 export function getMockAktivPlanData(): FerdigstiltPlanResponseForAG {
@@ -7,7 +8,7 @@ export function getMockAktivPlanData(): FerdigstiltPlanResponseForAG {
     ...mockCommonAGResponseFields,
     oppfolgingsplan: {
       ...mockAktivPlanData,
-      content: {},
+      content: mockPlanFormSnapshot,
     },
   };
 }
@@ -22,7 +23,7 @@ export function getMockTidligerePlanData(
       ...mockCommonAGResponseFields,
       oppfolgingsplan: {
         ...tidligerePlan,
-        content: {},
+        content: mockPlanFormSnapshot,
       },
     };
   }

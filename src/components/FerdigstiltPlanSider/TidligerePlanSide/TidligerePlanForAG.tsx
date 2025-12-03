@@ -1,8 +1,8 @@
 import { HStack, VStack } from "@navikt/ds-react";
 import { fetchTidligerePlanForAG } from "@/server/fetchData/arbeidsgiver/fetchTidligerePlan";
+import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
 import { LastNedSomPdfButton } from "../Shared/Buttons/LastNedSomPdfButton";
 import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
-import { MockOpprettetPlanSummary } from "../Shared/Summary/MockFerdigstiltPlanSummary";
 import { TidligerePlanDetails } from "./Details/TidligerePlanDetails";
 import { TidligerePlanHeadingAndTags } from "./HeadingAndTags/TidligerePlanHeadingAndTags";
 
@@ -22,6 +22,7 @@ export default async function TidligerePlanForAG({
       ferdigstiltTidspunkt,
       deltMedLegeTidspunkt,
       deltMedVeilederTidspunkt,
+      content,
     },
   } = await fetchTidligerePlanForAG(narmesteLederId, planId);
 
@@ -49,7 +50,7 @@ export default async function TidligerePlanForAG({
             />
           </HStack>
 
-          <MockOpprettetPlanSummary />
+          <FormSummaryFromSnapshot formSnapshot={content} />
         </VStack>
 
         <TilbakeTilOversiktButtonForAG />

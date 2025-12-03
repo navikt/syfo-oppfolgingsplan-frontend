@@ -39,7 +39,6 @@ export function isDateInPast(date: Date): boolean {
  * But when using getFullYear(), getMonth(), and getDate() on the Date object,
  * the local date components are extracted, resulting in the date that was picked,
  * formatted in ISO format, like `2025-11-27`.
- *
  */
 export function toLocalDateStringInIsoFormat(date: Date): string {
   const year = date.getFullYear();
