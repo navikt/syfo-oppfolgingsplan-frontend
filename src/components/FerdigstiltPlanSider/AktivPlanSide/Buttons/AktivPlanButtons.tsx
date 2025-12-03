@@ -9,7 +9,7 @@ import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
 import { SlettUtkastVedOppdaterPlanModal } from "./SlettUtkastVedOppdaterPlanModal";
 
 interface Props {
-  planId?: string;
+  planId: string;
 }
 
 export function AktivPlanButtons({ planId }: Props) {

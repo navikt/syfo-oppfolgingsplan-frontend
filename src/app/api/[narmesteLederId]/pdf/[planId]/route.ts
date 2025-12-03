@@ -7,11 +7,9 @@ import {
 
 export async function GET(
   _: Request,
-  {
-    params,
-  }: { params: Promise<{ narmesteLederId: string; documentId: string }> },
+  { params }: { params: Promise<{ narmesteLederId: string; planId: string }> },
 ) {
-  const { narmesteLederId, documentId } = await params;
+  const { narmesteLederId, planId } = await params;
 
   const idportenToken = await validateAndGetIdPortenToken();
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
@@ -19,7 +17,7 @@ export async function GET(
     TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
   );
 
-  const res = await fetch(getEndpointPDFForAG(narmesteLederId, documentId), {
+  const res = await fetch(getEndpointPDFForAG(narmesteLederId, planId), {
     headers: {
       Authorization: `Bearer ${oboToken}`,
     },

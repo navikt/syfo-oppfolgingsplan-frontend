@@ -4,8 +4,8 @@ import { Button } from "@navikt/ds-react";
 
 interface Props {
   className?: string;
-  narmesteLederId?: string;
-  planId?: string;
+  narmesteLederId: string;
+  planId: string;
 }
 
 export function LastNedSomPdfButton({
