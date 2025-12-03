@@ -12,7 +12,7 @@ export async function GET(
   }: { params: Promise<{ narmesteLederId: string; documentId: string }> },
 ) {
   const { narmesteLederId, documentId } = await params;
-  console.log("testing");
+
   const idportenToken = await validateAndGetIdPortenToken();
   const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
     idportenToken,
@@ -33,5 +33,5 @@ export async function GET(
   );
 
   const data = await res.blob();
-  return new Response(data, {});
+  return new Response(data, { headers });
 }
