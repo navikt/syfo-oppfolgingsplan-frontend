@@ -24,7 +24,7 @@ export async function overskrivUtkastMedInnholdFraAktivPlanServerAction(
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
-    return { error: null };
+    return redirect(getAGOpprettNyPlanHref(narmesteLederId));
   }
 
   // Input validation

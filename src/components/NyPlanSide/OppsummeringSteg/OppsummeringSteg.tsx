@@ -1,4 +1,6 @@
+import z from "zod";
 import { BodyLong, Heading } from "@navikt/ds-react";
+import { OppfolgingsplanFormFerdigstillSchema } from "@/schema/oppfolgingsplanFormSchemas";
 import { oppfolgingsplanFormDefaultValues } from "../FyllUtPlanSteg/form/form-options";
 import { withForm } from "../FyllUtPlanSteg/form/hooks/form";
 import NarDuFerdigstillerPlanenAlert from "./NarDuFerdigstillerPlanenAlert";
@@ -33,7 +35,12 @@ const OppsummeringSteg = withForm({
         <form.Subscribe selector={(state) => state.values}>
           {(formValues) => (
             <PlanFormSummary
-              formValues={formValues}
+              // When the user is here, the form values are valid
+              formValues={
+                formValues as z.infer<
+                  typeof OppfolgingsplanFormFerdigstillSchema
+                >
+              }
               onEditPlan={onGoBack}
               className="mb-8"
             />
