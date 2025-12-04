@@ -1,8 +1,11 @@
-import { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSchemas";
+import {
+  OppfolgingsplanerOversiktForAG,
+  OppfolgingsplanerOversiktForSM,
+} from "@/schema/oversiktResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
 
-export const mockOversiktDataMedPlaner: OppfolgingsplanerOversiktForAG = {
+export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
   oversikt: {
     utkast: {
@@ -20,4 +23,9 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
     aktivPlan: null,
     tidligerePlaner: [],
   },
+};
+
+export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
+  aktiveOppfolgingsplaner: [mockAktivPlanData],
+  tidligerePlaner: mockTidligerePlanerData,
 };

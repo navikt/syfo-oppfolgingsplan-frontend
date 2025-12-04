@@ -1,27 +1,28 @@
 import { getEndpointAktivPlanForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  FerdigstiltPlanResponseForAG,
-  ferdigstiltPlanResponseForAGSchema,
+  FerdigstiltPlanResponse,
+  ferdigstiltPlanResponseSchema,
 } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchGet } from "../../tokenXFetch/tokenXFetchGet";
-import { getMockAktivPlanData } from "../mockData/mockHelpers";
+import { getMockFerdigstiltPlanData } from "../mockData/mockHelpers";
+import { mockAktivPlanData } from "../mockData/mockPlanerData";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 export async function fetchAktivPlanForAG(
   narmesteLederId: string,
-): Promise<FerdigstiltPlanResponseForAG> {
+): Promise<FerdigstiltPlanResponse> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-    return getMockAktivPlanData();
+    return getMockFerdigstiltPlanData(mockAktivPlanData.id);
   }
 
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointAktivPlanForAG(narmesteLederId),
-    responseDataSchema: ferdigstiltPlanResponseForAGSchema,
+    responseDataSchema: ferdigstiltPlanResponseSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 }

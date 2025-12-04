@@ -1,5 +1,5 @@
 import z from "zod";
-import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
+import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { OppfolgingsplanForm } from "./oppfolgingsplanFormSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
@@ -9,7 +9,7 @@ const utkastResponseContentSchema = z.record(
 );
 
 export const utkastResponseForAGSchema = z.object({
-  ...commonResponseFieldsForAGSchema.shape,
+  ...commonResponseFieldsSchema.shape,
   utkast: z
     .object({
       ...utkastMetadataSchema.shape,

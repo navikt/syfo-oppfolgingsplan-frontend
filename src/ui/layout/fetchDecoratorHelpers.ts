@@ -1,4 +1,5 @@
 import { fetchDecoratorReact } from "@navikt/nav-dekoratoren-moduler/ssr";
+import { getBaseBreadcrumbsForSM } from "@/common/breadcrumbs";
 import { publicEnv } from "@/env-variables/publicEnv";
 
 export async function fetchDecoratorForAG(
@@ -19,6 +20,22 @@ export async function fetchDecoratorForAG(
         employeeName,
         narmesteLederId,
       ),
+    },
+  });
+}
+
+export async function fetchDecoratorForSM() {
+  return await fetchDecoratorReact({
+    env: createDecoratorEnv(),
+    params: {
+      language: "nb",
+      context: "privatperson",
+      logoutWarning: true,
+      chatbot: true,
+      chatbotVisible: false,
+      feedback: false,
+      redirectToApp: true,
+      breadcrumbs: getBaseBreadcrumbsForSM(),
     },
   });
 }

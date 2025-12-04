@@ -7,7 +7,7 @@ interface Props {
   evalueringsDato: Date;
 }
 
-export function AktivPlanDetails({
+export function AktivPlanDetailsAG({
   nyligOprettet,
   ferdigstiltTidspunkt,
   evalueringsDato,

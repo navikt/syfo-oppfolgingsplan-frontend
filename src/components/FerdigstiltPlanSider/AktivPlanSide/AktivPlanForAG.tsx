@@ -5,7 +5,7 @@ import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSna
 import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
 import { AktivPlanButtons } from "./Buttons/AktivPlanButtons";
 import DelAktivPlanMedLegeEllerNav from "./DelAktivPlan/DelAktivPlanMedLegeEllerNav";
-import { AktivPlanDetails } from "./Details/AktivPlanDetails";
+import { AktivPlanDetailsAG } from "./Details/AktivPlanDetailsAG";
 import { AktivPlanHeadingAndTags } from "./HeadingAndTags/AktivPlanHeadingAndTags";
 import { PlanDelingProvider } from "./PlanDelingContext";
 
@@ -41,7 +41,7 @@ export default async function AktivPlanForAG({
         >
           <AktivPlanHeadingAndTags employeeName={employee.name} />
 
-          <AktivPlanDetails
+          <AktivPlanDetailsAG
             nyligOprettet={nyligOpprettet}
             ferdigstiltTidspunkt={ferdigstiltTidspunkt}
             evalueringsDato={evalueringsDato}

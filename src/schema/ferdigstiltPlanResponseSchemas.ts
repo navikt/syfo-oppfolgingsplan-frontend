@@ -1,10 +1,10 @@
 import z from "zod";
 import { formSnapshotSchema } from "@/utils/FormSnapshot/schemas/FormSnapshot";
-import { commonResponseFieldsForAGSchema } from "./commonResponseFieldsSchemas";
+import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
 
-export const ferdigstiltPlanResponseForAGSchema = z.object({
-  ...commonResponseFieldsForAGSchema.shape,
+export const ferdigstiltPlanResponseSchema = z.object({
+  ...commonResponseFieldsSchema.shape,
   oppfolgingsplan: z.object({
     id: z.string(),
     ...ferdigstiltPlanMetadataSchema.shape,
@@ -12,6 +12,6 @@ export const ferdigstiltPlanResponseForAGSchema = z.object({
   }),
 });
 
-export type FerdigstiltPlanResponseForAG = z.infer<
-  typeof ferdigstiltPlanResponseForAGSchema
+export type FerdigstiltPlanResponse = z.infer<
+  typeof ferdigstiltPlanResponseSchema
 >;

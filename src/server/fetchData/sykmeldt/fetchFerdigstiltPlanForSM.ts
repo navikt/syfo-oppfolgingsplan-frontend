@@ -1,17 +1,16 @@
-import { getEndpointFerdigstiltPlanForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { getServerEnv } from "@/env-variables/serverEnv";
 import {
   FerdigstiltPlanResponse,
   ferdigstiltPlanResponseSchema,
 } from "@/schema/ferdigstiltPlanResponseSchemas";
-import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";
+import { getRedirectAfterLoginUrlForSM } from "@/server/auth/redirectToLogin";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
-import { tokenXFetchGet } from "../../tokenXFetch/tokenXFetchGet";
-import { getMockFerdigstiltPlanData } from "../mockData/mockHelpers";
+import { getMockFerdigstiltPlanData } from "@/server/fetchData/mockData/mockHelpers";
+import { tokenXFetchGet } from "@/server/tokenXFetch/tokenXFetchGet";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
-export async function fetchTidligerePlanForAG(
-  narmesteLederId: string,
+export async function fetchFerdigstiltPlanForSM(
   planId: string,
 ): Promise<FerdigstiltPlanResponse> {
   if (isLocalOrDemo) {
@@ -21,8 +20,8 @@ export async function fetchTidligerePlanForAG(
 
   return await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: getEndpointFerdigstiltPlanForAG(narmesteLederId, planId),
+    endpoint: `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt/oppfolgingsplaner/${planId}`,
     responseDataSchema: ferdigstiltPlanResponseSchema,
-    redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
+    redirectAfterLoginUrl: getRedirectAfterLoginUrlForSM(),
   });
 }
