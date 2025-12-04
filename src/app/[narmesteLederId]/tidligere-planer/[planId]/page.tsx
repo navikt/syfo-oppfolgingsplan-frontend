@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
-import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
 import TidligerePlanForAG from "@/components/FerdigstiltPlanSider/TidligerePlanSide/TidligerePlanForAG";
+import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner.tsx";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 
 export default async function TidligerePlanPageForAG({
@@ -16,7 +16,7 @@ export default async function TidligerePlanPageForAG({
         secondCrumbText="Tidligere plan"
       />
 
-      <Suspense fallback={<FerdigstiltPlanSkeleton />}>
+      <Suspense fallback={<BigLoadingSpinner />}>
         <TidligerePlanForAG narmesteLederId={narmesteLederId} planId={planId} />
       </Suspense>
     </>

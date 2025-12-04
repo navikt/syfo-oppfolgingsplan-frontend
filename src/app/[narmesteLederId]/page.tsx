@@ -3,8 +3,8 @@ import { BodyLong, Heading } from "@navikt/ds-react";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
-import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
 import TextContentBox from "@/components/layout/TextContentBox";
+import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner.tsx";
 
 export default async function OversiktPageForAG({
   params,
@@ -25,7 +25,7 @@ export default async function OversiktPageForAG({
         </BodyLong>
       </TextContentBox>
 
-      <Suspense fallback={<PlanListeSkeleton />}>
+      <Suspense fallback={<BigLoadingSpinner />}>
         <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
         <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>

@@ -4,7 +4,7 @@ import {
   getAGOversiktHref,
 } from "@/common/route-hrefs";
 import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
-import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
+import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner.tsx";
 import Breadcrumbs from "@/ui/Breadcrumbs";
 
 export default async function AktivPlanPageForAG({
@@ -22,7 +22,7 @@ export default async function AktivPlanPageForAG({
         secondCrumbText="Aktiv plan"
       />
 
-      <Suspense fallback={<FerdigstiltPlanSkeleton />}>
+      <Suspense fallback={<BigLoadingSpinner />}>
         <AktivPlanForAG
           narmesteLederId={narmesteLederId}
           nyligOpprettet={nyligOpprettetParam === "true"}
