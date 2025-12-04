@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useParams, useSelectedLayoutSegments } from "next/navigation";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import {
@@ -14,7 +14,7 @@ export function BreadcrumbsUpdaterForSM() {
   const segments = useSelectedLayoutSegments();
   const params = useParams<{ planId?: string }>();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const baseBreadcrumbs = getBaseBreadcrumbsForSM();
     const [firstSegment] = segments;
     const title = firstSegment ? SM_BREADCRUMB_TITLES[firstSegment] : null;

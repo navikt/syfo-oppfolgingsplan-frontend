@@ -1,25 +1,53 @@
 import { HStack, Skeleton, VStack } from "@navikt/ds-react";
 
+/**
+ * Skeleton for et LinkCard.
+ * Bruker navds-link-card klasser for riktig styling.
+ */
+function PlanLinkCardSkeleton({ isAktiv = false }: { isAktiv?: boolean }) {
+  return (
+    <div
+      className={`navds-link-card ${isAktiv ? "bg-surface-success-subtle" : ""}`}
+    >
+      <div className="navds-link-card__content">
+        {/* Tittel */}
+        <Skeleton variant="text" width="55%" height={28} />
+
+        {/* Datoer */}
+        <VStack gap="1" className="mt-2">
+          <Skeleton variant="text" width={220} height={20} />
+          <Skeleton variant="text" width={200} height={20} />
+        </VStack>
+
+        {/* Tags - 3 stk som wrapper på mobil */}
+        <HStack gap="2" wrap className="mt-3">
+          <Skeleton variant="rounded" height={22}>
+            Delt med den ansatte
+          </Skeleton>
+          <Skeleton variant="rounded" height={22}>
+            Ikke delt med fastlege
+          </Skeleton>
+          <Skeleton variant="rounded" height={22}>
+            Ikke delt med Nav
+          </Skeleton>
+        </HStack>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Skeleton for oversiktssiden med plan-liste.
+ */
 export default function PlanListeSkeleton() {
   return (
-    <section className="mb-12">
-      {/* Aktive planer seksjon - valgte å kun vise dette da jeg mistenker de fleste har kun 1 aktiv plan */}
+    <section className="mb-12" aria-label="Laster planer">
       <VStack gap="4">
-        <Skeleton variant="text" width={140} height={28} />
+        {/* Seksjonstittel (Heading size medium) */}
+        <Skeleton variant="text" width={130} height={28} />
 
-        <div className="rounded-lg border border-border-subtle bg-surface-success-subtle p-4">
-          <VStack gap="3">
-            <Skeleton variant="text" width="60%" height={28} />
-            <VStack gap="1">
-              <Skeleton variant="text" width="45%" height={20} />
-              <Skeleton variant="text" width="50%" height={20} />
-            </VStack>
-            <HStack gap="2" className="mt-1">
-              <Skeleton variant="rounded" width={100} height={24} />
-              <Skeleton variant="rounded" width={120} height={24} />
-            </HStack>
-          </VStack>
-        </div>
+        {/* Én aktiv plan-card */}
+        <PlanLinkCardSkeleton isAktiv />
       </VStack>
     </section>
   );

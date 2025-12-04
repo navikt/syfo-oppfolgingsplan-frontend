@@ -1,64 +1,84 @@
 import { HStack, Skeleton, VStack } from "@navikt/ds-react";
 
-function FormSummarySkeleton() {
+/**
+ * Skeleton for en FormSummary-seksjon.
+ * Bruker samme padding og border-styling som navds-form-summary.
+ */
+function FormSummarySkeleton({ answerCount = 3 }: { answerCount?: number }) {
   return (
-    <div className="rounded-lg border border-border-subtle">
-      {/* Header */}
-      <div className="border-b border-border-subtle bg-surface-subtle px-6 py-4">
-        <Skeleton variant="text" width="40%" height={24} />
+    <div className="navds-form-summary">
+      {/* Header - navds-form-summary__header */}
+      <div className="navds-form-summary__header">
+        <Skeleton variant="text" width="40%" height={28} />
       </div>
 
-      {/* Answers */}
-      <VStack gap="0" className="divide-y divide-border-subtle">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="px-6 py-4">
-            <VStack gap="2">
-              <Skeleton variant="text" width="35%" height={18} />
-              <Skeleton variant="text" width="90%" height={20} />
-              <Skeleton variant="text" width="75%" height={20} />
+      {/* Answers - navds-form-summary__answers */}
+      <dl className="navds-form-summary__answers" data-color="info">
+        {Array.from({ length: answerCount }).map((_, i) => (
+          <div key={i} className="navds-form-summary__answer">
+            {/* Label */}
+            <Skeleton variant="text" width="50%" height={22} />
+            {/* Value - lang tekst som wrapper */}
+            <VStack gap="1">
+              <Skeleton variant="text" width="100%" height={24} />
+              <Skeleton variant="text" width="95%" height={24} />
+              <Skeleton variant="text" width="70%" height={24} />
             </VStack>
           </div>
         ))}
-      </VStack>
+      </dl>
     </div>
   );
 }
 
+/**
+ * Skeleton for ferdigstilt plan-sider (aktiv og tidligere).
+ * Matcher layouten i AktivPlanForAG/SM.
+ */
 export default function FerdigstiltPlanSkeleton() {
   return (
-    <section>
+    <section aria-label="Laster oppfølgingsplan">
       <VStack gap="8">
-        {/* Heading and tags */}
+        {/* Heading + Tags */}
         <VStack gap="2">
-          <Skeleton variant="text" width="70%" height={40} />
-          <HStack gap="2">
-            <Skeleton variant="rounded" width={100} height={24} />
-            <Skeleton variant="rounded" width={120} height={24} />
+          {/* Heading (xlarge) */}
+          <Skeleton variant="text" width="65%" height={44} />
+
+          {/* Tags - 3 stk som wrapper på mobil */}
+          <HStack gap="2" wrap>
+            <Skeleton variant="rounded" height={24}>
+              Delt med den ansatte
+            </Skeleton>
+            <Skeleton variant="rounded" height={24}>
+              Ikke delt med fastlege
+            </Skeleton>
+            <Skeleton variant="rounded" height={24}>
+              Ikke delt med Nav
+            </Skeleton>
           </HStack>
         </VStack>
 
         {/* Details (Opprettet + Evalueringsdato) */}
         <VStack gap="1">
-          <Skeleton variant="text" width={280} height={22} />
-          <Skeleton variant="text" width={320} height={22} />
+          <Skeleton variant="text" width={260} height={24} />
+          <Skeleton variant="text" width={240} height={24} />
         </VStack>
 
-        {/* FormSummary sections */}
-        <VStack gap="8">
-          <FormSummarySkeleton />
-          <FormSummarySkeleton />
-        </VStack>
+        {/* FormSummary: Arbeidsoppgaver (3 felt) */}
+        <FormSummarySkeleton answerCount={3} />
+
+        {/* FormSummary: Tilrettelegging (6 felt) */}
+        <FormSummarySkeleton answerCount={6} />
 
         {/* Alert */}
-        <div className="mt-8 rounded-lg border-l-4 border-border-info bg-surface-info-subtle p-4">
-          <VStack gap="2">
-            <Skeleton variant="text" width="60%" height={22} />
-            <Skeleton variant="text" width="95%" height={20} />
-            <Skeleton variant="text" width="80%" height={20} />
+        <div className="navds-alert navds-alert--info navds-alert--medium navds-body-long navds-body-long--medium">
+          <VStack gap="2" className="flex-1">
+            <Skeleton variant="text" width="80%" height={24} />
+            <Skeleton variant="text" width="60%" height={24} />
           </VStack>
         </div>
 
-        {/* Button */}
+        {/* Tilbake-knapp */}
         <Skeleton variant="rounded" width={200} height={48} />
       </VStack>
     </section>
