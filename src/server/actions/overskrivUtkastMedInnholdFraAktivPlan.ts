@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { logger } from "@navikt/next-logger";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { FerdigstiltPlanResponseForAG } from "@/schema/ferdigstiltPlanResponseSchemas";
+import { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { getflatValuesObjectFromFormSnapshot } from "@/utils/FormSnapshot/getflatValuesObjectFromFormSnapshot";
 import { convertPlanContentToCurrentSchema } from "@/utils/convertPlanContentToCurrentSchema";
 import { fetchAktivPlanForAG } from "../fetchData/arbeidsgiver/fetchAktivPlan";
@@ -42,7 +42,7 @@ export async function overskrivUtkastMedInnholdFraAktivPlanServerAction(
   }
 
   // Fetch aktiv plan
-  let aktivPlanResponse: FerdigstiltPlanResponseForAG;
+  let aktivPlanResponse: FerdigstiltPlanResponse;
   try {
     aktivPlanResponse = await fetchAktivPlanForAG(narmesteLederId);
   } catch (err) {
