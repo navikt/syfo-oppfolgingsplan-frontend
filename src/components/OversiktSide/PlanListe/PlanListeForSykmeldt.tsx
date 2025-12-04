@@ -22,16 +22,18 @@ export default async function PlanListeForSykmeldt() {
 
       {harAktivePlaner && (
         <PlanListeDel heading="Aktive planer">
-          {aktiveOppfolgingsplaner.map((plan) => (
-            <AktivPlanLinkCard
-              key={plan.id}
-              aktivPlan={plan}
-              linkCardTitle={
-                plan.organization.orgName ?? plan.organization.orgNumber
-              }
-              href={getSMAktivPlanHref(plan.id)}
-            />
-          ))}
+          <VStack gap="4">
+            {aktiveOppfolgingsplaner.map((plan) => (
+              <AktivPlanLinkCard
+                key={plan.id}
+                aktivPlan={plan}
+                linkCardTitle={
+                  plan.organization.orgName ?? plan.organization.orgNumber
+                }
+                href={getSMAktivPlanHref(plan.id)}
+              />
+            ))}
+          </VStack>
         </PlanListeDel>
       )}
 
