@@ -14,13 +14,12 @@ import {
 export function convertPlanContentToCurrentSchema(
   planContent: Record<string, string | boolean | null>,
 ): OppfolgingsplanFormUnderArbeid {
-  const oppfolgingsplanFormSchemaShape =
-    OppfolgingsplanFormAndUtkastSchema.shape;
+  const currentFormSchemaShape = OppfolgingsplanFormAndUtkastSchema.shape;
 
   // Iterate over current form schema fields and pick corresponding values
   // from lagretUtkast. Validate each lagretUtkast value against current schema
   // for that field.
-  const result = Object.entries(oppfolgingsplanFormSchemaShape).reduce(
+  const result = Object.entries(currentFormSchemaShape).reduce(
     (acc, [fieldId, fieldSchema]) => {
       const lagretFieldValue = planContent[fieldId];
       const { success, data: parsedFieldValue } =
