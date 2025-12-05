@@ -27,7 +27,7 @@ export function OverskrivUtkastModal({ ref }: Props) {
       <Modal.Body>
         <BodyLong>
           Du har allerede et utkast. Hvis du fortsetter vil utkastet ditt bli
-          slettet og erstattet med en kopi av denne planen. Vil du fortsette?
+          erstattet med innholdet i denne planen. Vil du fortsette?
         </BodyLong>
 
         {/* TODO: Improve error message */}
@@ -41,7 +41,7 @@ export function OverskrivUtkastModal({ ref }: Props) {
             variant="primary"
             loading={isPendingOverskrivUtkast}
           >
-            Slett utkast og fortsett
+            Erstatt utkast og fortsett
           </Button>
         </form>
 
