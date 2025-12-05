@@ -8,13 +8,13 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { formHeadings, formLabels } from "@/components/NyPlanSide/form-labels";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFormSchemas";
 import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
 
 // TODO: Rewrite for FormSnapshot
 
 interface Props {
-  planContent: OppfolgingsplanForm;
+  planContent: OppfolgingsplanFormUnderArbeid;
 }
 
 export default function FerdigstiltPlanSummary({

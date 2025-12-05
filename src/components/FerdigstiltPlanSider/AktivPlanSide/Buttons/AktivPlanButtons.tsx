@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Button, HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
-import { SlettUtkastVedOppdaterPlanModal } from "./SlettUtkastVedOppdaterPlanModal";
+import { OverskrivUtkastModal } from "../OverskrivUtkastModal/OverskrivUtkastMedInnholdFraAktivPlanModal";
 
 interface Props {
   planId: string;
@@ -18,7 +18,7 @@ export function AktivPlanButtons({ planId }: Props) {
 
   return (
     <>
-      <SlettUtkastVedOppdaterPlanModal ref={modalRef} />
+      <OverskrivUtkastModal ref={modalRef} />
 
       <HStack justify="space-between">
         <HStack gap="4">

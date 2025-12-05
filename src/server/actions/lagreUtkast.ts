@@ -5,8 +5,8 @@ import { logger } from "@navikt/next-logger";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  OppfolgingsplanForm,
   OppfolgingsplanFormAndUtkastSchema,
+  OppfolgingsplanFormUnderArbeid,
 } from "@/schema/oppfolgingsplanFormSchemas";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -25,12 +25,12 @@ const lagreUtkastResponseSchema = z.object({
 type LagreUtkastResponse = z.infer<typeof lagreUtkastResponseSchema>;
 
 interface LagreUtkastRequestBody {
-  content: OppfolgingsplanForm;
+  content: OppfolgingsplanFormUnderArbeid;
 }
 
 export async function lagreUtkastServerAction(
   narmesteLederId: string,
-  formValues: OppfolgingsplanForm,
+  formValues: OppfolgingsplanFormUnderArbeid,
 ): Promise<FetchUpdateResultWithResponse<LagreUtkastResponse>> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
@@ -52,12 +52,12 @@ export async function lagreUtkastServerAction(
   if (!(isNarmesteLederIdValid && isFormValuesValid)) {
     if (!isNarmesteLederIdValid) {
       logger.error(
-        `LagreUtkastActionState invalid narmesteLederId: ${narmesteLederId}`,
+        `lagreUtkastServerAction invalid narmesteLederId: ${narmesteLederId}`,
       );
     }
     if (!isFormValuesValid) {
       logger.error(
-        `LagreUtkastActionState formValues validation error: ${inputValidationError.message}`,
+        `lagreUtkastServerAction formValues validation error: ${inputValidationError.message}`,
       );
     }
 

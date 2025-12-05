@@ -66,3 +66,6 @@ export const formSnapshotSchema = z.object({
 });
 
 export type FormSnapshot = z.infer<typeof formSnapshotSchema>;
+
+export type FormSnapshotField =
+  FormSnapshot["sections"][number]["fields"][number];

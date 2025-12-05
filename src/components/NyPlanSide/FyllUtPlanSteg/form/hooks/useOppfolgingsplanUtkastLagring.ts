@@ -1,20 +1,20 @@
 import { startTransition, useActionState } from "react";
 import { useParams } from "next/navigation";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFormSchemas";
 import { lagreUtkastServerAction } from "@/server/actions/lagreUtkast";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
 export interface LagreUtkastActionState {
   error: FetchResultError | null;
   sistLagretTidspunkt: Date | null;
-  sistLagretUtkast: OppfolgingsplanForm | null;
+  sistLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
 }
 
 export default function useOppfolgingsplanUtkastLagring({
   initialFormValues,
   initialSistLagretTidspunkt,
 }: {
-  initialFormValues: OppfolgingsplanForm;
+  initialFormValues: OppfolgingsplanFormUnderArbeid;
   initialSistLagretTidspunkt: Date | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
@@ -52,7 +52,7 @@ export default function useOppfolgingsplanUtkastLagring({
       values,
       onSuccess,
     }: {
-      values: OppfolgingsplanForm;
+      values: OppfolgingsplanFormUnderArbeid;
       onSuccess?: () => void;
     },
   ) {
@@ -103,7 +103,7 @@ export default function useOppfolgingsplanUtkastLagring({
     values,
     onSuccess,
   }: {
-    values: OppfolgingsplanForm;
+    values: OppfolgingsplanFormUnderArbeid;
     onSuccess?: () => void;
   }) {
     startTransition(() => {
@@ -129,7 +129,8 @@ export default function useOppfolgingsplanUtkastLagring({
   };
 }
 
-type FormFieldValue = OppfolgingsplanForm[keyof OppfolgingsplanForm];
+type FormFieldValue =
+  OppfolgingsplanFormUnderArbeid[keyof OppfolgingsplanFormUnderArbeid];
 
 function areFormStateObjectsEqual(
   a: Record<string, FormFieldValue> | null,

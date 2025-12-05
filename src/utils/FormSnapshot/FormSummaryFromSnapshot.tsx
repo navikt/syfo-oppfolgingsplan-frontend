@@ -11,13 +11,11 @@ import {
   getLocaleDateAndTimeString,
   getLocaleDateString,
 } from "@/ui-helpers/dateAndTime";
-import { FormSnapshot } from "./schemas/FormSnapshot";
+import { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
 
 interface Props {
   formSnapshot: FormSnapshot;
 }
-
-type FormSnapshotField = FormSnapshot["sections"][number]["fields"][number];
 
 export function FormSummaryFromSnapshot({ formSnapshot }: Props) {
   return formSnapshot.sections.map((section) => (

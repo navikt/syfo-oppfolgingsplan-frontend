@@ -1,9 +1,9 @@
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFormSchemas";
 import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
 import { toLocalDateStringInIsoFormat } from "@/utils/dateUtils";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 
-const mockLagretUtkast: Partial<OppfolgingsplanForm> = {
+const mockLagretUtkast: OppfolgingsplanFormUnderArbeid = {
   typiskArbeidshverdag:
     "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast.",
 };
@@ -16,7 +16,7 @@ export const mockUtkastResponse: ConvertedLagretUtkastData = {
   },
 };
 
-const mockUtfyltLagretUtkast: OppfolgingsplanForm = {
+const mockUtfyltLagretUtkast: OppfolgingsplanFormUnderArbeid = {
   typiskArbeidshverdag:
     "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast.",
   arbeidsoppgaverSomKanUtfores: ".",
