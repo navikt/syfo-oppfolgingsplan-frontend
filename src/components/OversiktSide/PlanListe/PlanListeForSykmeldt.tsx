@@ -21,7 +21,7 @@ export default async function PlanListeForSykmeldt() {
       {!harAktivePlaner && <IngenAktivPlanAlert />}
 
       {harAktivePlaner && (
-        <PlanListeDel heading="Aktive planer">
+        <PlanListeDel>
           <VStack gap="4">
             {aktiveOppfolgingsplaner.map((plan) => (
               <AktivPlanLinkCard
