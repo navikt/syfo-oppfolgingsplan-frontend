@@ -5,10 +5,11 @@ import {
   type FlexJarSurveyConfig,
   type FlexJarTransport,
 } from "@navikt/flexjar-widget";
+import { publicEnv } from "@/env-variables/publicEnv";
 
 const transport: FlexJarTransport = {
   async submit(submission) {
-    await fetch("/api/flexjar", {
+    await fetch(`${publicEnv.NEXT_PUBLIC_BASE_PATH}/api/flexjar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(submission.transportPayload),
