@@ -72,5 +72,7 @@ spec:
       rules:
         - application: syfo-oppfolgingsplan-backend
         - application: dinesykmeldte-backend
+        - application: flexjar-backend
+          namespace: flex
         - application: nav-dekoratoren
           namespace: personbruker
