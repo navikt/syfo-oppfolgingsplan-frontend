@@ -6,6 +6,8 @@ import {
 import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
 import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
 import Breadcrumbs from "@/ui/Breadcrumbs";
+import { Flexjar } from "@/ui/Flexjar/Flexjar.tsx";
+import { flexjarSurveyAG } from "@/ui/Flexjar/flexjarSurveyAG.ts";
 
 export default async function AktivPlanPageForAG({
   params,
@@ -26,6 +28,11 @@ export default async function AktivPlanPageForAG({
         <AktivPlanForAG
           narmesteLederId={narmesteLederId}
           nyligOpprettet={nyligOpprettetParam === "true"}
+        />
+
+        <Flexjar
+          feedbackId="Ny oppfølgingsplan - arbeidsgiver"
+          survey={flexjarSurveyAG}
         />
       </Suspense>
     </>
