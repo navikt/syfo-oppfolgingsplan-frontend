@@ -6,15 +6,10 @@ import { Button } from "@navikt/ds-react";
 
 interface Props {
   className?: string;
-  narmesteLederId: string;
   planId: string;
 }
 
-export function LastNedSomPdfButton({
-  className,
-  narmesteLederId,
-  planId,
-}: Props) {
+export function LastNedSomPdfButtonSM({ className, planId }: Props) {
   return (
     <Button
       variant="tertiary"
@@ -22,7 +17,7 @@ export function LastNedSomPdfButton({
       iconPosition="right"
       className={className}
       as={NextLink}
-      href={`/api/${narmesteLederId}/pdf/${planId}`}
+      href={`/api/sykmeldt/pdf/${planId}`}
     >
       Last ned som PDF
     </Button>

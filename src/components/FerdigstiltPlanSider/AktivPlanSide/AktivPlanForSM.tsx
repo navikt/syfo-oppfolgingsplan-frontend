@@ -1,5 +1,6 @@
 import { VStack } from "@navikt/ds-react";
 import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM";
+import { LastNedSomPdfButtonSM } from "@/components/FerdigstiltPlanSider/Shared/Buttons/LastNedSomPdfButtonSM.tsx";
 import TilbakeTilOversiktButtonForSM from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForSM";
 import { fetchFerdigstiltPlanForSM } from "@/server/fetchData/sykmeldt/fetchFerdigstiltPlanForSM";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot.tsx";
@@ -38,7 +39,10 @@ export default async function AktivPlanForSM({ planId }: Props) {
           evalueringsDato={evalueringsDato}
         />
 
-        <FormSummaryFromSnapshot formSnapshot={content} />
+        <VStack gap="1">
+          <LastNedSomPdfButtonSM planId={planId} className="ml-auto" />
+          <FormSummaryFromSnapshot formSnapshot={content} />
+        </VStack>
 
         <DeltMedDegAlert />
 

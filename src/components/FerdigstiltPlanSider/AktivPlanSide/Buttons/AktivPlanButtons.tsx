@@ -5,7 +5,7 @@ import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { Button, HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
-import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
+import { LastNedSomPdfButtonAG } from "../../Shared/Buttons/LastNedSomPdfButtonAG.tsx";
 import { OverskrivUtkastModal } from "../OverskrivUtkastModal/OverskrivUtkastMedInnholdFraAktivPlanModal";
 
 interface Props {
@@ -38,7 +38,7 @@ export function AktivPlanButtons({ planId }: Props) {
           </Button>
         </HStack>
 
-        <LastNedSomPdfButton
+        <LastNedSomPdfButtonAG
           narmesteLederId={narmesteLederId}
           planId={planId}
         />

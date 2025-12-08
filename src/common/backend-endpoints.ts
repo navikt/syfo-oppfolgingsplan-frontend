@@ -4,6 +4,9 @@ import { getServerEnv } from "@/env-variables/serverEnv";
 const getAGEndpointPrefix = (narmesteLederId: string) =>
   `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/arbeidsgiver/${narmesteLederId}`;
 
+const getSMEndpointPrefix = () =>
+  `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt`;
+
 export const getEndpointOversiktForAG = (narmesteLederId: string) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/oversikt`;
 
@@ -38,3 +41,6 @@ export const getEndpointPDFForAG = (
   documentId: string,
 ) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${documentId}/pdf`;
+
+export const getEndpointPDFForSM = (documentId: string) =>
+  `${getSMEndpointPrefix()}/oppfolgingsplaner/${documentId}/pdf`;
