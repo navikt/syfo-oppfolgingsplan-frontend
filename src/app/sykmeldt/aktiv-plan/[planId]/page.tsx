@@ -14,7 +14,7 @@ export default async function AktivPlanPageForSM({
       <AktivPlanForSM planId={planId} />
 
       <Flexjar
-        feedbackId="Ny oppfølgingsplan - arbeidsgiver"
+        feedbackId="Ny oppfølgingsplan - sykmeldt"
         survey={flexjarSurveySM}
       />
     </Suspense>
