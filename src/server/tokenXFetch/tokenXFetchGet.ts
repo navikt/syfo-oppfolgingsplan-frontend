@@ -54,7 +54,7 @@ export async function tokenXFetchGet<S extends z.ZodType>({
   }
 
   if (!response.ok) {
-    const errorResult = getAndLogErrorResultFromNonOkResponse({
+    const errorResult = await getAndLogErrorResultFromNonOkResponse({
       response,
       endpoint,
       method: "GET",
