@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Metadata } from "next";
 import Script from "next/script";
 import { Theme } from "@navikt/ds-react";
+import "@navikt/flexjar-widget/styles.css";
 import "@/app/globals.css";
 import { MainContent } from "@/ui/layout/MainContent";
 import { fetchDecoratorForSM } from "@/ui/layout/fetchDecoratorHelpers";

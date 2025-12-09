@@ -18,8 +18,9 @@
     "@navikt/aksel-icons": "^7.34.0",
     "@navikt/dinesykmeldte-sidemeny": "^7.0.6",
     "@navikt/ds-css": "^7.34.0",
-    "@navikt/ds-react": "^7.34.0",
+    "@navikt/ds-react": "^7.35.1",
     "@navikt/ds-tailwind": "^7.34.0",
+    "@navikt/flexjar-widget": "^0.2.14",
     "@navikt/nav-dekoratoren-moduler": "^3.6.0",
     "@navikt/next-logger": "^4.4.1",
     "@navikt/oasis": "^3.8.0",
@@ -28,8 +29,8 @@
     "pino": "^9.13.0",
     "pino-pretty": "^13.1.2",
     "pino-roll": "^3.1.0",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {

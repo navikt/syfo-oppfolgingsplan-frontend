@@ -38,3 +38,7 @@ export const getEndpointPDFForAG = (
   documentId: string,
 ) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${documentId}/pdf`;
+
+// Flexjar
+export const getFlexjarFeedbackEndpoint = () =>
+  `${getServerEnv().FLEXJAR_HOST}/api/v2/feedback`;
