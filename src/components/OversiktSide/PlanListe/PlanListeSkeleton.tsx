@@ -43,9 +43,6 @@ export default function PlanListeSkeleton() {
   return (
     <section className="mb-12" aria-label="Laster planer">
       <VStack gap="4">
-        {/* Seksjonstittel (Heading size medium) */}
-        <Skeleton variant="text" width={130} height={28} />
-
         {/* Én aktiv plan-card */}
         <PlanLinkCardSkeleton isAktiv />
       </VStack>
