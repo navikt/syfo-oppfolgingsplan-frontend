@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
-import { getLocaleDateAndTimeString } from "@/ui-helpers/dateAndTime";
+import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
 
@@ -36,7 +36,7 @@ export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
         {deltMedLegeTidspunkt && (
           <Alert variant="success" inline>
             Delt med fastlege{" "}
-            {getLocaleDateAndTimeString(deltMedLegeTidspunkt, "long")}.
+            {getFormattedDateAndTimeString(deltMedLegeTidspunkt)}.
           </Alert>
         )}
       </HStack>

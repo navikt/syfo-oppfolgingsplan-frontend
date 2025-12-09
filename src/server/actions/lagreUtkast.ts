@@ -8,6 +8,7 @@ import {
   OppfolgingsplanFormAndUtkastSchema,
   OppfolgingsplanFormUnderArbeid,
 } from "@/schema/oppfolgingsplanFormSchemas";
+import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
@@ -16,10 +17,7 @@ import { FrontendErrorType } from "./FrontendErrorTypeEnum";
 import { isNonEmptyString } from "./serverActionsInputValidation";
 
 const lagreUtkastResponseSchema = z.object({
-  sistLagretTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString))
-    .nullable(),
+  sistLagretTidspunkt: z.iso.datetime().nullable(),
 });
 
 type LagreUtkastResponse = z.infer<typeof lagreUtkastResponseSchema>;
@@ -37,7 +35,7 @@ export async function lagreUtkastServerAction(
 
     return {
       error: null,
-      data: { sistLagretTidspunkt: new Date() },
+      data: { sistLagretTidspunkt: now().toISOString() },
     };
   }
 
@@ -55,6 +53,7 @@ export async function lagreUtkastServerAction(
         `lagreUtkastServerAction invalid narmesteLederId: ${narmesteLederId}`,
       );
     }
+
     if (!isFormValuesValid) {
       logger.error(
         `lagreUtkastServerAction formValues validation error: ${inputValidationError.message}`,

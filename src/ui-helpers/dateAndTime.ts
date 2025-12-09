@@ -1,33 +1,29 @@
-const LOCALE = "nb-NO";
-const DONT_SHOW_YEAR_IF_CURRENT_YEAR = true;
+import { DATE_HIDE_YEAR_IF_THIS_YEAR } from "@/common/app-config";
+import { getDayjsFromIsoString, now } from "@/utils/dateAndTime/dateUtils";
 
-export function getLocaleDateAndTimeString(
-  dateTime: Date,
-  dateFormat: "long" | "short",
+export function getFormattedDateAndTimeString(
+  dateIsoString: string,
+  displaySeconds = false,
 ) {
-  return `${getLocaleDateString(dateTime, dateFormat)} kl. ${dateTime.toLocaleTimeString(
-    LOCALE,
-    {
-      hour: "2-digit",
-      minute: "2-digit",
-    },
-  )}`;
+  const dateString = getFormattedDateString(dateIsoString);
+  const timeString = getFormattedTimeString(dateIsoString, displaySeconds);
+
+  return `${dateString} kl. ${timeString}`;
 }
 
-export function getLocaleDateString(date: Date, format: "long" | "short") {
-  const currentYear = new Date().getFullYear();
-  const dateIsCurrentYear = date.getFullYear() === currentYear;
+export function getFormattedTimeString(
+  dateIsoString: string,
+  displaySeconds = false,
+) {
+  const d = getDayjsFromIsoString(dateIsoString);
+  return d.format(displaySeconds ? "HH:mm:ss" : "HH:mm");
+}
 
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    year:
-      DONT_SHOW_YEAR_IF_CURRENT_YEAR && dateIsCurrentYear
-        ? undefined
-        : format === "long"
-          ? "numeric"
-          : "2-digit",
-    month: format === "long" ? "long" : "2-digit",
-    day: format === "long" ? "numeric" : "2-digit",
-  };
+export function getFormattedDateString(dateIsoString: string) {
+  const d = getDayjsFromIsoString(dateIsoString);
+  const isThisYear = d.isSame(now(), "year");
 
-  return date.toLocaleDateString(LOCALE, dateOptions);
+  return d.format(
+    isThisYear && DATE_HIDE_YEAR_IF_THIS_YEAR ? "D. MMMM" : "D. MMMM YYYY",
+  );
 }

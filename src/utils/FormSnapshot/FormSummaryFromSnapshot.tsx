@@ -8,8 +8,8 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import {
-  getLocaleDateAndTimeString,
-  getLocaleDateString,
+  getFormattedDateAndTimeString,
+  getFormattedDateString,
 } from "@/ui-helpers/dateAndTime";
 import { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
 
@@ -71,14 +71,10 @@ function getFieldSummaryTextValue(field: FormSnapshotField) {
       return field.value ? "Ja" : "Nei";
 
     case "DATE":
-      return field.value
-        ? getLocaleDateString(new Date(field.value), "long")
-        : "";
+      return field.value ? getFormattedDateString(field.value) : "";
 
     case "DATE_TIME":
-      return field.value
-        ? getLocaleDateAndTimeString(new Date(field.value), "long")
-        : "";
+      return field.value ? getFormattedDateAndTimeString(field.value) : "";
 
     default:
       return "";

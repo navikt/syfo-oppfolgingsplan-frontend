@@ -6,7 +6,7 @@ import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
 export interface LagreUtkastActionState {
   error: FetchResultError | null;
-  sistLagretTidspunkt: Date | null;
+  sistLagretTidspunkt: string | null;
   sistLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
 }
 
@@ -15,7 +15,7 @@ export default function useOppfolgingsplanUtkastLagring({
   initialSistLagretTidspunkt,
 }: {
   initialFormValues: OppfolgingsplanFormUnderArbeid;
-  initialSistLagretTidspunkt: Date | null;
+  initialSistLagretTidspunkt: string | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 

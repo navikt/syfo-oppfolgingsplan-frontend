@@ -1,14 +1,14 @@
 "use client";
 
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
-import { toLocalDateStringInIsoFormat } from "@/utils/dateUtils";
+import { toDateStringInIsoFormat } from "@/utils/dateAndTime/dateUtils";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
   label: string;
   description?: React.ReactNode;
-  fromDate?: Date;
-  toDate?: Date;
+  fromDate: Date;
+  toDate: Date;
   isChangeDisabled?: boolean;
   className?: string;
 }
@@ -33,8 +33,10 @@ export default function FormDatePicker({
       // TODO: Fiks så endring av dato til dato utenfor fromDate-toDate intervall
       // via tekst input håndteres fornuftig. I disse tilfellene blir date `undefined` her.
       // Og state value for feltet blir visst null. Og feilmelding som vises blir "Feltet må fylles ut."
-      if (!isChangeDisabled && date)
-        field.handleChange(toLocalDateStringInIsoFormat(date));
+      if (!isChangeDisabled && date) {
+        const dateIsoString = toDateStringInIsoFormat(date);
+        field.handleChange(dateIsoString);
+      }
     },
   });
 

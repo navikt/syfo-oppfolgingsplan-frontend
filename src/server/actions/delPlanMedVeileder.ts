@@ -2,12 +2,13 @@
 
 import { getEndpointDelMedVeilederForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export type DelPlanMedVeilederActionState = {
-  deltMedVeilederTidspunkt: Date | null;
+  deltMedVeilederTidspunkt: string | null;
   errorDelMedVeileder: string | null;
 };
 
@@ -19,7 +20,7 @@ export async function delPlanMedVeilederServerAction(
     await simulateBackendDelay();
 
     return {
-      deltMedVeilederTidspunkt: new Date(),
+      deltMedVeilederTidspunkt: now().toISOString(),
       errorDelMedVeileder: null,
     };
   }
@@ -29,9 +30,8 @@ export async function delPlanMedVeilederServerAction(
     endpoint: getEndpointDelMedVeilederForAG(narmesteLederId, planId),
   });
 
-  // satisfy typescript for now
   return {
-    deltMedVeilederTidspunkt: new Date(),
+    deltMedVeilederTidspunkt: now().toISOString(),
     errorDelMedVeileder: null,
   };
 }

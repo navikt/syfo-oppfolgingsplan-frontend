@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, Button, HStack } from "@navikt/ds-react";
-import { getLocaleDateAndTimeString } from "@/ui-helpers/dateAndTime";
+import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
 
@@ -35,7 +35,7 @@ export function DelPlanMedVeilederButtonAndStatus({ planId }: Props) {
       {deltMedVeilederTidspunkt ? (
         <Alert variant="success" inline>
           Delt med Nav-veileder{" "}
-          {getLocaleDateAndTimeString(deltMedVeilederTidspunkt, "long")}.
+          {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
         </Alert>
       ) : (
         errorDelMedVeileder && <>{/* TODO: Show some error message */}</>

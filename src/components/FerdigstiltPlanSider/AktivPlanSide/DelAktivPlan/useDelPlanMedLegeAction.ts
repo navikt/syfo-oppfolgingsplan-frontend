@@ -6,7 +6,7 @@ import {
 } from "@/server/actions/delPlanMedLege";
 
 export function useDelPlanMedLegeAction(
-  initialDeltMedLegeTidspunkt: Date | null,
+  initialDeltMedLegeTidspunkt: string | null,
 ) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 

@@ -2,12 +2,13 @@
 
 import { getEndpointDelMedLegeForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export interface DelPlanMedLegeActionState {
-  deltMedLegeTidspunkt: Date | null;
+  deltMedLegeTidspunkt: string | null;
   errorDelMedLege: string | null;
 }
 
@@ -19,7 +20,7 @@ export async function delPlanMedLegeServerAction(
     await simulateBackendDelay();
 
     return {
-      deltMedLegeTidspunkt: new Date(),
+      deltMedLegeTidspunkt: now().toISOString(),
       errorDelMedLege: null,
     };
   }
@@ -29,9 +30,8 @@ export async function delPlanMedLegeServerAction(
     endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
   });
 
-  // satisfy typescript for now
   return {
-    deltMedLegeTidspunkt: new Date(),
+    deltMedLegeTidspunkt: now().toISOString(),
     errorDelMedLege: null,
   };
 }

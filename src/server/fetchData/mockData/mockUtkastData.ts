@@ -1,6 +1,6 @@
 import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFormSchemas";
 import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
-import { toLocalDateStringInIsoFormat } from "@/utils/dateUtils";
+import { now } from "@/utils/dateAndTime/dateUtils";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 
 const mockLagretUtkast: OppfolgingsplanFormUnderArbeid = {
@@ -11,7 +11,7 @@ const mockLagretUtkast: OppfolgingsplanFormUnderArbeid = {
 export const mockUtkastResponse: ConvertedLagretUtkastData = {
   ...mockCommonAGResponseFields,
   utkast: {
-    sistLagretTidspunkt: new Date(Date.now() - 30 * 60 * 1000),
+    sistLagretTidspunkt: now().subtract(30, "minute").toISOString(),
     content: mockLagretUtkast,
   },
 };
@@ -25,11 +25,7 @@ const mockUtfyltLagretUtkast: OppfolgingsplanFormUnderArbeid = {
   tilretteleggingFremover: ".",
   annenTilrettelegging: ".",
   hvordanFolgeOpp: ".",
-  evalueringsDato: (() => {
-    const d = new Date();
-    d.setMonth(d.getMonth() + 2);
-    return toLocalDateStringInIsoFormat(d);
-  })(),
+  evalueringsDato: now().add(2, "month").format("YYYY-MM-DD"),
   harDenAnsatteMedvirket: "ja",
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };
@@ -37,7 +33,7 @@ const mockUtfyltLagretUtkast: OppfolgingsplanFormUnderArbeid = {
 export const mockUtfyltLagretUtkastResponse: ConvertedLagretUtkastData = {
   ...mockCommonAGResponseFields,
   utkast: {
-    sistLagretTidspunkt: new Date(Date.now() - 5 * 60 * 1000),
+    sistLagretTidspunkt: now().subtract(30, "minute").toISOString(),
     content: mockUtfyltLagretUtkast,
   },
 };

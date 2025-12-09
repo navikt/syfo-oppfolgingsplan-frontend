@@ -7,7 +7,7 @@ import {
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
 import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
-import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
+import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import PlanDelingStatusTags from "./PlanLinkCardFooterTags";
 
 interface Props {
@@ -36,11 +36,11 @@ export default function TidligerePlanLinkCard({
 
       <LinkCardDescription>
         <BodyShort size="small" className="mb-1">
-          Opprettet dato: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
+          Opprettet dato: {getFormattedDateString(ferdigstiltTidspunkt)}
         </BodyShort>
 
         <BodyShort size="small">
-          Evalueringsdato: {getLocaleDateString(evalueringsDato, "long")}
+          Evalueringsdato: {getFormattedDateString(evalueringsDato)}
         </BodyShort>
       </LinkCardDescription>
 
