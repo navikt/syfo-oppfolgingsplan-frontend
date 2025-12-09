@@ -8,6 +8,7 @@ export function getLocaleDateAndTimeString(
   return `${getLocaleDateString(dateTime, dateFormat)} kl. ${dateTime.toLocaleTimeString(
     LOCALE,
     {
+      timeZone: "Europe/Oslo",
       hour: "2-digit",
       minute: "2-digit",
     },
@@ -19,6 +20,7 @@ export function getLocaleDateString(date: Date, format: "long" | "short") {
   const dateIsCurrentYear = date.getFullYear() === currentYear;
 
   const dateOptions: Intl.DateTimeFormatOptions = {
+    timeZone: "Europe/Oslo",
     year:
       DONT_SHOW_YEAR_IF_CURRENT_YEAR && dateIsCurrentYear
         ? undefined

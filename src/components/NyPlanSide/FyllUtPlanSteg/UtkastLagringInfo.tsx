@@ -32,6 +32,7 @@ export default function UtkastLagringInfo({
         <span>
           Utkast sist lagret kl.{" "}
           {utkastSistLagretTidspunkt?.toLocaleTimeString("no-NB", {
+            timeZone: "Europe/Oslo",
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
