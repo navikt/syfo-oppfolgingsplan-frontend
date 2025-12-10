@@ -10,9 +10,12 @@ type ActionPayload = {
 export default function useSlettUtkastAction() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const initialSlettUtkastState: FetchUpdateResult = { error: null };
+  const initialSlettUtkastState: FetchUpdateResult = {
+    success: true,
+    data: undefined,
+  };
 
-  const [{ error }, slettUtkastAction, isPendingSlettUtkast] = useActionState(
+  const [result, slettUtkastAction, isPendingSlettUtkast] = useActionState(
     innerSlettUtkastAction,
     initialSlettUtkastState,
   );
@@ -23,7 +26,7 @@ export default function useSlettUtkastAction() {
   ): Promise<FetchUpdateResult> {
     const actionState = await slettUtkastServerAction(narmesteLederId);
 
-    if (actionState.error === null) {
+    if (actionState.success) {
       onSuccess();
     }
 
@@ -33,6 +36,6 @@ export default function useSlettUtkastAction() {
   return {
     slettUtkastAction,
     isPendingSlettUtkast,
-    error,
+    error: !result.success ? result.error : null,
   };
 }

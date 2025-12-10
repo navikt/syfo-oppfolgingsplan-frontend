@@ -30,7 +30,7 @@ export async function submitFlexjarFeedback(
     responseDataSchema: flexjarResponseSchema,
   });
 
-  if (result.error) {
+  if (!result.success) {
     throw new Error("Failed to submit feedback");
   }
 

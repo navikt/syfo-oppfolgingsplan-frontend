@@ -2,6 +2,7 @@ import { useActionState } from "react";
 import { useParams } from "next/navigation";
 import { Alert, BodyLong, Button, Modal } from "@navikt/ds-react";
 import { overskrivUtkastMedInnholdFraAktivPlanServerAction } from "@/server/actions/overskrivUtkastMedInnholdFraAktivPlan";
+import { getGeneralActionErrorMessage } from "@/utils/error-messages";
 
 interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
@@ -10,9 +11,10 @@ interface Props {
 export function OverskrivUtkastModal({ ref }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const [{ error }, overskrivUtkastAction, isPendingOverskrivUtkast] =
+  const [result, overskrivUtkastAction, isPendingOverskrivUtkast] =
     useActionState(overskrivUtkastMedInnholdFraAktivPlanServerAction, {
-      error: null,
+      success: true,
+      data: undefined,
     });
 
   return (
@@ -30,8 +32,14 @@ export function OverskrivUtkastModal({ ref }: Props) {
           erstattet med innholdet i denne planen. Vil du fortsette?
         </BodyLong>
 
-        {/* TODO: Improve error message */}
-        {error && <Alert variant="error">Beklager, noe gikk galt.</Alert>}
+        {!result.success && (
+          <Alert variant="error">
+            {getGeneralActionErrorMessage(
+              result.error,
+              "Beklager, noe gikk galt når vi prøvde å erstatte utkastet. Vennligst prøv igjen senere.",
+            )}
+          </Alert>
+        )}
       </Modal.Body>
 
       <Modal.Footer>

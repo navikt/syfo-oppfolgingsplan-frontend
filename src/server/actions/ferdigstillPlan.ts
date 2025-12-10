@@ -5,6 +5,7 @@ import z from "zod";
 import { logger } from "@navikt/next-logger";
 import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
+import { StandardActionErrorType } from "@/common/types/errors.ts";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
 import { getOppfolgingsplanFormShape } from "@/utils/getOppfolgingsplanFormShape";
@@ -21,7 +22,7 @@ import {
 export async function ferdigstillPlanServerAction(
   narmesteLederId: string,
   payload: z.infer<typeof ferdigstillPlanActionPayloadSchema>,
-): Promise<FetchUpdateResult> {
+): Promise<FetchUpdateResult<StandardActionErrorType>> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
@@ -47,6 +48,7 @@ export async function ferdigstillPlanServerAction(
         `ferdigstillPlanServerAction payload validation error: ${inputValidationError.message}`,
       );
       return {
+        success: false,
         error: {
           type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
         },
@@ -75,8 +77,8 @@ export async function ferdigstillPlanServerAction(
     },
   });
 
-  if (fetchResult.error) {
-    return fetchResult;
+  if (!fetchResult.success) {
+    return fetchResult as FetchUpdateResult<StandardActionErrorType>;
   } else {
     // Redirect to aktiv plan page on success
     return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));

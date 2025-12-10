@@ -3,6 +3,7 @@
 import z from "zod";
 import { logger } from "@navikt/next-logger";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
+import { StandardActionErrorType } from "@/common/types/errors.ts";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   OppfolgingsplanFormAndUtkastSchema,
@@ -29,12 +30,14 @@ interface LagreUtkastRequestBody {
 export async function lagreUtkastServerAction(
   narmesteLederId: string,
   formValues: OppfolgingsplanFormUnderArbeid,
-): Promise<FetchUpdateResultWithResponse<LagreUtkastResponse>> {
+): Promise<
+  FetchUpdateResultWithResponse<LagreUtkastResponse, StandardActionErrorType>
+> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
     return {
-      error: null,
+      success: true,
       data: { sistLagretTidspunkt: now().toISOString() },
     };
   }
@@ -61,10 +64,10 @@ export async function lagreUtkastServerAction(
     }
 
     return {
+      success: false,
       error: {
         type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
       },
-      data: null,
     };
   }
 
@@ -72,11 +75,14 @@ export async function lagreUtkastServerAction(
     content: validatedFormValues,
   };
 
-  return await tokenXFetchUpdateWithResponse({
+  return (await tokenXFetchUpdateWithResponse({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
     method: "PUT",
     requestBody,
     responseDataSchema: lagreUtkastResponseSchema,
-  });
+  })) as FetchUpdateResultWithResponse<
+    LagreUtkastResponse,
+    StandardActionErrorType
+  >;
 }

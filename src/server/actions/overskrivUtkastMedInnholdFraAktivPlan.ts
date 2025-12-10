@@ -35,6 +35,7 @@ export async function overskrivUtkastMedInnholdFraAktivPlanServerAction(
     );
 
     return {
+      success: false,
       error: {
         type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
       },
@@ -47,6 +48,7 @@ export async function overskrivUtkastMedInnholdFraAktivPlanServerAction(
     aktivPlanResponse = await fetchAktivPlanForAG(narmesteLederId);
   } catch (err) {
     return {
+      success: false,
       error: err as FetchResultError,
     };
   }
@@ -65,8 +67,11 @@ export async function overskrivUtkastMedInnholdFraAktivPlanServerAction(
     convertedPlanContent,
   );
 
-  if (lagreUtkastResult.error) {
-    return lagreUtkastResult;
+  if (!lagreUtkastResult.success) {
+    return {
+      success: false,
+      error: lagreUtkastResult.error,
+    };
   } else {
     // Redirect to ny plan page on success
     return redirect(getAGOpprettNyPlanHref(narmesteLederId));

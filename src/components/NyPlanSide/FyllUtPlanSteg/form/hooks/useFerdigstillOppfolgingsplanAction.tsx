@@ -12,9 +12,12 @@ export type FerdigstillPlanActionPayload = z.infer<
 export default function useFerdigstillOppfolgingsplanAction() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const initialFerdigstillState = { error: null };
+  const initialFerdigstillState: FetchUpdateResult = {
+    success: true,
+    data: undefined,
+  };
 
-  const [{ error }, ferdigstillPlanAction, isPendingFerdigstillPlan] =
+  const [result, ferdigstillPlanAction, isPendingFerdigstillPlan] =
     useActionState(innerFerdigstillPlanAction, initialFerdigstillState);
 
   function innerFerdigstillPlanAction(
@@ -33,6 +36,6 @@ export default function useFerdigstillOppfolgingsplanAction() {
   return {
     startFerdigstillPlanAction,
     isPendingFerdigstillPlan,
-    error,
+    error: !result.success ? result.error : null,
   };
 }
