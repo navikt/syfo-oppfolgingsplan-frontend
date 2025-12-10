@@ -10,8 +10,8 @@ import { useDelPlanMedVeilederAction } from "./DelAktivPlan/useDelPlanMedVeilede
 // components also client components. See https://nextjs.org/docs/app/getting-started/server-and-client-components#context-providers.
 
 interface PlanDelingContextValue {
-  deltMedLegeTidspunkt: Date | null;
-  deltMedVeilederTidspunkt: Date | null;
+  deltMedLegeTidspunkt: string | null;
+  deltMedVeilederTidspunkt: string | null;
   delMedLegeAction: ({ planId }: { planId: string }) => void;
   delMedVeilederAction: ({ planId }: { planId: string }) => void;
   isPendingDelMedLege: boolean;
@@ -23,8 +23,8 @@ interface PlanDelingContextValue {
 const PlanDelingContext = createContext<PlanDelingContextValue | null>(null);
 
 interface ProviderProps {
-  initialDeltMedLegeTidspunkt: Date | null;
-  initialDeltMedVeilederTidspunkt: Date | null;
+  initialDeltMedLegeTidspunkt: string | null;
+  initialDeltMedVeilederTidspunkt: string | null;
   children: React.ReactNode;
 }
 

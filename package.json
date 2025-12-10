@@ -25,6 +25,7 @@
     "@navikt/next-logger": "^4.4.1",
     "@navikt/oasis": "^3.8.0",
     "@tanstack/react-form": "^1.27.0",
+    "dayjs": "^1.11.19",
     "next": "^16.0.7",
     "pino": "^9.13.0",
     "pino-pretty": "^13.1.3",

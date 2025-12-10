@@ -1,14 +1,14 @@
 import { BodyShort, VStack } from "@navikt/ds-react";
 import {
-  getLocaleDateAndTimeString,
-  getLocaleDateString,
+  getFormattedDateAndTimeString,
+  getFormattedDateString,
 } from "@/ui-helpers/dateAndTime";
 
 interface Props {
-  ferdigstiltTidspunkt: Date;
-  evalueringsDato: Date;
-  deltMedLegeTidspunkt: Date | null;
-  deltMedVeilederTidspunkt: Date | null;
+  ferdigstiltTidspunkt: string;
+  evalueringsDato: string;
+  deltMedLegeTidspunkt: string | null;
+  deltMedVeilederTidspunkt: string | null;
 }
 
 export function TidligerePlanDetails({
@@ -21,11 +21,11 @@ export function TidligerePlanDetails({
     <VStack className="gap-4">
       <VStack gap="2">
         <BodyShort size="medium">
-          Opprettet dato: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
+          Opprettet dato: {getFormattedDateString(ferdigstiltTidspunkt)}
         </BodyShort>
 
         <BodyShort size="medium">
-          Evalueringsdato: {getLocaleDateString(evalueringsDato, "long")}
+          Evalueringsdato: {getFormattedDateString(evalueringsDato)}
         </BodyShort>
       </VStack>
 
@@ -33,14 +33,14 @@ export function TidligerePlanDetails({
         {deltMedLegeTidspunkt && (
           <BodyShort size="medium">
             Planen ble delt med fastlege{" "}
-            {getLocaleDateAndTimeString(deltMedLegeTidspunkt, "long")}.
+            {getFormattedDateAndTimeString(deltMedLegeTidspunkt)}.
           </BodyShort>
         )}
 
         {deltMedVeilederTidspunkt && (
           <BodyShort size="medium">
             Den ble delt med Nav-veileder{" "}
-            {getLocaleDateAndTimeString(deltMedVeilederTidspunkt, "long")}.
+            {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
           </BodyShort>
         )}
       </VStack>

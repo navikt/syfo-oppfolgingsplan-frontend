@@ -6,7 +6,7 @@ import {
 } from "@/server/actions/delPlanMedVeileder";
 
 export function useDelPlanMedVeilederAction(
-  initialDeltMedVeilederTidspunkt: Date | null,
+  initialDeltMedVeilederTidspunkt: string | null,
 ) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 

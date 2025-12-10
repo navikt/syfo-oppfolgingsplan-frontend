@@ -1,9 +1,9 @@
 import { BodyShort, VStack } from "@navikt/ds-react";
-import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
+import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 
 interface Props {
-  ferdigstiltTidspunkt: Date;
-  evalueringsDato: Date;
+  ferdigstiltTidspunkt: string;
+  evalueringsDato: string;
 }
 
 export function AktivPlanDetailsSM({
@@ -13,11 +13,11 @@ export function AktivPlanDetailsSM({
   return (
     <VStack gap="1">
       <BodyShort size="medium">
-        Opprettet: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
+        Opprettet: {getFormattedDateString(ferdigstiltTidspunkt)}
       </BodyShort>
 
       <BodyShort size="medium">
-        Dato for evaluering: {getLocaleDateString(evalueringsDato, "long")}
+        Dato for evaluering: {getFormattedDateString(evalueringsDato)}
       </BodyShort>
     </VStack>
   );

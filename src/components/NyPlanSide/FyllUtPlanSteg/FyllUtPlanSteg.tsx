@@ -6,7 +6,7 @@ import { oppfolgingsplanFormDefaultValues } from "./form/form-options";
 import { withForm } from "./form/hooks/form";
 
 interface Props {
-  utkastSistLagretTidspunkt: Date | null;
+  utkastSistLagretTidspunkt: string | null;
   isSavingUtkast: boolean;
   isPendingProceedToOppsummering: boolean;
   isPendingExitAndContinueLater: boolean;

@@ -1,18 +1,10 @@
 import z from "zod";
 
 export const ferdigstiltPlanMetadataSchema = z.object({
-  ferdigstiltTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString)),
-  evalueringsDato: z.iso.date().transform((dateString) => new Date(dateString)),
-  deltMedLegeTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString))
-    .nullable(),
-  deltMedVeilederTidspunkt: z.iso
-    .datetime()
-    .transform((dateString) => new Date(dateString))
-    .nullable(),
+  ferdigstiltTidspunkt: z.iso.datetime(),
+  evalueringsDato: z.iso.date(),
+  deltMedLegeTidspunkt: z.iso.datetime().nullable(),
+  deltMedVeilederTidspunkt: z.iso.datetime().nullable(),
 });
 
 export type FerdigstiltPlanMetadata = z.infer<

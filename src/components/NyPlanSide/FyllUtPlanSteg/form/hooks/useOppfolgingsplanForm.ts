@@ -28,7 +28,7 @@ export default function useOppfolgingsplanForm({
   initialSistLagretTidspunkt,
 }: {
   initialLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
-  initialSistLagretTidspunkt: Date | null;
+  initialSistLagretTidspunkt: string | null;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 

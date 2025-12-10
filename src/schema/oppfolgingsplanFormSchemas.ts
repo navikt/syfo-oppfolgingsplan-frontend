@@ -1,10 +1,9 @@
 import { z } from "zod";
 import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
 import {
-  getOneYearFromNowDate,
-  getTomorrowDate,
-  isValidDate,
-} from "@/utils/dateUtils";
+  isNotMoreThanOneYearInTheFuture,
+  isTomorrowOrLater,
+} from "@/utils/dateAndTime/dateUtils";
 
 const requireFieldErrorMessage = "Feltet må fylles ut";
 const maxLengthExeededErrorMessage = `Feltet kan ikke ha mer enn ${TEXT_FIELD_MAX_LENGTH} tegn`;
@@ -52,24 +51,16 @@ const schemaForEvalueringsDatoVedFerdigstilling = z.iso
       issue.input === null ? requireFieldErrorMessage : "Ugyldig dato",
   })
   .refine(
-    (dateString) => {
-      const minDate = getTomorrowDate();
-      const parsedDate = new Date(dateString);
-      return (
-        isValidDate(parsedDate) && parsedDate.getTime() >= minDate.getTime()
-      );
+    (dateIsoString) => {
+      return isTomorrowOrLater(dateIsoString);
     },
     {
       message: "Dato for evaluering kan ikke være i dag eller tidligere",
     },
   )
   .refine(
-    (dateString) => {
-      const maxDate = getOneYearFromNowDate();
-      const parsedDate = new Date(dateString);
-      return (
-        isValidDate(parsedDate) && parsedDate.getTime() <= maxDate.getTime()
-      );
+    (dateIsoString) => {
+      return isNotMoreThanOneYearInTheFuture(dateIsoString);
     },
     {
       message: "Dato for evaluering kan ikke være mer enn ett år frem i tid",

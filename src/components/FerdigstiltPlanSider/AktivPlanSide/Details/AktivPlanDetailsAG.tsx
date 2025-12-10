@@ -1,10 +1,10 @@
 import { Alert, BodyShort, VStack } from "@navikt/ds-react";
-import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
+import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 
 interface Props {
   nyligOprettet: boolean;
-  ferdigstiltTidspunkt: Date;
-  evalueringsDato: Date;
+  ferdigstiltTidspunkt: string;
+  evalueringsDato: string;
 }
 
 export function AktivPlanDetailsAG({
@@ -14,7 +14,7 @@ export function AktivPlanDetailsAG({
 }: Props) {
   const evalueringsDatoInfo = (
     <BodyShort size="medium">
-      Evalueringsdato: {getLocaleDateString(evalueringsDato, "long")}
+      Evalueringsdato: {getFormattedDateString(evalueringsDato)}
     </BodyShort>
   );
 
@@ -29,7 +29,7 @@ export function AktivPlanDetailsAG({
   ) : (
     <VStack className="gap-4">
       <BodyShort size="medium">
-        Opprettet dato: {getLocaleDateString(ferdigstiltTidspunkt, "long")}
+        Opprettet dato: {getFormattedDateString(ferdigstiltTidspunkt)}
       </BodyShort>
 
       {evalueringsDatoInfo}

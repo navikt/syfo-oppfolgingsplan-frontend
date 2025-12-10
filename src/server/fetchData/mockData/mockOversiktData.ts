@@ -9,7 +9,7 @@ export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
   oversikt: {
     utkast: {
-      sistLagretTidspunkt: new Date("2025-10-28T10:17:31Z"),
+      sistLagretTidspunkt: "2025-10-28T10:17:31Z",
     },
     aktivPlan: mockAktivPlanData,
     tidligerePlaner: mockTidligerePlanerData,

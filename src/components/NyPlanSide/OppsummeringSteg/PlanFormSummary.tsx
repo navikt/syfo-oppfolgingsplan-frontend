@@ -1,6 +1,6 @@
 import { Box, FormSummary } from "@navikt/ds-react";
 import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
-import { getLocaleDateString } from "@/ui-helpers/dateAndTime";
+import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import { formHeadings, formLabels } from "../form-labels";
 
 interface Props {
@@ -10,6 +10,12 @@ interface Props {
 }
 
 export default function PlanFormSummary({ formValues, className }: Props) {
+  const evalueringsDatoFormatted = formValues.evalueringsDato ? (
+    getFormattedDateString(formValues.evalueringsDato)
+  ) : (
+    <em>Ikke valgt</em>
+  );
+
   return (
     <Box.New className={className}>
       {/* whitespace-pre-line er for å vise linjeskift i brukers svar */}
@@ -96,13 +102,7 @@ export default function PlanFormSummary({ formValues, className }: Props) {
             <FormSummary.Label>
               {formLabels.evalueringsDato.label}
             </FormSummary.Label>
-            <FormSummary.Value>
-              {formValues.evalueringsDato &&
-                getLocaleDateString(
-                  new Date(formValues.evalueringsDato),
-                  "long",
-                )}
-            </FormSummary.Value>
+            <FormSummary.Value>{evalueringsDatoFormatted}</FormSummary.Value>
           </FormSummary.Answer>
 
           <FormSummary.Answer>

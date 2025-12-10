@@ -1,7 +1,7 @@
 import z from "zod";
+import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { OppfolgingsplanFormUnderArbeid } from "./oppfolgingsplanFormSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
-import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 
 const utkastResponseContentSchema = z.record(
   z.string(),
@@ -22,7 +22,7 @@ export type ConvertedLagretUtkastData = z.infer<
   typeof utkastResponseForAGSchema
 > & {
   utkast: {
-    sistLagretTidspunkt: Date;
+    sistLagretTidspunkt: string;
     content: OppfolgingsplanFormUnderArbeid;
   } | null;
 };

@@ -1,50 +1,64 @@
 import { BodyLong, HStack, HelpText, Loader } from "@navikt/ds-react";
+import {
+  getFormattedDateAndTimeString,
+  getFormattedTimeString,
+} from "@/ui-helpers/dateAndTime";
+import {
+  isDateToday,
+  isNotMoreThanOneHourAgo,
+} from "@/utils/dateAndTime/dateUtils";
 
 interface Props {
   isSavingUtkast: boolean;
-  utkastSistLagretTidspunkt: Date | null;
+  utkastSistLagretTidspunkt: string | null;
 }
 
 export default function UtkastLagringInfo({
   isSavingUtkast,
   utkastSistLagretTidspunkt,
 }: Props) {
-  if (!isSavingUtkast && !utkastSistLagretTidspunkt) {
-    return null;
+  if (isSavingUtkast) {
+    return (
+      <HStack gap="4" align="center">
+        <BodyLong size="medium" className="text-ax-text-neutral-subtle">
+          <span>Lagrer utkast...</span>
+        </BodyLong>
+
+        <Loader
+          size="small"
+          title="Lagrer utkast"
+          variant="interaction"
+          className="relative -top-px"
+        />
+      </HStack>
+    );
   }
 
-  return isSavingUtkast ? (
-    <HStack gap="4" align="center">
-      <BodyLong size="medium" className="text-ax-text-neutral-subtle">
-        <span>Lagrer utkast...</span>
-      </BodyLong>
+  if (utkastSistLagretTidspunkt) {
+    const isToday = isDateToday(utkastSistLagretTidspunkt);
+    const displaySeconds = isNotMoreThanOneHourAgo(utkastSistLagretTidspunkt);
 
-      <Loader
-        size="small"
-        title="Lagrer utkast"
-        variant="interaction"
-        className="relative -top-px"
-      />
-    </HStack>
-  ) : (
-    <HStack gap="4" align="center">
-      <BodyLong size="medium" className="text-ax-text-neutral-subtle">
-        <span>
-          Utkast sist lagret kl.{" "}
-          {utkastSistLagretTidspunkt?.toLocaleTimeString("no-NB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          })}
-        </span>
-      </BodyLong>
+    const sistLagretTidspunktFormatted = isToday
+      ? `kl. ${getFormattedTimeString(utkastSistLagretTidspunkt, displaySeconds)}`
+      : getFormattedDateAndTimeString(
+          utkastSistLagretTidspunkt,
+          displaySeconds,
+        );
 
-      <HelpText className="relative -top-px">
-        Dine endringer lagres som et utkast mens du skriver. Du finner igjen
-        utkastet på siden med oppfølgingsplaner for den ansatte. Klikk på
-        «Avslutt og fortsett senere» for å avslutte for nå og gå til den siden.
-        Derfra kan du klikke på utkastet for å fortsette skrivingen.
-      </HelpText>
-    </HStack>
-  );
+    return (
+      <HStack gap="4" align="center">
+        <BodyLong size="medium" className="text-ax-text-neutral-subtle">
+          <span>Utkast sist lagret {sistLagretTidspunktFormatted}</span>
+        </BodyLong>
+
+        <HelpText className="relative -top-px">
+          Dine endringer lagres som et utkast mens du skriver. Hvis du ønsker å
+          jobbe videre med oppfølgingsplanen senere kan du velge «Avslutt og
+          fortsett senere».
+        </HelpText>
+      </HStack>
+    );
+  }
+
+  return null;
 }

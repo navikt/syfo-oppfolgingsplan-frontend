@@ -1,6 +1,9 @@
 import { BodyLong, Heading, Link, ReadMore } from "@navikt/ds-react";
 import TextContentBox from "@/components/layout/TextContentBox";
-import { getOneYearFromNowDate, getTomorrowDate } from "@/utils/dateUtils";
+import {
+  getOneYearFromNowDayDate,
+  getTomorrowDayDate,
+} from "@/utils/dateAndTime/dateUtils";
 import { formHeadings, formLabels } from "../../form-labels";
 import { oppfolgingsplanFormDefaultValues } from "./form-options";
 import { withForm } from "./hooks/form";
@@ -115,8 +118,8 @@ const OPFormFields = withForm({
           <field.FormDatePicker
             label={formLabels.evalueringsDato.label}
             description={readMoreOmAEvaluerePlanen}
-            fromDate={getTomorrowDate()}
-            toDate={getOneYearFromNowDate()}
+            fromDate={getTomorrowDayDate()}
+            toDate={getOneYearFromNowDayDate()}
             isChangeDisabled={isChangeDisabled}
             className="mb-8"
           />
