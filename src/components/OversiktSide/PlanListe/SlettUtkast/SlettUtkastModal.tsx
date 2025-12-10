@@ -23,11 +23,11 @@ export function SlettUtkastModal({ modalRef }: Props) {
         <BodyLong>Er du sikker på at du vil slette utkastet ditt?</BodyLong>
 
         {error && (
-          <div className="mb-4">
+          <div className="mt-4">
             <Alert variant="error">
               {getGeneralActionErrorMessage(
                 error,
-                "Vi klarte ikke å slette utkastet. Vennligst prøv igjen senere.",
+                "Noe gikk galt når vi prøvde å slette utkastet. Vennligst prøv igjen senere.",
               )}
             </Alert>
           </div>

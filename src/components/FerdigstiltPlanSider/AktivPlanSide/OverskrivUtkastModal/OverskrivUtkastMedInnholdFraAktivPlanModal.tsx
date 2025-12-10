@@ -36,7 +36,7 @@ export function OverskrivUtkastModal({ ref }: Props) {
           <Alert variant="error">
             {getGeneralActionErrorMessage(
               result.error,
-              "Beklager, noe gikk galt.",
+              "Beklager, noe gikk galt når vi prøvde å erstatte utkastet. Vennligst prøv igjen senere.",
             )}
           </Alert>
         )}
