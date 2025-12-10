@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
 import {
-  isLessThanOneYearAway,
+  isNotMoreThanOneYearInTheFuture,
   isTomorrowOrLater,
 } from "@/utils/dateAndTime/dateUtils";
 
@@ -60,7 +60,7 @@ const schemaForEvalueringsDatoVedFerdigstilling = z.iso
   )
   .refine(
     (dateIsoString) => {
-      return isLessThanOneYearAway(dateIsoString);
+      return isNotMoreThanOneYearInTheFuture(dateIsoString);
     },
     {
       message: "Dato for evaluering kan ikke være mer enn ett år frem i tid",

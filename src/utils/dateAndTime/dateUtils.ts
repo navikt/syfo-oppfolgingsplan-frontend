@@ -40,11 +40,13 @@ export function isTomorrowOrLater(isoDateString: string): boolean {
   return d.isSameOrAfter(tomorrow, "day");
 }
 
-export function isLessThanOneYearAway(isoDateString: string): boolean {
+export function isNotMoreThanOneYearInTheFuture(
+  isoDateString: string,
+): boolean {
   const d = getDayjsFromIsoString(isoDateString);
   const oneYearFromNow = getOneYearFromNowDayDate();
 
-  return d.isBefore(oneYearFromNow, "day");
+  return d.isSameOrBefore(oneYearFromNow, "day");
 }
 
 export function toDateStringInIsoFormat(date: Date): string {
