@@ -6,14 +6,11 @@ import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlan
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
 import TextContentBox from "@/components/layout/TextContentBox";
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt.ts";
 
 export default async function OversiktPageForAG({
   params,
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
-  const { userHasEditAccess } =
-    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
   return (
     <>
@@ -29,9 +26,8 @@ export default async function OversiktPageForAG({
         </BodyLong>
       </TextContentBox>
 
-      {!userHasEditAccess && <AnsattIkkeSykmeldtAlert />}
-
       <Suspense fallback={<PlanListeSkeleton />}>
+        <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
         <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
         <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>
