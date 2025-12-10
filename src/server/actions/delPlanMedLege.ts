@@ -24,14 +24,21 @@ export async function delPlanMedLegeServerAction(
     };
   }
 
-  await tokenXFetchUpdate({
+  const fetchResult = await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
   });
 
-  // satisfy typescript for now
-  return {
-    deltMedLegeTidspunkt: new Date(),
-    errorDelMedLege: null,
-  };
+  if (fetchResult.error) {
+    return {
+      deltMedLegeTidspunkt: null,
+      errorDelMedLege:
+        fetchResult.error.message || "Ukjent feil ved deling med lege",
+    };
+  } else {
+    return {
+      deltMedLegeTidspunkt: new Date(),
+      errorDelMedLege: null,
+    };
+  }
 }
