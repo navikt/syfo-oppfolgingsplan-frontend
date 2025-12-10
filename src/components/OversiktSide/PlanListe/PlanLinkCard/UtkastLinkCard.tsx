@@ -8,7 +8,11 @@ import {
 } from "@navikt/ds-react/LinkCard";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { UtkastMetadata } from "@/schema/utkastMetadataSchema";
-import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
+import {
+  getFormattedDateAndTimeString,
+  getFormattedTimeString,
+} from "@/ui-helpers/dateAndTime";
+import { isDateToday } from "@/utils/dateAndTime/dateUtils";
 
 interface Props {
   utkast: UtkastMetadata;
@@ -21,8 +25,11 @@ export default function UtkastLinkPanel({
   linkCardTitle,
   narmesteLederId,
 }: Props) {
-  const utkastSistLagretFormatted =
-    getFormattedDateAndTimeString(sistLagretTidspunkt);
+  const isToday = isDateToday(sistLagretTidspunkt);
+
+  const utkastSistLagretFormatted = isToday
+    ? `i dag kl. ${getFormattedTimeString(sistLagretTidspunkt)}`
+    : getFormattedDateAndTimeString(sistLagretTidspunkt);
 
   return (
     <LinkCard className="bg-ax-bg-brand-beige-soft">

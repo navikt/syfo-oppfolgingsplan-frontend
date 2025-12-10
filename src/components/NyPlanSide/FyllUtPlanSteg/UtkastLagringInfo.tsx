@@ -40,7 +40,10 @@ export default function UtkastLagringInfo({
 
     const sistLagretTidspunktFormatted = isToday
       ? `kl. ${getFormattedTimeString(utkastSistLagretTidspunkt, displaySeconds)}`
-      : getFormattedDateAndTimeString(utkastSistLagretTidspunkt);
+      : getFormattedDateAndTimeString(
+          utkastSistLagretTidspunkt,
+          displaySeconds,
+        );
 
     return (
       <HStack gap="4" align="center">
@@ -49,10 +52,9 @@ export default function UtkastLagringInfo({
         </BodyLong>
 
         <HelpText className="relative -top-px">
-          Dine endringer lagres som et utkast mens du skriver. Du finner igjen
-          utkastet på siden med oppfølgingsplaner for den ansatte. Klikk på
-          «Avslutt og fortsett senere» for å avslutte for nå og gå til den
-          siden. Derfra kan du klikke på utkastet for å fortsette skrivingen.
+          Dine endringer lagres som et utkast mens du skriver. Hvis du ønsker å
+          jobbe videre med oppfølgingsplanen senere kan du velge «Avslutt og
+          fortsett senere».
         </HelpText>
       </HStack>
     );
