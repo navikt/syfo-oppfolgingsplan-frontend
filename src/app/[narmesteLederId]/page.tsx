@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { BodyLong, Heading } from "@navikt/ds-react";
+import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
@@ -26,6 +27,7 @@ export default async function OversiktPageForAG({
       </TextContentBox>
 
       <Suspense fallback={<PlanListeSkeleton />}>
+        <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
         <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
         <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>

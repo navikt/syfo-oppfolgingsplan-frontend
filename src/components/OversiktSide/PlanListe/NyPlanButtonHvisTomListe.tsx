@@ -7,6 +7,7 @@ export default async function NyPlanButtonHvisTomListe({
   narmesteLederId: string;
 }) {
   const {
+    userHasEditAccess,
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
@@ -14,7 +15,8 @@ export default async function NyPlanButtonHvisTomListe({
     aktivPlan === null && tidligerePlaner.length === 0 && utkast === null;
 
   return (
-    harTomListe && (
+    harTomListe &&
+    userHasEditAccess && (
       <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
     )
   );
