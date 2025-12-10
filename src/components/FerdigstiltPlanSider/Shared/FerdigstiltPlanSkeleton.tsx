@@ -50,10 +50,10 @@ export default function FerdigstiltPlanSkeleton() {
               Delt med den ansatte
             </Skeleton>
             <Skeleton variant="rounded" height={24}>
-              Ikke delt med fastlege
+              Ikke sendt til fastlege
             </Skeleton>
             <Skeleton variant="rounded" height={24}>
-              Ikke delt med Nav
+              Ikke sendt til Nav
             </Skeleton>
           </HStack>
         </VStack>

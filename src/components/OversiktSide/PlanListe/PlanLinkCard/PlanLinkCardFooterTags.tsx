@@ -23,20 +23,20 @@ export default function PlanDelingStatusTags({
 
       {isDeltMedLege ? (
         <Tag variant={tagVariantHvisDelt} size={size}>
-          Delt med fastlege
+          Sendt til fastlege
         </Tag>
       ) : (
         <Tag variant={tagVariantHvisIkkeDelt} size={size}>
-          Ikke delt med fastlege
+          Ikke sendt til fastlege
         </Tag>
       )}
       {isDeltMedVeileder ? (
         <Tag variant={tagVariantHvisDelt} size={size}>
-          Delt med Nav
+          Sendt til Nav
         </Tag>
       ) : (
         <Tag variant={tagVariantHvisIkkeDelt} size={size}>
-          Ikke delt med Nav
+          Ikke sendt til Nav
         </Tag>
       )}
     </>

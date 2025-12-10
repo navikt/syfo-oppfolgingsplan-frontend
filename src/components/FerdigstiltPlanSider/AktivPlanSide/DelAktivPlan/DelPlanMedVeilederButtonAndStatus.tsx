@@ -34,7 +34,7 @@ export function DelPlanMedVeilederButtonAndStatus({ planId }: Props) {
 
       {deltMedVeilederTidspunkt ? (
         <Alert variant="success" inline>
-          Delt med Nav-veileder{" "}
+          Sendt til Nav-veileder{" "}
           {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
         </Alert>
       ) : (
