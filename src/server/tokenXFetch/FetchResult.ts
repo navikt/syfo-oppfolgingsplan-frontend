@@ -11,18 +11,17 @@ export const fetchResultErrorSchema = z.object({
   message: z.string().optional(),
 });
 
-export type FetchResultError = z.infer<typeof fetchResultErrorSchema>;
-
-export type FetchUpdateResult = {
-  error: FetchResultError | null;
+export type FetchResultError<E extends string = string> = {
+  type: E;
+  message?: string;
 };
 
-export type FetchUpdateResultWithResponse<T> =
-  | {
-      error: null;
-      data: T;
-    }
-  | {
-      error: FetchResultError;
-      data: null;
-    };
+export type Result<T, E extends string = string> =
+  | { success: true; data: T }
+  | { success: false; error: FetchResultError<E> };
+
+export type FetchUpdateResult<E extends string = string> = Result<void, E>;
+export type FetchUpdateResultWithResponse<
+  T,
+  E extends string = string,
+> = Result<T, E>;

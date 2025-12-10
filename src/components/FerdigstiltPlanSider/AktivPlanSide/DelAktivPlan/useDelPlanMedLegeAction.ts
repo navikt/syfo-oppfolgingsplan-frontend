@@ -1,32 +1,54 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
+import { DelPlanMedLegeErrorType } from "@/common/types/errors";
 import {
-  DelPlanMedLegeActionState,
+  DelMedLegeResponse,
   delPlanMedLegeServerAction,
 } from "@/server/actions/delPlanMedLege";
+import { FetchUpdateResultWithResponse } from "@/server/tokenXFetch/FetchResult";
+import { getDelPlanMedLegeErrorMessage } from "@/utils/error-messages";
 
 export function useDelPlanMedLegeAction(
   initialDeltMedLegeTidspunkt: Date | null,
 ) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const initialDelPlanMedLegeActionState: DelPlanMedLegeActionState = {
-    deltMedLegeTidspunkt: initialDeltMedLegeTidspunkt,
-    errorDelMedLege: null,
+  const initialState: FetchUpdateResultWithResponse<
+    DelMedLegeResponse | undefined,
+    DelPlanMedLegeErrorType
+  > = {
+    success: true,
+    data: undefined,
   };
 
-  const [
-    { deltMedLegeTidspunkt, errorDelMedLege },
-    delMedLegeAction,
-    isPendingDelMedLege,
-  ] = useActionState(innerDelMedLegeAction, initialDelPlanMedLegeActionState);
+  const [result, delMedLegeAction, isPendingDelMedLege] = useActionState(
+    innerDelMedLegeAction,
+    initialState,
+  );
 
-  function innerDelMedLegeAction(
-    _previousState: DelPlanMedLegeActionState,
+  async function innerDelMedLegeAction(
+    _previousState: FetchUpdateResultWithResponse<
+      DelMedLegeResponse | undefined,
+      DelPlanMedLegeErrorType
+    >,
     { planId }: { planId: string },
-  ): Promise<DelPlanMedLegeActionState> {
-    return delPlanMedLegeServerAction(narmesteLederId, planId);
+  ): Promise<
+    FetchUpdateResultWithResponse<
+      DelMedLegeResponse | undefined,
+      DelPlanMedLegeErrorType
+    >
+  > {
+    return await delPlanMedLegeServerAction(narmesteLederId, planId);
   }
+
+  const errorDelMedLege = !result.success
+    ? getDelPlanMedLegeErrorMessage(result.error)
+    : null;
+
+  const deltMedLegeTidspunkt =
+    result.success && result.data
+      ? new Date(result.data.deltMedLegeTidspunkt)
+      : initialDeltMedLegeTidspunkt;
 
   return {
     deltMedLegeTidspunkt,

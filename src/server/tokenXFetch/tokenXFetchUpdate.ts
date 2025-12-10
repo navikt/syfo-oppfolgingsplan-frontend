@@ -43,6 +43,7 @@ export async function tokenXFetchUpdate({
     );
   } catch (error) {
     return {
+      success: false,
       error: error as FetchResultError,
     };
   }
@@ -57,7 +58,7 @@ export async function tokenXFetchUpdate({
   } catch (error) {
     const errorResult = getAndLogFetchNetworkError({ error, endpoint, method });
 
-    return { error: errorResult };
+    return { success: false, error: errorResult };
   }
 
   if (!response.ok) {
@@ -67,10 +68,10 @@ export async function tokenXFetchUpdate({
       method,
     });
 
-    return { error: errorResult };
+    return { success: false, error: errorResult };
   } else {
     // Ok response
-    return { error: null };
+    return { success: true, data: undefined };
   }
 }
 
@@ -103,8 +104,8 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
     );
   } catch (error) {
     return {
+      success: false,
       error: error as FetchResultError,
-      data: null,
     };
   }
 
@@ -118,7 +119,7 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
   } catch (error) {
     const errorResult = getAndLogFetchNetworkError({ error, endpoint, method });
 
-    return { error: errorResult, data: null };
+    return { success: false, error: errorResult };
   }
 
   if (!response.ok) {
@@ -128,7 +129,7 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
       method,
     });
 
-    return { error: errorResult, data: null };
+    return { success: false, error: errorResult };
   } else {
     // Valididate response data
     const { success, validatedData } = await validateResponseBody({
@@ -139,13 +140,13 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
     });
 
     if (success) {
-      return { error: null, data: validatedData };
+      return { success: true, data: validatedData };
     } else {
       return {
+        success: false,
         error: {
           type: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
         },
-        data: null,
       };
     }
   }

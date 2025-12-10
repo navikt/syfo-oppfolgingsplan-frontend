@@ -75,7 +75,7 @@ export default function useOppfolgingsplanUtkastLagring({
     if (hasValuesChangedFromPreviousSave) {
       const result = await lagreUtkastServerAction(narmesteLederId, values);
 
-      if (result.error) {
+      if (!result.success) {
         newActionState = {
           sistLagretUtkast: previousState.sistLagretUtkast,
           sistLagretTidspunkt: previousState.sistLagretTidspunkt,

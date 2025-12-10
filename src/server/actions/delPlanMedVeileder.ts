@@ -1,37 +1,56 @@
 "use server";
 
 import { getEndpointDelMedVeilederForAG } from "@/common/backend-endpoints";
+import { DelPlanMedVeilederErrorType } from "@/common/types/errors";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
+import { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
-export type DelPlanMedVeilederActionState = {
-  deltMedVeilederTidspunkt: Date | null;
-  errorDelMedVeileder: string | null;
-};
+export interface DelMedVeilederResponse {
+  deltMedVeilederTidspunkt: string;
+}
 
 export async function delPlanMedVeilederServerAction(
   narmesteLederId: string,
   planId: string,
-): Promise<DelPlanMedVeilederActionState> {
+): Promise<
+  FetchUpdateResultWithResponse<
+    DelMedVeilederResponse,
+    DelPlanMedVeilederErrorType
+  >
+> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
     return {
-      deltMedVeilederTidspunkt: new Date(),
-      errorDelMedVeileder: null,
+      success: true,
+      data: {
+        deltMedVeilederTidspunkt: new Date().toISOString(),
+      },
     };
   }
 
-  await tokenXFetchUpdate({
+  const result = (await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedVeilederForAG(narmesteLederId, planId),
-  });
+  })) as FetchUpdateResultWithResponse<
+    DelMedVeilederResponse,
+    DelPlanMedVeilederErrorType
+  >;
 
-  // satisfy typescript for now
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error,
+    };
+  }
+
   return {
-    deltMedVeilederTidspunkt: new Date(),
-    errorDelMedVeileder: null,
+    success: true,
+    data: {
+      deltMedVeilederTidspunkt: new Date().toISOString(),
+    },
   };
 }

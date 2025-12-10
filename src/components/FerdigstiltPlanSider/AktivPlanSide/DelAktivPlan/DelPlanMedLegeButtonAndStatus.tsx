@@ -41,15 +41,7 @@ export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
         )}
       </HStack>
 
-      {errorDelMedLege && (
-        // TODO: Show this error message for specific error codes only
-        <Alert variant="error">
-          Du får dessverre ikke delt denne planen med legen herfra. Det kan
-          hende at den ansatte ikke har en fastlege, eller at fastlegen ikke kan
-          ta imot elektroniske meldinger. I dette tilfellet må dere laste ned og
-          skrive ut planen slik at dere får delt den med legen manuelt.
-        </Alert>
-      )}
+      {errorDelMedLege && <Alert variant="error">{errorDelMedLege}</Alert>}
     </VStack>
   );
 }

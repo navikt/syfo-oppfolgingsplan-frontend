@@ -38,7 +38,12 @@ export function DelPlanMedVeilederButtonAndStatus({ planId }: Props) {
           {getLocaleDateAndTimeString(deltMedVeilederTidspunkt, "long")}.
         </Alert>
       ) : (
-        errorDelMedVeileder && <>{/* TODO: Show some error message */}</>
+        errorDelMedVeileder && (
+          <Alert variant="error">
+            Det oppstod en feil ved deling av planen med Nav-veileder. Vennligst
+            prøv igjen senere.
+          </Alert>
+        )
       )}
     </HStack>
   );

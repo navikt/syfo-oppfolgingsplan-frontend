@@ -1,3 +1,6 @@
+import { Alert } from "@navikt/ds-react";
+import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import { getGeneralActionErrorMessage } from "@/utils/error-messages";
 import FyllUtPlanButtonsAndSavingInfo from "./FyllUtPlanButtonsAndSavingInfo";
 import UtkastLagringInfo from "./UtkastLagringInfo";
 import FormErrorSummary from "./form/OPFormErrorSummary";
@@ -13,6 +16,7 @@ interface Props {
   errorSummaryRef: React.RefObject<HTMLDivElement | null>;
   onAvsluttOgFortsettSenereClick: () => void;
   onGoToOppsummeringClick: () => void;
+  error: FetchResultError | null;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -27,6 +31,7 @@ const FyllUtPlanSteg = withForm({
     errorSummaryRef,
     onAvsluttOgFortsettSenereClick,
     onGoToOppsummeringClick,
+    error,
   }) => {
     return (
       <section>
@@ -49,6 +54,16 @@ const FyllUtPlanSteg = withForm({
             />
           }
         />
+        {error && (
+          <div className="mt-8">
+            <Alert variant="error">
+              {getGeneralActionErrorMessage(
+                error,
+                "Vi klarte ikke å lagre utkastet ditt. Vennligst prøv igjen senere.",
+              )}
+            </Alert>
+          </div>
+        )}
       </section>
     );
   },
