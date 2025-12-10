@@ -10,11 +10,9 @@ type ActionPayload = {
 export default function useSlettUtkastAction() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const initialSlettUtkastState: FetchUpdateResult = { error: null };
-
   const [{ error }, slettUtkastAction, isPendingSlettUtkast] = useActionState(
     innerSlettUtkastAction,
-    initialSlettUtkastState,
+    { error: null },
   );
 
   async function innerSlettUtkastAction(

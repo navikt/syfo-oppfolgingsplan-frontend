@@ -1,6 +1,7 @@
 import { VStack } from "@navikt/ds-react";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
+import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
 import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
 import { AktivPlanButtons } from "./Buttons/AktivPlanButtons";
@@ -30,6 +31,9 @@ export default async function AktivPlanForAG({
     },
   } = await fetchAktivPlanForAG(narmesteLederId);
 
+  const { utkast } = await fetchUtkastDataForAG(narmesteLederId);
+  const hasUtkast = utkast !== null;
+
   return (
     <section>
       {nyligOpprettet && <ScrollToTopHelper />}
@@ -49,7 +53,7 @@ export default async function AktivPlanForAG({
 
           <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-          <AktivPlanButtons planId={planId} />
+          <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
 
           <FormSummaryFromSnapshot formSnapshot={content} />
 
