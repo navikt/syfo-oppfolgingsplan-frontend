@@ -19,26 +19,24 @@ interface Props {
 
 export function FormSummaryFromSnapshot({ formSnapshot }: Props) {
   return formSnapshot.sections.map((section) => (
-    <>
-      <FormSummary className="mb-8 whitespace-pre-line" key={section.sectionId}>
-        <FormSummaryHeader>
-          <FormSummaryHeading level="3">
-            {section.sectionTitle}
-          </FormSummaryHeading>
-        </FormSummaryHeader>
+    <FormSummary className="mb-8 whitespace-pre-line" key={section.sectionId}>
+      <FormSummaryHeader>
+        <FormSummaryHeading level="3">
+          {section.sectionTitle}
+        </FormSummaryHeading>
+      </FormSummaryHeader>
 
-        <FormSummaryAnswers>
-          {section.fields.map((field) => (
-            <FormSummaryAnswer key={field.fieldId}>
-              <FormSummaryLabel>{field.label}</FormSummaryLabel>
-              <FormSummaryValue>
-                {getFieldSummaryTextValue(field)}
-              </FormSummaryValue>
-            </FormSummaryAnswer>
-          ))}
-        </FormSummaryAnswers>
-      </FormSummary>
-    </>
+      <FormSummaryAnswers>
+        {section.fields.map((field) => (
+          <FormSummaryAnswer key={field.fieldId}>
+            <FormSummaryLabel>{field.label}</FormSummaryLabel>
+            <FormSummaryValue>
+              {getFieldSummaryTextValue(field)}
+            </FormSummaryValue>
+          </FormSummaryAnswer>
+        ))}
+      </FormSummaryAnswers>
+    </FormSummary>
   ));
 }
 
