@@ -1,4 +1,5 @@
 import TilbakeTilOversiktButtonForAG from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForAG.tsx";
+import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import FyllUtPlanButtonsAndSavingInfo from "./FyllUtPlanButtonsAndSavingInfo";
 import UtkastLagringInfo from "./UtkastLagringInfo";
 import FormErrorSummary from "./form/OPFormErrorSummary";
@@ -15,6 +16,7 @@ interface Props {
   onAvsluttOgFortsettSenereClick: () => void;
   onGoToOppsummeringClick: () => void;
   isFormReadOnly: boolean;
+  lagreUtkastError: FetchResultError | null;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -30,6 +32,7 @@ const FyllUtPlanSteg = withForm({
     onAvsluttOgFortsettSenereClick,
     onGoToOppsummeringClick,
     isFormReadOnly,
+    lagreUtkastError,
   }) => {
     return (
       <section>
@@ -55,6 +58,7 @@ const FyllUtPlanSteg = withForm({
                 utkastSistLagretTidspunkt={utkastSistLagretTidspunkt}
               />
             }
+            lagreUtkastError={lagreUtkastError}
           />
         )}
       </section>

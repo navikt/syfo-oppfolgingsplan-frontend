@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from "@navikt/aksel-icons";
-import { Button, HStack, VStack } from "@navikt/ds-react";
+import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
+import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
 interface Props {
   isPendingProceed: boolean;
@@ -7,6 +8,7 @@ interface Props {
   onGoToOppsummeringClick: () => void;
   onAvsluttOgFortsettSenereClick: () => void;
   utkastLagringInfo: React.ReactNode;
+  lagreUtkastError: FetchResultError | null;
 }
 
 export default function FyllUtPlanButtonsAndSavingInfo({
@@ -15,6 +17,7 @@ export default function FyllUtPlanButtonsAndSavingInfo({
   onGoToOppsummeringClick,
   onAvsluttOgFortsettSenereClick,
   utkastLagringInfo,
+  lagreUtkastError,
 }: Props) {
   return (
     <VStack gap="8" align="start" className="mt-10">
@@ -31,18 +34,26 @@ export default function FyllUtPlanButtonsAndSavingInfo({
         </Button>
       </HStack>
 
-      <HStack gap="12" align="center">
-        <Button
-          variant="tertiary"
-          onClick={onAvsluttOgFortsettSenereClick}
-          loading={isPendingExit}
-          disabled={isPendingProceed}
-        >
-          Avslutt og fortsett senere
-        </Button>
+      <VStack gap="4">
+        <HStack gap="12" align="center">
+          <Button
+            variant="tertiary"
+            onClick={onAvsluttOgFortsettSenereClick}
+            loading={isPendingExit}
+            disabled={isPendingProceed}
+          >
+            Avslutt og fortsett senere
+          </Button>
 
-        {utkastLagringInfo}
-      </HStack>
+          {utkastLagringInfo}
+        </HStack>
+
+        {lagreUtkastError && (
+          <Alert variant="error">
+            Vi klarte ikke lagre utkastet ditt. Vennligst prøv igjen senere.
+          </Alert>
+        )}
+      </VStack>
     </VStack>
   );
 }

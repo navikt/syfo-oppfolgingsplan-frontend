@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button, HStack } from "@navikt/ds-react";
+import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
@@ -22,32 +22,34 @@ export function DelPlanMedVeilederButtonAndStatus({
   } = usePlanDelingContext();
 
   return (
-    <HStack gap="8" align="center">
-      <DelPlanButtonFlexGrowContainer>
-        <form action={() => delMedVeilederAction({ planId })}>
-          <Button
-            type="submit"
-            variant="primary"
-            loading={isPendingDelMedVeileder}
-            disabled={!userHasEditAccess || Boolean(deltMedVeilederTidspunkt)}
-          >
-            Send til Nav-veileder
-          </Button>
-        </form>
-      </DelPlanButtonFlexGrowContainer>
+    <VStack gap="4">
+      <HStack gap="8" align="center">
+        <DelPlanButtonFlexGrowContainer>
+          <form action={() => delMedVeilederAction({ planId })}>
+            <Button
+              type="submit"
+              variant="primary"
+              loading={isPendingDelMedVeileder}
+              disabled={!userHasEditAccess || Boolean(deltMedVeilederTidspunkt)}
+            >
+              Send til Nav-veileder
+            </Button>
+          </form>
+        </DelPlanButtonFlexGrowContainer>
 
-      {deltMedVeilederTidspunkt ? (
-        <Alert variant="success" inline>
-          Sendt til Nav-veileder{" "}
-          {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
-        </Alert>
-      ) : (
-        errorDelMedVeileder && (
-          <Alert variant="error">
-            Beklager, noe gikk galt. Vennligst prøv igjen senere.
+        {deltMedVeilederTidspunkt && (
+          <Alert variant="success" inline>
+            Sendt til Nav-veileder{" "}
+            {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
           </Alert>
-        )
+        )}
+      </HStack>
+
+      {errorDelMedVeileder && (
+        <Alert variant="error">
+          Beklager, noe gikk galt. Vennligst prøv igjen senere.
+        </Alert>
       )}
-    </HStack>
+    </VStack>
   );
 }

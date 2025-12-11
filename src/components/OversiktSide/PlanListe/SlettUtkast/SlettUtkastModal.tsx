@@ -1,4 +1,4 @@
-import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import { Alert, BodyLong, Button, Modal } from "@navikt/ds-react";
 import useSlettUtkastAction from "./useSlettUtkastAction";
 
 interface Props {
@@ -21,7 +21,12 @@ export function SlettUtkastModal({ modalRef }: Props) {
       <Modal.Body>
         <BodyLong>Er du sikker på at du vil slette utkastet ditt?</BodyLong>
 
-        {error && <>{/* TODO: Vise feilmelding */}</>}
+        {error && (
+          <Alert variant="error" className="mt-4">
+            Noe gikk galt når vi prøvde å slette utkastet. Vennligst prøv igjen
+            senere.
+          </Alert>
+        )}
       </Modal.Body>
 
       <Modal.Footer>
