@@ -29,10 +29,9 @@ export function VilDuOverskriveUtkastModal({ ref }: Props) {
           erstattet med innholdet i denne planen. Vil du fortsette?
         </BodyLong>
 
-        {/* TODO: Improve error message */}
         {error && (
           <Alert variant="error" className="mt-4">
-            Beklager, noe gikk galt.
+            Beklager, noe gikk galt. Vennligst prøv igjen senere.
           </Alert>
         )}
       </Modal.Body>
