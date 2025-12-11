@@ -19,19 +19,24 @@ export default async function AktivPlanForAG({
   narmesteLederId,
   nyligOpprettet,
 }: Props) {
-  const {
-    employee,
-    oppfolgingsplan: {
-      id: planId,
-      evalueringsDato,
-      ferdigstiltTidspunkt,
-      deltMedLegeTidspunkt,
-      deltMedVeilederTidspunkt,
-      content,
-    },
-  } = await fetchAktivPlanForAG(narmesteLederId);
+  const aktivPlanPromise = fetchAktivPlanForAG(narmesteLederId);
+  const utkastPromise = fetchUtkastDataForAG(narmesteLederId);
 
-  const { utkast } = await fetchUtkastDataForAG(narmesteLederId);
+  const [
+    {
+      employee,
+      oppfolgingsplan: {
+        id: planId,
+        evalueringsDato,
+        ferdigstiltTidspunkt,
+        deltMedLegeTidspunkt,
+        deltMedVeilederTidspunkt,
+        content,
+      },
+    },
+    { utkast },
+  ] = await Promise.all([aktivPlanPromise, utkastPromise]);
+
   const hasUtkast = utkast !== null;
 
   return (
