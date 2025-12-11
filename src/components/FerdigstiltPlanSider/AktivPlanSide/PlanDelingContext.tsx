@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
+import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { useDelPlanMedLegeAction } from "./DelAktivPlan/useDelPlanMedLegeAction";
 import { useDelPlanMedVeilederAction } from "./DelAktivPlan/useDelPlanMedVeilederAction";
 
@@ -16,8 +17,8 @@ interface PlanDelingContextValue {
   delMedVeilederAction: ({ planId }: { planId: string }) => void;
   isPendingDelMedLege: boolean;
   isPendingDelMedVeileder: boolean;
-  errorDelMedLege: string | null;
-  errorDelMedVeileder: string | null;
+  errorDelMedLege: FetchResultError | null;
+  errorDelMedVeileder: FetchResultError | null;
 }
 
 const PlanDelingContext = createContext<PlanDelingContextValue | null>(null);

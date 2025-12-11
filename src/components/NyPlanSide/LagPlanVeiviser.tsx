@@ -32,6 +32,8 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
     isPendingFerdigstillPlan,
     saveIfChangesAndExit,
     goBackToFyllUtPlanSteg,
+    lagreUtkastError,
+    ferdigstillPlanError,
   } = useOppfolgingsplanForm({
     initialLagretUtkast,
     initialSistLagretTidspunkt,
@@ -54,6 +56,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
             form.handleSubmit({ submitAction: "fortsettTilOppsummering" })
           }
           isFormReadOnly={!userHasEditAccess}
+          lagreUtkastError={lagreUtkastError}
         />
       </Activity>
 
@@ -67,6 +70,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           onFerdigstillPlanClick={() =>
             form.handleSubmit({ submitAction: "ferdigstill" })
           }
+          ferdigstillPlanError={ferdigstillPlanError}
         />
       </Activity>
     </section>

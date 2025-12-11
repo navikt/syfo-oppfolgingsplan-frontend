@@ -83,14 +83,21 @@ export default function useOppfolgingsplanForm({
     },
   });
 
-  const { isSavingUtkast, sistLagretTidspunkt, startLagreUtkastIfChanges } =
-    useOppfolgingsplanUtkastLagring({
-      initialFormValues,
-      initialSistLagretTidspunkt,
-    });
+  const {
+    isSavingUtkast,
+    lagreUtkastError,
+    sistLagretTidspunkt,
+    startLagreUtkastIfChanges,
+  } = useOppfolgingsplanUtkastLagring({
+    initialFormValues,
+    initialSistLagretTidspunkt,
+  });
 
-  const { startFerdigstillPlanAction, isPendingFerdigstillPlan } =
-    useFerdigstillOppfolgingsplanAction();
+  const {
+    startFerdigstillPlanAction,
+    isPendingFerdigstillPlan,
+    error: ferdigstillPlanError,
+  } = useFerdigstillOppfolgingsplanAction();
 
   function saveIfChangesAndProceedToOppsummering(
     values: OppfolgingsplanFormUnderArbeid,
@@ -141,5 +148,7 @@ export default function useOppfolgingsplanForm({
     isPendingFerdigstillPlan,
     saveIfChangesAndExit,
     goBackToFyllUtPlanSteg,
+    lagreUtkastError,
+    ferdigstillPlanError,
   };
 }

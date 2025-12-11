@@ -26,7 +26,7 @@ export default function useOppfolgingsplanUtkastLagring({
   };
 
   const [
-    { error, sistLagretTidspunkt },
+    { error: lagreUtkastError, sistLagretTidspunkt },
     // If this returned action function is called while the action is already
     // running, the call is queued and will run after the ongoing action is
     // finished.
@@ -113,7 +113,7 @@ export default function useOppfolgingsplanUtkastLagring({
 
   return {
     isSavingUtkast,
-    error,
+    lagreUtkastError,
     sistLagretTidspunkt,
     /**
      * Hvis `startLagreUtkastIfChanges` kalles flere ganger etter hverandre med

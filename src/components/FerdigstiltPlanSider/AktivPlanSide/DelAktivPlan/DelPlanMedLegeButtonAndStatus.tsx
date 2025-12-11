@@ -45,15 +45,19 @@ export function DelPlanMedLegeButtonAndStatus({
         )}
       </HStack>
 
-      {errorDelMedLege && (
-        // TODO: Show this error message for specific error codes only
-        <Alert variant="error">
-          Du får dessverre ikke delt denne planen med legen herfra. Det kan
-          hende at den ansatte ikke har en fastlege, eller at fastlegen ikke kan
-          ta imot elektroniske meldinger. I dette tilfellet må dere laste ned og
-          skrive ut planen slik at dere får delt den med legen manuelt.
-        </Alert>
-      )}
+      {errorDelMedLege &&
+        (errorDelMedLege.type === "LEGE_NOT_FOUND" ? (
+          <Alert variant="error">
+            Du får dessverre ikke delt denne planen med legen herfra. Det kan
+            hende at den ansatte ikke har en fastlege, eller at fastlegen ikke
+            kan ta imot elektroniske meldinger. I dette tilfellet må dere laste
+            ned og skrive ut planen slik at dere får delt den med legen manuelt.
+          </Alert>
+        ) : (
+          <Alert variant="error">
+            Beklager, noe gikk galt. Vennligst prøv igjen senere.
+          </Alert>
+        ))}
     </VStack>
   );
 }

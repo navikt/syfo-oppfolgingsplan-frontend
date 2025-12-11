@@ -83,9 +83,10 @@ export function AktivPlanButtons({
         />
       </HStack>
 
-      {/* TODO: Improve error message */}
       {upsertUtkastWithAktivPlanError && (
-        <Alert variant="error">Beklager, noe gikk galt.</Alert>
+        <Alert variant="error" className="mt-4">
+          Beklager, noe gikk galt. Vennligst prøv igjen senere.
+        </Alert>
       )}
     </>
   );
