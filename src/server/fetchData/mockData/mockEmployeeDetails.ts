@@ -18,7 +18,7 @@ export const mockOrganization: OrganizationDetails = {
 export const mockCommonAGResponseFields: z.infer<
   typeof commonResponseFieldsSchema
 > = {
-  userHasEditAccess: false,
+  userHasEditAccess: true,
   organization: mockOrganization,
   employee: mockEmployeeDetails,
 };
