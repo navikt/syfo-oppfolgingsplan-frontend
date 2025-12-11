@@ -4,9 +4,13 @@ import { DelPlanMedVeilederButtonAndStatus } from "./DelPlanMedVeilederButtonAnd
 
 interface Props {
   planId: string;
+  userHasEditAccess: boolean;
 }
 
-export default function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
+export default function DelAktivPlanMedLegeEllerNav({
+  planId,
+  userHasEditAccess,
+}: Props) {
   return (
     <Box className="bg-ax-bg-accent-soft p-4 pb-6 rounded-lg">
       <Heading level="3" size="medium" spacing>
@@ -18,7 +22,10 @@ export default function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
         vært helt eller delvis borte fra jobb i fire uker.
       </BodyLong>
 
-      <DelPlanMedLegeButtonAndStatus planId={planId} />
+      <DelPlanMedLegeButtonAndStatus
+        planId={planId}
+        userHasEditAccess={userHasEditAccess}
+      />
 
       <BodyLong className="mt-6 mb-6">
         Oppfølgingsplanen skal sendes til veileder i Nav senest en uke før et
@@ -26,7 +33,10 @@ export default function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
         oppfølgingsplanen før du velger å sende den til Nav-veileder.
       </BodyLong>
 
-      <DelPlanMedVeilederButtonAndStatus planId={planId} />
+      <DelPlanMedVeilederButtonAndStatus
+        planId={planId}
+        userHasEditAccess={userHasEditAccess}
+      />
     </Box>
   );
 }

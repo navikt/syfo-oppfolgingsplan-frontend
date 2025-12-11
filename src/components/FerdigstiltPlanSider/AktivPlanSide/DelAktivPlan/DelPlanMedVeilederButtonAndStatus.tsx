@@ -7,9 +7,13 @@ import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer
 
 interface Props {
   planId: string;
+  userHasEditAccess: boolean;
 }
 
-export function DelPlanMedVeilederButtonAndStatus({ planId }: Props) {
+export function DelPlanMedVeilederButtonAndStatus({
+  planId,
+  userHasEditAccess,
+}: Props) {
   const {
     deltMedVeilederTidspunkt,
     delMedVeilederAction,
@@ -25,7 +29,7 @@ export function DelPlanMedVeilederButtonAndStatus({ planId }: Props) {
             type="submit"
             variant="primary"
             loading={isPendingDelMedVeileder}
-            disabled={Boolean(deltMedVeilederTidspunkt)}
+            disabled={!userHasEditAccess || Boolean(deltMedVeilederTidspunkt)}
           >
             Send til Nav-veileder
           </Button>

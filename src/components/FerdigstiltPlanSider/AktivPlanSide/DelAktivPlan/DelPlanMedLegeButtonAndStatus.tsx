@@ -7,9 +7,13 @@ import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer
 
 interface Props {
   planId: string;
+  userHasEditAccess: boolean;
 }
 
-export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
+export function DelPlanMedLegeButtonAndStatus({
+  planId,
+  userHasEditAccess,
+}: Props) {
   const {
     deltMedLegeTidspunkt,
     delMedLegeAction,
@@ -26,7 +30,7 @@ export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
               type="submit"
               variant="primary"
               loading={isPendingDelMedLege}
-              disabled={Boolean(deltMedLegeTidspunkt)}
+              disabled={!userHasEditAccess || Boolean(deltMedLegeTidspunkt)}
             >
               Send til fastlege
             </Button>
