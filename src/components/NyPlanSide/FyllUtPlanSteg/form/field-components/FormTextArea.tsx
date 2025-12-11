@@ -10,6 +10,7 @@ interface Props {
   minRows?: number;
   maxLength?: number;
   isChangeDisabled?: boolean;
+  isReadOnly?: boolean;
 }
 
 export default function FormTextArea({
@@ -18,6 +19,7 @@ export default function FormTextArea({
   minRows,
   maxLength = TEXT_FIELD_MAX_LENGTH,
   isChangeDisabled = false,
+  isReadOnly = false,
 }: Props) {
   const field = useFieldContext<string>();
 
@@ -39,6 +41,7 @@ export default function FormTextArea({
         !isChangeDisabled ? field.handleChange(e.target.value) : null
       }
       onBlur={field.handleBlur}
+      readOnly={isReadOnly}
       className="mb-6"
     />
   );

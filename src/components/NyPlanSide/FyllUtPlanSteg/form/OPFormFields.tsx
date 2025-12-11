@@ -16,12 +16,13 @@ interface Props {
    * is removed in these states.
    */
   isChangeDisabled: boolean;
+  isReadOnly: boolean;
 }
 
 const OPFormFields = withForm({
   defaultValues: oppfolgingsplanFormDefaultValues,
   props: {} as Props,
-  render: ({ form, isChangeDisabled }) => (
+  render: ({ form, isChangeDisabled, isReadOnly }) => (
     <>
       <TextContentBox className="mb-4">
         <Heading level="2" size="medium" spacing>
@@ -35,6 +36,7 @@ const OPFormFields = withForm({
             label={formLabels.typiskArbeidshverdag.label}
             description={formLabels.typiskArbeidshverdag.description}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -44,6 +46,7 @@ const OPFormFields = withForm({
           <field.FormTextArea
             label={formLabels.arbeidsoppgaverSomKanUtfores.label}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -53,6 +56,7 @@ const OPFormFields = withForm({
           <field.FormTextArea
             label={formLabels.arbeidsoppgaverSomIkkeKanUtfores.label}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -81,6 +85,7 @@ const OPFormFields = withForm({
             label={formLabels.tidligereTilrettelegging.label}
             description={formLabels.tidligereTilrettelegging.description}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -90,6 +95,7 @@ const OPFormFields = withForm({
           <field.FormTextArea
             label={formLabels.tilretteleggingFremover.label}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -100,6 +106,7 @@ const OPFormFields = withForm({
             label={formLabels.annenTilrettelegging.label}
             description={formLabels.annenTilrettelegging.description}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -109,6 +116,7 @@ const OPFormFields = withForm({
           <field.FormTextArea
             label={formLabels.hvordanFolgeOpp.label}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>
@@ -121,6 +129,7 @@ const OPFormFields = withForm({
             fromDate={getTomorrowDayDate()}
             toDate={getOneYearFromNowDayDate()}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
             className="mb-8"
           />
         )}
@@ -142,6 +151,7 @@ const OPFormFields = withForm({
               },
             ]}
             isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
             className="mb-4"
           />
         )}

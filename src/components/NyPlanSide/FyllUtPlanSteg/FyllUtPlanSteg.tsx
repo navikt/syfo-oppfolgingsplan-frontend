@@ -1,3 +1,4 @@
+import TilbakeTilOversiktButtonForAG from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForAG.tsx";
 import FyllUtPlanButtonsAndSavingInfo from "./FyllUtPlanButtonsAndSavingInfo";
 import UtkastLagringInfo from "./UtkastLagringInfo";
 import FormErrorSummary from "./form/OPFormErrorSummary";
@@ -13,6 +14,7 @@ interface Props {
   errorSummaryRef: React.RefObject<HTMLDivElement | null>;
   onAvsluttOgFortsettSenereClick: () => void;
   onGoToOppsummeringClick: () => void;
+  isFormReadOnly: boolean;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -27,28 +29,34 @@ const FyllUtPlanSteg = withForm({
     errorSummaryRef,
     onAvsluttOgFortsettSenereClick,
     onGoToOppsummeringClick,
+    isFormReadOnly,
   }) => {
     return (
       <section>
         <OPFormFields
           form={form}
           isChangeDisabled={isPendingProceedToOppsummering}
+          isReadOnly={isFormReadOnly}
         />
 
         <FormErrorSummary form={form} errorSummaryRef={errorSummaryRef} />
 
-        <FyllUtPlanButtonsAndSavingInfo
-          isPendingProceed={isPendingProceedToOppsummering}
-          isPendingExit={isPendingExitAndContinueLater}
-          onAvsluttOgFortsettSenereClick={onAvsluttOgFortsettSenereClick}
-          onGoToOppsummeringClick={onGoToOppsummeringClick}
-          utkastLagringInfo={
-            <UtkastLagringInfo
-              isSavingUtkast={isSavingUtkast}
-              utkastSistLagretTidspunkt={utkastSistLagretTidspunkt}
-            />
-          }
-        />
+        {isFormReadOnly ? (
+          <TilbakeTilOversiktButtonForAG />
+        ) : (
+          <FyllUtPlanButtonsAndSavingInfo
+            isPendingProceed={isPendingProceedToOppsummering}
+            isPendingExit={isPendingExitAndContinueLater}
+            onAvsluttOgFortsettSenereClick={onAvsluttOgFortsettSenereClick}
+            onGoToOppsummeringClick={onGoToOppsummeringClick}
+            utkastLagringInfo={
+              <UtkastLagringInfo
+                isSavingUtkast={isSavingUtkast}
+                utkastSistLagretTidspunkt={utkastSistLagretTidspunkt}
+              />
+            }
+          />
+        )}
       </section>
     );
   },

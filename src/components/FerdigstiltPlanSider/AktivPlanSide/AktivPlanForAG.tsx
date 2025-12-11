@@ -25,6 +25,7 @@ export default async function AktivPlanForAG({
   const [
     {
       employee,
+      userHasEditAccess,
       oppfolgingsplan: {
         id: planId,
         evalueringsDato,
@@ -56,9 +57,16 @@ export default async function AktivPlanForAG({
             evalueringsDato={evalueringsDato}
           />
 
-          <DelAktivPlanMedLegeEllerNav planId={planId} />
+          <DelAktivPlanMedLegeEllerNav
+            planId={planId}
+            userHasEditAccess={userHasEditAccess}
+          />
 
-          <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
+          <AktivPlanButtons
+            planId={planId}
+            hasUtkast={hasUtkast}
+            userHasEditAccess={userHasEditAccess}
+          />
 
           <FormSummaryFromSnapshot formSnapshot={content} />
 

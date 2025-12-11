@@ -11,6 +11,7 @@ interface Props {
   toDate: Date;
   isChangeDisabled?: boolean;
   className?: string;
+  isReadOnly?: boolean;
 }
 
 export default function FormDatePicker({
@@ -20,6 +21,7 @@ export default function FormDatePicker({
   toDate,
   isChangeDisabled = false,
   className,
+  isReadOnly = false,
 }: Props) {
   const field = useFieldContext<string | undefined>();
   const { datepickerProps, inputProps } = useDatepicker({
@@ -54,6 +56,7 @@ export default function FormDatePicker({
         description={description}
         error={errorMessages}
         className={className}
+        readOnly={isReadOnly}
       />
     </DatePicker>
   );

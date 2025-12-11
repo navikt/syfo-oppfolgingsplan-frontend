@@ -12,9 +12,14 @@ import { VilDuSletteUtkastModal } from "../AlleredeUtkastModaler/VilDuSletteUtka
 interface Props {
   planId: string;
   hasUtkast: boolean;
+  userHasEditAccess: boolean;
 }
 
-export function AktivPlanButtons({ planId, hasUtkast }: Props) {
+export function AktivPlanButtons({
+  planId,
+  userHasEditAccess,
+  hasUtkast,
+}: Props) {
   const { push } = useRouter();
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
@@ -55,6 +60,7 @@ export function AktivPlanButtons({ planId, hasUtkast }: Props) {
       <HStack justify="space-between">
         <HStack gap="4">
           <Button
+            disabled={!userHasEditAccess}
             variant="primary"
             onClick={handleEndreOppfolgingsplanClick}
             loading={isPendingUpsertUtkastWithAktivPlan}
@@ -62,7 +68,11 @@ export function AktivPlanButtons({ planId, hasUtkast }: Props) {
             Endre oppfølgingsplanen
           </Button>
 
-          <Button variant="secondary" onClick={handleNyPlanClick}>
+          <Button
+            variant="secondary"
+            onClick={handleNyPlanClick}
+            disabled={!userHasEditAccess}
+          >
             Lag en ny plan
           </Button>
         </HStack>
