@@ -40,7 +40,7 @@ export function AktivPlanButtons({ planId, userHasEditAccess }: Props) {
               Lag en ny plan
             </Button>
           ) : (
-            <Button variant="secondary" disabled={true}>
+            <Button variant="secondary" disabled>
               Lag en ny plan
             </Button>
           )}

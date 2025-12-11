@@ -53,7 +53,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           onGoToOppsummeringClick={() =>
             form.handleSubmit({ submitAction: "fortsettTilOppsummering" })
           }
-          disabled={!userHasEditAccess}
+          isFormReadOnly={!userHasEditAccess}
         />
       </Activity>
 

@@ -7,7 +7,6 @@ interface Props {
   onGoToOppsummeringClick: () => void;
   onAvsluttOgFortsettSenereClick: () => void;
   utkastLagringInfo: React.ReactNode;
-  disabled: boolean;
 }
 
 export default function FyllUtPlanButtonsAndSavingInfo({
@@ -16,7 +15,6 @@ export default function FyllUtPlanButtonsAndSavingInfo({
   onGoToOppsummeringClick,
   onAvsluttOgFortsettSenereClick,
   utkastLagringInfo,
-  disabled,
 }: Props) {
   return (
     <VStack gap="8" align="start" className="mt-10">
@@ -27,7 +25,7 @@ export default function FyllUtPlanButtonsAndSavingInfo({
           icon={<ArrowRightIcon aria-hidden />}
           onClick={onGoToOppsummeringClick}
           loading={isPendingProceed}
-          disabled={disabled || isPendingExit}
+          disabled={isPendingExit}
         >
           Gå til oppsummering
         </Button>
@@ -38,7 +36,7 @@ export default function FyllUtPlanButtonsAndSavingInfo({
           variant="tertiary"
           onClick={onAvsluttOgFortsettSenereClick}
           loading={isPendingExit}
-          disabled={disabled || isPendingProceed}
+          disabled={isPendingProceed}
         >
           Avslutt og fortsett senere
         </Button>
