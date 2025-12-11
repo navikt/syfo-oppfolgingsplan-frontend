@@ -47,7 +47,6 @@ export function DelPlanMedLegeButtonAndStatus({
 
       {errorDelMedLege &&
         (errorDelMedLege.type === "LEGE_NOT_FOUND" ? (
-          // TODO: Show this error message for specific error codes only
           <Alert variant="error">
             Du får dessverre ikke delt denne planen med legen herfra. Det kan
             hende at den ansatte ikke har en fastlege, eller at fastlegen ikke
