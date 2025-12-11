@@ -1,6 +1,7 @@
 import { VStack } from "@navikt/ds-react";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
+import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
 import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
 import { AktivPlanButtons } from "./Buttons/AktivPlanButtons";
@@ -18,17 +19,25 @@ export default async function AktivPlanForAG({
   narmesteLederId,
   nyligOpprettet,
 }: Props) {
-  const {
-    employee,
-    oppfolgingsplan: {
-      id: planId,
-      evalueringsDato,
-      ferdigstiltTidspunkt,
-      deltMedLegeTidspunkt,
-      deltMedVeilederTidspunkt,
-      content,
+  const aktivPlanPromise = fetchAktivPlanForAG(narmesteLederId);
+  const utkastPromise = fetchUtkastDataForAG(narmesteLederId);
+
+  const [
+    {
+      employee,
+      oppfolgingsplan: {
+        id: planId,
+        evalueringsDato,
+        ferdigstiltTidspunkt,
+        deltMedLegeTidspunkt,
+        deltMedVeilederTidspunkt,
+        content,
+      },
     },
-  } = await fetchAktivPlanForAG(narmesteLederId);
+    { utkast },
+  ] = await Promise.all([aktivPlanPromise, utkastPromise]);
+
+  const hasUtkast = utkast !== null;
 
   return (
     <section>
@@ -49,7 +58,7 @@ export default async function AktivPlanForAG({
 
           <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-          <AktivPlanButtons planId={planId} />
+          <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
 
           <FormSummaryFromSnapshot formSnapshot={content} />
 
