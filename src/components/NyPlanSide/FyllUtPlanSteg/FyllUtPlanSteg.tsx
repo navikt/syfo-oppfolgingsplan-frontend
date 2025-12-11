@@ -13,6 +13,7 @@ interface Props {
   errorSummaryRef: React.RefObject<HTMLDivElement | null>;
   onAvsluttOgFortsettSenereClick: () => void;
   onGoToOppsummeringClick: () => void;
+  disabled: boolean;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -27,12 +28,14 @@ const FyllUtPlanSteg = withForm({
     errorSummaryRef,
     onAvsluttOgFortsettSenereClick,
     onGoToOppsummeringClick,
+    disabled,
   }) => {
     return (
       <section>
         <OPFormFields
           form={form}
           isChangeDisabled={isPendingProceedToOppsummering}
+          isReadOnly={disabled}
         />
 
         <FormErrorSummary form={form} errorSummaryRef={errorSummaryRef} />
@@ -42,6 +45,7 @@ const FyllUtPlanSteg = withForm({
           isPendingExit={isPendingExitAndContinueLater}
           onAvsluttOgFortsettSenereClick={onAvsluttOgFortsettSenereClick}
           onGoToOppsummeringClick={onGoToOppsummeringClick}
+          disabled={disabled}
           utkastLagringInfo={
             <UtkastLagringInfo
               isSavingUtkast={isSavingUtkast}

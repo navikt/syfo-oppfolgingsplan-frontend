@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
-  const { utkast } = use(lagretUtkastPromise);
+  const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
 
   const initialLagretUtkast = utkast?.content || null;
   const initialSistLagretTidspunkt = utkast?.sistLagretTidspunkt || null;
@@ -53,6 +53,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           onGoToOppsummeringClick={() =>
             form.handleSubmit({ submitAction: "fortsettTilOppsummering" })
           }
+          disabled={!userHasEditAccess}
         />
       </Activity>
 

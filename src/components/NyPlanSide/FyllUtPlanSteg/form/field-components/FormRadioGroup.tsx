@@ -12,6 +12,7 @@ interface Props {
     label: string;
   }[];
   isChangeDisabled?: boolean;
+  isReadOnly?: boolean;
   className?: string;
 }
 
@@ -20,6 +21,7 @@ export default function FormRadioGroup({
   description,
   options,
   isChangeDisabled = false,
+  isReadOnly = false,
   className,
 }: Props) {
   const field = useFieldContext<string>();
@@ -42,6 +44,7 @@ export default function FormRadioGroup({
       onChange={!isChangeDisabled ? handleChange : undefined}
       onBlur={field.handleBlur}
       className={className}
+      disabled={isReadOnly}
     >
       {options.map((option) => (
         <Radio key={option.value} value={option.value}>

@@ -20,6 +20,7 @@ export default async function AktivPlanForAG({
 }: Props) {
   const {
     employee,
+    userHasEditAccess,
     oppfolgingsplan: {
       id: planId,
       evalueringsDato,
@@ -49,7 +50,10 @@ export default async function AktivPlanForAG({
 
           <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-          <AktivPlanButtons planId={planId} />
+          <AktivPlanButtons
+            planId={planId}
+            userHasEditAccess={userHasEditAccess}
+          />
 
           <FormSummaryFromSnapshot formSnapshot={content} />
 

@@ -10,9 +10,10 @@ import { OverskrivUtkastModal } from "../OverskrivUtkastModal/OverskrivUtkastMed
 
 interface Props {
   planId: string;
+  userHasEditAccess: boolean;
 }
 
-export function AktivPlanButtons({ planId }: Props) {
+export function AktivPlanButtons({ planId, userHasEditAccess }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
@@ -23,6 +24,7 @@ export function AktivPlanButtons({ planId }: Props) {
       <HStack justify="space-between">
         <HStack gap="4">
           <Button
+            disabled={!userHasEditAccess}
             variant="primary"
             onClick={() => modalRef.current?.showModal()}
           >
@@ -31,8 +33,11 @@ export function AktivPlanButtons({ planId }: Props) {
 
           <Button
             variant="secondary"
-            as={NextLink}
-            href={getAGOpprettNyPlanHref(narmesteLederId)}
+            {...(userHasEditAccess && {
+              as: NextLink,
+              href: getAGOpprettNyPlanHref(narmesteLederId),
+            })}
+            disabled={!userHasEditAccess}
           >
             Lag en ny plan
           </Button>
