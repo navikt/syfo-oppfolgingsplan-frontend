@@ -29,7 +29,6 @@ export const ArbeidsgiverPageContainer = ({
       }}
       header={{
         title: employeeName,
-        subtitle: "70 % sykmeldt fra 19. september til 6. november 2025",
         Icon: PersonIcon,
       }}
       navigation={
