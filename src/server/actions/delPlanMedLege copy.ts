@@ -5,27 +5,26 @@ import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { FetchResultError } from "../tokenXFetch/FetchResult";
+import { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
-
-export interface DelPlanMedLegeActionState {
-  deltMedLegeTidspunkt: string | null;
-  errorDelMedLege: FetchResultError | null;
-}
 
 export async function delPlanMedLegeServerAction(
   narmesteLederId: string,
   planId: string,
-): Promise<DelPlanMedLegeActionState> {
+): Promise<FetchUpdateResultWithResponse<{ deltMedLegeTidspunkt: string }>> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
     return {
-      deltMedLegeTidspunkt: now().toISOString(),
-      errorDelMedLege: null,
+      data: {
+        deltMedLegeTidspunkt: now().toISOString(),
+      },
+      error: null,
     };
   }
 
+  // Can return directly from here after updating backend to respond with
+  // deltMedLegeTidspunkt
   const result = await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
@@ -33,13 +32,15 @@ export async function delPlanMedLegeServerAction(
 
   if (result.error) {
     return {
-      deltMedLegeTidspunkt: null,
-      errorDelMedLege: result.error,
+      data: null,
+      error: result.error,
     };
   } else {
     return {
-      deltMedLegeTidspunkt: now().toISOString(),
-      errorDelMedLege: null,
+      data: {
+        deltMedLegeTidspunkt: now().toISOString(),
+      },
+      error: null,
     };
   }
 }

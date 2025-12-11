@@ -42,7 +42,11 @@ export function DelPlanMedVeilederButtonAndStatus({
           {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
         </Alert>
       ) : (
-        errorDelMedVeileder && <>{/* TODO: Show some error message */}</>
+        errorDelMedVeileder && (
+          <Alert variant="error">
+            Beklager, noe gikk galt. Vennligst prøv igjen senere.
+          </Alert>
+        )
       )}
     </HStack>
   );
