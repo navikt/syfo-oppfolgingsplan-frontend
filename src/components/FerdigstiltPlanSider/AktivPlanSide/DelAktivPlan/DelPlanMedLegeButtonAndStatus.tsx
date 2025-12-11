@@ -35,7 +35,7 @@ export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
 
         {deltMedLegeTidspunkt && (
           <Alert variant="success" inline>
-            Delt med fastlege{" "}
+            Sendt til fastlege{" "}
             {getFormattedDateAndTimeString(deltMedLegeTidspunkt)}.
           </Alert>
         )}

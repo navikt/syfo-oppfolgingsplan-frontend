@@ -32,14 +32,14 @@ export function TidligerePlanDetails({
       <VStack gap="2">
         {deltMedLegeTidspunkt && (
           <BodyShort size="medium">
-            Planen ble delt med fastlege{" "}
+            Planen ble sendt til fastlege{" "}
             {getFormattedDateAndTimeString(deltMedLegeTidspunkt)}.
           </BodyShort>
         )}
 
         {deltMedVeilederTidspunkt && (
           <BodyShort size="medium">
-            Den ble delt med Nav-veileder{" "}
+            Den ble sendt til Nav-veileder{" "}
             {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
           </BodyShort>
         )}
