@@ -17,7 +17,12 @@ import { FrontendErrorType } from "./FrontendErrorTypeEnum";
 import { lagreUtkastServerAction } from "./lagreUtkast";
 import { isNonEmptyString } from "./serverActionsInputValidation";
 
-export async function overskrivUtkastMedInnholdFraAktivPlanServerAction(
+/**
+ * Henter innhold fra aktiv plan, konverterer det til nåværende utkast-format,
+ * lagrer det som utkast (overskriver eventuelt eksisterende utkast), og
+ * redirecter til "ny plan"-side.
+ */
+export async function upsertUtkastWithAktivPlanServerAction(
   _previousState: FetchUpdateResult,
   narmesteLederId: string,
 ): Promise<FetchUpdateResult> {

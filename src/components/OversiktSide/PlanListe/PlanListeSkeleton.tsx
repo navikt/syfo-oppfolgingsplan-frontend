@@ -25,10 +25,10 @@ function PlanLinkCardSkeleton({ isAktiv = false }: { isAktiv?: boolean }) {
             Delt med den ansatte
           </Skeleton>
           <Skeleton variant="rounded" height={22}>
-            Ikke delt med fastlege
+            Ikke sendt til fastlege
           </Skeleton>
           <Skeleton variant="rounded" height={22}>
-            Ikke delt med Nav
+            Ikke sendt til Nav
           </Skeleton>
         </HStack>
       </div>
