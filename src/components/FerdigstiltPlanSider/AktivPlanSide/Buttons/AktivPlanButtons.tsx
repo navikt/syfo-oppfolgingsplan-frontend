@@ -31,16 +31,19 @@ export function AktivPlanButtons({ planId, userHasEditAccess }: Props) {
             Endre oppfølgingsplanen
           </Button>
 
-          <Button
-            variant="secondary"
-            {...(userHasEditAccess && {
-              as: NextLink,
-              href: getAGOpprettNyPlanHref(narmesteLederId),
-            })}
-            disabled={!userHasEditAccess}
-          >
-            Lag en ny plan
-          </Button>
+          {userHasEditAccess ? (
+            <Button
+              variant="secondary"
+              as={NextLink}
+              href={getAGOpprettNyPlanHref(narmesteLederId)}
+            >
+              Lag en ny plan
+            </Button>
+          ) : (
+            <Button variant="secondary" disabled={true}>
+              Lag en ny plan
+            </Button>
+          )}
         </HStack>
 
         <LastNedSomPdfButton

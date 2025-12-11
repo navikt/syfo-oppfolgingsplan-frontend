@@ -48,7 +48,10 @@ export default async function AktivPlanForAG({
             evalueringsDato={evalueringsDato}
           />
 
-          <DelAktivPlanMedLegeEllerNav planId={planId} />
+          <DelAktivPlanMedLegeEllerNav
+            planId={planId}
+            userHasEditAccess={userHasEditAccess}
+          />
 
           <AktivPlanButtons
             planId={planId}
