@@ -2,6 +2,7 @@
 
 import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert.tsx";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
 
@@ -45,19 +46,7 @@ export function DelPlanMedLegeButtonAndStatus({
         )}
       </HStack>
 
-      {errorDelMedLege &&
-        (errorDelMedLege.type === "LEGE_NOT_FOUND" ? (
-          <Alert variant="error">
-            Du får dessverre ikke delt denne planen med legen herfra. Det kan
-            hende at den ansatte ikke har en fastlege, eller at fastlegen ikke
-            kan ta imot elektroniske meldinger. I dette tilfellet må dere laste
-            ned og skrive ut planen slik at dere får delt den med legen manuelt.
-          </Alert>
-        ) : (
-          <Alert variant="error">
-            Beklager, noe gikk galt. Vennligst prøv igjen senere.
-          </Alert>
-        ))}
+      <FetchErrorAlert error={errorDelMedLege} />
     </VStack>
   );
 }
