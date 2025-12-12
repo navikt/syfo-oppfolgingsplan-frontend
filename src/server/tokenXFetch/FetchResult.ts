@@ -1,4 +1,5 @@
 import z from "zod";
+import { combinedErrorTypeSchema } from "@/schema/errorSchemas.ts";
 
 /**
  * Backend can respond with an error object of this shape on all endpoints.
@@ -7,7 +8,7 @@ import z from "zod";
  * when something goes wrong.
  */
 export const fetchResultErrorSchema = z.object({
-  type: z.string(),
+  type: combinedErrorTypeSchema,
   message: z.string().optional(),
 });
 
