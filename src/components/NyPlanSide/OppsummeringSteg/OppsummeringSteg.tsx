@@ -1,7 +1,8 @@
 import z from "zod";
-import { Alert, BodyLong, Heading } from "@navikt/ds-react";
+import { BodyLong, Heading } from "@navikt/ds-react";
 import { OppfolgingsplanFormFerdigstillSchema } from "@/schema/oppfolgingsplanFormSchemas";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { oppfolgingsplanFormDefaultValues } from "../FyllUtPlanSteg/form/form-options";
 import { withForm } from "../FyllUtPlanSteg/form/hooks/form";
 import NarDuFerdigstillerPlanenAlert from "./NarDuFerdigstillerPlanenAlert";
@@ -58,13 +59,11 @@ const OppsummeringSteg = withForm({
           onGoBackClick={onGoBack}
         />
 
-        {ferdigstillPlanError && (
-          <div className="mt-4">
-            <Alert variant="error">
-              Vi klarte ikke å ferdigstille planen. Vennligst prøv igjen senere.
-            </Alert>
-          </div>
-        )}
+        <FetchErrorAlert
+          error={ferdigstillPlanError}
+          customGeneralMessage="Vi klarte ikke å ferdigstille planen. Vennligst prøv igjen senere."
+          className="mt-4"
+        />
       </section>
     );
   },

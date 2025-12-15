@@ -5,53 +5,70 @@ import {
 } from "@/schema/errorSchemas";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
-const GENERIC_ERROR_MESSAGE =
+const DEFAULT_GENERAL_MESSAGE =
   "Beklager, noe gikk galt. Vennligst prøv igjen senere.";
 
-const errorMessages: Record<CombinedErrorType, string> = {
+// Mapping of error types to specific user messages.
+// If the value is `null`, it means this error type is considered "general"
+// and should use the default general message (or a custom override provided by the caller).
+const standardErrorMessages: Record<CombinedErrorType, string | null> = {
   // Auth errors
   AUTHENTICATION_ERROR: "Du har blitt logget ut. Vennligst logg inn igjen.",
   AUTHORIZATION_ERROR: "Du har ikke tilgang til å utføre denne handlingen.",
 
-  // Backend errors
-  NOT_FOUND: GENERIC_ERROR_MESSAGE,
-  INTERNAL_SERVER_ERROR: GENERIC_ERROR_MESSAGE,
-  ILLEGAL_ARGUMENT: GENERIC_ERROR_MESSAGE,
-  BAD_REQUEST: GENERIC_ERROR_MESSAGE,
-  CONFLICT: GENERIC_ERROR_MESSAGE,
+  // Backend errors - these are general
+  NOT_FOUND: null,
+  INTERNAL_SERVER_ERROR: null,
+  ILLEGAL_ARGUMENT: null,
+  BAD_REQUEST: null,
+  CONFLICT: null,
+  PLAN_NOT_FOUND: null,
+  SYKMELDT_NOT_FOUND: null,
+
+  // Specific Backend errors
   LEGE_NOT_FOUND:
     "Du får dessverre ikke delt denne planen med legen herfra. Det kan hende at den ansatte ikke har en fastlege, " +
     "eller at fastlegen ikke kan ta imot elektroniske meldinger. I dette tilfellet må dere laste ned og skrive ut " +
     "planen slik at dere får delt den med legen manuelt.",
-  PLAN_NOT_FOUND: GENERIC_ERROR_MESSAGE,
-  SYKMELDT_NOT_FOUND: GENERIC_ERROR_MESSAGE,
 
   // Frontend errors
-  OK_RESPONSE_BUT_RESPONSE_BODY_INVALID: GENERIC_ERROR_MESSAGE,
-  SERVER_ACTION_INPUT_VALIDATION_ERROR: GENERIC_ERROR_MESSAGE,
-  FETCH_UNKOWN_ERROR_RESPONSE: GENERIC_ERROR_MESSAGE,
+  OK_RESPONSE_BUT_RESPONSE_BODY_INVALID: null,
+  SERVER_ACTION_INPUT_VALIDATION_ERROR: null,
+  FETCH_UNKOWN_ERROR_RESPONSE: null,
   FETCH_NETWORK_ERROR:
     "Vi fikk ikke kontakt med tjenesten. Sjekk nettverket ditt og prøv igjen.",
 };
 
 /**
- * Get a user-friendly error message for a FetchResultError.
+ * Resolves the correct user-facing error message for a given FetchResultError.
  *
- * @example
- * getFetchResultErrorMessage(error)
+ * @param error - The error object returned from the fetch operation.
+ * @param customGeneralMessage - (Optional) A custom message to display ONLY when the error is of a general type
+ *                               (e.g. INTERNAL_SERVER_ERROR, NOT_FOUND).
+ *                               If the error has a specific mandatory message (e.g. LEGE_NOT_FOUND),
+ *                               this custom message will be ignored.
+ * @returns The resolved error message string.
  */
-export function getFetchResultErrorMessage(error: FetchResultError): string {
+export function getFetchResultErrorMessage(
+  error: FetchResultError,
+  customGeneralMessage?: string,
+): string {
+  const generalErrorMessage = customGeneralMessage || DEFAULT_GENERAL_MESSAGE;
+
   if (!error?.type) {
     logger.warn("getFetchResultErrorMessage called with missing error or type");
-    return GENERIC_ERROR_MESSAGE;
+    return generalErrorMessage;
   }
 
   const parsed = combinedErrorTypeSchema.safeParse(error.type);
 
   if (!parsed.success) {
     logger.warn(`Unhandled error type: ${error.type}`);
-    return GENERIC_ERROR_MESSAGE;
+    return generalErrorMessage;
   }
 
-  return errorMessages[parsed.data];
+  const errorType = parsed.data;
+  const specificMessage = standardErrorMessages[errorType];
+
+  return specificMessage ?? generalErrorMessage;
 }

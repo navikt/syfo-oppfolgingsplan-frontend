@@ -2,7 +2,7 @@
 
 import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
-import { FetchErrorAlert } from "@/ui/FetchErrorAlert.tsx";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
 
@@ -46,7 +46,10 @@ export function DelPlanMedLegeButtonAndStatus({
         )}
       </HStack>
 
-      <FetchErrorAlert error={errorDelMedLege} />
+      <FetchErrorAlert
+        error={errorDelMedLege}
+        customGeneralMessage="Det oppstod en feil ved deling av planen med fastlegen. Vennligst prøv igjen senere."
+      />
     </VStack>
   );
 }

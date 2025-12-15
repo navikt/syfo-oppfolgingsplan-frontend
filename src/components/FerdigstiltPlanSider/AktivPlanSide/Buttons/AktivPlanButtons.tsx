@@ -2,9 +2,10 @@
 
 import { startTransition, useActionState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Alert, Button, HStack } from "@navikt/ds-react";
+import { Button, HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
 import { VilDuOverskriveUtkastModal } from "../AlleredeUtkastModaler/VilDuOverskriveUtkastMedInnholdModal";
 import { VilDuSletteUtkastModal } from "../AlleredeUtkastModaler/VilDuSletteUtkastModal";
@@ -83,11 +84,10 @@ export function AktivPlanButtons({
         />
       </HStack>
 
-      {upsertUtkastWithAktivPlanError && (
-        <Alert variant="error" className="mt-4">
-          Beklager, noe gikk galt. Vennligst prøv igjen senere.
-        </Alert>
-      )}
+      <FetchErrorAlert
+        error={upsertUtkastWithAktivPlanError}
+        className="mt-4"
+      />
     </>
   );
 }
