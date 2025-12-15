@@ -22,7 +22,7 @@
     "@navikt/ds-tailwind": "^7.35.1",
     "@navikt/flexjar-widget": "^0.2.14",
     "@navikt/nav-dekoratoren-moduler": "^3.6.1",
-    "@navikt/next-logger": "^4.4.2",
+    "@navikt/next-logger": "^4.4.4",
     "@navikt/oasis": "^3.8.0",
     "@tanstack/react-form": "^1.27.1",
     "dayjs": "^1.11.19",
