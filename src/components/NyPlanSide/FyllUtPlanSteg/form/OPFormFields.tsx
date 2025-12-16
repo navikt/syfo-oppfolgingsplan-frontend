@@ -67,13 +67,13 @@ const OPFormFields = withForm({
         </Heading>
 
         <BodyLong size="medium" spacing>
-          Arbeidsgivere plikter å legge til rette for alle arbeidstakere. På
-          arbeidstilsynet.no kan du lese om{" "}
+          Arbeidsgiver skal organisere arbeidet og legge til rette slik at den
+          ansatte kan være i jobb. Les mer om{" "}
           <Link
-            href="https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/"
+            href="https://www.nav.no/arbeidsgiver/tilretteleggingsplikt"
             target="_blank"
           >
-            den generelle tilretteleggingsplikten
+            tilrettelegging på arbeidsplassen (lenke åpner i ny fane)
           </Link>
           .
         </BodyLong>
