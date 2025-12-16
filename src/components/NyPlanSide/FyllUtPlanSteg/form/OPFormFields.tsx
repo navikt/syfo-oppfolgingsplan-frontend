@@ -73,9 +73,9 @@ const OPFormFields = withForm({
             href="https://www.nav.no/arbeidsgiver/tilretteleggingsplikt"
             target="_blank"
           >
-            tilrettelegging på arbeidsplassen (lenke åpner i ny fane)
-          </Link>
-          .
+            tilrettelegging på arbeidsplassen
+          </Link>{" "}
+          (lenke åpner i ny fane).
         </BodyLong>
       </TextContentBox>
 
