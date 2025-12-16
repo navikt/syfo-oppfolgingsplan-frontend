@@ -38,7 +38,7 @@ export default async function PlanListeForSykmeldt() {
       )}
 
       {harTidligerePlaner && (
-        <PlanListeDel heading="Tidligere planer">
+        <PlanListeDel heading="Tidligere oppfølgingsplaner">
           <VStack gap="4">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
