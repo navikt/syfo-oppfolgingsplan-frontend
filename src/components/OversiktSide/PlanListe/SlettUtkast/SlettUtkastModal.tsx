@@ -24,7 +24,7 @@ export function SlettUtkastModal({ modalRef }: Props) {
 
         <FetchErrorAlert
           error={error}
-          customGeneralMessage="Noe gikk galt når vi prøvde å slette utkastet. Vennligst prøv igjen
+          fallbackMessage="Noe gikk galt når vi prøvde å slette utkastet. Vennligst prøv igjen
             senere."
           className="mt-4"
         />

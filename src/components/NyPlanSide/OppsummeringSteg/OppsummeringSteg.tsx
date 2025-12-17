@@ -61,7 +61,7 @@ const OppsummeringSteg = withForm({
 
         <FetchErrorAlert
           error={ferdigstillPlanError}
-          customGeneralMessage="Vi klarte ikke å ferdigstille planen. Vennligst prøv igjen senere."
+          fallbackMessage="Vi klarte ikke å ferdigstille planen. Vennligst prøv igjen senere."
           className="mt-4"
         />
       </section>

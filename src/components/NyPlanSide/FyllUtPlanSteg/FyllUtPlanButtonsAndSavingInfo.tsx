@@ -51,7 +51,7 @@ export default function FyllUtPlanButtonsAndSavingInfo({
 
         <FetchErrorAlert
           error={lagreUtkastError}
-          customGeneralMessage="Vi klarte ikke lagre utkastet ditt. Vennligst prøv igjen senere."
+          fallbackMessage="Vi klarte ikke lagre utkastet ditt. Vennligst prøv igjen senere."
         />
       </VStack>
     </VStack>

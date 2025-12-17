@@ -48,7 +48,7 @@ export function DelPlanMedLegeButtonAndStatus({
 
       <FetchErrorAlert
         error={errorDelMedLege}
-        customGeneralMessage="Det oppstod en feil ved deling av planen med fastlegen. Vennligst prøv igjen senere."
+        fallbackMessage="Det oppstod en feil ved deling av planen med fastlegen. Vennligst prøv igjen senere."
       />
     </VStack>
   );
