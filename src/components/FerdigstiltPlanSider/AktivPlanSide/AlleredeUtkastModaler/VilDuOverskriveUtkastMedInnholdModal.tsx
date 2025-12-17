@@ -1,7 +1,8 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
-import { Alert, BodyLong, Button, Modal } from "@navikt/ds-react";
+import { BodyLong, Button, Modal } from "@navikt/ds-react";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 
 interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
@@ -29,11 +30,7 @@ export function VilDuOverskriveUtkastModal({ ref }: Props) {
           erstattet med innholdet i denne planen. Vil du fortsette?
         </BodyLong>
 
-        {error && (
-          <Alert variant="error" className="mt-4">
-            Beklager, noe gikk galt. Vennligst prøv igjen senere.
-          </Alert>
-        )}
+        <FetchErrorAlert error={error} className="mt-4" />
       </Modal.Body>
 
       <Modal.Footer>

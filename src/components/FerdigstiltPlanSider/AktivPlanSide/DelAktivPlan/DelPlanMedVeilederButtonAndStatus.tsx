@@ -2,6 +2,7 @@
 
 import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
 
@@ -45,11 +46,7 @@ export function DelPlanMedVeilederButtonAndStatus({
         )}
       </HStack>
 
-      {errorDelMedVeileder && (
-        <Alert variant="error">
-          Beklager, noe gikk galt. Vennligst prøv igjen senere.
-        </Alert>
-      )}
+      <FetchErrorAlert error={errorDelMedVeileder} />
     </VStack>
   );
 }

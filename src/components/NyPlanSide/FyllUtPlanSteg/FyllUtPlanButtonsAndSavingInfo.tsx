@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@navikt/aksel-icons";
-import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
+import { Button, HStack, VStack } from "@navikt/ds-react";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 
 interface Props {
   isPendingProceed: boolean;
@@ -48,11 +49,10 @@ export default function FyllUtPlanButtonsAndSavingInfo({
           {utkastLagringInfo}
         </HStack>
 
-        {lagreUtkastError && (
-          <Alert variant="error">
-            Vi klarte ikke lagre utkastet ditt. Vennligst prøv igjen senere.
-          </Alert>
-        )}
+        <FetchErrorAlert
+          error={lagreUtkastError}
+          fallbackMessage="Vi klarte ikke lagre utkastet ditt. Vennligst prøv igjen senere."
+        />
       </VStack>
     </VStack>
   );
