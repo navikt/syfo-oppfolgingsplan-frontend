@@ -8,8 +8,9 @@ export const oppfolgingsplanFormDefaultValues: OppfolgingsplanFormUnderArbeid =
     tidligereTilrettelegging: "",
     tilretteleggingFremover: "",
     annenTilrettelegging: "",
-    hvordanFolgeOpp: "",
+    // hvordanFolgeOpp: "",
     evalueringsDato: null,
+    etNyttSporsmal: "",
     harDenAnsatteMedvirket: null,
     denAnsatteHarIkkeMedvirketBegrunnelse: "",
   };

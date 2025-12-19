@@ -24,8 +24,9 @@ const mockUtfyltLagretUtkast: OppfolgingsplanFormUnderArbeid = {
   tidligereTilrettelegging: ".",
   tilretteleggingFremover: ".",
   annenTilrettelegging: ".",
-  hvordanFolgeOpp: ".",
+  // hvordanFolgeOpp: ".",
   evalueringsDato: now().add(2, "month").format("YYYY-MM-DD"),
+  etNyttSporsmal: ".",
   harDenAnsatteMedvirket: "ja",
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };

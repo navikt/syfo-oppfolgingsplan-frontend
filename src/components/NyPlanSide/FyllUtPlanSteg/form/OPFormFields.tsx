@@ -111,7 +111,7 @@ const OPFormFields = withForm({
         )}
       </form.AppField>
 
-      <form.AppField name="hvordanFolgeOpp">
+      {/* <form.AppField name="hvordanFolgeOpp">
         {(field) => (
           <field.FormTextArea
             label={formLabels.hvordanFolgeOpp.label}
@@ -119,7 +119,7 @@ const OPFormFields = withForm({
             isReadOnly={isReadOnly}
           />
         )}
-      </form.AppField>
+      </form.AppField> */}
 
       <form.AppField name="evalueringsDato">
         {(field) => (
@@ -131,6 +131,16 @@ const OPFormFields = withForm({
             isChangeDisabled={isChangeDisabled}
             isReadOnly={isReadOnly}
             className="mb-8"
+          />
+        )}
+      </form.AppField>
+
+      <form.AppField name="etNyttSporsmal">
+        {(field) => (
+          <field.FormTextArea
+            label={formLabels.etNyttSporsmal.label}
+            isChangeDisabled={isChangeDisabled}
+            isReadOnly={isReadOnly}
           />
         )}
       </form.AppField>

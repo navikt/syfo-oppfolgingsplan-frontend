@@ -29,13 +29,17 @@ export const formLabels = {
     description:
       "For eksempel involvering av bedriftshelsetjeneste, eller utføre andre typer arbeidsoppgaver.",
   },
-  hvordanFolgeOpp: {
-    label: "Hvordan skal dere følge opp avtalt tilrettelegging?",
-  },
+  // hvordanFolgeOpp: {
+  //   label: "Hvordan skal dere følge opp avtalt tilrettelegging?",
+  // },
   harDenAnsatteMedvirket: {
     label: "Har den ansatte vært med å lage planen?",
     description:
       "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Den ansatte skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
+  },
+  etNyttSporsmal: {
+    label: "Et nytt spørsmål som er lagt til",
+    description: "Dette er et eksempel på et nytt spørsmål i skjemaet.",
   },
   denAnsatteHarIkkeMedvirketBegrunnelse: {
     label: "Hvorfor har ikke den ansatte deltatt?",

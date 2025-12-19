@@ -37,8 +37,9 @@ export const OppfolgingsplanFormAndUtkastSchema = z
     tidligereTilrettelegging: schemaForNonRequiredMaxLengthTextField,
     tilretteleggingFremover: schemaForNonRequiredMaxLengthTextField,
     annenTilrettelegging: schemaForNonRequiredMaxLengthTextField,
-    hvordanFolgeOpp: schemaForNonRequiredMaxLengthTextField,
+    // hvordanFolgeOpp: schemaForNonRequiredMaxLengthTextField,
     evalueringsDato: z.iso.date().nullable(),
+    etNyttSporsmal: schemaForNonRequiredMaxLengthTextField,
     harDenAnsatteMedvirket: z.enum(["ja", "nei"]).nullable(),
     denAnsatteHarIkkeMedvirketBegrunnelse:
       schemaForNonRequiredMaxLengthTextField,
@@ -79,8 +80,9 @@ export const OppfolgingsplanFormFerdigstillSchema = z
     tidligereTilrettelegging: schemaForRequiredMaxLengthTextField,
     tilretteleggingFremover: schemaForRequiredMaxLengthTextField,
     annenTilrettelegging: schemaForRequiredMaxLengthTextField,
-    hvordanFolgeOpp: schemaForRequiredMaxLengthTextField,
+    // hvordanFolgeOpp: schemaForRequiredMaxLengthTextField,
     evalueringsDato: schemaForEvalueringsDatoVedFerdigstilling,
+    etNyttSporsmal: schemaForNonRequiredMaxLengthTextField,
     harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
       error: "Du må svare ja eller nei",
     }),

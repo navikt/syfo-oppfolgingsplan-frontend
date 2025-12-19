@@ -91,18 +91,25 @@ export default function PlanFormSummary({ formValues, className }: Props) {
             </FormSummary.Value>
           </FormSummary.Answer>
 
-          <FormSummary.Answer>
+          {/* <FormSummary.Answer>
             <FormSummary.Label>
               {formLabels.hvordanFolgeOpp.label}
             </FormSummary.Label>
             <FormSummary.Value>{formValues.hvordanFolgeOpp}</FormSummary.Value>
-          </FormSummary.Answer>
+          </FormSummary.Answer> */}
 
           <FormSummary.Answer>
             <FormSummary.Label>
               {formLabels.evalueringsDato.label}
             </FormSummary.Label>
             <FormSummary.Value>{evalueringsDatoFormatted}</FormSummary.Value>
+          </FormSummary.Answer>
+
+          <FormSummary.Answer>
+            <FormSummary.Label>
+              {formLabels.etNyttSporsmal.label}
+            </FormSummary.Label>
+            <FormSummary.Value>{formValues.etNyttSporsmal}</FormSummary.Value>
           </FormSummary.Answer>
 
           <FormSummary.Answer>

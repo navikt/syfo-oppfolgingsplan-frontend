@@ -65,19 +65,26 @@ export function getOppfolgingsplanFormShape(
             description: formLabels.annenTilrettelegging.description,
             wasRequired: true,
           },
-          {
-            fieldId: "hvordanFolgeOpp",
-            fieldType: "TEXT",
-            label: formLabels.hvordanFolgeOpp.label,
-            description: null,
-            wasRequired: true,
-          },
+          // {
+          //   fieldId: "hvordanFolgeOpp",
+          //   fieldType: "TEXT",
+          //   label: formLabels.hvordanFolgeOpp.label,
+          //   description: null,
+          //   wasRequired: true,
+          // },
           {
             fieldId: "evalueringsDato",
             fieldType: "DATE",
             label: formLabels.evalueringsDato.label,
             description: null,
             wasRequired: true,
+          },
+          {
+            fieldId: "etNyttSporsmal",
+            fieldType: "TEXT",
+            label: formLabels.etNyttSporsmal.label,
+            description: null,
+            wasRequired: false,
           },
           {
             fieldId: "harDenAnsatteMedvirket",
