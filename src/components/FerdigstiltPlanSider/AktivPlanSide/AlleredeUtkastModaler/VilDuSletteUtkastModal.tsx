@@ -1,8 +1,9 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
-import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import { BodyLong, Modal } from "@navikt/ds-react";
 import { slettUtkastAndRedirectToNyPlanServerAction } from "@/server/actions/slettUtkast";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
@@ -35,18 +36,33 @@ export function VilDuSletteUtkastModal({ ref }: Props) {
 
       <Modal.Footer>
         <form action={() => slettUtkastAndRedirectAction(narmesteLederId)}>
-          <Button
+          <TrackedButton
             type="submit"
             variant="primary"
             loading={isPendingSlettUtkast}
+            tracking={{
+              komponentId: "slett-utkast-og-fortsett-knapp",
+              tekst: "Slett utkast og fortsett",
+              kontekst: "vil-du-slette-utkast-modal",
+            }}
           >
             Slett utkast og fortsett
-          </Button>
+          </TrackedButton>
         </form>
 
-        <Button variant="secondary" onClick={() => ref.current?.close()}>
+        <TrackedButton
+          variant="secondary"
+          onClick={() => {
+            ref.current?.close();
+          }}
+          tracking={{
+            komponentId: "avbryt-slett-utkast-knapp",
+            tekst: "Avbryt",
+            kontekst: "vil-du-slette-utkast-modal",
+          }}
+        >
           Avbryt
-        </Button>
+        </TrackedButton>
       </Modal.Footer>
     </Modal>
   );

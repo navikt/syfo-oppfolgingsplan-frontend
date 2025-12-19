@@ -2,10 +2,11 @@
 
 import { startTransition, useActionState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, HStack } from "@navikt/ds-react";
+import { HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import { TrackedButton } from "@/ui/TrackedButton";
 import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
 import { VilDuOverskriveUtkastModal } from "../AlleredeUtkastModaler/VilDuOverskriveUtkastMedInnholdModal";
 import { VilDuSletteUtkastModal } from "../AlleredeUtkastModaler/VilDuSletteUtkastModal";
@@ -60,22 +61,32 @@ export function AktivPlanButtons({
 
       <HStack justify="space-between">
         <HStack gap="4">
-          <Button
+          <TrackedButton
             disabled={!userHasEditAccess}
             variant="primary"
             onClick={handleEndreOppfolgingsplanClick}
             loading={isPendingUpsertUtkastWithAktivPlan}
+            tracking={{
+              komponentId: "endre-oppfolgingsplan-knapp",
+              tekst: "Endre oppfølgingsplanen",
+              kontekst: "AktivPlanSide",
+            }}
           >
             Endre oppfølgingsplanen
-          </Button>
+          </TrackedButton>
 
-          <Button
+          <TrackedButton
             variant="secondary"
             onClick={handleNyPlanClick}
             disabled={!userHasEditAccess}
+            tracking={{
+              komponentId: "lag-ny-oppfolgingsplan-knapp",
+              tekst: "Lag en ny plan",
+              kontekst: "AktivPlanSide",
+            }}
           >
             Lag en ny plan
-          </Button>
+          </TrackedButton>
         </HStack>
 
         <LastNedSomPdfButton

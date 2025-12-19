@@ -2,6 +2,7 @@
 
 import { Textarea } from "@navikt/ds-react";
 import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
+import { logTaxonomyEvent } from "@/common/logTaxonomyEvent.ts";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
@@ -40,7 +41,17 @@ export default function FormTextArea({
       onChange={(e) =>
         !isChangeDisabled ? field.handleChange(e.target.value) : null
       }
-      onBlur={field.handleBlur}
+      onBlur={() => {
+        logTaxonomyEvent({
+          name: "textarea utfylt",
+          properties: {
+            feltNavn: label,
+            harVerdi: field.state.value.length > 0,
+            tegnlengde: field.state.value.length,
+          },
+        });
+        field.handleBlur();
+      }}
       readOnly={isReadOnly}
       className="mb-6"
     />

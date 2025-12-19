@@ -3,22 +3,27 @@
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { ChevronLeftIcon } from "@navikt/aksel-icons";
-import { Button } from "@navikt/ds-react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
+import { TrackedButton } from "@/ui/TrackedButton";
 
 export default function TilbakeTilOversiktButtonForAG() {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   return (
-    <Button
+    <TrackedButton
       variant="tertiary"
       as={NextLink}
       iconPosition="left"
       icon={<ChevronLeftIcon aria-hidden />}
       href={getAGOversiktHref(narmesteLederId)}
       className="self-start"
+      tracking={{
+        komponentId: "tilbake-til-oversikt-knapp",
+        tekst: "Tilbake til oppfølgingsplaner",
+        kontekst: "FerdigstiltPlanSide",
+      }}
     >
       Tilbake til oppfølgingsplaner
-    </Button>
+    </TrackedButton>
   );
 }

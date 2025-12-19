@@ -1,8 +1,9 @@
 "use client";
 
-import { Alert, Button, HStack, VStack } from "@navikt/ds-react";
+import { Alert, HStack, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import { TrackedButton } from "@/ui/TrackedButton";
 import { usePlanDelingContext } from "../PlanDelingContext";
 import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer";
 
@@ -27,14 +28,19 @@ export function DelPlanMedLegeButtonAndStatus({
       <HStack gap="8" align="center">
         <DelPlanButtonFlexGrowContainer>
           <form action={() => delMedLegeAction({ planId })}>
-            <Button
+            <TrackedButton
               type="submit"
               variant="primary"
               loading={isPendingDelMedLege}
               disabled={!userHasEditAccess || Boolean(deltMedLegeTidspunkt)}
+              tracking={{
+                komponentId: "del-med-fastlege-knapp",
+                tekst: "Send til fastlege",
+                kontekst: "AktivPlanSide",
+              }}
             >
               Send til fastlege
-            </Button>
+            </TrackedButton>
           </form>
         </DelPlanButtonFlexGrowContainer>
 

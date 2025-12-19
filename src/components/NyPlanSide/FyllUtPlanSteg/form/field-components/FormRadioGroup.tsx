@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { Radio, RadioGroup } from "@navikt/ds-react";
+import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
@@ -31,6 +32,14 @@ export default function FormRadioGroup({
     .join(", ");
 
   const handleChange = (value: string) => {
+    logTaxonomyEvent({
+      name: "radio valg endret",
+      properties: {
+        komponentId: label,
+        valgtAlternativ: value,
+        antallAlternativer: options.length,
+      },
+    });
     field.setValue(value);
   };
 
