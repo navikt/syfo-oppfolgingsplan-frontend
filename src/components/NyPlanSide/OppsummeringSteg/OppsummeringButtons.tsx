@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { ArrowLeftIcon } from "@navikt/aksel-icons";
 import { Button, HStack, VStack } from "@navikt/ds-react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
+import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
   isPendingFerdigstill: boolean;
@@ -22,15 +23,20 @@ export default function OppsummeringButtons({
   return (
     <VStack gap="8" align="start">
       <HStack gap="8">
-        <Button
+        <TrackedButton
           variant="secondary"
           iconPosition="left"
           icon={<ArrowLeftIcon aria-hidden />}
           onClick={onGoBackClick}
           disabled={isPendingFerdigstill}
+          tracking={{
+            komponentId: "ga-tilbake-fra-oppsummering-knapp",
+            tekst: "Gå tilbake",
+            kontekst: "Oppsummering",
+          }}
         >
           Gå tilbake
-        </Button>
+        </TrackedButton>
 
         <Button
           variant="primary"
@@ -43,13 +49,30 @@ export default function OppsummeringButtons({
 
       {isPendingFerdigstill ? (
         // Seperate because anchor cannot be disabled
-        <Button variant="tertiary" disabled>
+        <TrackedButton
+          variant="tertiary"
+          disabled
+          tracking={{
+            komponentId: "avslutt-og-fortsett-senere-knapp",
+            tekst: "Avslutt og fortsett senere",
+            kontekst: "NyPlanSide",
+          }}
+        >
           Avslutt og fortsett senere
-        </Button>
+        </TrackedButton>
       ) : (
-        <Button variant="tertiary" as={NextLink} href={oversiktHref}>
+        <TrackedButton
+          variant="tertiary"
+          as={NextLink}
+          href={oversiktHref}
+          tracking={{
+            komponentId: "avslutt-og-fortsett-senere-knapp",
+            tekst: "Avslutt og fortsett senere",
+            kontekst: "Oppsummering",
+          }}
+        >
           Avslutt og fortsett senere
-        </Button>
+        </TrackedButton>
       )}
     </VStack>
   );

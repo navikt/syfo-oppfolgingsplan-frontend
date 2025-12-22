@@ -2,7 +2,7 @@
 
 import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
-import { Button } from "@navikt/ds-react";
+import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
   className?: string;
@@ -16,15 +16,20 @@ export function LastNedSomPdfButton({
   planId,
 }: Props) {
   return (
-    <Button
+    <TrackedButton
       variant="tertiary"
       icon={<FilePdfIcon />}
       iconPosition="right"
       className={className}
+      tracking={{
+        komponentId: "last-ned-som-pdf-knapp",
+        tekst: "Last ned som PDF",
+        kontekst: "FerdigstiltPlanSide",
+      }}
       as={NextLink}
       href={`/api/${narmesteLederId}/pdf/${planId}`}
     >
       Last ned som PDF
-    </Button>
+    </TrackedButton>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Button } from "@navikt/ds-react";
+import { TrackedButton } from "@/ui/TrackedButton";
 import { SlettUtkastModal } from "./SlettUtkastModal";
 
 export function SlettUtkastButtonAndModal() {
@@ -13,9 +13,18 @@ export function SlettUtkastButtonAndModal() {
 
   return (
     <>
-      <Button variant="tertiary" onClick={openModal} className="self-start">
+      <TrackedButton
+        variant="tertiary"
+        onClick={openModal}
+        className="self-start"
+        tracking={{
+          komponentId: "apne-slett-utkast-modal-knapp",
+          tekst: "Slett utkast",
+          kontekst: "OversiktSide",
+        }}
+      >
         Slett utkast
-      </Button>
+      </TrackedButton>
 
       <SlettUtkastModal modalRef={modalRef} />
     </>

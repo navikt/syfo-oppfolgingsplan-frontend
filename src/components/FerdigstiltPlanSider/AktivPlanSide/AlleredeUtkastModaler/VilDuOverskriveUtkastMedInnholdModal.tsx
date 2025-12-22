@@ -1,8 +1,9 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
-import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import { BodyLong, Modal } from "@navikt/ds-react";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
@@ -35,18 +36,31 @@ export function VilDuOverskriveUtkastModal({ ref }: Props) {
 
       <Modal.Footer>
         <form action={() => overskrivUtkastAction(narmesteLederId)}>
-          <Button
+          <TrackedButton
             type="submit"
             variant="primary"
             loading={isPendingOverskrivUtkast}
+            tracking={{
+              komponentId: "erstatt-utkast-og-fortsett-knapp",
+              tekst: "Erstatt utkast og fortsett",
+              kontekst: "vil-du-overskrive-utkast-modal",
+            }}
           >
             Erstatt utkast og fortsett
-          </Button>
+          </TrackedButton>
         </form>
 
-        <Button variant="secondary" onClick={() => ref.current?.close()}>
+        <TrackedButton
+          variant="secondary"
+          onClick={() => ref.current?.close()}
+          tracking={{
+            komponentId: "avbryt-erstatt-utkast-knapp",
+            tekst: "Avbryt",
+            kontekst: "vil-du-overskrive-utkast-modal",
+          }}
+        >
           Avbryt
-        </Button>
+        </TrackedButton>
       </Modal.Footer>
     </Modal>
   );

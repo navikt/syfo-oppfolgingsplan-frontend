@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink from "next/link";
 import { BodyShort, LinkCard } from "@navikt/ds-react";
 import {
@@ -6,6 +8,7 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
+import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
 import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import PlanDelingStatusTags from "./PlanLinkCardFooterTags";
@@ -30,7 +33,21 @@ export default function TidligerePlanLinkCard({
     <LinkCard className="bg-ax-bg-neutral-soft">
       <LinkCardTitle>
         <LinkCardAnchor asChild>
-          <NextLink href={href}>{linkCardTitle}</NextLink>
+          <NextLink
+            href={href}
+            onClick={() => {
+              logTaxonomyEvent({
+                name: "linkcard klikket",
+                properties: {
+                  tittel: "Tidligere plan",
+                  destinasjon: href,
+                  seksjon: "Tidligere oppfølgingsplaner",
+                },
+              });
+            }}
+          >
+            {linkCardTitle}
+          </NextLink>
         </LinkCardAnchor>
       </LinkCardTitle>
 

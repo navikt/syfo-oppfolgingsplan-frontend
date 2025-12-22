@@ -1,6 +1,7 @@
 "use client";
 
 import { Activity, use } from "react";
+import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
 import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
@@ -51,10 +52,20 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           isPendingExitAndContinueLater={isPendingExitAndContinueLater}
           utkastSistLagretTidspunkt={utkastSistLagretTidspunkt}
           errorSummaryRef={focusThisOnValidationErrorsRef}
-          onAvsluttOgFortsettSenereClick={saveIfChangesAndExit}
-          onGoToOppsummeringClick={() =>
-            form.handleSubmit({ submitAction: "fortsettTilOppsummering" })
-          }
+          onAvsluttOgFortsettSenereClick={() => {
+            saveIfChangesAndExit();
+          }}
+          onGoToOppsummeringClick={() => {
+            logTaxonomyEvent({
+              name: "skjema steg fullført",
+              properties: {
+                komponentId: "gaa-til-oppsummering-knapp",
+                skjemanavn: "Oppfølgingsplan",
+                steg: "fyll-ut-plan",
+              },
+            });
+            form.handleSubmit({ submitAction: "fortsettTilOppsummering" });
+          }}
           isFormReadOnly={!userHasEditAccess}
           lagreUtkastError={lagreUtkastError}
         />
@@ -67,9 +78,17 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           form={form}
           isPendingFerdigstillPlan={isPendingFerdigstillPlan}
           onGoBack={goBackToFyllUtPlanSteg}
-          onFerdigstillPlanClick={() =>
-            form.handleSubmit({ submitAction: "ferdigstill" })
-          }
+          onFerdigstillPlanClick={() => {
+            logTaxonomyEvent({
+              name: "skjema fullført",
+              properties: {
+                komponentId: "ferdigstill-oppfolgingsplan-knapp",
+                skjemanavn: "Oppfølgingsplan",
+                kontekst: "Oppsummering",
+              },
+            });
+            form.handleSubmit({ submitAction: "ferdigstill" });
+          }}
           ferdigstillPlanError={ferdigstillPlanError}
         />
       </Activity>

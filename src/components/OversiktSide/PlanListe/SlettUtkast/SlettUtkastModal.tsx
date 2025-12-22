@@ -1,5 +1,6 @@
-import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import { BodyLong, Modal } from "@navikt/ds-react";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import { TrackedButton } from "@/ui/TrackedButton";
 import useSlettUtkastAction from "./useSlettUtkastAction";
 
 interface Props {
@@ -38,18 +39,33 @@ export function SlettUtkastModal({ modalRef }: Props) {
             })
           }
         >
-          <Button
+          <TrackedButton
             type="submit"
             variant="primary"
             loading={isPendingSlettUtkast}
+            tracking={{
+              komponentId: "slett-utkast-modal-knapp",
+              tekst: "Slett utkast",
+              kontekst: "OversiktSide",
+            }}
           >
             Slett utkast
-          </Button>
+          </TrackedButton>
         </form>
 
-        <Button variant="secondary" onClick={() => modalRef.current?.close()}>
+        <TrackedButton
+          variant="secondary"
+          onClick={() => {
+            modalRef.current?.close();
+          }}
+          tracking={{
+            komponentId: "avbryt-slett-utkast-modal-knapp",
+            tekst: "Avbryt",
+            kontekst: "OversiktSide",
+          }}
+        >
           Avbryt
-        </Button>
+        </TrackedButton>
       </Modal.Footer>
     </Modal>
   );

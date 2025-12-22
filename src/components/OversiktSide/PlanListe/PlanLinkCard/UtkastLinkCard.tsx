@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink from "next/link";
 import { BodyShort, LinkCard, Tag } from "@navikt/ds-react";
 import {
@@ -6,6 +8,7 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
+import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { UtkastMetadata } from "@/schema/utkastMetadataSchema";
 import {
@@ -35,7 +38,19 @@ export default function UtkastLinkPanel({
     <LinkCard className="bg-ax-bg-brand-beige-soft">
       <LinkCardTitle>
         <LinkCardAnchor asChild>
-          <NextLink href={getAGOpprettNyPlanHref(narmesteLederId)}>
+          <NextLink
+            href={getAGOpprettNyPlanHref(narmesteLederId)}
+            onClick={() => {
+              logTaxonomyEvent({
+                name: "linkcard klikket",
+                properties: {
+                  tittel: "Oppfølgingsplan under arbeid",
+                  destinasjon: getAGOpprettNyPlanHref(narmesteLederId),
+                  seksjon: "Oppfølgingsplan under arbeid",
+                },
+              });
+            }}
+          >
             {linkCardTitle}
           </NextLink>
         </LinkCardAnchor>

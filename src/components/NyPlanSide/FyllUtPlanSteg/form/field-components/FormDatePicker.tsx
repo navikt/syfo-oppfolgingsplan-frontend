@@ -1,6 +1,7 @@
 "use client";
 
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
+import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
 import { toDateStringInIsoFormat } from "@/utils/dateAndTime/dateUtils";
 import { useFieldContext } from "../hooks/form-context";
 
@@ -37,6 +38,13 @@ export default function FormDatePicker({
       // Og state value for feltet blir visst null. Og feilmelding som vises blir "Feltet må fylles ut."
       if (!isChangeDisabled && date) {
         const dateIsoString = toDateStringInIsoFormat(date);
+        logTaxonomyEvent({
+          name: "dato valgt",
+          properties: {
+            datoFelt: label,
+            datoVerdi: dateIsoString,
+          },
+        });
         field.handleChange(dateIsoString);
       }
     },
