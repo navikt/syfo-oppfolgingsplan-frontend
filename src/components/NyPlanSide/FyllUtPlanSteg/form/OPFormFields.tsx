@@ -67,10 +67,10 @@ const OPFormFields = withForm({
         </Heading>
 
         <BodyLong size="medium" spacing>
-          Arbeidsgivere plikter å legge til rette for alle arbeidstakere. På
-          arbeidstilsynet.no kan du lese om{" "}
+          Arbeidsgivere plikter å legge til rette for alle arbeidstakere. Her
+          kan du lese mer om{" "}
           <Link
-            href="https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/"
+            href="https://www.nav.no/arbeidsgiver/tilretteleggingsplikt"
             target="_blank"
           >
             den generelle tilretteleggingsplikten
@@ -94,6 +94,7 @@ const OPFormFields = withForm({
         {(field) => (
           <field.FormTextArea
             label={formLabels.tilretteleggingFremover.label}
+            description={readMoreOmTilrettelegging}
             isChangeDisabled={isChangeDisabled}
             isReadOnly={isReadOnly}
           />
@@ -178,21 +179,26 @@ const OPFormFields = withForm({
   ),
 });
 
-const readMoreOmAEvaluerePlanen = (
-  <ReadMore header="Mer om å evaluere planen">
+const readMoreOmTilrettelegging = (
+  <ReadMore header="Hvorfor spør vi om dette?">
     <BodyLong className="mb-2">
-      Etter at dere har prøvd ut de foreslåtte tilpasningene en stund, er det
-      viktig å ta et steg tilbake og se hvordan det faktisk har gått. Har det
-      blitt lettere å jobbe? Fungerer tilpasningene som ønsket? Eller er det
-      behov for mer støtte eller justeringer?
+      Tilrettelegging handler om alt arbeidsgiver gjør for å tilpasse
+      arbeidsoppgaver eller miljøet slik at medarbeideren kan fungere bedre og
+      være på jobb. Dette inkluderer tiltak som endringer i arbeidstid,
+      arbeidsoppgaver, fysisk miljø eller utstyr. Tiltakene kan være
+      midlertidige eller permanente ut fra behovet.
     </BodyLong>
+  </ReadMore>
+);
 
+const readMoreOmAEvaluerePlanen = (
+  <ReadMore header="Hvorfor spør vi om dette?">
     <BodyLong className="mb-2">
-      For å sikre at planen fortsatt er relevant og nyttig for dere, anbefaler
-      vi at dere evaluerer den innen <strong>fire uker</strong>. Dette gir nok
-      tid til å erfare hva som fungerer – og hva som kanskje må endres. En god
-      evaluering gir dere bedre støtte og øker sjansen for en tryggere vei
-      tilbake til arbeid.
+      Etter at dere har prøvd ut tilrettelegging i en avtalt tidsperiode bør
+      dere følge opp hvordan dette har fungert. Fungerer tilpasningene som
+      ønsket? Vi anbefaler at dere går gjennom planen og vurderer å oppdatere
+      den innen <strong>fire uker</strong>. Dette gir nok tid til å erfare hva
+      som fungerer – og hva som kanskje må endres.
     </BodyLong>
   </ReadMore>
 );
