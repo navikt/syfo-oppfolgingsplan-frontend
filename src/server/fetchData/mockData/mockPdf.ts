@@ -9,7 +9,7 @@ export async function mockPdf() {
   headers.append("Content-Type", "application/pdf");
   headers.append(
     "Content-Disposition",
-    'attachment; filename="oppfolgingsplan.pdf"',
+    'inline; filename="oppfolgingsplan.pdf"',
   );
 
   return new Response(pdfBuffer, { headers });

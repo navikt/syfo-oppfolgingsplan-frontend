@@ -33,7 +33,7 @@ export async function GET(
   headers.append("Content-Type", "application/pdf");
   headers.append(
     "Content-Disposition",
-    'attachment; filename="oppfolgingsplan.pdf"',
+    'inline; filename="oppfolgingsplan.pdf"',
   );
 
   const data = await res.blob();
