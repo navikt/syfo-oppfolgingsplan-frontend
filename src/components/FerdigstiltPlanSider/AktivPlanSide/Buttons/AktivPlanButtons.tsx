@@ -7,7 +7,7 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
-import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";
+import { VisPdfButton } from "../../Shared/Buttons/VisPdfButton";
 import { VilDuOverskriveUtkastModal } from "../AlleredeUtkastModaler/VilDuOverskriveUtkastMedInnholdModal";
 import { VilDuSletteUtkastModal } from "../AlleredeUtkastModaler/VilDuSletteUtkastModal";
 
@@ -89,10 +89,7 @@ export function AktivPlanButtons({
           </TrackedButton>
         </HStack>
 
-        <LastNedSomPdfButton
-          narmesteLederId={narmesteLederId}
-          planId={planId}
-        />
+        <VisPdfButton narmesteLederId={narmesteLederId} planId={planId} />
       </HStack>
 
       <FetchErrorAlert
