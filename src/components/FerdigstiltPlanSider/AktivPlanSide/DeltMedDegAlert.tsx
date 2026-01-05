@@ -1,24 +1,17 @@
 import { Alert, BodyLong, Heading, Link } from "@navikt/ds-react";
 
-interface DeltMedDegAlertProps {
+interface Props {
   isDeltMedVeileder: boolean;
 }
 
-function PlanDeltMedVeilederInfoTekst() {
-  return (
-    <>
-      {" "}
+export function DeltMedDegAlert({ isDeltMedVeileder }: Props) {
+  const planDeltMedVeilederInfoTekst = (
+    <span>
       Hvis det ikke er mulig, tar du kontakt med Nav (
       <Link href="https://www.nav.no/kontaktoss">lenke</Link>) slik at du kan gi
       tilleggsopplysninger du mener er viktig.
-    </>
+    </span>
   );
-}
-
-export function DeltMedDegAlert({ isDeltMedVeileder }: DeltMedDegAlertProps) {
-  const infoTekstHvisDeltMedVeileder = isDeltMedVeileder ? (
-    <PlanDeltMedVeilederInfoTekst />
-  ) : null;
 
   return (
     <Alert variant="info">
@@ -27,8 +20,8 @@ export function DeltMedDegAlert({ isDeltMedVeileder }: DeltMedDegAlertProps) {
       </Heading>
       <BodyLong>
         Er det noe i denne planen du er uenig i, må du snakke med lederen din
-        for å lage en ny oppfølgingsplan.
-        {infoTekstHvisDeltMedVeileder}
+        for å lage en ny oppfølgingsplan.{" "}
+        {isDeltMedVeileder && planDeltMedVeilederInfoTekst}
       </BodyLong>
     </Alert>
   );
