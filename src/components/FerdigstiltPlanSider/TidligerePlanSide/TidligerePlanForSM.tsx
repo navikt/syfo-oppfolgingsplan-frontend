@@ -40,7 +40,9 @@ export default async function TidligerePlanForSM({ planId }: Props) {
 
         <FormSummaryFromSnapshot formSnapshot={content} />
 
-        <DeltMedDegAlert />
+        <DeltMedDegAlert
+          isDeltMedVeileder={Boolean(deltMedVeilederTidspunkt)}
+        />
 
         <TilbakeTilOversiktButtonForSM />
       </VStack>
