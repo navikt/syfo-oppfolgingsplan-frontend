@@ -8,12 +8,15 @@ export function AktivPlanTopTags() {
   const { deltMedLegeTidspunkt, deltMedVeilederTidspunkt } =
     usePlanDelingContext();
 
+  const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
+  const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
+
   return (
     <HStack gap="2">
       <PlanDelingStatusTags
         tagSize="small"
-        isDeltMedLege={Boolean(deltMedLegeTidspunkt)}
-        isDeltMedVeileder={Boolean(deltMedVeilederTidspunkt)}
+        isDeltMedLege={isDeltMedLege}
+        isDeltMedVeileder={isDeltMedVeileder}
       />
     </HStack>
   );

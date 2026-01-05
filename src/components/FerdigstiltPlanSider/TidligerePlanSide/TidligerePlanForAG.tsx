@@ -26,13 +26,16 @@ export default async function TidligerePlanForAG({
     },
   } = await fetchTidligerePlanForAG(narmesteLederId, planId);
 
+  const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
+  const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
+
   return (
     <section>
       <VStack gap="8">
         <TidligerePlanHeadingAndTags
           employeeName={employee.name}
-          isDeltMedLege={Boolean(deltMedLegeTidspunkt)}
-          isDeltMedVeileder={Boolean(deltMedVeilederTidspunkt)}
+          isDeltMedLege={isDeltMedLege}
+          isDeltMedVeileder={isDeltMedVeileder}
         />
 
         <VStack gap="4">

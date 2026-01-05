@@ -23,6 +23,9 @@ export function DelPlanMedLegeButtonAndStatus({
     errorDelMedLege,
   } = usePlanDelingContext();
 
+  const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
+  const isDelButtonDisabled = isDeltMedLege || !userHasEditAccess;
+
   return (
     <VStack gap="4">
       <HStack gap="8" align="center">
@@ -32,7 +35,7 @@ export function DelPlanMedLegeButtonAndStatus({
               type="submit"
               variant="primary"
               loading={isPendingDelMedLege}
-              disabled={!userHasEditAccess || Boolean(deltMedLegeTidspunkt)}
+              disabled={isDelButtonDisabled}
               tracking={{
                 komponentId: "del-med-fastlege-knapp",
                 tekst: "Send til fastlege",
