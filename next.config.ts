@@ -68,7 +68,6 @@ const nextConfig: NextConfig = {
   ],
   experimental: {
     optimizePackageImports: ["@navikt/ds-react", "@navikt/aksel-icons"],
-    turbopackFileSystemCacheForDev: true,
   },
 };
 
