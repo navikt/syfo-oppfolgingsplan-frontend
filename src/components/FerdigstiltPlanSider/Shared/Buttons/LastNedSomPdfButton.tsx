@@ -28,6 +28,7 @@ export function LastNedSomPdfButton({
       }}
       as={NextLink}
       href={`/api/${narmesteLederId}/pdf/${planId}`}
+      target="_blank"
     >
       Last ned som PDF
     </TrackedButton>
