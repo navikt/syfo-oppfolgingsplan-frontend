@@ -1,7 +1,7 @@
 import { Alert, BodyLong, Heading, Link } from "@navikt/ds-react";
 
 interface DeltMedDegAlertProps {
-  isDeltMedVeileder?: boolean;
+  isDeltMedVeileder: boolean;
 }
 
 function PlanDeltMedVeilederInfoTekst() {
