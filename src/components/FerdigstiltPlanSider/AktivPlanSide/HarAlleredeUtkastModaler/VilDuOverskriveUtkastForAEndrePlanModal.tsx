@@ -1,6 +1,7 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
 import { BodyLong, Modal } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -9,7 +10,7 @@ interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
 }
 
-export function VilDuOverskriveUtkastModal({ ref }: Props) {
+export function VilDuOverskriveUtkastForAEndrePlanModal({ ref }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [{ error }, overskrivUtkastAction, isPendingOverskrivUtkast] =
@@ -40,11 +41,9 @@ export function VilDuOverskriveUtkastModal({ ref }: Props) {
             type="submit"
             variant="primary"
             loading={isPendingOverskrivUtkast}
-            tracking={{
-              komponentId: "erstatt-utkast-og-fortsett-knapp",
-              tekst: "Erstatt utkast og fortsett",
-              kontekst: "vil-du-overskrive-utkast-modal",
-            }}
+            tracking={
+              knappKlikket.aktivPlanSide.overskriveUtkastForAEndreModal.bekreft
+            }
           >
             Erstatt utkast og fortsett
           </TrackedButton>
@@ -53,11 +52,9 @@ export function VilDuOverskriveUtkastModal({ ref }: Props) {
         <TrackedButton
           variant="secondary"
           onClick={() => ref.current?.close()}
-          tracking={{
-            komponentId: "avbryt-erstatt-utkast-knapp",
-            tekst: "Avbryt",
-            kontekst: "vil-du-overskrive-utkast-modal",
-          }}
+          tracking={
+            knappKlikket.aktivPlanSide.overskriveUtkastForAEndreModal.avbryt
+          }
         >
           Avbryt
         </TrackedButton>

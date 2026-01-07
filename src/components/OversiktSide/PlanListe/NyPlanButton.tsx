@@ -2,6 +2,7 @@
 
 import NextLink from "next/link";
 import { Box } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { TrackedButton } from "@/ui/TrackedButton";
 
@@ -16,11 +17,7 @@ export function LagNyOppfolgingsplanButton({
         variant="primary"
         as={NextLink}
         href={getAGOpprettNyPlanHref(narmesteLederId)}
-        tracking={{
-          komponentId: "lag-ny-oppfolgingsplan-knapp",
-          tekst: "Lag en ny oppfølgingsplan",
-          kontekst: "OversiktSide",
-        }}
+        tracking={knappKlikket.oversiktSide.lagNyOppfolgingsplan}
       >
         Lag en ny oppfølgingsplan
       </TrackedButton>

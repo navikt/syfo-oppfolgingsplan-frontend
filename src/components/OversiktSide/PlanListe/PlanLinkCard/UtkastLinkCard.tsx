@@ -8,7 +8,7 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { UtkastMetadata } from "@/schema/utkastMetadataSchema";
 import {
@@ -34,22 +34,24 @@ export default function UtkastLinkPanel({
     ? `i dag kl. ${getFormattedTimeString(sistLagretTidspunkt)}`
     : getFormattedDateAndTimeString(sistLagretTidspunkt);
 
+  function logAnalyticsLinkCardClick() {
+    logAnalyticsEvent({
+      name: "linkcard klikket",
+      properties: {
+        tittel: "Oppfølgingsplan under arbeid",
+        destinasjon: getAGOpprettNyPlanHref(narmesteLederId),
+        seksjon: "Oppfølgingsplan under arbeid",
+      },
+    });
+  }
+
   return (
     <LinkCard className="bg-ax-bg-brand-beige-soft">
       <LinkCardTitle>
         <LinkCardAnchor asChild>
           <NextLink
             href={getAGOpprettNyPlanHref(narmesteLederId)}
-            onClick={() => {
-              logTaxonomyEvent({
-                name: "linkcard klikket",
-                properties: {
-                  tittel: "Oppfølgingsplan under arbeid",
-                  destinasjon: getAGOpprettNyPlanHref(narmesteLederId),
-                  seksjon: "Oppfølgingsplan under arbeid",
-                },
-              });
-            }}
+            onClick={logAnalyticsLinkCardClick}
           >
             {linkCardTitle}
           </NextLink>

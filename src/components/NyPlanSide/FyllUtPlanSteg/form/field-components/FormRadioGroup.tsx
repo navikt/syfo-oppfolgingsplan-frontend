@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { Radio, RadioGroup } from "@navikt/ds-react";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
@@ -32,7 +32,12 @@ export default function FormRadioGroup({
     .join(", ");
 
   const handleChange = (value: string) => {
-    logTaxonomyEvent({
+    logAnalyticsRadioValgEndret(value);
+    field.setValue(value);
+  };
+
+  function logAnalyticsRadioValgEndret(value: string) {
+    logAnalyticsEvent({
       name: "radio valg endret",
       properties: {
         komponentId: label,
@@ -40,8 +45,7 @@ export default function FormRadioGroup({
         antallAlternativer: options.length,
       },
     });
-    field.setValue(value);
-  };
+  }
 
   return (
     <RadioGroup

@@ -6,9 +6,11 @@ import { isLocalOrDemo } from "@/env-variables/envHelpers.ts";
 
 const logger = getAnalyticsInstance("syfo-oppfolgingsplan-frontend");
 
-export function logTaxonomyEvent<K extends EventName>(event: TaxonomyEvent<K>) {
+export function logAnalyticsEvent<K extends EventName>(
+  event: TaxonomyEvent<K>,
+) {
   if (isLocalOrDemo) {
-    console.log("Taxonomy event logged:", event);
+    console.log("Analytics event logged:", event);
     return;
   }
 

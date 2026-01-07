@@ -2,6 +2,7 @@
 
 import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
@@ -21,11 +22,7 @@ export function LastNedSomPdfButton({
       icon={<FilePdfIcon />}
       iconPosition="right"
       className={className}
-      tracking={{
-        komponentId: "last-ned-som-pdf-knapp",
-        tekst: "Last ned som PDF",
-        kontekst: "FerdigstiltPlanSide",
-      }}
+      tracking={knappKlikket.ferdigstiltPlanSide.lastNedSomPdf}
       as={NextLink}
       href={`/api/${narmesteLederId}/pdf/${planId}`}
       target="_blank"

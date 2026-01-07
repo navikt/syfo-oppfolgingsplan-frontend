@@ -8,7 +8,7 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import PlanDelingStatusTags from "./PlanLinkCardFooterTags";
@@ -29,23 +29,22 @@ export default function TidligerePlanLinkCard({
   linkCardTitle,
   href,
 }: Props) {
+  function logAnalyticsLinkCardClick() {
+    logAnalyticsEvent({
+      name: "linkcard klikket",
+      properties: {
+        tittel: "Tidligere plan",
+        destinasjon: href,
+        seksjon: "Tidligere oppfølgingsplaner",
+      },
+    });
+  }
+
   return (
     <LinkCard className="bg-ax-bg-neutral-soft">
       <LinkCardTitle>
         <LinkCardAnchor asChild>
-          <NextLink
-            href={href}
-            onClick={() => {
-              logTaxonomyEvent({
-                name: "linkcard klikket",
-                properties: {
-                  tittel: "Tidligere plan",
-                  destinasjon: href,
-                  seksjon: "Tidligere oppfølgingsplaner",
-                },
-              });
-            }}
-          >
+          <NextLink href={href} onClick={logAnalyticsLinkCardClick}>
             {linkCardTitle}
           </NextLink>
         </LinkCardAnchor>

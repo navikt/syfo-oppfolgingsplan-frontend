@@ -1,9 +1,10 @@
 "use client";
 
 import { Button, ButtonProps, OverridableComponent } from "@navikt/ds-react";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 
 interface TrackedButtonOwnProps {
+  /** Event properties to log for "knapp klikket" analytics event */
   tracking: {
     komponentId: string;
     tekst: string;
@@ -14,7 +15,7 @@ interface TrackedButtonOwnProps {
 export type TrackedButtonProps = ButtonProps & TrackedButtonOwnProps;
 
 export const TrackedButton = (({
-  tracking,
+  tracking: { komponentId, tekst, kontekst },
   onClick,
   ...props
 }: TrackedButtonProps) => {
@@ -22,12 +23,12 @@ export const TrackedButton = (({
     <Button
       {...props}
       onClick={(e) => {
-        logTaxonomyEvent({
+        logAnalyticsEvent({
           name: "knapp klikket",
           properties: {
-            komponentId: tracking.komponentId,
-            tekst: tracking.tekst,
-            kontekst: tracking.kontekst,
+            komponentId,
+            tekst,
+            kontekst,
             ...(props.variant ? { variant: props.variant } : {}),
           },
         });
