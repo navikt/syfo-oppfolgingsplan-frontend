@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Button, ButtonProps, OverridableComponent } from "@navikt/ds-react";
 import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
 
@@ -14,14 +13,14 @@ interface TrackedButtonOwnProps {
 
 export type TrackedButtonProps = ButtonProps & TrackedButtonOwnProps;
 
-export const TrackedButton = React.forwardRef<
-  HTMLButtonElement,
-  TrackedButtonProps
->(function TrackedButton({ tracking, onClick, ...props }, ref) {
+export const TrackedButton = (({
+  tracking,
+  onClick,
+  ...props
+}: TrackedButtonProps) => {
   return (
     <Button
       {...props}
-      ref={ref}
       onClick={(e) => {
         logTaxonomyEvent({
           name: "knapp klikket",
