@@ -1,6 +1,7 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
 import { BodyLong, Modal } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { slettUtkastAndRedirectToNyPlanServerAction } from "@/server/actions/slettUtkast";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -9,7 +10,7 @@ interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
 }
 
-export function VilDuSletteUtkastModal({ ref }: Props) {
+export function VilDuSletteUtkastForALageNyPlanModal({ ref }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [{ error }, slettUtkastAndRedirectAction, isPendingSlettUtkast] =
@@ -40,11 +41,9 @@ export function VilDuSletteUtkastModal({ ref }: Props) {
             type="submit"
             variant="primary"
             loading={isPendingSlettUtkast}
-            tracking={{
-              komponentId: "slett-utkast-og-fortsett-knapp",
-              tekst: "Slett utkast og fortsett",
-              kontekst: "vil-du-slette-utkast-modal",
-            }}
+            tracking={
+              knappKlikket.aktivPlanSide.sletteUtkastForALageNyModal.bekreft
+            }
           >
             Slett utkast og fortsett
           </TrackedButton>
@@ -55,11 +54,9 @@ export function VilDuSletteUtkastModal({ ref }: Props) {
           onClick={() => {
             ref.current?.close();
           }}
-          tracking={{
-            komponentId: "avbryt-slett-utkast-knapp",
-            tekst: "Avbryt",
-            kontekst: "vil-du-slette-utkast-modal",
-          }}
+          tracking={
+            knappKlikket.aktivPlanSide.sletteUtkastForALageNyModal.avbryt
+          }
         >
           Avbryt
         </TrackedButton>

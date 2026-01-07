@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { TrackedButton } from "@/ui/TrackedButton";
 import { SlettUtkastModal } from "./SlettUtkastModal";
 
@@ -17,11 +18,7 @@ export function SlettUtkastButtonAndModal() {
         variant="tertiary"
         onClick={openModal}
         className="self-start"
-        tracking={{
-          komponentId: "apne-slett-utkast-modal-knapp",
-          tekst: "Slett utkast",
-          kontekst: "OversiktSide",
-        }}
+        tracking={knappKlikket.oversiktSide.slettUtkastModalTrigger}
       >
         Slett utkast
       </TrackedButton>
