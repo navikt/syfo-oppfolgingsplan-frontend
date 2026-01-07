@@ -4,7 +4,7 @@ import { startTransition, useActionState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { HStack } from "@navikt/ds-react";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
-import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
+import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 import { LastNedSomPdfButton } from "../../Shared/Buttons/LastNedSomPdfButton";

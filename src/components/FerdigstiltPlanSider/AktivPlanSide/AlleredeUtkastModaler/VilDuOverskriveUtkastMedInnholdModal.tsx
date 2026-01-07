@@ -1,7 +1,7 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
 import { BodyLong, Modal } from "@navikt/ds-react";
-import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlanServerAction";
+import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 
