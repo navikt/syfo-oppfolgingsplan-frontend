@@ -23,14 +23,16 @@ export default async function AktivPlanForSM({ planId }: Props) {
   } = await fetchFerdigstiltPlanForSM(planId);
 
   const arbeidsstedNavn = organization.orgName ?? organization.orgNumber;
+  const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
+  const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
 
   return (
     <section>
       <VStack gap="8">
         <AktivPlanHeadingAndTagsSM
           arbeidsstedNavn={arbeidsstedNavn}
-          isDeltMedVeileder={Boolean(deltMedVeilederTidspunkt)}
-          isDeltMedLege={Boolean(deltMedLegeTidspunkt)}
+          isDeltMedVeileder={isDeltMedVeileder}
+          isDeltMedLege={isDeltMedLege}
         />
 
         <AktivPlanDetailsSM
@@ -40,9 +42,7 @@ export default async function AktivPlanForSM({ planId }: Props) {
 
         <FormSummaryFromSnapshot formSnapshot={content} />
 
-        <DeltMedDegAlert
-          isDeltMedVeileder={Boolean(deltMedVeilederTidspunkt)}
-        />
+        <DeltMedDegAlert isDeltMedVeileder={isDeltMedVeileder} />
 
         <TilbakeTilOversiktButtonForSM />
       </VStack>

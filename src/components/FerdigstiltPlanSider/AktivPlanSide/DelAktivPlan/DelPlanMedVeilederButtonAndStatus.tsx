@@ -23,6 +23,9 @@ export function DelPlanMedVeilederButtonAndStatus({
     errorDelMedVeileder,
   } = usePlanDelingContext();
 
+  const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
+  const isDelButtonDisabled = isDeltMedVeileder || !userHasEditAccess;
+
   return (
     <VStack gap="4">
       <HStack gap="8" align="center">
@@ -32,7 +35,7 @@ export function DelPlanMedVeilederButtonAndStatus({
               type="submit"
               variant="primary"
               loading={isPendingDelMedVeileder}
-              disabled={!userHasEditAccess || Boolean(deltMedVeilederTidspunkt)}
+              disabled={isDelButtonDisabled}
               tracking={{
                 komponentId: "del-med-nav-knapp",
                 tekst: "Send til Nav-veileder",
