@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from "@navikt/aksel-icons";
 import { Button, HStack, VStack } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -43,11 +44,9 @@ export default function FyllUtPlanButtonsAndSavingInfo({
             onClick={onAvsluttOgFortsettSenereClick}
             loading={isPendingExit}
             disabled={isPendingProceed}
-            tracking={{
-              komponentId: "avslutt-og-fortsett-senere-knapp",
-              tekst: "Avslutt og fortsett senere",
-              kontekst: "NyPlanSide",
-            }}
+            tracking={
+              knappKlikket.nyPlanSide.fyllUtSteg.avsluttOgFortsettSenere
+            }
           >
             Avslutt og fortsett senere
           </TrackedButton>

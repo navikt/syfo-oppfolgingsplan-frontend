@@ -1,8 +1,8 @@
 "use client";
 
 import { Textarea } from "@navikt/ds-react";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { TEXT_FIELD_MAX_LENGTH } from "@/common/app-config";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent.ts";
 import { useFieldContext } from "../hooks/form-context";
 
 interface Props {
@@ -30,6 +30,17 @@ export default function FormTextArea({
     .map((err) => err?.message)
     .join(", ");
 
+  function logAnalyticsTextareaUtfylt() {
+    logAnalyticsEvent({
+      name: "textarea utfylt",
+      properties: {
+        feltNavn: label,
+        harVerdi: field.state.value.length > 0,
+        tegnlengde: field.state.value.length,
+      },
+    });
+  }
+
   return (
     <Textarea
       id={field.name}
@@ -44,14 +55,7 @@ export default function FormTextArea({
         !isChangeDisabled ? field.handleChange(e.target.value) : null
       }
       onBlur={() => {
-        logTaxonomyEvent({
-          name: "textarea utfylt",
-          properties: {
-            feltNavn: label,
-            harVerdi: field.state.value.length > 0,
-            tegnlengde: field.state.value.length,
-          },
-        });
+        logAnalyticsTextareaUtfylt();
         field.handleBlur();
       }}
       readOnly={isReadOnly}

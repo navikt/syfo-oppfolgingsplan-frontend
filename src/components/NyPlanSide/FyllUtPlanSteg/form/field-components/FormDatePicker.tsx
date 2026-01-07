@@ -1,7 +1,7 @@
 "use client";
 
 import { DatePicker, useDatepicker } from "@navikt/ds-react";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { toDateStringInIsoFormat } from "@/utils/dateAndTime/dateUtils";
 import { useFieldContext } from "../hooks/form-context";
 
@@ -27,6 +27,7 @@ export default function FormDatePicker({
   className,
 }: Props) {
   const field = useFieldContext<string | undefined>();
+
   const { datepickerProps, inputProps } = useDatepicker({
     fromDate,
     toDate,
@@ -40,13 +41,7 @@ export default function FormDatePicker({
       // Og state value for feltet blir visst null. Og feilmelding som vises blir "Feltet må fylles ut."
       if (!isChangeDisabled && date) {
         const dateIsoString = toDateStringInIsoFormat(date);
-        logTaxonomyEvent({
-          name: "dato valgt",
-          properties: {
-            datoFelt: label,
-            datoVerdi: dateIsoString,
-          },
-        });
+        logAnalyticsDatoValgt(dateIsoString);
         field.handleChange(dateIsoString);
       }
     },
@@ -55,6 +50,16 @@ export default function FormDatePicker({
   const errorMessages = field.state.meta.errors
     .map((err) => err?.message)
     .join(", ");
+
+  function logAnalyticsDatoValgt(datoVerdi: string) {
+    logAnalyticsEvent({
+      name: "dato valgt",
+      properties: {
+        datoFelt: label,
+        datoVerdi,
+      },
+    });
+  }
 
   return (
     <DatePicker {...datepickerProps}>

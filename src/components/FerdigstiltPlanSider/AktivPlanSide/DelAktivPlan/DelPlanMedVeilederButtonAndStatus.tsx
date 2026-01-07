@@ -1,6 +1,7 @@
 "use client";
 
 import { Alert, HStack, VStack } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -36,11 +37,7 @@ export function DelPlanMedVeilederButtonAndStatus({
               variant="primary"
               loading={isPendingDelMedVeileder}
               disabled={isDelButtonDisabled}
-              tracking={{
-                komponentId: "del-med-nav-knapp",
-                tekst: "Send til Nav-veileder",
-                kontekst: "AktivPlanSide",
-              }}
+              tracking={knappKlikket.aktivPlanSide.delMedVeileder}
             >
               Send til Nav-veileder
             </TrackedButton>

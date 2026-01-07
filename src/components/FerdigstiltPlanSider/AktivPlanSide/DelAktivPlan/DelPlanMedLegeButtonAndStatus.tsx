@@ -1,6 +1,7 @@
 "use client";
 
 import { Alert, HStack, VStack } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -36,11 +37,7 @@ export function DelPlanMedLegeButtonAndStatus({
               variant="primary"
               loading={isPendingDelMedLege}
               disabled={isDelButtonDisabled}
-              tracking={{
-                komponentId: "del-med-fastlege-knapp",
-                tekst: "Send til fastlege",
-                kontekst: "AktivPlanSide",
-              }}
+              tracking={knappKlikket.aktivPlanSide.delMedFastlege}
             >
               Send til fastlege
             </TrackedButton>

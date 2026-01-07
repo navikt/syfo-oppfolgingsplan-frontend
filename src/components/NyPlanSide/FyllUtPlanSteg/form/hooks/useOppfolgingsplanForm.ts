@@ -70,7 +70,7 @@ export default function useOppfolgingsplanForm({
         saveIfChangesAndProceedToOppsummering(value);
       } else if (meta.submitAction === "ferdigstill") {
         startFerdigstillPlanAction({
-          // We now know the form is valid when onSubmit runs, so we can
+          // We know the form is valid when onSubmit runs, so we can
           // safely assert the type, and that evalueringsDato is defined
           formValues: value as z.infer<typeof oppfolgingsplanFormUtfylltSchema>,
           evalueringsDatoIsoString: value.evalueringsDato!,

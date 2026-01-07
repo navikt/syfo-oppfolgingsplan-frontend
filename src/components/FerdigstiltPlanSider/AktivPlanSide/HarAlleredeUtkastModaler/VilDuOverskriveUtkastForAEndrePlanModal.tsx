@@ -1,7 +1,8 @@
 import { useActionState } from "react";
 import { useParams } from "next/navigation";
 import { BodyLong, Modal } from "@navikt/ds-react";
-import { slettUtkastAndRedirectToNyPlanServerAction } from "@/server/actions/slettUtkast";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
+import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 
@@ -9,11 +10,11 @@ interface Props {
   ref: React.RefObject<HTMLDialogElement | null>;
 }
 
-export function VilDuSletteUtkastModal({ ref }: Props) {
+export function VilDuOverskriveUtkastForAEndrePlanModal({ ref }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const [{ error }, slettUtkastAndRedirectAction, isPendingSlettUtkast] =
-    useActionState(slettUtkastAndRedirectToNyPlanServerAction, {
+  const [{ error }, overskrivUtkastAction, isPendingOverskrivUtkast] =
+    useActionState(upsertUtkastWithAktivPlanServerAction, {
       error: null,
     });
 
@@ -21,45 +22,39 @@ export function VilDuSletteUtkastModal({ ref }: Props) {
     <Modal
       ref={ref}
       header={{
-        heading: "Slett utkast?",
+        heading: "Erstatt utkast?",
       }}
       closeOnBackdropClick
     >
       <Modal.Body>
         <BodyLong>
           Du har allerede et utkast. Hvis du fortsetter vil utkastet ditt bli
-          slettet. Vil du fortsette?
+          erstattet med innholdet i denne planen. Vil du fortsette?
         </BodyLong>
 
         <FetchErrorAlert error={error} className="mt-4" />
       </Modal.Body>
 
       <Modal.Footer>
-        <form action={() => slettUtkastAndRedirectAction(narmesteLederId)}>
+        <form action={() => overskrivUtkastAction(narmesteLederId)}>
           <TrackedButton
             type="submit"
             variant="primary"
-            loading={isPendingSlettUtkast}
-            tracking={{
-              komponentId: "slett-utkast-og-fortsett-knapp",
-              tekst: "Slett utkast og fortsett",
-              kontekst: "vil-du-slette-utkast-modal",
-            }}
+            loading={isPendingOverskrivUtkast}
+            tracking={
+              knappKlikket.aktivPlanSide.overskriveUtkastForAEndreModal.bekreft
+            }
           >
-            Slett utkast og fortsett
+            Erstatt utkast og fortsett
           </TrackedButton>
         </form>
 
         <TrackedButton
           variant="secondary"
-          onClick={() => {
-            ref.current?.close();
-          }}
-          tracking={{
-            komponentId: "avbryt-slett-utkast-knapp",
-            tekst: "Avbryt",
-            kontekst: "vil-du-slette-utkast-modal",
-          }}
+          onClick={() => ref.current?.close()}
+          tracking={
+            knappKlikket.aktivPlanSide.overskriveUtkastForAEndreModal.avbryt
+          }
         >
           Avbryt
         </TrackedButton>

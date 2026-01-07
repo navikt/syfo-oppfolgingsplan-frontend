@@ -1,7 +1,11 @@
 "use client";
 
 import { Activity, use } from "react";
-import { logTaxonomyEvent } from "@/common/logTaxonomyEvent";
+import {
+  fyllUtPlanSkjemaFullfortEvent,
+  fyllUtPlanSkjemaStegFullfortEvent,
+} from "@/common/analytics/events-and-properties/skjema-events";
+import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
@@ -40,6 +44,16 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
     initialSistLagretTidspunkt,
   });
 
+  function handleFortsettTilOppsummering() {
+    logAnalyticsEvent(fyllUtPlanSkjemaStegFullfortEvent);
+    form.handleSubmit({ submitAction: "fortsettTilOppsummering" });
+  }
+
+  function handleFerdigstillPlan() {
+    logAnalyticsEvent(fyllUtPlanSkjemaFullfortEvent);
+    form.handleSubmit({ submitAction: "ferdigstill" });
+  }
+
   return (
     <section>
       <Activity
@@ -55,17 +69,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           onAvsluttOgFortsettSenereClick={() => {
             saveIfChangesAndExit();
           }}
-          onGoToOppsummeringClick={() => {
-            logTaxonomyEvent({
-              name: "skjema steg fullført",
-              properties: {
-                komponentId: "gaa-til-oppsummering-knapp",
-                skjemanavn: "Oppfølgingsplan",
-                steg: "fyll-ut-plan",
-              },
-            });
-            form.handleSubmit({ submitAction: "fortsettTilOppsummering" });
-          }}
+          onGoToOppsummeringClick={handleFortsettTilOppsummering}
           isFormReadOnly={!userHasEditAccess}
           lagreUtkastError={lagreUtkastError}
         />
@@ -78,17 +82,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           form={form}
           isPendingFerdigstillPlan={isPendingFerdigstillPlan}
           onGoBack={goBackToFyllUtPlanSteg}
-          onFerdigstillPlanClick={() => {
-            logTaxonomyEvent({
-              name: "skjema fullført",
-              properties: {
-                komponentId: "ferdigstill-oppfolgingsplan-knapp",
-                skjemanavn: "Oppfølgingsplan",
-                kontekst: "Oppsummering",
-              },
-            });
-            form.handleSubmit({ submitAction: "ferdigstill" });
-          }}
+          onFerdigstillPlanClick={handleFerdigstillPlan}
           ferdigstillPlanError={ferdigstillPlanError}
         />
       </Activity>
