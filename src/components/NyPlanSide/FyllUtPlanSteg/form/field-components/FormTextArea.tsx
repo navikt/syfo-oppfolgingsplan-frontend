@@ -10,6 +10,7 @@ interface Props {
   description?: React.ReactNode;
   minRows?: number;
   maxLength?: number;
+  isRequired: boolean;
   isChangeDisabled?: boolean;
   isReadOnly?: boolean;
 }
@@ -19,6 +20,7 @@ export default function FormTextArea({
   description,
   minRows,
   maxLength = TEXT_FIELD_MAX_LENGTH,
+  isRequired,
   isChangeDisabled = false,
   isReadOnly = false,
 }: Props) {
@@ -53,6 +55,7 @@ export default function FormTextArea({
         field.handleBlur();
       }}
       readOnly={isReadOnly}
+      aria-required={isRequired}
       className="mb-6"
     />
   );
