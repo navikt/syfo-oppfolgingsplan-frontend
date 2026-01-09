@@ -10,11 +10,7 @@ interface Props {
   planId: string;
 }
 
-export function LastNedSomPdfButton({
-  className,
-  narmesteLederId,
-  planId,
-}: Props) {
+export function VisPdfButton({ className, narmesteLederId, planId }: Props) {
   return (
     <TrackedButton
       variant="tertiary"
@@ -22,15 +18,15 @@ export function LastNedSomPdfButton({
       iconPosition="right"
       className={className}
       tracking={{
-        komponentId: "last-ned-som-pdf-knapp",
-        tekst: "Last ned som PDF",
+        komponentId: "vis-pdf-knapp",
+        tekst: "Vis PDF",
         kontekst: "FerdigstiltPlanSide",
       }}
       as={NextLink}
       href={`/api/${narmesteLederId}/pdf/${planId}`}
       target="_blank"
     >
-      Last ned som PDF
+      Vis PDF
     </TrackedButton>
   );
 }
