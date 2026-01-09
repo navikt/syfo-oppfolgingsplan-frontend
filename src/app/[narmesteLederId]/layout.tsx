@@ -30,7 +30,7 @@ export default async function RootLayoutForAG({
       await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
     employeeName = employee.name;
     employeeFnr = employee.fnr;
-  } catch (error) {
+  } catch {
     employeeName = "Sykmeldt";
     employeeFnr = "";
   }
