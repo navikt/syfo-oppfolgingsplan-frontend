@@ -14,6 +14,16 @@ export const fetchResultErrorSchema = z.object({
 
 export type FetchResultError = z.infer<typeof fetchResultErrorSchema>;
 
+/**
+ * Attempts to parse an Error as a FetchResultError.
+ */
+export function tryParseFetchResultError(err: Error): FetchResultError | null {
+  const parsed = fetchResultErrorSchema.safeParse(err);
+  if (parsed.success) return parsed.data;
+
+  return null;
+}
+
 export type FetchUpdateResult = {
   error: FetchResultError | null;
 };
