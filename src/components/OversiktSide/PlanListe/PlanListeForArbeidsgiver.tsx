@@ -4,6 +4,7 @@ import {
   getAGTidligerePlanHref,
 } from "@/common/route-hrefs";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
+import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
@@ -17,10 +18,21 @@ interface Props {
 export default async function PlanListeForArbeidsgiver({
   narmesteLederId,
 }: Props) {
+  const oversiktResult =
+    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+
+  if (oversiktResult.error) {
+    return (
+      <section className="mb-12">
+        <FetchErrorAlert error={oversiktResult.error} />
+      </section>
+    );
+  }
+
   const {
     organization: { orgName },
     oversikt: { aktivPlan, tidligerePlaner, utkast },
-  } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  } = oversiktResult.data;
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
 

@@ -6,10 +6,15 @@ export default async function NyPlanButtonHvisTomListe({
 }: {
   narmesteLederId: string;
 }) {
+  const oversiktResult =
+    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+
+  if (oversiktResult.error) return null;
+
   const {
     userHasEditAccess,
     oversikt: { aktivPlan, tidligerePlaner, utkast },
-  } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  } = oversiktResult.data;
 
   const harTomListe =
     aktivPlan === null && tidligerePlaner.length === 0 && utkast === null;

@@ -27,3 +27,16 @@ export type FetchUpdateResultWithResponse<T> =
       error: FetchResultError;
       data: null;
     };
+
+/**
+ * Result type for GET requests that return data.
+ */
+export type FetchGetResult<T> =
+  | {
+      error: null;
+      data: T;
+    }
+  | {
+      error: FetchResultError;
+      data: null;
+    };

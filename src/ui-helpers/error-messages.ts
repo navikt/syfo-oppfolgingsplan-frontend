@@ -16,14 +16,17 @@ const standardErrorMessages: Record<CombinedErrorType, string | null> = {
   AUTHENTICATION_ERROR: "Du har blitt logget ut. Vennligst logg inn igjen.",
   AUTHORIZATION_ERROR: "Du har ikke tilgang til å utføre denne handlingen.",
 
-  // Backend errors - these are general
+  // Backend errors
   NOT_FOUND: null,
   INTERNAL_SERVER_ERROR: null,
   ILLEGAL_ARGUMENT: null,
   BAD_REQUEST: null,
   CONFLICT: null,
   PLAN_NOT_FOUND: null,
-  SYKMELDT_NOT_FOUND: null,
+
+  // Backend errors with a specific message
+  SYKMELDT_NOT_FOUND:
+    "Vi finner ikke den ansatte. Dette kan skyldes at vedkommende ikke har vært sykmeldt de siste 4 månedene, eller at du ikke har tilgang til personen.",
 
   // Specific Backend errors
   LEGE_NOT_FOUND:
