@@ -5,8 +5,11 @@ import Image from "next/image";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
 import { logger } from "@navikt/next-logger";
 import { publicEnv } from "@/env-variables/publicEnv";
+import { extractFetchErrorType } from "@/server/tokenXFetch/FetchResult";
+import { getErrorMessage } from "@/ui-helpers/error-messages";
 
 const ERROR_DAD_SVG_PUBLIC_PATH = `${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/error-page-dad.svg`;
+const GENERAL_ERROR_MESSAGE = "Beklager! Det har oppstått en uventet feil";
 
 // TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.
 
@@ -21,7 +24,8 @@ export default function Error({
     logger.error(error);
   }, [error]);
 
-  const errorText = "Beklager! Det har oppstått en uventet feil";
+  const errorType = extractFetchErrorType(error);
+  const errorText = getErrorMessage(errorType, GENERAL_ERROR_MESSAGE);
 
   return (
     <div className="flex max-w-3xl flex-col" role="status" aria-live="polite">

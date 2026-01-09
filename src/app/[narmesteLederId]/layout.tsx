@@ -22,9 +22,18 @@ export default async function RootLayoutForAG({
   // visiting the oversikt page first, all these fetch calls made from different
   // server components (this component included) will be deduplicated by
   // Next.js.
-  const { employee } = await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  let employeeName: string;
+  let employeeFnr: string;
 
-  const employeeName = employee.name;
+  try {
+    const { employee } =
+      await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+    employeeName = employee.name;
+    employeeFnr = employee.fnr;
+  } catch {
+    employeeName = "Sykmeldt";
+    employeeFnr = "";
+  }
 
   const Decorator = await fetchDecoratorForAG(narmesteLederId, employeeName);
 
@@ -39,7 +48,7 @@ export default async function RootLayoutForAG({
 
         <ArbeidsgiverPageContainer
           narmesteLederId={narmesteLederId}
-          employeeFnr={employee.fnr}
+          employeeFnr={employeeFnr}
           employeeName={employeeName}
         >
           <Theme>
