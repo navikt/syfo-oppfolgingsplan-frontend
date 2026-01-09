@@ -75,3 +75,18 @@ export function getFetchResultErrorMessage(
 
   return specificMessage ?? generalErrorMessage;
 }
+
+/**
+ * Returns the user-facing error message for a given error type.
+ * Use with extractFetchErrorType in error boundaries.
+ *
+ * @param errorType - The extracted error type (or null if not a FetchResultError)
+ * @param fallback - Message to show when errorType is null or has no specific message
+ */
+export function getErrorMessage(
+  errorType: CombinedErrorType | null,
+  fallback: string,
+): string {
+  if (!errorType) return fallback;
+  return standardErrorMessages[errorType] ?? fallback;
+}
