@@ -10,9 +10,10 @@ interface Props {
   description?: React.ReactNode;
   fromDate: Date;
   toDate: Date;
+  isRequired: boolean;
   isChangeDisabled?: boolean;
-  className?: string;
   isReadOnly?: boolean;
+  className?: string;
 }
 
 export default function FormDatePicker({
@@ -20,9 +21,10 @@ export default function FormDatePicker({
   description,
   fromDate,
   toDate,
+  isRequired,
   isChangeDisabled = false,
-  className,
   isReadOnly = false,
+  className,
 }: Props) {
   const field = useFieldContext<string | undefined>();
   const { datepickerProps, inputProps } = useDatepicker({
@@ -65,6 +67,7 @@ export default function FormDatePicker({
         error={errorMessages}
         className={className}
         readOnly={isReadOnly}
+        aria-required={isRequired}
       />
     </DatePicker>
   );

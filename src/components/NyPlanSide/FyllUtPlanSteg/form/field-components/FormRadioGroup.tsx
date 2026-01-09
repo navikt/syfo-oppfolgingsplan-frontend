@@ -8,6 +8,7 @@ import { useFieldContext } from "../hooks/form-context";
 interface Props {
   label: string;
   description?: ReactNode;
+  isRequired: boolean;
   options: {
     value: string;
     label: string;
@@ -20,6 +21,7 @@ interface Props {
 export default function FormRadioGroup({
   label,
   description,
+  isRequired,
   options,
   isChangeDisabled = false,
   isReadOnly = false,
@@ -54,6 +56,7 @@ export default function FormRadioGroup({
       onBlur={field.handleBlur}
       className={className}
       disabled={isReadOnly}
+      aria-required={isRequired}
     >
       {options.map((option) => (
         <Radio key={option.value} value={option.value}>
