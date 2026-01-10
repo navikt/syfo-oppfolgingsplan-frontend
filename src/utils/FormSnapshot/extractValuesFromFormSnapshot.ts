@@ -1,8 +1,8 @@
 import { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
 
-export function getflatValuesObjectFromFormSnapshot(
+export function extractValuesFromFormSnapshot(
   formSnapshot: FormSnapshot,
-) {
+): Record<string, string | boolean | null> {
   const snapshotFields = formSnapshot.sections.flatMap(
     (section) => section.fields,
   );

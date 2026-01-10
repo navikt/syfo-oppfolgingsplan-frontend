@@ -6,9 +6,9 @@ import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
-  OppfolgingsplanFormFerdigstillSchema,
   OppfolgingsplanFormUnderArbeid,
-} from "@/schema/oppfolgingsplanFormSchemas";
+  oppfolgingsplanFormUtfylltSchema,
+} from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
 import { useAppForm } from "./form";
@@ -52,7 +52,7 @@ export default function useOppfolgingsplanForm({
     defaultValues: initialFormValues,
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: OppfolgingsplanFormFerdigstillSchema,
+      onDynamic: oppfolgingsplanFormUtfylltSchema,
     },
     listeners: {
       onChange: ({ formApi }) =>
@@ -72,9 +72,7 @@ export default function useOppfolgingsplanForm({
         startFerdigstillPlanAction({
           // We now know the form is valid when onSubmit runs, so we can
           // safely assert the type, and that evalueringsDato is defined
-          formValues: value as z.infer<
-            typeof OppfolgingsplanFormFerdigstillSchema
-          >,
+          formValues: value as z.infer<typeof oppfolgingsplanFormUtfylltSchema>,
           evalueringsDatoIsoString: value.evalueringsDato!,
           includeIkkeMedvirketBegrunnelseFieldInFormSnapshot:
             value.harDenAnsatteMedvirket === "nei",

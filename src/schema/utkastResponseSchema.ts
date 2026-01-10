@@ -1,6 +1,6 @@
 import z from "zod";
 import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
-import { OppfolgingsplanFormUnderArbeid } from "./oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "./oppfolgingsplanForm/formValidationSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
 const utkastResponseContentSchema = z.record(

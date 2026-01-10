@@ -1,4 +1,4 @@
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
 export const formLabels = {
   typiskArbeidshverdag: {
@@ -48,7 +48,7 @@ export const formLabels = {
       "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Arbeidstakeren skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
   },
 } satisfies Record<
-  keyof OppfolgingsplanForm,
+  keyof OppfolgingsplanFormUtfyllt,
   { label: string; description?: string }
 >;
 

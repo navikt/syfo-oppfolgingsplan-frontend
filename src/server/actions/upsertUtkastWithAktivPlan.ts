@@ -5,7 +5,7 @@ import { logger } from "@navikt/next-logger";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
-import { getflatValuesObjectFromFormSnapshot } from "@/utils/FormSnapshot/getflatValuesObjectFromFormSnapshot";
+import { extractValuesFromFormSnapshot } from "@/utils/FormSnapshot/extractValuesFromFormSnapshot";
 import { convertPlanContentToCurrentSchema } from "@/utils/convertPlanContentToCurrentSchema";
 import { fetchAktivPlanForAG } from "../fetchData/arbeidsgiver/fetchAktivPlan";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -59,9 +59,7 @@ export async function upsertUtkastWithAktivPlanServerAction(
   // Convert aktivPlan formSnapshot to content that can be saved as utkast.
   const aktivPlanFormSnapshot = aktivPlanResponse.oppfolgingsplan.content;
 
-  const planContent = getflatValuesObjectFromFormSnapshot(
-    aktivPlanFormSnapshot,
-  );
+  const planContent = extractValuesFromFormSnapshot(aktivPlanFormSnapshot);
   const convertedPlanContent = convertPlanContentToCurrentSchema(planContent);
 
   // Save utkast

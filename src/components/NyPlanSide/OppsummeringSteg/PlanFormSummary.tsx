@@ -1,10 +1,10 @@
 import { Box, FormSummary } from "@navikt/ds-react";
-import { OppfolgingsplanForm } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import { formHeadings, formLabels } from "../form-labels";
 
 interface Props {
-  formValues: OppfolgingsplanForm;
+  formValues: OppfolgingsplanFormUtfyllt;
   onEditPlan: () => void;
   className?: string;
 }
