@@ -94,7 +94,7 @@ async function renderComponent(mockData: ConvertedLagretUtkastResponse) {
   return renderResult!;
 }
 
-describe("LagPlanVeiviser autosave feature", () => {
+describe("LagPlanVeiviser lagre utkast feature", () => {
   let lagreUtkastSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
@@ -287,6 +287,89 @@ describe("LagPlanVeiviser autosave feature", () => {
       expect.objectContaining({
         typiskArbeidshverdag:
           validForm.typiskArbeidshverdag + " - unsaved edit",
+      }),
+    );
+  });
+
+  test("does not save again when clicking 'Avslutt og fortsett senere' if changes were already autosaved", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    await renderComponent(createMockLagretUtkastResponse());
+
+    const typiskArbeidshverdagTextarea = screen.getByLabelText(
+      formLabels.typiskArbeidshverdag.label,
+    );
+
+    // Make a small edit to trigger autosave
+    await user.type(typiskArbeidshverdagTextarea, "Some changes");
+
+    // Wait for autosave to trigger (past debounce delay)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
+    });
+
+    // Verify autosave was triggered
+    expect(lagreUtkastSpy).toHaveBeenCalledTimes(1);
+
+    // Wait for autosave to complete (backend delay)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
+    });
+
+    // Clear the spy to check if it gets called again
+    lagreUtkastSpy.mockClear();
+
+    // Click the "Avslutt og fortsett senere" button
+    const avsluttOgFortsettSenereButton = screen.getByRole("button", {
+      name: /avslutt og fortsett senere/i,
+    });
+    await user.click(avsluttOgFortsettSenereButton);
+
+    // Allow the button click handler and any transitions to run
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
+    });
+
+    // The server action should NOT have been called again since there are no new changes
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+  });
+
+  test("saves immediately when clicking 'Avslutt og fortsett senere' before autosave debounce completes", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    await renderComponent(createMockLagretUtkastResponse());
+
+    const typiskArbeidshverdagTextarea = screen.getByLabelText(
+      formLabels.typiskArbeidshverdag.label,
+    );
+
+    // Make a small edit
+    await user.type(typiskArbeidshverdagTextarea, "Unsaved changes");
+
+    // Advance time, but NOT past the debounce delay (so autosave hasn't triggered yet)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY - 500);
+    });
+
+    // Verify autosave hasn't happened yet
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+
+    // Click the "Avslutt og fortsett senere" button before autosave kicks in
+    const avsluttOgFortsettSenereButton = screen.getByRole("button", {
+      name: /avslutt og fortsett senere/i,
+    });
+    await user.click(avsluttOgFortsettSenereButton);
+
+    // Wait for the save to be triggered
+    await waitFor(() => {
+      expect(lagreUtkastSpy).toHaveBeenCalled();
+    });
+
+    // The server action should have been called with the updated text
+    expect(lagreUtkastSpy).toHaveBeenCalledWith(
+      "12345",
+      expect.objectContaining({
+        typiskArbeidshverdag: "Unsaved changes",
       }),
     );
   });
