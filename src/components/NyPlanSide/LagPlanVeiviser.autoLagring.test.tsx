@@ -96,6 +96,7 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
 
     // Save should NOT have started yet because debounce was reset
     expect(screen.queryByText("Lagrer utkast...")).not.toBeInTheDocument();
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
 
     // Now advance past the debounce delay
     await act(async () => {
@@ -104,6 +105,7 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
 
     // Now the save should be in progress
     expect(screen.getByText("Lagrer utkast...")).toBeInTheDocument();
+    expect(lagreUtkastSpy).toHaveBeenCalledOnce();
 
     // Verify the server action was called with the complete text
     // (including both "First" and " second", not just "First")
