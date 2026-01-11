@@ -1,6 +1,6 @@
 ## Why `@testing-library/jest-dom`?
 
-Modified answer from Cloud Sonnet:
+Modified answer from Claude Sonnet:
 
 `@testing-library/jest-dom` provides **custom matchers** that make assertions more readable and semantic. Without it, you'd have to write more verbose assertions.
 
