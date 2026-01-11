@@ -12,7 +12,7 @@ import {
 } from "./LagPlanVeiviser.testUtils";
 import { formLabels } from "./form-labels";
 
-describe("LagPlanVeiviser lagre utkast feature", () => {
+describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
   let lagreUtkastSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {

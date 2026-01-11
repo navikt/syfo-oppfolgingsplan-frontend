@@ -34,7 +34,7 @@ export function createValidFormContent(): OppfolgingsplanFormUtfyllt {
   };
 }
 
-describe("LagPlanVeiviser lagre utkast feature", () => {
+describe("LagPlanVeiviser button-triggered saving feature", () => {
   let lagreUtkastSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
