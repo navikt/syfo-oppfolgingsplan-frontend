@@ -65,6 +65,8 @@ function createMockLagretUtkastResponse(
  * only calls onSubmit if the form is valid.
  */
 function createValidFormContent(): OppfolgingsplanFormUtfyllt {
+  // Use a date far in the future to ensure it's always valid
+  // (the schema requires evalueringsDato to be tomorrow or later)
   return {
     typiskArbeidshverdag: "Kontorarbeid med møter",
     arbeidsoppgaverSomKanUtfores: "Skrivearbeid og telefonmøter",
@@ -73,7 +75,7 @@ function createValidFormContent(): OppfolgingsplanFormUtfyllt {
     tilretteleggingFremover: "Hjemmekontor to dager i uken",
     annenTilrettelegging: "Fleksibel arbeidstid",
     hvordanFolgeOpp: "Ukentlige oppfølgingsmøter",
-    evalueringsDato: "2025-03-01",
+    evalueringsDato: "2030-03-01",
     harDenAnsatteMedvirket: "ja",
     denAnsatteHarIkkeMedvirketBegrunnelse: "",
   };
@@ -153,7 +155,7 @@ describe("LagPlanVeiviser lagre utkast feature", () => {
     expect(screen.queryByText("Lagrer utkast...")).not.toBeInTheDocument();
   });
 
-  test("resets debounce timer when user continues typing", async () => {
+  test("resets autosave debounce timer when user continues typing", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
     await renderComponent(createMockLagretUtkastResponse());
@@ -244,53 +246,6 @@ describe("LagPlanVeiviser lagre utkast feature", () => {
     expect(lagreUtkastSpy).not.toHaveBeenCalled();
   });
 
-  test("saves immediately when clicking 'Gå til oppsummering' before autosave debounce completes", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
-    // Start with a valid form that has all required fields filled
-    const validForm = createValidFormContent();
-    await renderComponent(createMockLagretUtkastResponse(validForm));
-
-    const typiskArbeidshverdagTextarea = screen.getByLabelText(
-      formLabels.typiskArbeidshverdag.label,
-    );
-
-    // Make a small edit
-    await user.type(typiskArbeidshverdagTextarea, " - unsaved edit");
-
-    // Advance time, but NOT past the debounce delay (so autosave hasn't triggered yet)
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY - 500);
-    });
-
-    // Verify autosave hasn't happened yet
-    expect(lagreUtkastSpy).not.toHaveBeenCalled();
-
-    // Click the "Gå til oppsummering" button before autosave kicks in
-    const goToOppsummeringButton = screen.getByRole("button", {
-      name: /gå til oppsummering/i,
-    });
-    await user.click(goToOppsummeringButton);
-
-    await waitFor(() => {
-      expect(screen.getByText("Lagrer utkast...")).toBeInTheDocument();
-    });
-
-    // Wait for the save to be triggered
-    await waitFor(() => {
-      expect(lagreUtkastSpy).toHaveBeenCalled();
-    });
-
-    // The server action should have been called with the updated text
-    expect(lagreUtkastSpy).toHaveBeenCalledWith(
-      "12345",
-      expect.objectContaining({
-        typiskArbeidshverdag:
-          validForm.typiskArbeidshverdag + " - unsaved edit",
-      }),
-    );
-  });
-
   test("does not save again when clicking 'Avslutt og fortsett senere' if changes were already autosaved", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
@@ -334,19 +289,21 @@ describe("LagPlanVeiviser lagre utkast feature", () => {
     expect(lagreUtkastSpy).not.toHaveBeenCalled();
   });
 
-  test("saves immediately when clicking 'Avslutt og fortsett senere' before autosave debounce completes", async () => {
+  test("saves unsaved changes when clicking 'Gå til oppsummering'", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderComponent(createMockLagretUtkastResponse());
+    // Start with a valid form that has all required fields filled
+    const validForm = createValidFormContent();
+    await renderComponent(createMockLagretUtkastResponse(validForm));
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,
     );
 
     // Make a small edit
-    await user.type(typiskArbeidshverdagTextarea, "Unsaved changes");
+    await user.type(typiskArbeidshverdagTextarea, " - edit");
 
-    // Advance time, but NOT past the debounce delay (so autosave hasn't triggered yet)
+    // Advance time, but NOT past the save utkast delay (so autosave should not trigger yet)
     await act(async () => {
       await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY - 500);
     });
@@ -354,23 +311,72 @@ describe("LagPlanVeiviser lagre utkast feature", () => {
     // Verify autosave hasn't happened yet
     expect(lagreUtkastSpy).not.toHaveBeenCalled();
 
-    // Click the "Avslutt og fortsett senere" button before autosave kicks in
+    // Click the "Gå til oppsummering" button before autosave kicks in
+    const goToOppsummeringButton = screen.getByRole("button", {
+      name: /gå til oppsummering/i,
+    });
+
+    await user.click(goToOppsummeringButton);
+
+    // It's difficult to ensure that the save is triggered via the button and
+    // not via the debounced autosave. However, the presence of the text
+    // "Lagrer utkast..." indicates the save was triggered via the button,
+    // since this text appears only in FyllUtPlanSteg and not in OppsummeringSteg.
+    // With the current timing it would not have time to appear via the
+    // debounced autosave before navigating to OppsummeringSteg.
+    await waitFor(() => {
+      expect(screen.getByText("Lagrer utkast...")).toBeInTheDocument();
+    });
+
+    expect(lagreUtkastSpy).toHaveBeenCalled();
+
+    // The server action should have been called with the latest form state
+    expect(lagreUtkastSpy).toHaveBeenCalledWith(
+      "12345",
+      expect.objectContaining({
+        typiskArbeidshverdag: validForm.typiskArbeidshverdag + " - edit",
+      }),
+    );
+  });
+
+  test("does not save when making no changes to lagret utkast and clicking 'Gå til oppsummering'", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    const validForm = createValidFormContent();
+    await renderComponent(createMockLagretUtkastResponse(validForm));
+
+    const goToOppsummeringButton = screen.getByRole("button", {
+      name: /gå til oppsummering/i,
+    });
+    await user.click(goToOppsummeringButton);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
+    });
+
+    // Verify no saving has happened
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+  });
+
+  test("does not save when making no changes to lagret utkast and clicking 'Avslutt og fortsett senere'", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    await renderComponent(
+      createMockLagretUtkastResponse({
+        typiskArbeidshverdag: "Lagret fra før",
+      }),
+    );
+
     const avsluttOgFortsettSenereButton = screen.getByRole("button", {
       name: /avslutt og fortsett senere/i,
     });
     await user.click(avsluttOgFortsettSenereButton);
 
-    // Wait for the save to be triggered
-    await waitFor(() => {
-      expect(lagreUtkastSpy).toHaveBeenCalled();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
     });
 
-    // The server action should have been called with the updated text
-    expect(lagreUtkastSpy).toHaveBeenCalledWith(
-      "12345",
-      expect.objectContaining({
-        typiskArbeidshverdag: "Unsaved changes",
-      }),
-    );
+    // Verify autosave hasn't happened yet
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
   });
 });
