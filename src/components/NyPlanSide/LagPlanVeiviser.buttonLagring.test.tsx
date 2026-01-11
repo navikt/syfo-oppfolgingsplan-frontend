@@ -5,19 +5,42 @@ import {
   DEMO_SIMULATED_BACKEND_DELAY_MS,
   SAVE_UTKAST_DEBOUNCE_DELAY,
 } from "@/common/app-config";
+import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import {
   createMockLagretUtkastResponse,
-  createValidFormContent,
   renderComponent,
 } from "./LagPlanVeiviser.testUtils";
 import { formLabels } from "./form-labels";
+
+// These date values are important for testing "Gå til oppsummering" behavior, since the
+// form must be valid to proceed to the next step.
+export const mockCurrentTime = new Date("2026-01-14T12:00:00Z");
+// Must be between one day and one year after mockCurrentTime for form to be valid.
+const mockEvalueringsDatoFormValue = "2026-03-15";
+
+export function createValidFormContent(): OppfolgingsplanFormUtfyllt {
+  return {
+    typiskArbeidshverdag: "Kontorarbeid med møter",
+    arbeidsoppgaverSomKanUtfores: "Skrivearbeid og telefonmøter",
+    arbeidsoppgaverSomIkkeKanUtfores: "Tunge løft",
+    tidligereTilrettelegging: "Ergonomisk utstyr",
+    tilretteleggingFremover: "Hjemmekontor to dager i uken",
+    annenTilrettelegging: "Fleksibel arbeidstid",
+    hvordanFolgeOpp: "Ukentlige oppfølgingsmøter",
+    evalueringsDato: mockEvalueringsDatoFormValue,
+    harDenAnsatteMedvirket: "ja",
+    denAnsatteHarIkkeMedvirketBegrunnelse: "",
+  };
+}
 
 describe("LagPlanVeiviser lagre utkast feature", () => {
   let lagreUtkastSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.setSystemTime(mockCurrentTime);
+
     // Spy on the lagreUtkastServerAction to verify it gets called
     lagreUtkastSpy = vi.spyOn(lagreUtkastModule, "lagreUtkastServerAction");
   });

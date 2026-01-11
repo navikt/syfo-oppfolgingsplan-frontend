@@ -1,9 +1,6 @@
 import { act, render } from "@testing-library/react";
 import { vi } from "vitest";
-import {
-  OppfolgingsplanFormUnderArbeid,
-  OppfolgingsplanFormUtfyllt,
-} from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import LagPlanVeiviser from "./LagPlanVeiviser";
 
@@ -16,7 +13,7 @@ export function setupMocks() {
     }),
   }));
 
-  // Mock the taxonomy event logging
+  // Mock the analytics event logging
   vi.mock("@/common/logTaxonomyEvent", () => ({
     logTaxonomyEvent: vi.fn(),
   }));
@@ -26,9 +23,6 @@ export function setupMocks() {
     scrollToAppTopForAG: vi.fn(),
     scrollToAppTopForSM: vi.fn(),
   }));
-
-  // set date to a fixed point in time: 2026-01-10
-  vi.setSystemTime(new Date("2026-01-10T12:00:00Z"));
 }
 
 export function createMockLagretUtkastResponse(
@@ -52,21 +46,6 @@ export function createMockLagretUtkastResponse(
       fnr: "12345678901",
       name: "Test Ansatt",
     },
-  };
-}
-
-export function createValidFormContent(): OppfolgingsplanFormUtfyllt {
-  return {
-    typiskArbeidshverdag: "Kontorarbeid med møter",
-    arbeidsoppgaverSomKanUtfores: "Skrivearbeid og telefonmøter",
-    arbeidsoppgaverSomIkkeKanUtfores: "Tunge løft",
-    tidligereTilrettelegging: "Ergonomisk utstyr",
-    tilretteleggingFremover: "Hjemmekontor to dager i uken",
-    annenTilrettelegging: "Fleksibel arbeidstid",
-    hvordanFolgeOpp: "Ukentlige oppfølgingsmøter",
-    evalueringsDato: "2026-03-15",
-    harDenAnsatteMedvirket: "ja",
-    denAnsatteHarIkkeMedvirketBegrunnelse: "",
   };
 }
 

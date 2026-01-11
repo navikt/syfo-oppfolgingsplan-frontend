@@ -114,4 +114,32 @@ describe("LagPlanVeiviser lagre utkast feature", () => {
       }),
     );
   });
+
+  test("does not save when users makes an edit and then reverts it before debounce delay", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    await renderComponent(createMockLagretUtkastResponse());
+
+    const typiskArbeidshverdagTextarea = screen.getByLabelText(
+      formLabels.typiskArbeidshverdag.label,
+    );
+
+    // Make an edit
+    await user.type(typiskArbeidshverdagTextarea, "Some changes");
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY - 500);
+    });
+
+    // Revert the edit
+    await user.clear(typiskArbeidshverdagTextarea);
+
+    // Advance past debounce delay
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
+    });
+
+    // Verify no saving has happened
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+  });
 });
