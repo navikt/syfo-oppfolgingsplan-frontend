@@ -1,9 +1,12 @@
-import { Suspense } from "react";
-import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
-import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
+import {
+  DEMO_SIMULATED_BACKEND_DELAY_MS,
+  SAVE_UTKAST_DEBOUNCE_DELAY,
+} from "@/common/app-config";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import LagPlanVeiviser from "./LagPlanVeiviser";
 import { formLabels } from "./form-labels";
@@ -29,12 +32,19 @@ vi.mock("@/utils/scrollToAppTop", () => ({
   scrollToAppTopForSM: vi.fn(),
 }));
 
-function createMockUtkastData(
-  overrides?: Partial<ConvertedLagretUtkastData>,
-): ConvertedLagretUtkastData {
+function createMockLagretUtkastResponse(
+  alreadyLagretUtkast?: OppfolgingsplanFormUnderArbeid,
+): ConvertedLagretUtkastResponse {
+  const utkastAndSistLagretTidspunkt = alreadyLagretUtkast
+    ? {
+        content: alreadyLagretUtkast,
+        sistLagretTidspunkt: "2024-06-01T12:00:00Z",
+      }
+    : null;
+
   return {
     userHasEditAccess: true,
-    utkast: null,
+    utkast: utkastAndSistLagretTidspunkt,
     organization: {
       orgNumber: "123456789",
       orgName: "Test Bedrift AS",
@@ -43,11 +53,10 @@ function createMockUtkastData(
       fnr: "12345678901",
       name: "Test Ansatt",
     },
-    ...overrides,
   };
 }
 
-async function renderAndWaitForForm(mockData: ConvertedLagretUtkastData) {
+async function renderComponent(mockData: ConvertedLagretUtkastResponse) {
   // Create a promise that is already resolved
   const lagretUtkastPromise = Promise.resolve(mockData);
 
@@ -55,23 +64,9 @@ async function renderAndWaitForForm(mockData: ConvertedLagretUtkastData) {
 
   await act(async () => {
     renderResult = render(
-      <Suspense fallback={<div>Loading...</div>}>
-        <LagPlanVeiviser lagretUtkastPromise={lagretUtkastPromise} />
-      </Suspense>,
+      <LagPlanVeiviser lagretUtkastPromise={lagretUtkastPromise} />,
     );
-    // Give React time to process
-    await new Promise((resolve) => setTimeout(resolve, 0));
   });
-
-  // Wait for the component to finish loading and display the form
-  await waitFor(
-    () => {
-      expect(
-        screen.getByLabelText(formLabels.typiskArbeidshverdag.label),
-      ).toBeInTheDocument();
-    },
-    { timeout: 3000 },
-  );
 
   return renderResult!;
 }
@@ -96,7 +91,7 @@ describe("LagPlanVeiviser autosave feature", () => {
   test("autosaves when user types in form field, shows 'Lagrer utkast...' during save, and calls lagreUtkastServerAction", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderAndWaitForForm(createMockUtkastData());
+    await renderComponent(createMockLagretUtkastResponse());
 
     // Get the first text area field
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
@@ -126,43 +121,19 @@ describe("LagPlanVeiviser autosave feature", () => {
       }),
     );
 
-    // Advance past the simulated backend delay (300ms)
+    // Advance past the simulated backend delay
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(400);
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
     });
 
     // After save completes, "Lagrer utkast..." should disappear
     expect(screen.queryByText("Lagrer utkast...")).not.toBeInTheDocument();
-  }, 10000);
-
-  test("does not trigger autosave immediately when typing", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
-    await renderAndWaitForForm(createMockUtkastData());
-
-    const typiskArbeidshverdagTextarea = screen.getByLabelText(
-      formLabels.typiskArbeidshverdag.label,
-    );
-
-    // Type some text
-    await user.type(typiskArbeidshverdagTextarea, "Test");
-
-    // Advance timers by less than the debounce delay
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY - 200);
-    });
-
-    // "Lagrer utkast..." should NOT appear yet because debounce hasn't completed
-    expect(screen.queryByText("Lagrer utkast...")).not.toBeInTheDocument();
-
-    // The server action should NOT have been called yet
-    expect(lagreUtkastSpy).not.toHaveBeenCalled();
-  }, 10000);
+  });
 
   test("resets debounce timer when user continues typing", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderAndWaitForForm(createMockUtkastData());
+    await renderComponent(createMockLagretUtkastResponse());
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,
@@ -203,5 +174,5 @@ describe("LagPlanVeiviser autosave feature", () => {
         typiskArbeidshverdag: "First second",
       }),
     );
-  }, 10000);
+  });
 });

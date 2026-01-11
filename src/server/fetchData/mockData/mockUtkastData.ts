@@ -1,5 +1,5 @@
 import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
-import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
+import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 
@@ -8,7 +8,7 @@ const mockLagretUtkast: OppfolgingsplanFormUnderArbeid = {
     "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast.",
 };
 
-export const mockUtkastResponse: ConvertedLagretUtkastData = {
+export const mockUtkastResponse: ConvertedLagretUtkastResponse = {
   ...mockCommonAGResponseFields,
   utkast: {
     sistLagretTidspunkt: now().subtract(30, "minute").toISOString(),
@@ -30,7 +30,7 @@ const mockUtfyltLagretUtkast: OppfolgingsplanFormUnderArbeid = {
   denAnsatteHarIkkeMedvirketBegrunnelse: "",
 };
 
-export const mockUtfyltLagretUtkastResponse: ConvertedLagretUtkastData = {
+export const mockUtfyltLagretUtkastResponse: ConvertedLagretUtkastResponse = {
   ...mockCommonAGResponseFields,
   utkast: {
     sistLagretTidspunkt: now().subtract(30, "minute").toISOString(),

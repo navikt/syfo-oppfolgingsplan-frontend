@@ -11,7 +11,7 @@ export default async function NyPlanPage({
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
 
-  const lagretUtkast = fetchUtkastDataForAG(narmesteLederId);
+  const convertedLagretUtkast = fetchUtkastDataForAG(narmesteLederId);
 
   return (
     <section>
@@ -25,7 +25,7 @@ export default async function NyPlanPage({
       </Heading>
 
       <Suspense fallback={<BigLoadingSpinner />}>
-        <LagPlanVeiviser lagretUtkastPromise={lagretUtkast} />
+        <LagPlanVeiviser lagretUtkastPromise={convertedLagretUtkast} />
       </Suspense>
     </section>
   );
