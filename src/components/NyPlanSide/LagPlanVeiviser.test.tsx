@@ -1,11 +1,14 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   DEMO_SIMULATED_BACKEND_DELAY_MS,
   SAVE_UTKAST_DEBOUNCE_DELAY,
 } from "@/common/app-config";
-import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import {
+  OppfolgingsplanFormUnderArbeid,
+  OppfolgingsplanFormUtfyllt,
+} from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import LagPlanVeiviser from "./LagPlanVeiviser";
@@ -53,6 +56,26 @@ function createMockLagretUtkastResponse(
       fnr: "12345678901",
       name: "Test Ansatt",
     },
+  };
+}
+
+/**
+ * Creates a complete valid form with all required fields filled.
+ * This is needed for testing form submission, since handleSubmit
+ * only calls onSubmit if the form is valid.
+ */
+function createValidFormContent(): OppfolgingsplanFormUtfyllt {
+  return {
+    typiskArbeidshverdag: "Kontorarbeid med møter",
+    arbeidsoppgaverSomKanUtfores: "Skrivearbeid og telefonmøter",
+    arbeidsoppgaverSomIkkeKanUtfores: "Tunge løft",
+    tidligereTilrettelegging: "Ergonomisk utstyr",
+    tilretteleggingFremover: "Hjemmekontor to dager i uken",
+    annenTilrettelegging: "Fleksibel arbeidstid",
+    hvordanFolgeOpp: "Ukentlige oppfølgingsmøter",
+    evalueringsDato: "2025-03-01",
+    harDenAnsatteMedvirket: "ja",
+    denAnsatteHarIkkeMedvirketBegrunnelse: "",
   };
 }
 
@@ -172,6 +195,98 @@ describe("LagPlanVeiviser autosave feature", () => {
       "12345",
       expect.objectContaining({
         typiskArbeidshverdag: "First second",
+      }),
+    );
+  });
+
+  test("does not save again when clicking 'Gå til oppsummering' if changes were already autosaved", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    // Start with a valid form that has all required fields filled
+    const validForm = createValidFormContent();
+    await renderComponent(createMockLagretUtkastResponse(validForm));
+
+    const typiskArbeidshverdagTextarea = screen.getByLabelText(
+      formLabels.typiskArbeidshverdag.label,
+    );
+
+    // Make a small edit to trigger autosave
+    await user.type(typiskArbeidshverdagTextarea, " - updated");
+
+    // Wait for autosave to trigger (past debounce delay)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
+    });
+
+    // Verify autosave was triggered
+    expect(lagreUtkastSpy).toHaveBeenCalledTimes(1);
+
+    // Wait for autosave to complete (backend delay)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
+    });
+
+    // Clear the spy to check if it gets called again
+    lagreUtkastSpy.mockClear();
+
+    // Click the "Gå til oppsummering" button
+    const goToOppsummeringButton = screen.getByRole("button", {
+      name: /gå til oppsummering/i,
+    });
+    await user.click(goToOppsummeringButton);
+
+    // Allow the button click handler and any transitions to run
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(DEMO_SIMULATED_BACKEND_DELAY_MS + 100);
+    });
+
+    // The server action should NOT have been called again since there are no new changes
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+  });
+
+  test("saves immediately when clicking 'Gå til oppsummering' before autosave debounce completes", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    // Start with a valid form that has all required fields filled
+    const validForm = createValidFormContent();
+    await renderComponent(createMockLagretUtkastResponse(validForm));
+
+    const typiskArbeidshverdagTextarea = screen.getByLabelText(
+      formLabels.typiskArbeidshverdag.label,
+    );
+
+    // Make a small edit
+    await user.type(typiskArbeidshverdagTextarea, " - unsaved edit");
+
+    // Advance time, but NOT past the debounce delay (so autosave hasn't triggered yet)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY - 500);
+    });
+
+    // Verify autosave hasn't happened yet
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+
+    // Click the "Gå til oppsummering" button before autosave kicks in
+    const goToOppsummeringButton = screen.getByRole("button", {
+      name: /gå til oppsummering/i,
+    });
+    await user.click(goToOppsummeringButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Lagrer utkast...")).toBeInTheDocument();
+    });
+
+    // Wait for the save to be triggered
+    await waitFor(() => {
+      expect(lagreUtkastSpy).toHaveBeenCalled();
+    });
+
+    // The server action should have been called with the updated text
+    expect(lagreUtkastSpy).toHaveBeenCalledWith(
+      "12345",
+      expect.objectContaining({
+        typiskArbeidshverdag:
+          validForm.typiskArbeidshverdag + " - unsaved edit",
       }),
     );
   });
