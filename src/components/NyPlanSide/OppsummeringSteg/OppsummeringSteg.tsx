@@ -1,6 +1,6 @@
 import z from "zod";
 import { BodyLong, Heading } from "@navikt/ds-react";
-import { OppfolgingsplanFormFerdigstillSchema } from "@/schema/oppfolgingsplanFormSchemas";
+import { oppfolgingsplanFormUtfylltSchema } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { oppfolgingsplanFormDefaultValues } from "../FyllUtPlanSteg/form/form-options";
@@ -41,9 +41,7 @@ const OppsummeringSteg = withForm({
             <PlanFormSummary
               // When the user is here, the form values are valid
               formValues={
-                formValues as z.infer<
-                  typeof OppfolgingsplanFormFerdigstillSchema
-                >
+                formValues as z.infer<typeof oppfolgingsplanFormUtfylltSchema>
               }
               onEditPlan={onGoBack}
               className="mb-8"

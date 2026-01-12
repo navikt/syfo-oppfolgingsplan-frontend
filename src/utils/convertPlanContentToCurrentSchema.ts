@@ -1,25 +1,28 @@
 import {
-  OppfolgingsplanFormAndUtkastSchema,
   OppfolgingsplanFormUnderArbeid,
-} from "@/schema/oppfolgingsplanFormSchemas";
+  oppfolgingsplanFormUnderArbeidSchema,
+} from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
 /**
- * Converts planContent to current OppfolgingsplanFormAndUtkastSchema.
- * `planContent` can be a stored utkast or come from a ferdigstilt plan. This
- * accounts for changes to the form schema since the content was saved. If a
- * field exists in the content but not in the current schema, it will be ignored.
- * If a field that exists in the current schema is missing or has invalid value
- * in the stored content, it will be omitted from the returned object.
+ * Converts planContent to match current oppfolgingsplanFormUnderArbeidSchema.
+ * `planContent` can be a stored utkast or be extracted from a ferdigstilt plan.
+ * The conversion accounts for changes to the form schema in the time since the
+ * content was saved. If a field exists in the content but not in the current
+ * schema, it will be ignored. If a field that exists in the current schema is
+ * missing or has invalid value in the stored content, it will be omitted from
+ * the result.
  */
 export function convertPlanContentToCurrentSchema(
   planContent: Record<string, string | boolean | null>,
 ): OppfolgingsplanFormUnderArbeid {
-  const currentFormSchemaShape = OppfolgingsplanFormAndUtkastSchema.shape;
+  const currentOppfolgingsplanSchemaShape =
+    // The shape contains the internal Zod schemas for each field.
+    oppfolgingsplanFormUnderArbeidSchema.shape;
 
   // Iterate over current form schema fields and pick corresponding values
-  // from lagretUtkast. Validate each lagretUtkast value against current schema
+  // from planContent. Validate each planContent value against current schema
   // for that field.
-  const result = Object.entries(currentFormSchemaShape).reduce(
+  const result = Object.entries(currentOppfolgingsplanSchemaShape).reduce(
     (acc, [fieldId, fieldSchema]) => {
       const lagretFieldValue = planContent[fieldId];
       const { success, data: parsedFieldValue } =
@@ -31,7 +34,7 @@ export function convertPlanContentToCurrentSchema(
           [fieldId]: parsedFieldValue,
         };
       } else {
-        // Field is missing or has invalid value in lagretUtkast.
+        // Field is missing or has invalid value in planContent. Omit it.
         return acc;
       }
     },

@@ -1,6 +1,6 @@
 import { startTransition, useActionState } from "react";
 import { useParams } from "next/navigation";
-import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { lagreUtkastServerAction } from "@/server/actions/lagreUtkast";
 import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 

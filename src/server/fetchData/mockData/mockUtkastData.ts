@@ -1,4 +1,4 @@
-import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFormSchemas";
+import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";

@@ -5,9 +5,9 @@ import { logger } from "@navikt/next-logger";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  OppfolgingsplanFormAndUtkastSchema,
   OppfolgingsplanFormUnderArbeid,
-} from "@/schema/oppfolgingsplanFormSchemas";
+  oppfolgingsplanFormUnderArbeidSchema,
+} from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -45,7 +45,7 @@ export async function lagreUtkastServerAction(
     success: isFormValuesValid,
     data: validatedFormValues,
     error: inputValidationError,
-  } = OppfolgingsplanFormAndUtkastSchema.safeParse(formValues);
+  } = oppfolgingsplanFormUnderArbeidSchema.safeParse(formValues);
 
   if (!(isNarmesteLederIdValid && isFormValuesValid)) {
     if (!isNarmesteLederIdValid) {
