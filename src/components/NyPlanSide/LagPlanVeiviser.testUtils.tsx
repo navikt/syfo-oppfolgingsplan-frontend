@@ -49,7 +49,9 @@ export function createMockLagretUtkastResponse(
   };
 }
 
-export async function renderComponent(mockData: ConvertedLagretUtkastResponse) {
+export async function renderLagPlanVeiviserComponent(
+  mockData: ConvertedLagretUtkastResponse,
+) {
   const lagretUtkastPromise = Promise.resolve(mockData);
 
   let renderResult: ReturnType<typeof render>;

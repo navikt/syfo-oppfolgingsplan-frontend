@@ -8,7 +8,7 @@ import {
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import {
   createMockLagretUtkastResponse,
-  renderComponent,
+  renderLagPlanVeiviserComponent,
 } from "./LagPlanVeiviser.testUtils";
 import { formLabels } from "./form-labels";
 
@@ -30,7 +30,7 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
   test("autosaves when user types in form field, shows 'Lagrer utkast...' during save, and calls lagreUtkastServerAction", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderComponent(createMockLagretUtkastResponse());
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
     // Get the first text area field
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
@@ -72,7 +72,7 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
   test("resets autosave debounce timer when user continues typing", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderComponent(createMockLagretUtkastResponse());
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,
@@ -120,7 +120,7 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
   test("does not save when users makes an edit and then reverts it before debounce delay", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderComponent(createMockLagretUtkastResponse());
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,

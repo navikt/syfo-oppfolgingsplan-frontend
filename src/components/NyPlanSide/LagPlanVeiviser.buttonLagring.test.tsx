@@ -9,7 +9,7 @@ import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formVal
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import {
   createMockLagretUtkastResponse,
-  renderComponent,
+  renderLagPlanVeiviserComponent,
 } from "./LagPlanVeiviser.testUtils";
 import { formLabels } from "./form-labels";
 
@@ -56,7 +56,9 @@ describe("LagPlanVeiviser button-triggered saving feature", () => {
 
     // Start with a valid form that has all required fields filled
     const validForm = createValidFormContent();
-    await renderComponent(createMockLagretUtkastResponse(validForm));
+    await renderLagPlanVeiviserComponent(
+      createMockLagretUtkastResponse(validForm),
+    );
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,
@@ -98,7 +100,7 @@ describe("LagPlanVeiviser button-triggered saving feature", () => {
   test("does not save again when clicking 'Avslutt og fortsett senere' if changes were already autosaved", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderComponent(createMockLagretUtkastResponse());
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,
@@ -143,7 +145,9 @@ describe("LagPlanVeiviser button-triggered saving feature", () => {
 
     // Start with a valid form that has all required fields filled
     const validForm = createValidFormContent();
-    await renderComponent(createMockLagretUtkastResponse(validForm));
+    await renderLagPlanVeiviserComponent(
+      createMockLagretUtkastResponse(validForm),
+    );
 
     const typiskArbeidshverdagTextarea = screen.getByLabelText(
       formLabels.typiskArbeidshverdag.label,
@@ -183,7 +187,9 @@ describe("LagPlanVeiviser button-triggered saving feature", () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
     const validForm = createValidFormContent();
-    await renderComponent(createMockLagretUtkastResponse(validForm));
+    await renderLagPlanVeiviserComponent(
+      createMockLagretUtkastResponse(validForm),
+    );
 
     const goToOppsummeringButton = screen.getByRole("button", {
       name: /gå til oppsummering/i,
@@ -201,7 +207,7 @@ describe("LagPlanVeiviser button-triggered saving feature", () => {
   test("does not save when making no changes to lagret utkast and clicking 'Avslutt og fortsett senere'", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-    await renderComponent(
+    await renderLagPlanVeiviserComponent(
       createMockLagretUtkastResponse({
         typiskArbeidshverdag: "Lagret fra før",
       }),
