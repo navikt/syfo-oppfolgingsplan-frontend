@@ -1,3 +1,4 @@
+import { logger } from "@navikt/next-logger";
 import { getEndpointOversiktForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
@@ -19,10 +20,18 @@ export async function fetchOppfolgingsplanOversiktForAG(
     return mockOversiktDataMedPlanerForAG;
   }
 
-  return await tokenXFetchGet({
-    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: getEndpointOversiktForAG(narmesteLederId),
-    responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,
-    redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
-  });
+  try {
+    return await tokenXFetchGet({
+      targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
+      endpoint: getEndpointOversiktForAG(narmesteLederId),
+      responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,
+      redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
+    });
+  } catch (error) {
+    logger.error(
+      error,
+      "Error fetching oppfølgingsplan oversikt for arbeidsgiver",
+    );
+    throw error;
+  }
 }

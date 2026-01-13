@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { BodyLong, Heading } from "@navikt/ds-react";
+import { logger } from "@navikt/next-logger";
 import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
@@ -11,6 +12,14 @@ export default async function OversiktPageForAG({
   params,
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
+
+  // test structured logging
+  logger.info({
+    narmesteLederId,
+    foo: true,
+    bar: 1,
+    msg: "Viser oversikt side for AG",
+  });
 
   return (
     <>
