@@ -7,6 +7,7 @@ import "@/app/globals.css";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
+import { Instrumentation } from "../../instrumentation/Instrumentation";
 
 export const metadata: Metadata = {
   title: "Oppfølgingsplan",
@@ -37,15 +38,17 @@ export default async function RootLayoutForAG({
       <body>
         <Decorator.Header />
 
-        <ArbeidsgiverPageContainer
-          narmesteLederId={narmesteLederId}
-          employeeFnr={employee.fnr}
-          employeeName={employeeName}
-        >
-          <Theme>
-            <main className="max-w-[730px]">{children}</main>
-          </Theme>
-        </ArbeidsgiverPageContainer>
+        <Instrumentation>
+          <ArbeidsgiverPageContainer
+            narmesteLederId={narmesteLederId}
+            employeeFnr={employee.fnr}
+            employeeName={employeeName}
+          >
+            <Theme>
+              <main className="max-w-[730px]">{children}</main>
+            </Theme>
+          </ArbeidsgiverPageContainer>
+        </Instrumentation>
 
         <Decorator.Footer />
 
