@@ -2,15 +2,17 @@
 
 ## Run locally during development
 
-Run the development server with
+Se [eSyfo-Wiki - Next bygg og kjør](https://github.com/navikt/esyfo-dev-tools/wiki/nextjs-build-run) for oppsett som må gjøres først.
+
+Installer avhengigheter med `npm install`. Kjør så utvikler-server med
 
 ```bash
 npm run dev
 ```
 
-Then go to
-- [http://localhost:3000/syk/oppfolgingsplan/123](http://localhost:3000/syk/oppfolgingsplan/123) to see start page for arbeidsgiver.
-- [http://localhost:3000/syk/oppfolgingsplan/sykmeldt](http://localhost:3000/syk/oppfolgingsplan/sykmeldt) to see start page for sykmeldt/personbruker.
+Når den kjører kan du gå til en av "start-sidene":
+- [http://localhost:3000/syk/oppfolgingsplan/123](http://localhost:3000/syk/oppfolgingsplan/123) for arbeidsgiver
+- [http://localhost:3000/syk/oppfolgingsplan/sykmeldt](http://localhost:3000/syk/oppfolgingsplan/sykmeldt) for sykmeldt/personbruker
 
 ## Checks you can run before pushing
 
@@ -24,7 +26,7 @@ These are also run in CI pipeline by Github Actions, and will stop the build and
 
 The project uses Vitest for unit and component testing.
 
-Run ```npm run test``` to run Vitest, which will find and run all unit test files in the project. You can have it running in the terminal while editing code, and the affected tests will automatically rerun when saving files.
+Run `npm run test` to run Vitest, which will find and run all unit test files in the project. You can have it running in the terminal while editing code, and the affected tests will automatically rerun when saving files.
 
 For VS Code the [Vitest extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) is nice.
 
