@@ -6,8 +6,12 @@ export async function AnsattIkkeSykmeldtAlert({
 }: {
   narmesteLederId: string;
 }) {
-  const { userHasEditAccess } =
+  const oversiktResult =
     await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+
+  if (oversiktResult.error) return null;
+
+  const { userHasEditAccess } = oversiktResult.data;
 
   return (
     !userHasEditAccess && (
