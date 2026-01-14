@@ -2,15 +2,9 @@
 
 ## Run locally during development
 
-Se [eSyfo-Wiki - Next bygg og kjør](https://github.com/navikt/esyfo-dev-tools/wiki/nextjs-build-run) for oppsett som må gjøres først.
+Se [eSyfo-Wiki - Next bygg og kjør](https://github.com/navikt/esyfo-dev-tools/wiki/nextjs-build-run).
 
-Installer avhengigheter med `npm install`. Kjør så utvikler-server med
-
-```bash
-npm run dev
-```
-
-Når den kjører kan du gå til en av "start-sidene":
+Når dev-server kjører kan du gå til en av "start-sidene":
 - [http://localhost:3000/syk/oppfolgingsplan/123](http://localhost:3000/syk/oppfolgingsplan/123) for arbeidsgiver
 - [http://localhost:3000/syk/oppfolgingsplan/sykmeldt](http://localhost:3000/syk/oppfolgingsplan/sykmeldt) for sykmeldt/personbruker
 
