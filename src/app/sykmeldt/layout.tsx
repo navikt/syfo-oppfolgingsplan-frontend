@@ -4,11 +4,11 @@ import Script from "next/script";
 import { Theme } from "@navikt/ds-react";
 import "@navikt/flexjar-widget/styles.css";
 import "@/app/globals.css";
+import { Instrumentation } from "@/instrumentation/Instrumentation";
 import { MainContent } from "@/ui/layout/MainContent";
 import { fetchDecoratorForSM } from "@/ui/layout/fetchDecoratorHelpers";
 import { BreadcrumbsUpdaterForSM } from "./_components/BreadcrumbsUpdaterForSM";
 import Preload from "./preload";
-import { Providers } from "./providers";
 
 export const dynamic = "force-dynamic";
 
@@ -33,12 +33,12 @@ export default async function RootLayoutForSM({
       <body>
         <Decorator.Header />
 
-        <Theme>
-          <Providers>
+        <Instrumentation>
+          <Theme>
             <BreadcrumbsUpdaterForSM />
             <MainContent>{children}</MainContent>
-          </Providers>
-        </Theme>
+          </Theme>
+        </Instrumentation>
 
         <Decorator.Footer />
 
