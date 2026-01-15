@@ -3,6 +3,8 @@ import {
   oppfolgingsplanFormUnderArbeidSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
+export type PlanContent = Record<string, string | boolean | null>;
+
 /**
  * Converts planContent to match current oppfolgingsplanFormUnderArbeidSchema.
  * `planContent` can be a stored utkast or be extracted from a ferdigstilt plan.
@@ -13,7 +15,7 @@ import {
  * the result.
  */
 export function convertPlanContentToCurrentSchema(
-  planContent: Record<string, string | boolean | null>,
+  planContent: PlanContent,
 ): OppfolgingsplanFormUnderArbeid {
   const currentOppfolgingsplanSchemaShape =
     // The shape contains the internal Zod schemas for each field.

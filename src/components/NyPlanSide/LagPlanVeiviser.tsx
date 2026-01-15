@@ -6,7 +6,7 @@ import {
   fyllUtPlanSkjemaStegFullfortEvent,
 } from "@/common/analytics/events-and-properties/skjema-events";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
-import { ConvertedLagretUtkastData } from "@/schema/utkastResponseSchema";
+import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";
@@ -17,7 +17,7 @@ export enum VeiviserSteg {
 }
 
 interface Props {
-  lagretUtkastPromise: Promise<ConvertedLagretUtkastData>;
+  lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
 }
 
 export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {

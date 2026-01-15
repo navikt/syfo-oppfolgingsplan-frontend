@@ -3,23 +3,24 @@ import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { OppfolgingsplanFormUnderArbeid } from "./oppfolgingsplanForm/formValidationSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
-const utkastResponseContentSchema = z.record(
+// Raw as in not yet converted to current OppfolgingsplanFormUnderArbeid schema
+const rawUtkastResponseContentSchema = z.record(
   z.string(),
   z.union([z.string(), z.null()]),
 );
 
-export const utkastResponseForAGSchema = z.object({
+export const rawUtkastResponseForAGSchema = z.object({
   ...commonResponseFieldsSchema.shape,
   utkast: z
     .object({
       ...utkastMetadataSchema.shape,
-      content: utkastResponseContentSchema,
+      content: rawUtkastResponseContentSchema,
     })
     .nullable(),
 });
 
-export type ConvertedLagretUtkastData = z.infer<
-  typeof utkastResponseForAGSchema
+export type ConvertedLagretUtkastResponse = z.infer<
+  typeof rawUtkastResponseForAGSchema
 > & {
   utkast: {
     sistLagretTidspunkt: string;

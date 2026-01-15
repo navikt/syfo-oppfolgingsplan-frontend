@@ -1,23 +1,22 @@
 import { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
 
+export type FormSnapshotFlatValuesMap = Record<string, string | boolean | null>;
+
 export function extractValuesFromFormSnapshot(
   formSnapshot: FormSnapshot,
-): Record<string, string | boolean | null> {
+): FormSnapshotFlatValuesMap {
   const snapshotFields = formSnapshot.sections.flatMap(
     (section) => section.fields,
   );
 
-  const fieldIdsToValues = snapshotFields.reduce(
-    (acc, field) => {
-      const { fieldId } = field;
+  const fieldIdsToValues = snapshotFields.reduce((acc, field) => {
+    const { fieldId } = field;
 
-      return {
-        ...acc,
-        [fieldId]: getValueBasedOnFieldType(field),
-      };
-    },
-    {} as Record<string, string | boolean | null>,
-  );
+    return {
+      ...acc,
+      [fieldId]: getValueBasedOnFieldType(field),
+    };
+  }, {} as FormSnapshotFlatValuesMap);
 
   return fieldIdsToValues;
 }

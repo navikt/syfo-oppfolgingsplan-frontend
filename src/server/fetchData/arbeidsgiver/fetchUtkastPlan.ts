@@ -1,8 +1,8 @@
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  ConvertedLagretUtkastData,
-  utkastResponseForAGSchema,
+  ConvertedLagretUtkastResponse,
+  rawUtkastResponseForAGSchema,
 } from "@/schema/utkastResponseSchema";
 import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
@@ -13,7 +13,7 @@ import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 export async function fetchUtkastDataForAG(
   narmesteLederId: string,
-): Promise<ConvertedLagretUtkastData> {
+): Promise<ConvertedLagretUtkastResponse> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
     return mockUtkastResponse;
@@ -22,13 +22,14 @@ export async function fetchUtkastDataForAG(
   const lagretUtkastResponse = await tokenXFetchGet({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
-    responseDataSchema: utkastResponseForAGSchema,
+    responseDataSchema: rawUtkastResponseForAGSchema,
     redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
   });
 
   if (lagretUtkastResponse.utkast) {
+    const rawUtkastResponseContent = lagretUtkastResponse.utkast.content;
     const convertedUtkast = convertPlanContentToCurrentSchema(
-      lagretUtkastResponse.utkast.content,
+      rawUtkastResponseContent,
     );
 
     return {
