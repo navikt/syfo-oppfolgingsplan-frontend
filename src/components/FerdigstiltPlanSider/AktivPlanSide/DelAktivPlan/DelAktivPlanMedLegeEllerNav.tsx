@@ -7,10 +7,7 @@ interface Props {
   userHasEditAccess: boolean;
 }
 
-export default function DelAktivPlanMedLegeEllerNav({
-  planId,
-  userHasEditAccess,
-}: Props) {
+export default function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
   return (
     <Box className="bg-ax-bg-accent-soft p-4 pb-6 rounded-lg">
       <Heading level="3" size="medium" spacing>
@@ -22,10 +19,7 @@ export default function DelAktivPlanMedLegeEllerNav({
         vært helt eller delvis borte fra jobb i fire uker.
       </BodyLong>
 
-      <DelPlanMedLegeButtonAndStatus
-        planId={planId}
-        userHasEditAccess={userHasEditAccess}
-      />
+      <DelPlanMedLegeButtonAndStatus planId={planId} />
 
       <BodyLong className="mt-6 mb-6">
         Oppfølgingsplanen skal sendes til veileder i Nav senest en uke før et
@@ -33,10 +27,7 @@ export default function DelAktivPlanMedLegeEllerNav({
         oppfølgingsplanen før du velger å sende den til Nav-veileder.
       </BodyLong>
 
-      <DelPlanMedVeilederButtonAndStatus
-        planId={planId}
-        userHasEditAccess={userHasEditAccess}
-      />
+      <DelPlanMedVeilederButtonAndStatus planId={planId} />
     </Box>
   );
 }

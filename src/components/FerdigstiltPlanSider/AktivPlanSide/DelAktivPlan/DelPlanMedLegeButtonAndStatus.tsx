@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, HStack, VStack } from "@navikt/ds-react";
+import { HStack, InlineMessage, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -9,13 +9,9 @@ import { DelPlanButtonFlexGrowContainer } from "./DelPlanButtonFlexGrowContainer
 
 interface Props {
   planId: string;
-  userHasEditAccess: boolean;
 }
 
-export function DelPlanMedLegeButtonAndStatus({
-  planId,
-  userHasEditAccess,
-}: Props) {
+export function DelPlanMedLegeButtonAndStatus({ planId }: Props) {
   const {
     deltMedLegeTidspunkt,
     delMedLegeAction,
@@ -23,35 +19,31 @@ export function DelPlanMedLegeButtonAndStatus({
     errorDelMedLege,
   } = usePlanDelingContext();
 
-  const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
-  const isDelButtonDisabled = isDeltMedLege || !userHasEditAccess;
-
   return (
     <VStack gap="4">
       <HStack gap="8" align="center">
-        <DelPlanButtonFlexGrowContainer>
-          <form action={() => delMedLegeAction({ planId })}>
-            <TrackedButton
-              type="submit"
-              variant="primary"
-              loading={isPendingDelMedLege}
-              disabled={isDelButtonDisabled}
-              tracking={{
-                komponentId: "del-med-fastlege-knapp",
-                tekst: "Send til fastlege",
-                kontekst: "AktivPlanSide",
-              }}
-            >
-              Send til fastlege
-            </TrackedButton>
-          </form>
-        </DelPlanButtonFlexGrowContainer>
-
-        {deltMedLegeTidspunkt && (
-          <Alert variant="success" inline>
+        {deltMedLegeTidspunkt ? (
+          <InlineMessage status="success" role="status">
             Sendt til fastlege{" "}
             {getFormattedDateAndTimeString(deltMedLegeTidspunkt)}.
-          </Alert>
+          </InlineMessage>
+        ) : (
+          <DelPlanButtonFlexGrowContainer>
+            <form action={() => delMedLegeAction({ planId })}>
+              <TrackedButton
+                type="submit"
+                variant="primary"
+                loading={isPendingDelMedLege}
+                tracking={{
+                  komponentId: "del-med-fastlege-knapp",
+                  tekst: "Send til fastlege",
+                  kontekst: "AktivPlanSide",
+                }}
+              >
+                Send til fastlege
+              </TrackedButton>
+            </form>
+          </DelPlanButtonFlexGrowContainer>
         )}
       </HStack>
 
