@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, HStack, VStack } from "@navikt/ds-react";
+import { HStack, InlineMessage, VStack } from "@navikt/ds-react";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
@@ -23,35 +23,32 @@ export function DelPlanMedVeilederButtonAndStatus({
     errorDelMedVeileder,
   } = usePlanDelingContext();
 
-  const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
-  const isDelButtonDisabled = isDeltMedVeileder || !userHasEditAccess;
-
   return (
     <VStack gap="4">
       <HStack gap="8" align="center">
-        <DelPlanButtonFlexGrowContainer>
-          <form action={() => delMedVeilederAction({ planId })}>
-            <TrackedButton
-              type="submit"
-              variant="primary"
-              loading={isPendingDelMedVeileder}
-              disabled={isDelButtonDisabled}
-              tracking={{
-                komponentId: "del-med-nav-knapp",
-                tekst: "Send til Nav-veileder",
-                kontekst: "AktivPlanSide",
-              }}
-            >
-              Send til Nav-veileder
-            </TrackedButton>
-          </form>
-        </DelPlanButtonFlexGrowContainer>
-
-        {deltMedVeilederTidspunkt && (
-          <Alert variant="success" inline>
+        {deltMedVeilederTidspunkt ? (
+          <InlineMessage status="success" role="status">
             Sendt til Nav-veileder{" "}
             {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
-          </Alert>
+          </InlineMessage>
+        ) : (
+          <DelPlanButtonFlexGrowContainer>
+            <form action={() => delMedVeilederAction({ planId })}>
+              <TrackedButton
+                type="submit"
+                variant="primary"
+                loading={isPendingDelMedVeileder}
+                disabled={!userHasEditAccess}
+                tracking={{
+                  komponentId: "del-med-nav-knapp",
+                  tekst: "Send til Nav-veileder",
+                  kontekst: "AktivPlanSide",
+                }}
+              >
+                Send til Nav-veileder
+              </TrackedButton>
+            </form>
+          </DelPlanButtonFlexGrowContainer>
         )}
       </HStack>
 
