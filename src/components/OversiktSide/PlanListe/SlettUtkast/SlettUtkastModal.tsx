@@ -1,4 +1,5 @@
 import { BodyLong, Modal } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 import useSlettUtkastAction from "./useSlettUtkastAction";
@@ -43,11 +44,7 @@ export function SlettUtkastModal({ modalRef }: Props) {
             type="submit"
             variant="primary"
             loading={isPendingSlettUtkast}
-            tracking={{
-              komponentId: "slett-utkast-modal-knapp",
-              tekst: "Slett utkast",
-              kontekst: "OversiktSide",
-            }}
+            tracking={knappKlikket.oversiktSide.slettUtkastModal.bekreft}
           >
             Slett utkast
           </TrackedButton>
@@ -58,11 +55,7 @@ export function SlettUtkastModal({ modalRef }: Props) {
           onClick={() => {
             modalRef.current?.close();
           }}
-          tracking={{
-            komponentId: "avbryt-slett-utkast-modal-knapp",
-            tekst: "Avbryt",
-            kontekst: "OversiktSide",
-          }}
+          tracking={knappKlikket.oversiktSide.slettUtkastModal.avbryt}
         >
           Avbryt
         </TrackedButton>

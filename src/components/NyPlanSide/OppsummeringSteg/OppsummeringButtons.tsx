@@ -2,6 +2,7 @@ import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeftIcon } from "@navikt/aksel-icons";
 import { Button, HStack, VStack } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { TrackedButton } from "@/ui/TrackedButton";
 
@@ -29,15 +30,12 @@ export default function OppsummeringButtons({
           icon={<ArrowLeftIcon aria-hidden />}
           onClick={onGoBackClick}
           disabled={isPendingFerdigstill}
-          tracking={{
-            komponentId: "ga-tilbake-fra-oppsummering-knapp",
-            tekst: "Gå tilbake",
-            kontekst: "Oppsummering",
-          }}
+          tracking={knappKlikket.nyPlanSide.oppsummeringSteg.gaTilbake}
         >
           Gå tilbake
         </TrackedButton>
 
+        {/* The ferdigstill user action is tracked elsewhere as SKJEMA_FULLFORT */}
         <Button
           variant="primary"
           onClick={onFerdigstillPlanClick}
@@ -49,27 +47,17 @@ export default function OppsummeringButtons({
 
       {isPendingFerdigstill ? (
         // Seperate because anchor cannot be disabled
-        <TrackedButton
-          variant="tertiary"
-          disabled
-          tracking={{
-            komponentId: "avslutt-og-fortsett-senere-knapp",
-            tekst: "Avslutt og fortsett senere",
-            kontekst: "NyPlanSide",
-          }}
-        >
+        <Button variant="tertiary" disabled>
           Avslutt og fortsett senere
-        </TrackedButton>
+        </Button>
       ) : (
         <TrackedButton
           variant="tertiary"
           as={NextLink}
           href={oversiktHref}
-          tracking={{
-            komponentId: "avslutt-og-fortsett-senere-knapp",
-            tekst: "Avslutt og fortsett senere",
-            kontekst: "Oppsummering",
-          }}
+          tracking={
+            knappKlikket.nyPlanSide.oppsummeringSteg.avsluttOgFortsettSenere
+          }
         >
           Avslutt og fortsett senere
         </TrackedButton>

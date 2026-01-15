@@ -3,13 +3,14 @@
 import { startTransition, useActionState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { HStack } from "@navikt/ds-react";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 import { VisPdfButton } from "../../Shared/Buttons/VisPdfButton";
-import { VilDuOverskriveUtkastModal } from "../AlleredeUtkastModaler/VilDuOverskriveUtkastMedInnholdModal";
-import { VilDuSletteUtkastModal } from "../AlleredeUtkastModaler/VilDuSletteUtkastModal";
+import { VilDuOverskriveUtkastForAEndrePlanModal } from "../HarAlleredeUtkastModaler/VilDuOverskriveUtkastForAEndrePlanModal";
+import { VilDuSletteUtkastForALageNyPlanModal } from "../HarAlleredeUtkastModaler/VilDuSletteUtkastForALageNyPlanModal";
 
 interface Props {
   planId: string;
@@ -25,8 +26,10 @@ export function AktivPlanButtons({
   const { push } = useRouter();
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
-  const vilDuOverskriveUtkastModal = useRef<HTMLDialogElement | null>(null);
-  const vilDuSletteUtkastModal = useRef<HTMLDialogElement | null>(null);
+  const vilDuOverskriveUtkastMedInnholdFraAktivPlanModalRef =
+    useRef<HTMLDialogElement | null>(null);
+  const vilDuSletteUtkastForALageNyPlanModalRef =
+    useRef<HTMLDialogElement | null>(null);
 
   const [
     { error: upsertUtkastWithAktivPlanError },
@@ -38,7 +41,7 @@ export function AktivPlanButtons({
 
   function handleEndreOppfolgingsplanClick() {
     if (hasUtkast) {
-      vilDuOverskriveUtkastModal.current?.showModal();
+      vilDuOverskriveUtkastMedInnholdFraAktivPlanModalRef.current?.showModal();
     } else {
       startTransition(() => {
         upsertUtkastWithAktivPlanAction(narmesteLederId);
@@ -48,7 +51,7 @@ export function AktivPlanButtons({
 
   function handleNyPlanClick() {
     if (hasUtkast) {
-      vilDuSletteUtkastModal.current?.showModal();
+      vilDuSletteUtkastForALageNyPlanModalRef.current?.showModal();
     } else {
       push(getAGOpprettNyPlanHref(narmesteLederId));
     }
@@ -56,8 +59,12 @@ export function AktivPlanButtons({
 
   return (
     <>
-      <VilDuOverskriveUtkastModal ref={vilDuOverskriveUtkastModal} />
-      <VilDuSletteUtkastModal ref={vilDuSletteUtkastModal} />
+      <VilDuOverskriveUtkastForAEndrePlanModal
+        ref={vilDuOverskriveUtkastMedInnholdFraAktivPlanModalRef}
+      />
+      <VilDuSletteUtkastForALageNyPlanModal
+        ref={vilDuSletteUtkastForALageNyPlanModalRef}
+      />
 
       <HStack justify="space-between">
         <HStack gap="4">
@@ -66,11 +73,7 @@ export function AktivPlanButtons({
             variant="primary"
             onClick={handleEndreOppfolgingsplanClick}
             loading={isPendingUpsertUtkastWithAktivPlan}
-            tracking={{
-              komponentId: "endre-oppfolgingsplan-knapp",
-              tekst: "Endre oppfølgingsplanen",
-              kontekst: "AktivPlanSide",
-            }}
+            tracking={knappKlikket.aktivPlanSide.endreOppfolgingsplan}
           >
             Endre oppfølgingsplanen
           </TrackedButton>
@@ -79,11 +82,7 @@ export function AktivPlanButtons({
             variant="secondary"
             onClick={handleNyPlanClick}
             disabled={!userHasEditAccess}
-            tracking={{
-              komponentId: "lag-ny-oppfolgingsplan-knapp",
-              tekst: "Lag en ny plan",
-              kontekst: "AktivPlanSide",
-            }}
+            tracking={knappKlikket.aktivPlanSide.lagNyOppfolgingsplan}
           >
             Lag en ny plan
           </TrackedButton>

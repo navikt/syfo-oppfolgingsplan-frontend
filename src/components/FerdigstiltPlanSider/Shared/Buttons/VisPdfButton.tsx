@@ -2,6 +2,7 @@
 
 import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
@@ -17,11 +18,7 @@ export function VisPdfButton({ className, narmesteLederId, planId }: Props) {
       icon={<FilePdfIcon />}
       iconPosition="right"
       className={className}
-      tracking={{
-        komponentId: "vis-pdf-knapp",
-        tekst: "Vis PDF",
-        kontekst: "FerdigstiltPlanSide",
-      }}
+      tracking={knappKlikket.ferdigstiltPlanSide.visPdf}
       as={NextLink}
       href={`/api/${narmesteLederId}/pdf/${planId}`}
       target="_blank"
