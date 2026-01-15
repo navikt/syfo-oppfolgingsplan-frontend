@@ -1,20 +1,26 @@
 # syfo-oppfolgingsplan-frontend
 
-## Getting Started
+## Run locally during development
 
-Run the development server with
+Se [eSyfo-Wiki - Next bygg og kjør](https://github.com/navikt/esyfo-dev-tools/wiki/nextjs-build-run).
 
-```bash
-npm run dev
-```
+Når dev-server kjører kan du gå til en av "start-sidene":
+- [http://localhost:3000/syk/oppfolgingsplan/123](http://localhost:3000/syk/oppfolgingsplan/123) for arbeidsgiver
+- [http://localhost:3000/syk/oppfolgingsplan/sykmeldt](http://localhost:3000/syk/oppfolgingsplan/sykmeldt) for sykmeldt/personbruker
 
-Go to for example [http://localhost:3000/syk/oppfolgingsplan/123](http://localhost:3000/syk/oppfolgingsplan/123) to test the app.
+## Checks you can run before pushing
+
+- `npm run build` to verify that the full project builds. If there are Typescript errors, this will fail.
+- `npm run test` to run tests.
+- `npm run lint` to run eslint.
+
+These are also run in CI pipeline by Github Actions, and will stop the build and deploy if they fail. It can therefore be convenient to run them locally first.
 
 ## Testing
 
 The project uses Vitest for unit and component testing.
 
-Run ```npm run test``` to run Vitest, which will find all unit test files in the project and run the tests. You can have it running in the terminal while editing code, and the affected tests will automatically rerun when saving files.
+Run `npm run test` to run Vitest, which will find and run all unit test files in the project. You can have it running in the terminal while editing code, and the affected tests will automatically rerun when saving files.
 
 For VS Code the [Vitest extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) is nice.
 
