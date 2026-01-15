@@ -1,17 +1,22 @@
 "use server";
 
+import z from "zod";
 import { getEndpointDelMedLegeForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { FetchResultError } from "../tokenXFetch/FetchResult";
-import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
+import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
 
 export interface DelPlanMedLegeActionState {
   deltMedLegeTidspunkt: string | null;
   errorDelMedLege: FetchResultError | null;
 }
+
+const delPlanMedLegeResponseSchema = z.object({
+  deltMedLegeTidspunkt: z.iso.datetime(),
+});
 
 export async function delPlanMedLegeServerAction(
   narmesteLederId: string,
@@ -26,19 +31,20 @@ export async function delPlanMedLegeServerAction(
     };
   }
 
-  const result = await tokenXFetchUpdate({
+  const { data, error } = await tokenXFetchUpdateWithResponse({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
+    responseDataSchema: delPlanMedLegeResponseSchema,
   });
 
-  if (result.error) {
+  if (error) {
     return {
       deltMedLegeTidspunkt: null,
-      errorDelMedLege: result.error,
+      errorDelMedLege: error,
     };
   } else {
     return {
-      deltMedLegeTidspunkt: now().toISOString(),
+      deltMedLegeTidspunkt: data.deltMedLegeTidspunkt,
       errorDelMedLege: null,
     };
   }

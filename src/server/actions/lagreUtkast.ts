@@ -17,7 +17,7 @@ import { FrontendErrorType } from "./FrontendErrorTypeEnum";
 import { isNonEmptyString } from "./serverActionsInputValidation";
 
 const lagreUtkastResponseSchema = z.object({
-  sistLagretTidspunkt: z.iso.datetime().nullable(),
+  sistLagretTidspunkt: z.iso.datetime(),
 });
 
 type LagreUtkastResponse = z.infer<typeof lagreUtkastResponseSchema>;
