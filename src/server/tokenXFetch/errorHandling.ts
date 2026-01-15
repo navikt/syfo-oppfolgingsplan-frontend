@@ -12,12 +12,15 @@ export function getAndLogFetchNetworkError({
   method: string;
 }): FetchResultError {
   const { errorName, message } = tryToExtractNameAndMessageFromError(error);
+  const errorType = FrontendErrorType.FETCH_NETWORK_ERROR;
+
   logger.error(
+    { type: errorType, method, endpoint },
     `Unexpected network error on fetch to ${method} ${endpoint}: errorName=${errorName} message=${message}`,
   );
 
   return {
-    type: FrontendErrorType.FETCH_NETWORK_ERROR,
+    type: errorType,
   };
 }
 
@@ -35,6 +38,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
     const parsedErrorResponse = fetchResultErrorSchema.parse(errorResponseJson);
 
     logger.error(
+      { ...parsedErrorResponse, method, endpoint },
       `Got structured error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): type=${parsedErrorResponse.type}${parsedErrorResponse.message ? ` message=${parsedErrorResponse.message}` : ""}`,
     );
 
@@ -48,12 +52,15 @@ export async function getAndLogErrorResultFromNonOkResponse({
       /* ignore response.text() error */
     }
 
+    const errorType = FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE;
+
     logger.error(
+      { type: errorType, method, endpoint },
       `Got unknown error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): ${bodySnippet ? ` body=${bodySnippet}` : ""}`,
     );
 
     return {
-      type: FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE,
+      type: errorType,
     };
   }
 }
