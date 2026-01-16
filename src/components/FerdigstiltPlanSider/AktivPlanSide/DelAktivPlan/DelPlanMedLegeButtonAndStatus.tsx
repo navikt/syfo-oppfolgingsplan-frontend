@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, HStack, VStack } from "@navikt/ds-react";
+import { HStack, InlineMessage, VStack } from "@navikt/ds-react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
@@ -24,31 +24,28 @@ export function DelPlanMedLegeButtonAndStatus({
     errorDelMedLege,
   } = usePlanDelingContext();
 
-  const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
-  const isDelButtonDisabled = isDeltMedLege || !userHasEditAccess;
-
   return (
     <VStack gap="4">
       <HStack gap="8" align="center">
-        <DelPlanButtonFlexGrowContainer>
-          <form action={() => delMedLegeAction({ planId })}>
-            <TrackedButton
-              type="submit"
-              variant="primary"
-              loading={isPendingDelMedLege}
-              disabled={isDelButtonDisabled}
-              tracking={knappKlikket.aktivPlanSide.delMedFastlege}
-            >
-              Send til fastlege
-            </TrackedButton>
-          </form>
-        </DelPlanButtonFlexGrowContainer>
-
-        {deltMedLegeTidspunkt && (
-          <Alert variant="success" inline>
+        {deltMedLegeTidspunkt ? (
+          <InlineMessage status="success" role="status">
             Sendt til fastlege{" "}
             {getFormattedDateAndTimeString(deltMedLegeTidspunkt)}.
-          </Alert>
+          </InlineMessage>
+        ) : (
+          <DelPlanButtonFlexGrowContainer>
+            <form action={() => delMedLegeAction({ planId })}>
+              <TrackedButton
+                type="submit"
+                variant="primary"
+                loading={isPendingDelMedLege}
+                disabled={!userHasEditAccess}
+                tracking={knappKlikket.aktivPlanSide.delMedFastlege}
+              >
+                Send til fastlege
+              </TrackedButton>
+            </form>
+          </DelPlanButtonFlexGrowContainer>
         )}
       </HStack>
 

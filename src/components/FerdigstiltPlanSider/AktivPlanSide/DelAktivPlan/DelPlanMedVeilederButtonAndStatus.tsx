@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, HStack, VStack } from "@navikt/ds-react";
+import { HStack, InlineMessage, VStack } from "@navikt/ds-react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
@@ -24,31 +24,28 @@ export function DelPlanMedVeilederButtonAndStatus({
     errorDelMedVeileder,
   } = usePlanDelingContext();
 
-  const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
-  const isDelButtonDisabled = isDeltMedVeileder || !userHasEditAccess;
-
   return (
     <VStack gap="4">
       <HStack gap="8" align="center">
-        <DelPlanButtonFlexGrowContainer>
-          <form action={() => delMedVeilederAction({ planId })}>
-            <TrackedButton
-              type="submit"
-              variant="primary"
-              loading={isPendingDelMedVeileder}
-              disabled={isDelButtonDisabled}
-              tracking={knappKlikket.aktivPlanSide.delMedVeileder}
-            >
-              Send til Nav-veileder
-            </TrackedButton>
-          </form>
-        </DelPlanButtonFlexGrowContainer>
-
-        {deltMedVeilederTidspunkt && (
-          <Alert variant="success" inline>
+        {deltMedVeilederTidspunkt ? (
+          <InlineMessage status="success" role="status">
             Sendt til Nav-veileder{" "}
             {getFormattedDateAndTimeString(deltMedVeilederTidspunkt)}.
-          </Alert>
+          </InlineMessage>
+        ) : (
+          <DelPlanButtonFlexGrowContainer>
+            <form action={() => delMedVeilederAction({ planId })}>
+              <TrackedButton
+                type="submit"
+                variant="primary"
+                loading={isPendingDelMedVeileder}
+                disabled={!userHasEditAccess}
+                tracking={knappKlikket.aktivPlanSide.delMedVeileder}
+              >
+                Send til Nav-veileder
+              </TrackedButton>
+            </form>
+          </DelPlanButtonFlexGrowContainer>
         )}
       </HStack>
 
