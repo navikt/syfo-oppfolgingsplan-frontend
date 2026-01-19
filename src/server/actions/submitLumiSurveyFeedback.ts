@@ -1,22 +1,22 @@
 "use server";
 
 import { z } from "zod";
-import { FlexJarTransportPayload } from "@navikt/flexjar-widget";
-import { getFlexjarFeedbackEndpoint } from "@/common/backend-endpoints";
+import { type LumiSurveyTransportPayload } from "@navikt/lumi-survey";
+import { getLumiSurveyFeedbackEndpoint } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { flexjarTransportSchema } from "@/schema/flexjarTransportPayloadSchema.ts";
+import { lumiSurveyTransportSchema } from "@/schema/lumiSurveyTransportPayloadSchema";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
 
-const flexjarResponseSchema = z.object({
+const lumiResponseSchema = z.object({
   id: z.string(),
 });
 
-export async function submitFlexjarFeedback(
-  payload: FlexJarTransportPayload,
+export async function submitLumiSurveyFeedback(
+  payload: LumiSurveyTransportPayload,
 ): Promise<{ id: string }> {
-  const validatedPayload = flexjarTransportSchema.parse(payload);
+  const validatedPayload = lumiSurveyTransportSchema.parse(payload);
 
   if (isLocalOrDemo) {
     await simulateBackendDelay();
@@ -24,10 +24,10 @@ export async function submitFlexjarFeedback(
   }
 
   const result = await tokenXFetchUpdateWithResponse({
-    targetApi: TokenXTargetApi.FLEXJAR_BACKEND,
-    endpoint: getFlexjarFeedbackEndpoint(),
+    targetApi: TokenXTargetApi.LUMI_API,
+    endpoint: getLumiSurveyFeedbackEndpoint(),
     requestBody: validatedPayload,
-    responseDataSchema: flexjarResponseSchema,
+    responseDataSchema: lumiResponseSchema,
   });
 
   if (result.error) {

@@ -19,7 +19,7 @@ export function TidligerePlanDetails({
 }: Props) {
   return (
     <VStack className="gap-4">
-      <VStack gap="2">
+      <VStack gap="space-8">
         <BodyShort size="medium">
           Opprettet dato: {getFormattedDateString(ferdigstiltTidspunkt)}
         </BodyShort>
@@ -28,8 +28,7 @@ export function TidligerePlanDetails({
           Evalueringsdato: {getFormattedDateString(evalueringsDato)}
         </BodyShort>
       </VStack>
-
-      <VStack gap="2">
+      <VStack gap="space-8">
         {deltMedLegeTidspunkt && (
           <BodyShort size="medium">
             Planen ble sendt til fastlege{" "}

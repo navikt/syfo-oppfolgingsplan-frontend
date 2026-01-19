@@ -49,10 +49,9 @@ export default async function PlanListeForArbeidsgiver({
           />
         </PlanListeDel>
       )}
-
       {utkast && (
         <PlanListeDel heading="Oppfølgingsplan under arbeid">
-          <VStack gap="4">
+          <VStack gap="space-16">
             <UtkastLinkPanel
               utkast={utkast}
               linkCardTitle={linkCardTitle}
@@ -63,10 +62,9 @@ export default async function PlanListeForArbeidsgiver({
           </VStack>
         </PlanListeDel>
       )}
-
       {harTidligerePlaner && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
-          <VStack gap="4">
+          <VStack gap="space-16">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
                 key={plan.id}

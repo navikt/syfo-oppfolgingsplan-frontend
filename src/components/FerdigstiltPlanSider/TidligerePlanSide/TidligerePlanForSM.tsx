@@ -28,7 +28,7 @@ export default async function TidligerePlanForSM({ planId }: Props) {
 
   return (
     <section>
-      <VStack gap="8">
+      <VStack gap="space-32">
         <AktivPlanHeadingAndTagsSM
           arbeidsstedNavn={arbeidsstedNavn}
           isDeltMedLege={isDeltMedLege}

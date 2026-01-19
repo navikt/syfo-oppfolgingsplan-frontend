@@ -14,9 +14,8 @@ export function TidligerePlanHeadingAndTags({
   isDeltMedVeileder,
 }: Props) {
   return (
-    <VStack gap="2">
+    <VStack gap="space-8">
       <FerdigstiltPlanHeading employeeName={employeeName} />
-
       <TidligerePlanTopTags
         isDeltMedLege={isDeltMedLege}
         isDeltMedVeileder={isDeltMedVeileder}

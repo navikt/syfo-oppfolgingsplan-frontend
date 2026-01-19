@@ -65,9 +65,8 @@ export function AktivPlanButtons({
       <VilDuSletteUtkastForALageNyPlanModal
         ref={vilDuSletteUtkastForALageNyPlanModalRef}
       />
-
       <HStack justify="space-between">
-        <HStack gap="4">
+        <HStack gap="space-16">
           <TrackedButton
             disabled={!userHasEditAccess}
             variant="primary"
@@ -90,7 +89,6 @@ export function AktivPlanButtons({
 
         <VisPdfButton narmesteLederId={narmesteLederId} planId={planId} />
       </HStack>
-
       <FetchErrorAlert
         error={upsertUtkastWithAktivPlanError}
         className="mt-4"

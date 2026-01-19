@@ -31,14 +31,14 @@ export default async function TidligerePlanForAG({
 
   return (
     <section>
-      <VStack gap="8">
+      <VStack gap="space-32">
         <TidligerePlanHeadingAndTags
           employeeName={employee.name}
           isDeltMedLege={isDeltMedLege}
           isDeltMedVeileder={isDeltMedVeileder}
         />
 
-        <VStack gap="4">
+        <VStack gap="space-16">
           <TidligerePlanDetails
             ferdigstiltTidspunkt={ferdigstiltTidspunkt}
             evalueringsDato={evalueringsDato}

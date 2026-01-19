@@ -6,8 +6,8 @@ export function DelPlanButtonFlexGrowContainer({
   children: React.ReactNode;
 }) {
   return (
-    <Box.New flexGrow="1" flexShrink="1" flexBasis="auto" className="max-w-56">
+    <Box flexGrow="1" flexShrink="1" flexBasis="auto" className="max-w-56">
       {children}
-    </Box.New>
+    </Box>
   );
 }

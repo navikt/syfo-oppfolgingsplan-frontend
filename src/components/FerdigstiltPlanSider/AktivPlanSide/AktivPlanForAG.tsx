@@ -43,8 +43,7 @@ export default async function AktivPlanForAG({
   return (
     <section>
       {nyligOpprettet && <ScrollToTopHelper />}
-
-      <VStack gap="8">
+      <VStack gap="space-32">
         <PlanDelingProvider
           initialDeltMedLegeTidspunkt={deltMedLegeTidspunkt}
           initialDeltMedVeilederTidspunkt={deltMedVeilederTidspunkt}

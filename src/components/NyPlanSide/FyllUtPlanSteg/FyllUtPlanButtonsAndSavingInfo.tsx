@@ -23,8 +23,8 @@ export default function FyllUtPlanButtonsAndSavingInfo({
   lagreUtkastError,
 }: Props) {
   return (
-    <VStack gap="8" align="start" className="mt-10">
-      <HStack gap="8">
+    <VStack gap="space-32" align="start" className="mt-10">
+      <HStack gap="space-32">
         <Button
           variant="primary"
           iconPosition="right"
@@ -36,9 +36,8 @@ export default function FyllUtPlanButtonsAndSavingInfo({
           Gå til oppsummering
         </Button>
       </HStack>
-
-      <VStack gap="4">
-        <HStack gap="12" align="center">
+      <VStack gap="space-16">
+        <HStack gap="space-48" align="center">
           <TrackedButton
             variant="tertiary"
             onClick={onAvsluttOgFortsettSenereClick}

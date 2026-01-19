@@ -17,10 +17,9 @@ export default function PlanDelingStatusTags({
 }: Props) {
   return (
     <>
-      <Tag variant="success-moderate" size={size}>
+      <Tag data-color="success" variant="moderate" size={size}>
         Delt med den ansatte
       </Tag>
-
       {isDeltMedLege ? (
         <Tag variant={tagVariantHvisDelt} size={size}>
           Sendt til fastlege
