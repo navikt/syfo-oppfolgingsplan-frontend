@@ -7,7 +7,7 @@ import { logWarningMessageAndThrowAuthError } from "./handleAuthError";
 export enum TokenXTargetApi {
   SYFO_OPPFOLGINGSPLAN_BACKEND = "SYFO_OPPFOLGINGSPLAN_BACKEND",
   DINE_SYKMELDTE_BACKEND = "DINE_SYKMELDTE_BACKEND",
-  FLEXJAR_BACKEND = "FLEXJAR_BACKEND",
+  LUMI_API = "LUMI_API",
 }
 
 /**
@@ -41,8 +41,8 @@ function getClientIdForTokenXTargetApi(targetApi: TokenXTargetApi): string {
     return getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID;
   } else if (targetApi === TokenXTargetApi.DINE_SYKMELDTE_BACKEND) {
     return getServerEnv().DINESYKMELDTE_BACKEND_CLIENT_ID;
-  } else if (targetApi === TokenXTargetApi.FLEXJAR_BACKEND) {
-    return getServerEnv().FLEXJAR_BACKEND_CLIENT_ID;
+  } else if (targetApi === TokenXTargetApi.LUMI_API) {
+    return getServerEnv().LUMI_API_CLIENT_ID;
   } else {
     return "" as never;
   }

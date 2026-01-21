@@ -11,11 +11,10 @@ export function AktivPlanDetailsSM({
   evalueringsDato,
 }: Props) {
   return (
-    <VStack gap="1">
+    <VStack gap="space-4">
       <BodyShort size="medium">
         Opprettet: {getFormattedDateString(ferdigstiltTidspunkt)}
       </BodyShort>
-
       <BodyShort size="medium">
         Dato for evaluering: {getFormattedDateString(evalueringsDato)}
       </BodyShort>

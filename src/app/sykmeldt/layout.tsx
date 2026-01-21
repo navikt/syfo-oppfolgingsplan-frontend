@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Metadata } from "next";
 import Script from "next/script";
 import { Theme } from "@navikt/ds-react";
-import "@navikt/flexjar-widget/styles.css";
+import "@navikt/lumi-survey/styles.css";
 import "@/app/globals.css";
 import { Instrumentation } from "@/instrumentation/Instrumentation";
 import { MainContent } from "@/ui/layout/MainContent";

@@ -25,8 +25,8 @@ export function DelPlanMedVeilederButtonAndStatus({
   } = usePlanDelingContext();
 
   return (
-    <VStack gap="4">
-      <HStack gap="8" align="center">
+    <VStack gap="space-16">
+      <HStack gap="space-32" align="center">
         {deltMedVeilederTidspunkt ? (
           <InlineMessage status="success" role="status">
             Sendt til Nav-veileder{" "}
@@ -48,7 +48,6 @@ export function DelPlanMedVeilederButtonAndStatus({
           </DelPlanButtonFlexGrowContainer>
         )}
       </HStack>
-
       <FetchErrorAlert error={errorDelMedVeileder} />
     </VStack>
   );

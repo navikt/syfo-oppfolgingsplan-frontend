@@ -19,11 +19,10 @@ export default function UtkastLagringInfo({
 }: Props) {
   if (isSavingUtkast) {
     return (
-      <HStack gap="4" align="center">
+      <HStack gap="space-16" align="center">
         <BodyLong size="medium" className="text-ax-text-neutral-subtle">
           <span>Lagrer utkast...</span>
         </BodyLong>
-
         <Loader
           size="small"
           title="Lagrer utkast"
@@ -46,11 +45,10 @@ export default function UtkastLagringInfo({
         );
 
     return (
-      <HStack gap="4" align="center">
+      <HStack gap="space-16" align="center">
         <BodyLong size="medium" className="text-ax-text-neutral-subtle">
           <span>Utkast sist lagret {sistLagretTidspunktFormatted}</span>
         </BodyLong>
-
         <HelpText className="relative -top-px">
           Dine endringer lagres som et utkast mens du skriver. Hvis du ønsker å
           jobbe videre med oppfølgingsplanen senere kan du velge «Avslutt og

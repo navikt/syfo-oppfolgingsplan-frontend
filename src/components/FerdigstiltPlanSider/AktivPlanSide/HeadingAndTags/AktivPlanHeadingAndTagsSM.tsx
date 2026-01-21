@@ -13,11 +13,11 @@ export function AktivPlanHeadingAndTagsSM({
   isDeltMedVeileder,
 }: Props) {
   return (
-    <VStack gap="2">
+    <VStack gap="space-8">
       <Heading level="2" size="xlarge">
         Oppfølgingsplan {arbeidsstedNavn}
       </Heading>
-      <HStack gap="2">
+      <HStack gap="space-8">
         <PlanDelingStatusTags
           tagSize="small"
           isDeltMedLege={isDeltMedLege}

@@ -6,8 +6,8 @@ import {
 import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
 import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
 import Breadcrumbs from "@/ui/Breadcrumbs";
-import { Flexjar } from "@/ui/Flexjar/Flexjar.tsx";
-import { flexjarSurveyAG } from "@/ui/Flexjar/flexjarSurveyAG.ts";
+import { Lumi } from "@/ui/Lumi/Lumi";
+import { lumiSurveyAG } from "@/ui/Lumi/lumiSurveyAG";
 
 export default async function AktivPlanPageForAG({
   params,
@@ -30,9 +30,9 @@ export default async function AktivPlanPageForAG({
           nyligOpprettet={nyligOpprettetParam === "true"}
         />
 
-        <Flexjar
+        <Lumi
           feedbackId="Ny oppfølgingsplan - arbeidsgiver"
-          survey={flexjarSurveyAG}
+          survey={lumiSurveyAG}
         />
       </Suspense>
     </>

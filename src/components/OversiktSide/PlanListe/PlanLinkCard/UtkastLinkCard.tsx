@@ -57,15 +57,13 @@ export default function UtkastLinkPanel({
           </NextLink>
         </LinkCardAnchor>
       </LinkCardTitle>
-
       <LinkCardDescription>
         <BodyShort size="small">
           <em>Sist lagret {utkastSistLagretFormatted}.</em>
         </BodyShort>
       </LinkCardDescription>
-
       <LinkCardFooter>
-        <Tag variant="neutral-moderate" size="small">
+        <Tag data-color="neutral" variant="moderate" size="small">
           Kun synlig for deg
         </Tag>
       </LinkCardFooter>

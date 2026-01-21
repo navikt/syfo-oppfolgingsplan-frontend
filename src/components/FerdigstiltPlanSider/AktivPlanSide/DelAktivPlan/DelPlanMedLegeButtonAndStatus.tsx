@@ -25,8 +25,8 @@ export function DelPlanMedLegeButtonAndStatus({
   } = usePlanDelingContext();
 
   return (
-    <VStack gap="4">
-      <HStack gap="8" align="center">
+    <VStack gap="space-16">
+      <HStack gap="space-32" align="center">
         {deltMedLegeTidspunkt ? (
           <InlineMessage status="success" role="status">
             Sendt til fastlege{" "}
@@ -48,7 +48,6 @@ export function DelPlanMedLegeButtonAndStatus({
           </DelPlanButtonFlexGrowContainer>
         )}
       </HStack>
-
       <FetchErrorAlert
         error={errorDelMedLege}
         fallbackMessage="Det oppstod en feil ved deling av planen med fastlegen. Vennligst prøv igjen senere."

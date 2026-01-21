@@ -9,8 +9,8 @@ export const serverEnvSchema = z.object({
   DINESYKMELDTE_BACKEND_CLIENT_ID: z.string(),
   SYFO_OPPFOLGINGSPLAN_BACKEND_HOST: z.string(),
   SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID: z.string(),
-  FLEXJAR_HOST: z.string(),
-  FLEXJAR_BACKEND_CLIENT_ID: z.string(),
+  LUMI_API_HOST: z.string(),
+  LUMI_API_CLIENT_ID: z.string(),
   // Provided by nais
   TOKEN_X_WELL_KNOWN_URL: z.string(),
   TOKEN_X_CLIENT_ID: z.string(),
@@ -27,8 +27,8 @@ const rawServerEnv = {
     process.env.SYFO_OPPFOLGINGSPLAN_BACKEND_HOST,
   SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID:
     process.env.SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID,
-  FLEXJAR_HOST: process.env.FLEXJAR_HOST,
-  FLEXJAR_BACKEND_CLIENT_ID: process.env.FLEXJAR_BACKEND_CLIENT_ID,
+  LUMI_API_HOST: process.env.LUMI_API_HOST,
+  LUMI_API_CLIENT_ID: process.env.LUMI_API_CLIENT_ID,
 
   // Provided by nais
   TOKEN_X_WELL_KNOWN_URL: process.env.TOKEN_X_WELL_KNOWN_URL,

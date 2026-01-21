@@ -22,8 +22,8 @@ export default function OppsummeringButtons({
   const oversiktHref = getAGOversiktHref(narmesteLederId);
 
   return (
-    <VStack gap="8" align="start">
-      <HStack gap="8">
+    <VStack gap="space-32" align="start">
+      <HStack gap="space-32">
         <TrackedButton
           variant="secondary"
           iconPosition="left"
@@ -44,7 +44,6 @@ export default function OppsummeringButtons({
           Ferdigstill og del med den ansatte
         </Button>
       </HStack>
-
       {isPendingFerdigstill ? (
         // Seperate because anchor cannot be disabled
         <Button variant="tertiary" disabled>

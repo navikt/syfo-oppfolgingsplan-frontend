@@ -11,7 +11,7 @@ export function TidligerePlanTopTags({
   isDeltMedVeileder,
 }: Props) {
   return (
-    <HStack gap="2">
+    <HStack gap="space-8">
       <PlanDelingStatusTags
         tagSize="small"
         isDeltMedLege={isDeltMedLege}

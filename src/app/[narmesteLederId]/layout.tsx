@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Script from "next/script";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
-import "@navikt/flexjar-widget/styles.css";
+import "@navikt/lumi-survey/styles.css";
 import { Theme } from "@navikt/ds-react";
 import "@/app/globals.css";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";

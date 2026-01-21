@@ -19,10 +19,9 @@ export default async function PlanListeForSykmeldt() {
   return (
     <section className="mb-12">
       {!harAktivePlaner && <IngenAktivPlanAlert />}
-
       {harAktivePlaner && (
         <PlanListeDel>
-          <VStack gap="4">
+          <VStack gap="space-16">
             {aktiveOppfolgingsplaner.map((plan) => (
               <AktivPlanLinkCard
                 key={plan.id}
@@ -36,10 +35,9 @@ export default async function PlanListeForSykmeldt() {
           </VStack>
         </PlanListeDel>
       )}
-
       {harTidligerePlaner && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
-          <VStack gap="4">
+          <VStack gap="space-16">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
                 key={plan.id}

@@ -17,7 +17,7 @@ export default function PlanFormSummary({ formValues, className }: Props) {
   );
 
   return (
-    <Box.New className={className}>
+    <Box className={className}>
       {/* whitespace-pre-line er for å vise linjeskift i brukers svar */}
       <FormSummary className="mb-8 whitespace-pre-line">
         <FormSummary.Header>
@@ -55,7 +55,6 @@ export default function PlanFormSummary({ formValues, className }: Props) {
           </FormSummary.Answer>
         </FormSummary.Answers>
       </FormSummary>
-
       <FormSummary>
         <FormSummary.Header>
           <FormSummary.Heading level="3">
@@ -126,6 +125,6 @@ export default function PlanFormSummary({ formValues, className }: Props) {
           )}
         </FormSummary.Answers>
       </FormSummary>
-    </Box.New>
+    </Box>
   );
 }

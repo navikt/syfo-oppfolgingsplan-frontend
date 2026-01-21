@@ -39,6 +39,6 @@ export const getEndpointPDFForAG = (
 ) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${documentId}/pdf`;
 
-// Flexjar
-export const getFlexjarFeedbackEndpoint = () =>
-  `${getServerEnv().FLEXJAR_HOST}/api/v2/feedback`;
+// Lumi survey submissions (sendes til eksisterende endpoint i backend)
+export const getLumiSurveyFeedbackEndpoint = () =>
+  `${getServerEnv().LUMI_API_HOST}/api/tokenx/v1/feedback`;

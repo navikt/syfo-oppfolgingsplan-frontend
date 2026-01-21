@@ -5,7 +5,7 @@ interface Props {
 }
 
 export const MainContent = ({ children }: Props) => (
-  <div className="flex justify-center px-4 md:px-6">
+  <div className="flex justify-center px-4 ax-md:px-6">
     <main className="w-full max-w-[730px]">{children}</main>
   </div>
 );

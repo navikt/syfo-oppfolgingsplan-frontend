@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
-/* TODO: Hvis vi får oppdatert dinesykmeldte-sidemeny til å bruke darkside kan dette forenkles */
-/* Dette oppsettet var en måte å få styling til å bli riktig i sidemeny og app */
-@import "@navikt/ds-css/dist/components.css" layer(components); /* Ikke-darkside for d.s.-sidemeny */
-@import "@navikt/ds-css/darkside" layer(components); /* Darkside */
+/*
+  Aksel v8: Dark/light theme styres via Theme-komponenten (".dark"/".light").
+
+  Viktig: Importer Aksel CSS i en CSS layer.
+  Tailwind v4 bruker layers (base/components/utilities). U-layered CSS vil
+  kunne overstyre Tailwind utilities (f.eks. `mb-4` på `BodyLong`).
+*/
+@import "@navikt/ds-css" layer(components);
 @config '../../tailwind.config.ts';
 
 /*

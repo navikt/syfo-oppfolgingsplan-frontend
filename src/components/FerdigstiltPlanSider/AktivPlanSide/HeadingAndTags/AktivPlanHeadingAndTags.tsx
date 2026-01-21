@@ -8,9 +8,8 @@ interface Props {
 
 export function AktivPlanHeadingAndTags({ employeeName }: Props) {
   return (
-    <VStack gap="2">
+    <VStack gap="space-8">
       <FerdigstiltPlanHeading employeeName={employeeName} />
-
       <AktivPlanTopTags />
     </VStack>
   );
