@@ -1,4 +1,12 @@
-import { BodyLong, Heading, Link, ReadMore } from "@navikt/ds-react";
+import {
+  Alert,
+  BodyLong,
+  BodyShort,
+  Box,
+  Heading,
+  Link,
+  ReadMore,
+} from "@navikt/ds-react";
 import TextContentBox from "@/components/layout/TextContentBox";
 import {
   getOneYearFromNowDayDate,
@@ -25,6 +33,21 @@ const OPFormFields = withForm({
   render: ({ form, isChangeDisabled, isReadOnly }) => (
     <>
       <BodyLong spacing>Alle felt må fylles ut.</BodyLong>
+
+      {isReadOnly && (
+        <Alert variant="info" size="small" className="mb-12">
+          <Heading level="3" size="small" spacing>
+            Den ansatte er ikke sykmeldt
+          </Heading>
+          <Box>
+            <BodyShort>
+              Du kan ikke redigere planen nå. Skjemaet er kun åpent når den
+              ansatte har en sykmelding, eller det er mindre enn 16 dager siden
+              siste sykmeldingsdato.
+            </BodyShort>
+          </Box>
+        </Alert>
+      )}
 
       <TextContentBox className="mb-4">
         <Heading level="2" size="medium" spacing>

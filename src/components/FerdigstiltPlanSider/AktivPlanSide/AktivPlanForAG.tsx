@@ -56,16 +56,13 @@ export default async function AktivPlanForAG({
             evalueringsDato={evalueringsDato}
           />
 
-          <DelAktivPlanMedLegeEllerNav
-            planId={planId}
-            userHasEditAccess={userHasEditAccess}
-          />
+          {userHasEditAccess && (
+            <>
+              <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-          <AktivPlanButtons
-            planId={planId}
-            hasUtkast={hasUtkast}
-            userHasEditAccess={userHasEditAccess}
-          />
+              <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
+            </>
+          )}
 
           <FormSummaryFromSnapshot formSnapshot={content} />
 

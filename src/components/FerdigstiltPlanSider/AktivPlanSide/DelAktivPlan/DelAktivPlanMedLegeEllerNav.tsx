@@ -4,13 +4,9 @@ import { DelPlanMedVeilederButtonAndStatus } from "./DelPlanMedVeilederButtonAnd
 
 interface Props {
   planId: string;
-  userHasEditAccess: boolean;
 }
 
-export default function DelAktivPlanMedLegeEllerNav({
-  planId,
-  userHasEditAccess,
-}: Props) {
+export default function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
   return (
     <Box className="bg-ax-bg-accent-soft p-4 pb-6 rounded-lg">
       <HStack gap="space-16">
@@ -23,10 +19,7 @@ export default function DelAktivPlanMedLegeEllerNav({
           har vært helt eller delvis borte fra jobb i fire uker.
         </BodyLong>
 
-        <DelPlanMedLegeButtonAndStatus
-          planId={planId}
-          userHasEditAccess={userHasEditAccess}
-        />
+        <DelPlanMedLegeButtonAndStatus planId={planId} />
 
         <BodyLong>
           Oppfølgingsplanen skal sendes til veileder i Nav senest en uke før et
@@ -34,10 +27,7 @@ export default function DelAktivPlanMedLegeEllerNav({
           oppfølgingsplanen før du velger å sende den til Nav-veileder.
         </BodyLong>
 
-        <DelPlanMedVeilederButtonAndStatus
-          planId={planId}
-          userHasEditAccess={userHasEditAccess}
-        />
+        <DelPlanMedVeilederButtonAndStatus planId={planId} />
       </HStack>
     </Box>
   );
