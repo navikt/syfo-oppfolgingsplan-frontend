@@ -1,11 +1,11 @@
-import { isLocalOrDemo } from "@/env-variables/envHelpers.ts";
-import { getServerEnv } from "@/env-variables/serverEnv.ts";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { getServerEnv } from "@/env-variables/serverEnv";
 import { validateAndGetIdPortenToken } from "@/server/auth/idPortenToken";
 import {
   TokenXTargetApi,
   exchangeIdPortenTokenForTokenXOboToken,
 } from "@/server/auth/tokenXExchange";
-import { mockPdf } from "@/server/fetchData/mockData/mockPdf.ts";
+import { mockPdf } from "@/server/fetchData/mockData/mockPdf";
 
 export async function GET(
   _: Request,

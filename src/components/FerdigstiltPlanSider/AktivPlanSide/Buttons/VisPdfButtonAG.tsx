@@ -2,8 +2,8 @@
 
 import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
-import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties.ts";
-import { TrackedButton } from "@/ui/TrackedButton.tsx";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
+import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
   className?: string;
