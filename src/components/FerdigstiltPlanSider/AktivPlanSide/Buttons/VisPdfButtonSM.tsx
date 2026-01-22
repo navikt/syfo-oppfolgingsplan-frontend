@@ -7,20 +7,19 @@ import { TrackedButton } from "@/ui/TrackedButton";
 
 interface Props {
   className?: string;
-  narmesteLederId: string;
   planId: string;
 }
 
-export function VisPdfButton({ className, narmesteLederId, planId }: Props) {
+export function VisPdfButtonSM({ className, planId }: Props) {
   return (
     <TrackedButton
       variant="tertiary"
       icon={<FilePdfIcon />}
       iconPosition="right"
       className={className}
-      tracking={knappKlikket.ferdigstiltPlanSide.visPdf}
+      tracking={knappKlikket.ferdigstiltPlanSide.visPdfSykmeldt}
       as={NextLink}
-      href={`/api/${narmesteLederId}/pdf/${planId}`}
+      href={`/api/sykmeldt/pdf/${planId}`}
       target="_blank"
     >
       Vis PDF

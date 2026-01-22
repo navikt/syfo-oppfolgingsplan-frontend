@@ -1,10 +1,11 @@
-import { VStack } from "@navikt/ds-react";
-import { DeltMedDegAlert } from "@/components/FerdigstiltPlanSider/AktivPlanSide/DeltMedDegAlert.tsx";
-import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM.tsx";
-import { AktivPlanHeadingAndTagsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/HeadingAndTags/AktivPlanHeadingAndTagsSM.tsx";
+import { HStack, VStack } from "@navikt/ds-react";
+import { VisPdfButtonSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Buttons/VisPdfButtonSM";
+import { DeltMedDegAlert } from "@/components/FerdigstiltPlanSider/AktivPlanSide/DeltMedDegAlert";
+import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM";
+import { AktivPlanHeadingAndTagsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/HeadingAndTags/AktivPlanHeadingAndTagsSM";
 import TilbakeTilOversiktButtonForSM from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForSM";
 import { fetchFerdigstiltPlanForSM } from "@/server/fetchData/sykmeldt/fetchFerdigstiltPlanForSM";
-import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot.tsx";
+import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
 
 interface Props {
   planId: string;
@@ -35,10 +36,14 @@ export default async function TidligerePlanForSM({ planId }: Props) {
           isDeltMedVeileder={isDeltMedVeileder}
         />
 
-        <AktivPlanDetailsSM
-          ferdigstiltTidspunkt={ferdigstiltTidspunkt}
-          evalueringsDato={evalueringsDato}
-        />
+        <HStack>
+          <AktivPlanDetailsSM
+            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
+            evalueringsDato={evalueringsDato}
+          />
+
+          <VisPdfButtonSM planId={planId} className="ml-auto" />
+        </HStack>
 
         <FormSummaryFromSnapshot formSnapshot={content} />
 
