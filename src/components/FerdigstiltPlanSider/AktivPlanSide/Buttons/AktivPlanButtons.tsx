@@ -8,9 +8,9 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
-import { VisPdfButton } from "../../Shared/Buttons/VisPdfButton";
 import { VilDuOverskriveUtkastForAEndrePlanModal } from "../HarAlleredeUtkastModaler/VilDuOverskriveUtkastForAEndrePlanModal";
 import { VilDuSletteUtkastForALageNyPlanModal } from "../HarAlleredeUtkastModaler/VilDuSletteUtkastForALageNyPlanModal";
+import { VisPdfButtonAG } from "./VisPdfButtonAG.tsx";
 
 interface Props {
   planId: string;
@@ -87,7 +87,7 @@ export function AktivPlanButtons({
           </TrackedButton>
         </HStack>
 
-        <VisPdfButton narmesteLederId={narmesteLederId} planId={planId} />
+        <VisPdfButtonAG narmesteLederId={narmesteLederId} planId={planId} />
       </HStack>
       <FetchErrorAlert
         error={upsertUtkastWithAktivPlanError}

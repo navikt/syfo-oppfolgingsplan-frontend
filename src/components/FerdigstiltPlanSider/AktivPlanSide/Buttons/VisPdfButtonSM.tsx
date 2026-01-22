@@ -2,25 +2,24 @@
 
 import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
-import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
-import { TrackedButton } from "@/ui/TrackedButton";
+import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties.ts";
+import { TrackedButton } from "@/ui/TrackedButton.tsx";
 
 interface Props {
   className?: string;
-  narmesteLederId: string;
   planId: string;
 }
 
-export function VisPdfButton({ className, narmesteLederId, planId }: Props) {
+export function VisPdfButtonSM({ className, planId }: Props) {
   return (
     <TrackedButton
       variant="tertiary"
       icon={<FilePdfIcon />}
       iconPosition="right"
       className={className}
-      tracking={knappKlikket.ferdigstiltPlanSide.visPdf}
+      tracking={knappKlikket.ferdigstiltPlanSide.visPdfSykmeldt}
       as={NextLink}
-      href={`/api/${narmesteLederId}/pdf/${planId}`}
+      href={`/api/sykmeldt/pdf/${planId}`}
       target="_blank"
     >
       Vis PDF

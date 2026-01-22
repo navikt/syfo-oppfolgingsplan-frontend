@@ -1,4 +1,5 @@
-import { VStack } from "@navikt/ds-react";
+import { HStack, VStack } from "@navikt/ds-react";
+import { VisPdfButtonSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Buttons/VisPdfButtonSM.tsx";
 import { DeltMedDegAlert } from "@/components/FerdigstiltPlanSider/AktivPlanSide/DeltMedDegAlert.tsx";
 import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM.tsx";
 import { AktivPlanHeadingAndTagsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/HeadingAndTags/AktivPlanHeadingAndTagsSM.tsx";
@@ -35,10 +36,14 @@ export default async function TidligerePlanForSM({ planId }: Props) {
           isDeltMedVeileder={isDeltMedVeileder}
         />
 
-        <AktivPlanDetailsSM
-          ferdigstiltTidspunkt={ferdigstiltTidspunkt}
-          evalueringsDato={evalueringsDato}
-        />
+        <HStack>
+          <AktivPlanDetailsSM
+            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
+            evalueringsDato={evalueringsDato}
+          />
+
+          <VisPdfButtonSM planId={planId} className="ml-auto" />
+        </HStack>
 
         <FormSummaryFromSnapshot formSnapshot={content} />
 

@@ -46,10 +46,15 @@ export const knappKlikket = {
     },
   },
   ferdigstiltPlanSide: {
-    visPdf: {
-      komponentId: "vis-pdf-knapp",
+    visPdfSykmeldt: {
+      komponentId: "vis-pdf-knapp-sykmeldt",
       tekst: "Vis PDF",
-      kontekst: "FerdigstiltPlanSide",
+      kontekst: "FerdigstiltPlanSideSykmeldt",
+    },
+    visPdfArbeidsgiver: {
+      komponentId: "vis-pdf-knapp-arbeidsgiver",
+      tekst: "Vis PDF",
+      kontekst: "FerdigstiltPlanSideArbeidsgiver",
     },
     tilbakeTilOversikt: {
       komponentId: "tilbake-til-oversikt-knapp",
