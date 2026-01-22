@@ -10,7 +10,7 @@ import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 import { VilDuOverskriveUtkastForAEndrePlanModal } from "../HarAlleredeUtkastModaler/VilDuOverskriveUtkastForAEndrePlanModal";
 import { VilDuSletteUtkastForALageNyPlanModal } from "../HarAlleredeUtkastModaler/VilDuSletteUtkastForALageNyPlanModal";
-import { VisPdfButtonAG } from "./VisPdfButtonAG.tsx";
+import { VisPdfButtonAG } from "./VisPdfButtonAG";
 
 interface Props {
   planId: string;

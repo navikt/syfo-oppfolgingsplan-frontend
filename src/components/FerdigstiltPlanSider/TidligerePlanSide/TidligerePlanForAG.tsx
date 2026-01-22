@@ -1,7 +1,7 @@
 import { HStack, VStack } from "@navikt/ds-react";
 import { fetchTidligerePlanForAG } from "@/server/fetchData/arbeidsgiver/fetchTidligerePlan";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
-import { VisPdfButtonAG } from "../AktivPlanSide/Buttons/VisPdfButtonAG.tsx";
+import { VisPdfButtonAG } from "../AktivPlanSide/Buttons/VisPdfButtonAG";
 import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktButtonForAG";
 import { TidligerePlanDetails } from "./Details/TidligerePlanDetails";
 import { TidligerePlanHeadingAndTags } from "./HeadingAndTags/TidligerePlanHeadingAndTags";
