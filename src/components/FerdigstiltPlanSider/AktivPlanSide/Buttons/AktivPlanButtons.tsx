@@ -15,14 +15,9 @@ import { VilDuSletteUtkastForALageNyPlanModal } from "../HarAlleredeUtkastModale
 interface Props {
   planId: string;
   hasUtkast: boolean;
-  userHasEditAccess: boolean;
 }
 
-export function AktivPlanButtons({
-  planId,
-  userHasEditAccess,
-  hasUtkast,
-}: Props) {
+export function AktivPlanButtons({ planId, hasUtkast }: Props) {
   const { push } = useRouter();
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
@@ -68,7 +63,6 @@ export function AktivPlanButtons({
       <HStack justify="space-between">
         <HStack gap="space-16">
           <TrackedButton
-            disabled={!userHasEditAccess}
             variant="primary"
             onClick={handleEndreOppfolgingsplanClick}
             loading={isPendingUpsertUtkastWithAktivPlan}
@@ -80,7 +74,6 @@ export function AktivPlanButtons({
           <TrackedButton
             variant="secondary"
             onClick={handleNyPlanClick}
-            disabled={!userHasEditAccess}
             tracking={knappKlikket.aktivPlanSide.lagNyOppfolgingsplan}
           >
             Lag en ny plan
