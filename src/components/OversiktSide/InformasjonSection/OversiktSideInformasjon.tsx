@@ -1,5 +1,5 @@
 import { BodyLong, Heading, Link } from "@navikt/ds-react";
-import { publicEnv } from "@/env-variables/publicEnv";
+import { publicAssetUrl } from "@/common/publicAssetUrl";
 import InformasjonListItem from "./InformasjonListItem";
 
 export default function OversiktSideInformasjon() {
@@ -10,7 +10,9 @@ export default function OversiktSideInformasjon() {
       </Heading>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/chat-double-bubble.svg`}
+        illustrationSrc={publicAssetUrl(
+          "/illustrations/chat-double-bubble.svg",
+        )}
         heading="Involver medarbeideren din!"
       >
         <BodyLong className="mb-4">
@@ -32,7 +34,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/pencil.svg`}
+        illustrationSrc={publicAssetUrl("/illustrations/pencil.svg")}
         heading="Foreslå tilpasninger og bli enige om oppfølging"
       >
         <BodyLong size="medium">
@@ -45,7 +47,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/letter-opened.svg`}
+        illustrationSrc={publicAssetUrl("/illustrations/letter-opened.svg")}
         heading="Del oppfølgingsplanen med legen og Nav når som helst"
       >
         <BodyLong size="medium" className="mb-4">
@@ -61,7 +63,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/stepper.svg`}
+        illustrationSrc={publicAssetUrl("/illustrations/stepper.svg")}
         heading="Oppdater planen underveis"
       >
         <BodyLong className="mb-4">
@@ -72,7 +74,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/clipboard.svg`}
+        illustrationSrc={publicAssetUrl("/illustrations/clipboard.svg")}
         heading="Last ned en oppfølgingsplan som PDF"
       >
         <BodyLong>
