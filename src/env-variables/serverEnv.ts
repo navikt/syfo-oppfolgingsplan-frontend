@@ -6,7 +6,6 @@ import { PublicEnv, publicEnvSchema, rawPublicEnv } from "./publicEnv";
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 export const serverEnvSchema = z.object({
   // Provided by nais-*.yaml
-  DINESYKMELDTE_BACKEND_CLIENT_ID: z.string(),
   SYFO_OPPFOLGINGSPLAN_BACKEND_HOST: z.string(),
   SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID: z.string(),
   LUMI_API_HOST: z.string(),
@@ -22,7 +21,6 @@ export const serverEnvSchema = z.object({
 
 const rawServerEnv = {
   // Provided by nais-*.yml
-  DINESYKMELDTE_BACKEND_CLIENT_ID: process.env.DINESYKMELDTE_BACKEND_CLIENT_ID,
   SYFO_OPPFOLGINGSPLAN_BACKEND_HOST:
     process.env.SYFO_OPPFOLGINGSPLAN_BACKEND_HOST,
   SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID:

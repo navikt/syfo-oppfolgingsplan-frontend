@@ -59,8 +59,6 @@ spec:
       value: "http://lumi-api"
     - name: LUMI_API_CLIENT_ID
       value: dev-gcp:team-esyfo:lumi-api
-    - name: DINESYKMELDTE_BACKEND_CLIENT_ID
-      value: "dev-gcp:team-esyfo:dinesykmeldte-backend"
     - name: SYFO_OPPFOLGINGSPLAN_BACKEND_HOST
       value: http://syfo-oppfolgingsplan-backend
     - name: SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID
@@ -69,7 +67,6 @@ spec:
     outbound:
       rules:
         - application: syfo-oppfolgingsplan-backend
-        - application: dinesykmeldte-backend
         - application: lumi-api
         - application: nav-dekoratoren
           namespace: personbruker
