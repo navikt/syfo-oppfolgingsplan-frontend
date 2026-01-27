@@ -6,7 +6,6 @@ import { logWarningMessageAndThrowAuthError } from "./handleAuthError";
 
 export enum TokenXTargetApi {
   SYFO_OPPFOLGINGSPLAN_BACKEND = "SYFO_OPPFOLGINGSPLAN_BACKEND",
-  DINE_SYKMELDTE_BACKEND = "DINE_SYKMELDTE_BACKEND",
   LUMI_API = "LUMI_API",
 }
 
@@ -39,8 +38,6 @@ export const exchangeIdPortenTokenForTokenXOboToken = cache(
 function getClientIdForTokenXTargetApi(targetApi: TokenXTargetApi): string {
   if (targetApi === TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND) {
     return getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID;
-  } else if (targetApi === TokenXTargetApi.DINE_SYKMELDTE_BACKEND) {
-    return getServerEnv().DINESYKMELDTE_BACKEND_CLIENT_ID;
   } else if (targetApi === TokenXTargetApi.LUMI_API) {
     return getServerEnv().LUMI_API_CLIENT_ID;
   } else {
