@@ -15,7 +15,13 @@ export default function InformasjonListItem({
   return (
     <Box className="flex gap-12 mb-8">
       <Box className="flex-shrink-0">
-        <Image src={illustrationSrc} alt="" width={64} height={64} />
+        <Image
+          src={illustrationSrc}
+          alt=""
+          width={64}
+          height={64}
+          unoptimized
+        />
       </Box>
       <Box>
         <Heading level="3" size="small" spacing>
