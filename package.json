@@ -13,7 +13,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@grafana/faro-web-sdk": "^1.19.0",
+    "@grafana/faro-web-sdk": "^2.2.0",
     "@grafana/faro-web-tracing": "^1.19.0",
     "@navikt/aksel-icons": "^8.1.0",
     "@navikt/analytics-types": "^0.0.6",
