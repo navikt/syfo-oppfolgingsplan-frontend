@@ -1,5 +1,11 @@
 import { BodyLong, Heading, Link } from "@navikt/ds-react";
-import { publicEnv } from "@/env-variables/publicEnv";
+import {
+  CHAT_BUBBLE_SVG,
+  CLIPBOARD_SVG,
+  LETTER_OPENED_SVG,
+  PENCIL_SVG,
+  STEPPER_SVG,
+} from "@/common/publicAssets";
 import InformasjonListItem from "./InformasjonListItem";
 
 export default function OversiktSideInformasjon() {
@@ -10,7 +16,7 @@ export default function OversiktSideInformasjon() {
       </Heading>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/chat-double-bubble.svg`}
+        illustrationSrc={CHAT_BUBBLE_SVG}
         heading="Involver medarbeideren din!"
       >
         <BodyLong className="mb-4">
@@ -32,7 +38,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/pencil.svg`}
+        illustrationSrc={PENCIL_SVG}
         heading="Foreslå tilpasninger og bli enige om oppfølging"
       >
         <BodyLong size="medium">
@@ -45,7 +51,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/letter-opened.svg`}
+        illustrationSrc={LETTER_OPENED_SVG}
         heading="Del oppfølgingsplanen med legen og Nav når som helst"
       >
         <BodyLong size="medium" className="mb-4">
@@ -61,7 +67,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/stepper.svg`}
+        illustrationSrc={STEPPER_SVG}
         heading="Oppdater planen underveis"
       >
         <BodyLong className="mb-4">
@@ -72,7 +78,7 @@ export default function OversiktSideInformasjon() {
       </InformasjonListItem>
 
       <InformasjonListItem
-        illustrationSrc={`${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/clipboard.svg`}
+        illustrationSrc={CLIPBOARD_SVG}
         heading="Last ned en oppfølgingsplan som PDF"
       >
         <BodyLong>
