@@ -37,22 +37,23 @@ export const oppfolgingsplanFormUnderArbeidSchema = z
  * Zod-schema for validering av form ved ferdigstilling av plan.
  * Denne valideringen er strengere enn ved lagring av utkast.
  */
-export const oppfolgingsplanFormUtfylltSchema = z
-  .object({
-    typiskArbeidshverdag: requiredMaxLengthTextFieldSchema,
-    arbeidsoppgaverSomKanUtfores: requiredMaxLengthTextFieldSchema,
-    arbeidsoppgaverSomIkkeKanUtfores: requiredMaxLengthTextFieldSchema,
-    tidligereTilrettelegging: requiredMaxLengthTextFieldSchema,
-    tilretteleggingFremover: requiredMaxLengthTextFieldSchema,
-    annenTilrettelegging: requiredMaxLengthTextFieldSchema,
-    hvordanFolgeOpp: requiredMaxLengthTextFieldSchema,
-    evalueringsDato: evalueringsDatoFieldInUtfylltFormSchema,
-    harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
-      error: "Du må svare ja eller nei",
-    }),
-    denAnsatteHarIkkeMedvirketBegrunnelse: nonRequiredMaxLengthTextFieldSchema,
-  })
-  .refine(
+const oppfolgingsplanFormUtfylltBaseSchema = z.object({
+  typiskArbeidshverdag: requiredMaxLengthTextFieldSchema,
+  arbeidsoppgaverSomKanUtfores: requiredMaxLengthTextFieldSchema,
+  arbeidsoppgaverSomIkkeKanUtfores: requiredMaxLengthTextFieldSchema,
+  tidligereTilrettelegging: requiredMaxLengthTextFieldSchema,
+  tilretteleggingFremover: requiredMaxLengthTextFieldSchema,
+  annenTilrettelegging: requiredMaxLengthTextFieldSchema,
+  hvordanFolgeOpp: requiredMaxLengthTextFieldSchema,
+  evalueringsDato: evalueringsDatoFieldInUtfylltFormSchema,
+  harDenAnsatteMedvirket: z.enum(["ja", "nei"], {
+    error: "Du må svare ja eller nei",
+  }),
+  denAnsatteHarIkkeMedvirketBegrunnelse: nonRequiredMaxLengthTextFieldSchema,
+});
+
+export const oppfolgingsplanFormUtfylltSchema =
+  oppfolgingsplanFormUtfylltBaseSchema.refine(
     ({ harDenAnsatteMedvirket, denAnsatteHarIkkeMedvirketBegrunnelse }) =>
       checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
         harDenAnsatteMedvirket,
@@ -62,7 +63,7 @@ export const oppfolgingsplanFormUtfylltSchema = z
       message: requireFieldErrorMessage,
       path: ["denAnsatteHarIkkeMedvirketBegrunnelse"],
       when(payload) {
-        return oppfolgingsplanFormUtfylltSchema
+        return oppfolgingsplanFormUtfylltBaseSchema
           .pick({
             harDenAnsatteMedvirket: true,
           })
