@@ -4,9 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
 import { logger } from "@navikt/next-logger";
-import { publicEnv } from "@/env-variables/publicEnv";
-
-const ERROR_DAD_SVG_PUBLIC_PATH = `${publicEnv.NEXT_PUBLIC_BASE_PATH}/illustrations/error-page-dad.svg`;
+import { ERROR_PAGE_DAD_SVG } from "@/common/publicAssets";
 
 // TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.
 
@@ -26,11 +24,12 @@ export default function Error({
   return (
     <div className="flex max-w-3xl flex-col" role="status" aria-live="polite">
       <Image
-        src={ERROR_DAD_SVG_PUBLIC_PATH}
+        src={ERROR_PAGE_DAD_SVG}
         width={200}
         height={237}
         alt=""
         className="max-[960px]:max-h[240px] mr-8 flex-[1_1_50%] max-[960px]:mb-4"
+        unoptimized
       />
 
       <div>

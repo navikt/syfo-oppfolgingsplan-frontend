@@ -20,7 +20,7 @@ const appDirectives = {
     "http://localhost:3000",
     "https://uxsignals-frontend.uxsignals.app.iterate.no",
   ],
-  "img-src": ["'self'", "data:"],
+  "img-src": ["'self'", "data:", "https://cdn.nav.no"],
   "font-src": ["'self'", "https://cdn.nav.no"],
   "worker-src": ["'self'"],
   "connect-src": [
@@ -58,7 +58,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   output: "standalone",
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
-  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX ?? "",
+  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX || "",
   productionBrowserSourceMaps: true,
   serverExternalPackages: [
     "@navikt/next-logger",
