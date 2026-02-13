@@ -12,12 +12,12 @@ export function throwEnvSchemaParsingError(e: unknown): never {
           .filter(
             (it) =>
               it.code === "invalid_type" &&
-              it.message.includes("received undefined")
+              it.message.includes("received undefined"),
           )
           .map((it) => it.path.join("."))
           .join(", ") || "None are missing, but zod is not happy. Look at cause"
       }`,
-      { cause: e }
+      { cause: e },
     );
   } else {
     throw e;
