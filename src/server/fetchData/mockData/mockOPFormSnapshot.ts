@@ -94,7 +94,7 @@ export const mockPlanFormSnapshot: FormSnapshot = {
           fieldId: "harDenAnsatteMedvirket",
           fieldType: "RADIO_GROUP",
           label:
-            'Har du snakket med den ansatte om innholdet i planen, enten på telefon eller i møte?"',
+            "Har du snakket med den ansatte om innholdet i planen, enten på telefon eller i møte?",
           description: null,
           selectedOptionId: "ja",
           options: [

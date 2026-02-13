@@ -34,7 +34,7 @@ export const formLabels = {
   },
   harDenAnsatteMedvirket: {
     label:
-      'Har du snakket med den ansatte om innholdet i planen, enten på telefon eller i møte?"',
+      "Har du snakket med den ansatte om innholdet i planen, enten på telefon eller i møte?",
     description:
       "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Den ansatte skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
   },
