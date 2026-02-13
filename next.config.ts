@@ -64,7 +64,6 @@ const nextConfig: NextConfig = {
     "@navikt/next-logger",
     "next-logger",
     "pino",
-    "pino-roll",
   ],
   experimental: {
     optimizePackageImports: ["@navikt/ds-react", "@navikt/aksel-icons"],
