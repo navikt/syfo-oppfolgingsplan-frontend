@@ -1,6 +1,11 @@
 import { logger } from "@navikt/next-logger";
+import { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 import { FetchResultError, fetchResultErrorSchema } from "./FetchResult";
+
+const EXPECTED_ERROR_TYPES: ReadonlySet<CombinedErrorType> = new Set([
+  "LEGE_NOT_FOUND",
+]);
 
 export function getAndLogFetchNetworkError({
   error,
@@ -37,10 +42,14 @@ export async function getAndLogErrorResultFromNonOkResponse({
     const errorResponseJson = await response.json();
     const parsedErrorResponse = fetchResultErrorSchema.parse(errorResponseJson);
 
-    logger.error(
-      { ...parsedErrorResponse, method, endpoint },
-      `Got structured error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): type=${parsedErrorResponse.type}${parsedErrorResponse.message ? ` message=${parsedErrorResponse.message}` : ""}`,
-    );
+    const logMessage = `Got structured error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): type=${parsedErrorResponse.type}${parsedErrorResponse.message ? ` message=${parsedErrorResponse.message}` : ""}`;
+    const logMetadata = { ...parsedErrorResponse, method, endpoint };
+
+    if (EXPECTED_ERROR_TYPES.has(parsedErrorResponse.type)) {
+      logger.info(logMetadata, logMessage);
+    } else {
+      logger.error(logMetadata, logMessage);
+    }
 
     return parsedErrorResponse;
   } catch {
