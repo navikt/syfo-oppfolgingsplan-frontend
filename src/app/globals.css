@@ -8,7 +8,7 @@
   kunne overstyre Tailwind utilities (f.eks. `mb-4` på `BodyLong`).
 */
 @import "@navikt/ds-css" layer(components);
-@config '../../tailwind.config.ts';
+@config "../../tailwind.config.ts";
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
