@@ -12,12 +12,16 @@ export default async function OversiktPageForSM() {
       </Heading>
 
       <TextContentBox>
+        <BodyLong size="large" className="mb-4">
+          På denne siden finner du oppfølgingsplanene lederen din lager i dialog
+          med deg. Lederen din er lovpålagt å lage oppfølgingsplanen, og dele
+          den med fastlegen din innen fire ukers sykefravær.
+        </BodyLong>
         <BodyLong size="large" spacing>
-          Oppfølgingsplanen skal gjøre det lettere for deg å bli i jobben.
-          Hensikten er å finne ut hvilke oppgaver du kan gjøre hvis lederen din
-          legger til rette for det. Arbeidsgiver har plikt til å lage en plan
-          sammen med deg innen du har vært sykmeldt i fire uker. Dere kan endre
-          den når som helst etter hvert som dere ser hvordan det går.
+          Du har ansvar for å bidra med innhold til planen. Oppfølgingsplanen
+          skal hjelpe deg tilbake i jobb på en trygg og tilpasset måte. For at
+          planen skal bli best mulig tilpasset deg og din arbeidssituasjon, er
+          det viktig at du snakker med lederen din om hva du trenger.
         </BodyLong>
       </TextContentBox>
 
