@@ -1,7 +1,7 @@
 "use client";
 
-import NextLink from "next/link";
 import { FilePdfIcon } from "@navikt/aksel-icons";
+import NextLink from "next/link";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { TrackedButton } from "@/ui/TrackedButton";
 

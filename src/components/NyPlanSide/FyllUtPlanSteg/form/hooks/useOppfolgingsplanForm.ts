@@ -1,12 +1,12 @@
-import { startTransition, useRef, useState, useTransition } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { revalidateLogic } from "@tanstack/react-form";
-import z from "zod";
+import { useParams, useRouter } from "next/navigation";
+import { startTransition, useRef, useState, useTransition } from "react";
+import type z from "zod";
 import { SAVE_UTKAST_DEBOUNCE_DELAY } from "@/common/app-config";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
-  OppfolgingsplanFormUnderArbeid,
+  type OppfolgingsplanFormUnderArbeid,
   oppfolgingsplanFormUtfylltSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";

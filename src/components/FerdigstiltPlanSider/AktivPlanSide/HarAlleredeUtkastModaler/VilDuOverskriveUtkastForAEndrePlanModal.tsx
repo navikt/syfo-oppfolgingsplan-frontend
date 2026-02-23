@@ -1,6 +1,6 @@
-import { useActionState } from "react";
-import { useParams } from "next/navigation";
 import { BodyLong, Modal } from "@navikt/ds-react";
+import { useParams } from "next/navigation";
+import { useActionState } from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";

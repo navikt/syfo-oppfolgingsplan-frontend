@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import {
-  NYLIG_OPPRETTET_SEARCH_PARAM,
   getAGOversiktHref,
+  NYLIG_OPPRETTET_SEARCH_PARAM,
 } from "@/common/route-hrefs";
 import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
 import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";

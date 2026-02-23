@@ -1,4 +1,4 @@
-import {
+import type {
   SkjemaFullfortEvent,
   SkjemaStegFullfortEvent,
 } from "@navikt/analytics-types";

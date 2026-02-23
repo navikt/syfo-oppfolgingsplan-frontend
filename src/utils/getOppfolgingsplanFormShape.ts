@@ -1,5 +1,5 @@
 import { formLabels } from "@/components/NyPlanSide/form-labels";
-import { FormSnapshotFormShape } from "./FormSnapshot/schemas/FormShape";
+import type { FormSnapshotFormShape } from "./FormSnapshot/schemas/FormShape";
 
 const OPPFOLGINGSPLAN_FORM_IDENTIFIER = "oppfolgingsplan-navno";
 const OPPFOLGINGSPLAN_FORM_VERSION = "1.0.0";

@@ -11,7 +11,7 @@ import {
   getFormattedDateAndTimeString,
   getFormattedDateString,
 } from "@/ui-helpers/dateAndTime";
-import { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
+import type { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
 
 interface Props {
   formSnapshot: FormSnapshot;

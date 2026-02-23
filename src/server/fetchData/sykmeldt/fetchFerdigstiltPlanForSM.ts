@@ -1,7 +1,7 @@
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
 import {
-  FerdigstiltPlanResponse,
+  type FerdigstiltPlanResponse,
   ferdigstiltPlanResponseSchema,
 } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { getRedirectAfterLoginUrlForSM } from "@/server/auth/redirectToLogin";

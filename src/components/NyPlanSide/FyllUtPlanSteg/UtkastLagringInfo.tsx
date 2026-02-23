@@ -1,4 +1,4 @@
-import { BodyLong, HStack, HelpText, Loader } from "@navikt/ds-react";
+import { BodyLong, HelpText, HStack, Loader } from "@navikt/ds-react";
 import {
   getFormattedDateAndTimeString,
   getFormattedTimeString,

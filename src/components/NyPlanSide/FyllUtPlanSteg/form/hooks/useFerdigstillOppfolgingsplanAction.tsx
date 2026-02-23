@@ -1,9 +1,9 @@
-import { startTransition, useActionState } from "react";
 import { useParams } from "next/navigation";
-import z from "zod";
+import { startTransition, useActionState } from "react";
+import type z from "zod";
 import { ferdigstillPlanServerAction } from "@/server/actions/ferdigstillPlan";
-import { ferdigstillPlanActionPayloadSchema } from "@/server/actions/serverActionsInputValidation";
-import { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
+import type { ferdigstillPlanActionPayloadSchema } from "@/server/actions/serverActionsInputValidation";
+import type { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
 
 export type FerdigstillPlanActionPayload = z.infer<
   typeof ferdigstillPlanActionPayloadSchema

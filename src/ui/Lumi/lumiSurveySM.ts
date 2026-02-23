@@ -1,4 +1,4 @@
-import { type LumiSurveyConfig } from "@navikt/lumi-survey";
+import type { LumiSurveyConfig } from "@navikt/lumi-survey";
 
 export const lumiSurveySM: LumiSurveyConfig = {
   type: "rating",

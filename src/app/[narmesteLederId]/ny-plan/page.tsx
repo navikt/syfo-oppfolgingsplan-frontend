@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import { Heading } from "@navikt/ds-react";
+import { Suspense } from "react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import LagPlanVeiviser from "@/components/NyPlanSide/LagPlanVeiviser";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";

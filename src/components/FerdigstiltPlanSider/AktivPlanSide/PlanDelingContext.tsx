@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type React from "react";
+import { createContext, useContext } from "react";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { useDelPlanMedLegeAction } from "./DelAktivPlan/useDelPlanMedLegeAction";
 import { useDelPlanMedVeilederAction } from "./DelAktivPlan/useDelPlanMedVeilederAction";
 

@@ -1,9 +1,9 @@
-import z from "zod";
-import {
-  EmployeeDetails,
+import type z from "zod";
+import type {
   commonResponseFieldsSchema,
+  EmployeeDetails,
 } from "@/schema/commonResponseFieldsSchemas";
-import { OrganizationDetails } from "@/schema/organizationDetailsSchema";
+import type { OrganizationDetails } from "@/schema/organizationDetailsSchema";
 
 export const mockEmployeeDetails: EmployeeDetails = {
   fnr: "17097534212",

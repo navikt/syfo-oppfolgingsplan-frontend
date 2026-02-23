@@ -1,6 +1,6 @@
 import z from "zod";
 import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
-import { OppfolgingsplanFormUnderArbeid } from "./oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUnderArbeid } from "./oppfolgingsplanForm/formValidationSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
 // Raw as in not yet converted to current OppfolgingsplanFormUnderArbeid schema

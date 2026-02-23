@@ -1,8 +1,8 @@
-import { Suspense } from "react";
 import { BodyLong, Heading } from "@navikt/ds-react";
+import { Suspense } from "react";
+import TextContentBox from "@/components/layout/TextContentBox.tsx";
 import PlanListeForSykmeldt from "@/components/OversiktSide/PlanListe/PlanListeForSykmeldt.tsx";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton.tsx";
-import TextContentBox from "@/components/layout/TextContentBox.tsx";
 
 export default async function OversiktPageForSM() {
   return (

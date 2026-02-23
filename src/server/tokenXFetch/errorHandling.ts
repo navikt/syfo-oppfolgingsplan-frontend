@@ -1,7 +1,7 @@
 import { logger } from "@navikt/next-logger";
-import { CombinedErrorType } from "@/schema/errorSchemas";
+import type { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
-import { FetchResultError, fetchResultErrorSchema } from "./FetchResult";
+import { type FetchResultError, fetchResultErrorSchema } from "./FetchResult";
 
 const EXPECTED_ERROR_TYPES: ReadonlySet<CombinedErrorType> = new Set([
   "LEGE_NOT_FOUND",

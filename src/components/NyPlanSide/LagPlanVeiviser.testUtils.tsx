@@ -1,7 +1,7 @@
 import { act, render } from "@testing-library/react";
 import { vi } from "vitest";
-import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
-import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
+import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import LagPlanVeiviser from "./LagPlanVeiviser";
 
 // Mock setup functions

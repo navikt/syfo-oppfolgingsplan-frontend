@@ -1,4 +1,4 @@
-import { FormSnapshot } from "@/utils/FormSnapshot/schemas/FormSnapshot";
+import type { FormSnapshot } from "@/utils/FormSnapshot/schemas/FormSnapshot";
 
 export const mockPlanFormSnapshot: FormSnapshot = {
   formIdentifier: "oppfolgingsplan-navno",

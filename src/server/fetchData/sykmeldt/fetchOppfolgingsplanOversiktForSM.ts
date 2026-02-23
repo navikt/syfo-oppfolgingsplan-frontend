@@ -1,7 +1,7 @@
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
 import {
-  OppfolgingsplanerOversiktForSM,
+  type OppfolgingsplanerOversiktForSM,
   OppfolgingsplanerOversiktResponseSchemaForSM,
 } from "@/schema/oversiktResponseSchemas";
 import { getRedirectAfterLoginUrlForSM } from "@/server/auth/redirectToLogin";

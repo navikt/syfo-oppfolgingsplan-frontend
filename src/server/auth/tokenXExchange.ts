@@ -1,6 +1,6 @@
 import "server-only";
-import { cache } from "react";
 import { requestOboToken } from "@navikt/oasis";
+import { cache } from "react";
 import { getServerEnv } from "@/env-variables/serverEnv";
 import { logWarningMessageAndThrowAuthError } from "./handleAuthError";
 

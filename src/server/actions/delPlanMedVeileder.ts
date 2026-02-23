@@ -6,7 +6,7 @@ import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { FetchResultError } from "../tokenXFetch/FetchResult";
+import type { FetchResultError } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
 
 export type DelPlanMedVeilederActionState = {

@@ -1,5 +1,5 @@
-import z from "zod";
 import { logger } from "@navikt/next-logger";
+import type z from "zod";
 import { tryToExtractNameAndMessageFromError } from "./errorHandling";
 
 /**

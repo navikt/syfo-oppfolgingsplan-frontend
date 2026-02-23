@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import Image from "next/image";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
 import { logger } from "@navikt/next-logger";
+import Image from "next/image";
+import { useEffect } from "react";
 import { ERROR_PAGE_DAD_SVG } from "@/common/publicAssets";
 
 // TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.

@@ -1,5 +1,5 @@
 import {
-  OppfolgingsplanFormUnderArbeid,
+  type OppfolgingsplanFormUnderArbeid,
   oppfolgingsplanFormUnderArbeidSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 

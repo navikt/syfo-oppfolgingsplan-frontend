@@ -1,8 +1,8 @@
 "use client";
 
+import { ChevronLeftIcon } from "@navikt/aksel-icons";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronLeftIcon } from "@navikt/aksel-icons";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { TrackedButton } from "@/ui/TrackedButton";

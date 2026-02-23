@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode } from "react";
 import { Radio, RadioGroup } from "@navikt/ds-react";
+import type { ReactNode } from "react";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { useFieldContext } from "../hooks/form-context";
 

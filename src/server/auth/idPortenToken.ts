@@ -1,8 +1,8 @@
 import "server-only";
-import { cache } from "react";
-import { headers } from "next/headers";
 import { logger } from "@navikt/next-logger";
 import { getToken, validateIdportenToken } from "@navikt/oasis";
+import { headers } from "next/headers";
+import { cache } from "react";
 import { logWarningMessageAndThrowAuthError } from "./handleAuthError";
 import { redirectToLogin } from "./redirectToLogin";
 

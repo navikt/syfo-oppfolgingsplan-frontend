@@ -1,7 +1,7 @@
 import { getEndpointFerdigstiltPlanForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  FerdigstiltPlanResponse,
+  type FerdigstiltPlanResponse,
   ferdigstiltPlanResponseSchema,
 } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";

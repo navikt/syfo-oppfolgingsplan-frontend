@@ -1,15 +1,15 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { logger } from "@navikt/next-logger";
+import { redirect } from "next/navigation";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
-import { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
-import { extractValuesFromFormSnapshot } from "@/utils/FormSnapshot/extractValuesFromFormSnapshot";
+import type { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { convertPlanContentToCurrentSchema } from "@/utils/convertPlanContentToCurrentSchema";
+import { extractValuesFromFormSnapshot } from "@/utils/FormSnapshot/extractValuesFromFormSnapshot";
 import { fetchAktivPlanForAG } from "../fetchData/arbeidsgiver/fetchAktivPlan";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import {
+import type {
   FetchResultError,
   FetchUpdateResult,
 } from "../tokenXFetch/FetchResult";

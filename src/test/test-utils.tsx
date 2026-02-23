@@ -1,6 +1,6 @@
-import type { ReactElement, ReactNode } from "react";
-import { render } from "@testing-library/react";
 import { Theme } from "@navikt/ds-react";
+import { render } from "@testing-library/react";
+import type { ReactElement, ReactNode } from "react";
 
 export function AllTheProviders({ children }: { children: ReactNode }) {
   return <Theme>{children}</Theme>;

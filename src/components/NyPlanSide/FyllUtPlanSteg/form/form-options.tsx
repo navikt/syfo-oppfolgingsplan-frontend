@@ -1,4 +1,4 @@
-import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
 export const oppfolgingsplanFormDefaultValues: OppfolgingsplanFormUnderArbeid =
   {

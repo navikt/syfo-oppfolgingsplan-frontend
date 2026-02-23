@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from "@navikt/aksel-icons";
 import { Button, HStack, VStack } from "@navikt/ds-react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
 

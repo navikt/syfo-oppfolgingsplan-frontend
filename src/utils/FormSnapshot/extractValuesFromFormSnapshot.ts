@@ -1,4 +1,4 @@
-import { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
+import type { FormSnapshot, FormSnapshotField } from "./schemas/FormSnapshot";
 
 export type FormSnapshotFlatValuesMap = Record<string, string | boolean | null>;
 

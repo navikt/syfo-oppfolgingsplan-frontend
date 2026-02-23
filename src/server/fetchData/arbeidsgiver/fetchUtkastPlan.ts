@@ -1,7 +1,7 @@
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  ConvertedLagretUtkastResponse,
+  type ConvertedLagretUtkastResponse,
   rawUtkastResponseForAGSchema,
 } from "@/schema/utkastResponseSchema";
 import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";

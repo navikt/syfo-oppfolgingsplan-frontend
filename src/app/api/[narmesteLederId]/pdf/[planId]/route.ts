@@ -2,8 +2,8 @@ import { getEndpointPDFForAG } from "@/common/backend-endpoints.ts";
 import { isLocalOrDemo } from "@/env-variables/envHelpers.ts";
 import { validateAndGetIdPortenToken } from "@/server/auth/idPortenToken";
 import {
-  TokenXTargetApi,
   exchangeIdPortenTokenForTokenXOboToken,
+  TokenXTargetApi,
 } from "@/server/auth/tokenXExchange";
 import { mockPdf } from "@/server/fetchData/mockData/mockPdf.ts";
 

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Box, Heading } from "@navikt/ds-react";
+import Image from "next/image";
 
 interface Props {
   illustrationSrc: string;

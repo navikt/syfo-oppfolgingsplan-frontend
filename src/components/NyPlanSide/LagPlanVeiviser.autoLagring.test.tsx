@@ -6,11 +6,11 @@ import {
   SAVE_UTKAST_DEBOUNCE_DELAY,
 } from "@/common/app-config";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
+import { formLabels } from "./form-labels";
 import {
   createMockLagretUtkastResponse,
   renderLagPlanVeiviserComponent,
 } from "./LagPlanVeiviser.testUtils";
-import { formLabels } from "./form-labels";
 
 describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
   let lagreUtkastSpy: ReturnType<typeof vi.spyOn>;

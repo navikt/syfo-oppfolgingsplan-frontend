@@ -1,5 +1,5 @@
-import z from "zod";
 import { ErrorSummary } from "@navikt/ds-react";
+import type z from "zod";
 import { formLabels } from "../../form-labels";
 import { oppfolgingsplanFormDefaultValues } from "./form-options";
 import { withForm } from "./hooks/form";
@@ -7,7 +7,7 @@ import { withForm } from "./hooks/form";
 type ErrorMapWithZodIssues = Record<string, Array<z.core.$ZodIssue>>;
 
 function isFormLabelsKey(fieldId: string): fieldId is keyof typeof formLabels {
-  return Object.prototype.hasOwnProperty.call(formLabels, fieldId);
+  return Object.hasOwn(formLabels, fieldId);
 }
 
 function getLabelForFormField(fieldId: string) {

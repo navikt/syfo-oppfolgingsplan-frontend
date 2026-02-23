@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 import dayjs from "./app-dayjs";
 
 export function now(): Dayjs {

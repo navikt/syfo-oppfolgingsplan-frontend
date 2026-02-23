@@ -5,13 +5,13 @@ import {
   DEMO_SIMULATED_BACKEND_DELAY_MS,
   SAVE_UTKAST_DEBOUNCE_DELAY,
 } from "@/common/app-config";
-import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
+import { formLabels } from "./form-labels";
 import {
   createMockLagretUtkastResponse,
   renderLagPlanVeiviserComponent,
 } from "./LagPlanVeiviser.testUtils";
-import { formLabels } from "./form-labels";
 
 // These date values are important for testing "Gå til oppsummering" behavior, since the
 // form must be valid to proceed to the next step.

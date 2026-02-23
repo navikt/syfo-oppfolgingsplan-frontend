@@ -1,7 +1,7 @@
-import NextLink from "next/link";
-import { useParams } from "next/navigation";
 import { ArrowLeftIcon } from "@navikt/aksel-icons";
 import { Button, HStack, VStack } from "@navikt/ds-react";
+import NextLink from "next/link";
+import { useParams } from "next/navigation";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import { TrackedButton } from "@/ui/TrackedButton";

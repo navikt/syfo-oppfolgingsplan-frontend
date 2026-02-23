@@ -1,8 +1,8 @@
-import { startTransition, useActionState } from "react";
 import { useParams } from "next/navigation";
-import { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import { startTransition, useActionState } from "react";
+import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { lagreUtkastServerAction } from "@/server/actions/lagreUtkast";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
 export interface LagreUtkastActionState {
   error: FetchResultError | null;
@@ -142,7 +142,7 @@ function areFormStateObjectsEqual(
   if (aKeys.length !== Object.keys(b).length) return false;
 
   for (const key of aKeys) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!Object.hasOwn(b, key)) return false;
 
     const av = a[key];
     const bv = b[key];

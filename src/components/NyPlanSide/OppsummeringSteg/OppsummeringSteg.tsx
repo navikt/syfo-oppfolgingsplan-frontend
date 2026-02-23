@@ -1,7 +1,7 @@
-import z from "zod";
 import { BodyLong, Heading } from "@navikt/ds-react";
-import { oppfolgingsplanFormUtfylltSchema } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type z from "zod";
+import type { oppfolgingsplanFormUtfylltSchema } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { oppfolgingsplanFormDefaultValues } from "../FyllUtPlanSteg/form/form-options";
 import { withForm } from "../FyllUtPlanSteg/form/hooks/form";

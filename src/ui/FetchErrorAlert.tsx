@@ -1,5 +1,5 @@
 import { Alert } from "@navikt/ds-react";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { getFetchResultErrorMessage } from "@/ui-helpers/error-messages";
 
 interface Props {
