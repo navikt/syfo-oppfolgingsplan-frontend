@@ -73,7 +73,8 @@ export default function useOppfolgingsplanForm({
           // We know the form is valid when onSubmit runs, so we can
           // safely assert the type, and that evalueringsDato is defined
           formValues: value as z.infer<typeof oppfolgingsplanFormUtfylltSchema>,
-          evalueringsDatoIsoString: value.evalueringsDato ?? "",
+          // biome-ignore lint/style/noNonNullAssertion: evalueringsDato is guaranteed to be defined when form is valid
+          evalueringsDatoIsoString: value.evalueringsDato!,
           includeIkkeMedvirketBegrunnelseFieldInFormSnapshot:
             value.harDenAnsatteMedvirket === "nei",
         });
