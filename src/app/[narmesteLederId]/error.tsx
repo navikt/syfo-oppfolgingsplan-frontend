@@ -8,7 +8,7 @@ import { ERROR_PAGE_DAD_SVG } from "@/common/publicAssets";
 
 // TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.
 
-export default function Error({
+export default function ErrorPage({
   error,
   reset,
 }: {
@@ -22,6 +22,7 @@ export default function Error({
   const errorText = "Beklager! Det har oppstått en uventet feil";
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: role="status" is semantically correct for dynamic status messages
     <div className="flex max-w-3xl flex-col" role="status" aria-live="polite">
       <Image
         src={ERROR_PAGE_DAD_SVG}

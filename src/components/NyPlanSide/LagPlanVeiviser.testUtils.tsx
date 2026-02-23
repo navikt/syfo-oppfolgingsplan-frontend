@@ -54,7 +54,7 @@ export async function renderLagPlanVeiviserComponent(
 ) {
   const lagretUtkastPromise = Promise.resolve(mockData);
 
-  let renderResult: ReturnType<typeof render>;
+  let renderResult: ReturnType<typeof render> | null = null;
 
   await act(async () => {
     renderResult = render(
@@ -62,5 +62,11 @@ export async function renderLagPlanVeiviserComponent(
     );
   });
 
-  return renderResult!;
+  if (!renderResult) {
+    throw new Error(
+      "renderLagPlanVeiviserComponent failed to render component",
+    );
+  }
+
+  return renderResult;
 }

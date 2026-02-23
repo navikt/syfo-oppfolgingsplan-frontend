@@ -178,7 +178,7 @@ describe("LagPlanVeiviser button-triggered saving feature", () => {
     expect(lagreUtkastSpy).toHaveBeenCalledWith(
       "12345",
       expect.objectContaining({
-        typiskArbeidshverdag: validForm.typiskArbeidshverdag + " - edit",
+        typiskArbeidshverdag: `${validForm.typiskArbeidshverdag} - edit`,
       }),
     );
   });

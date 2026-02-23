@@ -68,6 +68,12 @@ export function createFormSnapshot(
                 ...fieldShape,
                 value: dateTimeFieldSnapshotSchema.shape.value.parse(value),
               };
+            // Missing 'fieldShape' causes a compile-time error if we use the following check:
+            // https://gibbok.github.io/typescript-book/book/exhaustiveness-checking/
+            default: {
+              const _exhaustiveCheck: never = fieldShape;
+              return _exhaustiveCheck;
+            }
           }
         }),
       })),

@@ -57,8 +57,11 @@ export const FormErrorSummary = withForm({
               heading="Du må gjøre dette før du kan gå videre:"
             >
               {errorSummaryItemData.map(
-                ({ fieldId, errorMessage, fieldLabel }, index) => (
-                  <ErrorSummary.Item key={index} href={`#${fieldId}`}>
+                ({ fieldId, errorMessage, fieldLabel }) => (
+                  <ErrorSummary.Item
+                    key={`${fieldId}-${errorMessage}`}
+                    href={`#${fieldId}`}
+                  >
                     {errorMessage}
                     {fieldLabel ? ` - ${fieldLabel}` : ""}
                   </ErrorSummary.Item>
