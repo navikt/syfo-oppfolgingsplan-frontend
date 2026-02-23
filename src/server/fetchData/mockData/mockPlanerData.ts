@@ -17,8 +17,8 @@ export const mockAktivPlanData: OppfolgingsplanMetadata = {
   evalueringsDato: "2025-12-14",
   deltMedLegeTidspunkt: null,
   // deltMedLegeTidspunkt: getDayjsDateFromIsoString("2025-10-25T09:03:00Z"),
-  // deltMedVeilederTidspunkt: null,
-  deltMedVeilederTidspunkt: "2025-10-25T09:27:00Z",
+  deltMedVeilederTidspunkt: null,
+  //deltMedVeilederTidspunkt: "2025-10-25T09:27:00Z",
   organization: mockOrganization,
 };
 
