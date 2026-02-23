@@ -63,7 +63,7 @@ export function AktivPlanButtons({ planId, hasUtkast }: Props) {
       <HStack justify="space-between">
         <HStack gap="space-16">
           <TrackedButton
-            variant="primary"
+            variant="secondary"
             onClick={handleEndreOppfolgingsplanClick}
             loading={isPendingUpsertUtkastWithAktivPlan}
             tracking={knappKlikket.aktivPlanSide.endreOppfolgingsplan}
