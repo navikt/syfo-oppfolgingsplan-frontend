@@ -13,6 +13,7 @@ export function extractValuesFromFormSnapshot(
     const { fieldId } = field;
 
     return {
+      // biome-ignore lint/performance/noAccumulatingSpread: false positive impact on readability, and number of fields is small so performance impact is negligible
       ...acc,
       [fieldId]: getValueBasedOnFieldType(field),
     };

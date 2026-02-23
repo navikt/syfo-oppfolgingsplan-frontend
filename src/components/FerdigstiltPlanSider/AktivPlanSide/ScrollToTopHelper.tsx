@@ -12,5 +12,6 @@ export function ScrollToTopHelper() {
     scrollToAppTopForAG("instant");
   });
 
+  // biome-ignore lint/complexity/noUselessFragments: Empty element
   return <></>;
 }

@@ -19,6 +19,7 @@ function FormSummarySkeleton({ answerCount = 3 }: { answerCount?: number }) {
 
       <FormSummaryAnswers>
         {Array.from({ length: answerCount }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: few field answers, and they don't have unique ids to use as keys
           <FormSummaryAnswer key={i}>
             <FormSummaryLabel>
               <Skeleton variant="text" width="50%" height={22} />
