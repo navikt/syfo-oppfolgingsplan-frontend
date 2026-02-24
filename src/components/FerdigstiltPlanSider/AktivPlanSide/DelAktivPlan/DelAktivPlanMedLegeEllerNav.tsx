@@ -118,10 +118,10 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
         Hvem vil du sende planen til
       </Heading>
       <BodyLong>
-        Det er krav om å sende oppfølgingsplanen til fastlegen innen den
-        sykmeldte har vært borte fra jobb i 4 uker. Utover dette kan planen
-        sendes til veileder i Nav når som helst, men skal være sendt før man
-        skal på dialogmøte med veileder.
+        Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært
+        helt eller delvis borte fra jobben i 4 uker. I tillegg kan du sende
+        planen til Nav når du selv ønsker, når Nav ber om den, eller senest én
+        uke før et dialogmøte med Nav.
       </BodyLong>
 
       <form action={handleSubmit}>
@@ -148,7 +148,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
           <RecipientCheckbox
             id="veileder-checkbox"
             name="sendToVeileder"
-            label="Nav-veileder"
+            label="Nav-veilederen"
             sentTimestamp={deltMedVeilederTidspunkt}
             error={errorDelMedVeileder}
             errorMessage="Kunne ikke sende planen til Nav-veileder. Prøv igjen."
