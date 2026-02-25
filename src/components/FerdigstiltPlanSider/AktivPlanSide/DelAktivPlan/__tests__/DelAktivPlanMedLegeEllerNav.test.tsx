@@ -61,7 +61,9 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       ).toBeInTheDocument();
 
       expect(
-        screen.getByText(/det er krav om å sende oppfølgingsplanen/i),
+        screen.getByText(
+          /Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært helt eller delvis borte fra jobben i 4 uker./i,
+        ),
       ).toBeInTheDocument();
     });
 
