@@ -1,4 +1,4 @@
-import { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSchemas";
+import type { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
 

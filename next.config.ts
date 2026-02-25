@@ -1,6 +1,5 @@
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { buildCspHeader } = require("@navikt/nav-dekoratoren-moduler/ssr");
 
 const appDirectives = {
@@ -60,11 +59,7 @@ const nextConfig: NextConfig = {
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
   assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX || "",
   productionBrowserSourceMaps: true,
-  serverExternalPackages: [
-    "@navikt/next-logger",
-    "next-logger",
-    "pino",
-  ],
+  serverExternalPackages: ["@navikt/next-logger", "next-logger", "pino"],
   experimental: {
     optimizePackageImports: ["@navikt/ds-react", "@navikt/aksel-icons"],
   },

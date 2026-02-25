@@ -7,7 +7,7 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { FetchUpdateResult } from "../tokenXFetch/FetchResult";
+import type { FetchUpdateResult } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 
 export async function slettUtkastServerAction(

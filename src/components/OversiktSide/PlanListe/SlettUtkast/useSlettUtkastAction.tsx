@@ -1,7 +1,7 @@
-import { useActionState } from "react";
 import { useParams } from "next/navigation";
+import { useActionState } from "react";
 import { slettUtkastServerAction } from "@/server/actions/slettUtkast";
-import { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
+import type { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
 
 type ActionPayload = {
   onSuccess: () => void;

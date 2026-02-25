@@ -1,8 +1,8 @@
 "use client";
 
-import NextLink from "next/link";
 import { ChevronRightIcon } from "@navikt/aksel-icons";
 import { Link } from "@navikt/ds-react";
+import NextLink from "next/link";
 
 interface Props {
   /** Href for the first (link) level */

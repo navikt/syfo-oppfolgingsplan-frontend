@@ -1,4 +1,4 @@
-import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
 export const formLabels = {
   typiskArbeidshverdag: {

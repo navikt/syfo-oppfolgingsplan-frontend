@@ -1,7 +1,7 @@
 "use server";
 
+import type { LumiSurveyTransportPayload } from "@navikt/lumi-survey";
 import { z } from "zod";
-import { type LumiSurveyTransportPayload } from "@navikt/lumi-survey";
 import { getLumiSurveyFeedbackEndpoint } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { lumiSurveyTransportSchema } from "@/schema/lumiSurveyTransportPayloadSchema";

@@ -1,4 +1,4 @@
-import { HStack, Heading, VStack } from "@navikt/ds-react";
+import { Heading, HStack, VStack } from "@navikt/ds-react";
 import PlanDelingStatusTags from "@/components/OversiktSide/PlanListe/PlanLinkCard/PlanLinkCardFooterTags.tsx";
 
 interface Props {

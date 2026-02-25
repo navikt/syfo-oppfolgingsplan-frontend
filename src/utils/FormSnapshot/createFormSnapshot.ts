@@ -1,9 +1,9 @@
-import { FormSnapshotFormShape } from "./schemas/FormShape";
+import type { FormSnapshotFormShape } from "./schemas/FormShape";
 import {
-  FormSnapshot,
   checkboxSingleFieldSnapshotSchema,
   dateFieldSnapshotSchema,
   dateTimeFieldSnapshotSchema,
+  type FormSnapshot,
   radioGroupFieldSnapshotSchema,
   textFieldSnapshot,
 } from "./schemas/FormSnapshot";
@@ -36,7 +36,7 @@ export function createFormSnapshot(
                     value,
                   ),
               };
-            case "CHECKBOX_GROUP":
+            case "CHECKBOX_GROUP": {
               if (!Array.isArray(value)) {
                 throw new Error(
                   `createFormSnapshot expected array for CHECKBOX_GROUP field value but got: ${value}`,
@@ -51,6 +51,7 @@ export function createFormSnapshot(
                   wasSelected: selectedOptionIds.includes(option.optionId),
                 })),
               };
+            }
             case "CHECKBOX_SINGLE":
               return {
                 ...fieldShape,
@@ -67,6 +68,12 @@ export function createFormSnapshot(
                 ...fieldShape,
                 value: dateTimeFieldSnapshotSchema.shape.value.parse(value),
               };
+            // Missing 'fieldShape' causes a compile-time error if we use the following check:
+            // https://gibbok.github.io/typescript-book/book/exhaustiveness-checking/
+            default: {
+              const _exhaustiveCheck: never = fieldShape;
+              return _exhaustiveCheck;
+            }
           }
         }),
       })),

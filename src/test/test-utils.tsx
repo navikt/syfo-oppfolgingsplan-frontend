@@ -1,6 +1,6 @@
-import type { ReactElement, ReactNode } from "react";
-import { render } from "@testing-library/react";
 import { Theme } from "@navikt/ds-react";
+import { render } from "@testing-library/react";
+import type { ReactElement, ReactNode } from "react";
 
 export function AllTheProviders({ children }: { children: ReactNode }) {
   return <Theme>{children}</Theme>;
@@ -25,6 +25,7 @@ export function customRender(ui: ReactElement) {
 export async function renderAsync(ui: Promise<ReactElement | null | false>) {
   const component = await ui;
   if (!component) {
+    // biome-ignore lint/complexity/noUselessFragments: parameter is required
     return customRender(<></>);
   }
   return customRender(component);

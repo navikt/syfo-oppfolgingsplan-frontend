@@ -1,7 +1,7 @@
 "use client";
 
-import NextLink from "next/link";
 import { Box } from "@navikt/ds-react";
+import NextLink from "next/link";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { TrackedButton } from "@/ui/TrackedButton";

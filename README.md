@@ -10,9 +10,7 @@ Når dev-server kjører kan du gå til en av "start-sidene":
 
 ## Checks you can run before pushing
 
-- `npm run build` to verify that the full project builds. If there are Typescript errors, this will fail.
-- `npm run test` to run tests.
-- `npm run lint` to run eslint.
+`mise ci`
 
 These are also run in CI pipeline by Github Actions, and will stop the build and deploy if they fail. It can therefore be convenient to run them locally first.
 

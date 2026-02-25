@@ -1,8 +1,8 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import z from "zod";
 import { logger } from "@navikt/next-logger";
+import { redirect } from "next/navigation";
+import type z from "zod";
 import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
@@ -10,7 +10,7 @@ import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
 import { getOppfolgingsplanFormShape } from "@/utils/getOppfolgingsplanFormShape";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { FetchUpdateResult } from "../tokenXFetch/FetchResult";
+import type { FetchUpdateResult } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
 import {

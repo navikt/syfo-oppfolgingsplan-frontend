@@ -1,6 +1,5 @@
 "use client";
 
-import NextLink from "next/link";
 import { BodyShort, LinkCard } from "@navikt/ds-react";
 import {
   LinkCardAnchor,
@@ -8,8 +7,9 @@ import {
   LinkCardFooter,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
+import NextLink from "next/link";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
-import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
+import type { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import PlanDelingStatusTags from "./PlanLinkCardFooterTags";
 

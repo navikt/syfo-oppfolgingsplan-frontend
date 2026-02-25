@@ -2,8 +2,8 @@ import { z } from "zod";
 import {
   evalueringsDatoFieldInUtfylltFormSchema,
   nonRequiredMaxLengthTextFieldSchema,
-  requireFieldErrorMessage,
   requiredMaxLengthTextFieldSchema,
+  requireFieldErrorMessage,
 } from "./fieldValidationSchemas";
 
 export type OppfolgingsplanFormUnderArbeid = z.infer<

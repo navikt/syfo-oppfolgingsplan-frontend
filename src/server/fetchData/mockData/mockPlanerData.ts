@@ -1,5 +1,5 @@
-import { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
-import { OrganizationDetails } from "@/schema/organizationDetailsSchema";
+import type { FerdigstiltPlanMetadata } from "@/schema/ferdigstiltPlanMetadataSchema";
+import type { OrganizationDetails } from "@/schema/organizationDetailsSchema";
 import { mockOrganization } from "./mockEmployeeDetails";
 
 /**

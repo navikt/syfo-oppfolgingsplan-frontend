@@ -6,7 +6,7 @@ import {
   fyllUtPlanSkjemaStegFullfortEvent,
 } from "@/common/analytics/events-and-properties/skjema-events";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
-import { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
+import type { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";

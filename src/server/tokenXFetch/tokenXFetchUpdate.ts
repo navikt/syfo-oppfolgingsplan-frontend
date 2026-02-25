@@ -1,18 +1,20 @@
 import "server-only";
-import z from "zod";
+import type z from "zod";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 import { validateAndGetIdPortenToken } from "../auth/idPortenToken";
-import { exchangeIdPortenTokenForTokenXOboToken } from "../auth/tokenXExchange";
-import { TokenXTargetApi } from "../auth/tokenXExchange";
 import {
-  FetchResultError,
-  FetchUpdateResult,
-  FetchUpdateResultWithResponse,
-} from "./FetchResult";
+  exchangeIdPortenTokenForTokenXOboToken,
+  type TokenXTargetApi,
+} from "../auth/tokenXExchange";
 import {
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
 } from "./errorHandling";
+import type {
+  FetchResultError,
+  FetchUpdateResult,
+  FetchUpdateResultWithResponse,
+} from "./FetchResult";
 import { getBackendRequestHeaders } from "./helpers";
 import { validateResponseBody } from "./validateResponseBody";
 

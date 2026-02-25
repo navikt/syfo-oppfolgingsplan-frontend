@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
-import { Metadata } from "next";
-import Script from "next/script";
 import { Theme } from "@navikt/ds-react";
+import type { Metadata } from "next";
+import Script from "next/script";
+import type { ReactNode } from "react";
 import "@navikt/lumi-survey/styles.css";
 import "@/app/globals.css";
 import { Instrumentation } from "@/instrumentation/Instrumentation";
-import { MainContent } from "@/ui/layout/MainContent";
 import { fetchDecoratorForSM } from "@/ui/layout/fetchDecoratorHelpers";
+import { MainContent } from "@/ui/layout/MainContent";
 import { BreadcrumbsUpdaterForSM } from "./_components/BreadcrumbsUpdaterForSM";
 import Preload from "./preload";
 

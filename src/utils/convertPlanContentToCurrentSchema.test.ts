@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
-import {
+import type {
   OppfolgingsplanFormUnderArbeid,
   OppfolgingsplanFormUtfyllt,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import {
-  PlanContent,
   convertPlanContentToCurrentSchema,
+  type PlanContent,
 } from "./convertPlanContentToCurrentSchema";
 
 test("Returns the same object when plan content matches current plan schema with all properties", () => {

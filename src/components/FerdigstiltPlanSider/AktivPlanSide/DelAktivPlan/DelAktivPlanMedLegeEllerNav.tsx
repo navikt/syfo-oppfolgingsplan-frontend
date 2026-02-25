@@ -1,6 +1,5 @@
 "use client";
 
-import { type RefObject, useRef, useState } from "react";
 import {
   BodyLong,
   Box,
@@ -10,10 +9,11 @@ import {
   Heading,
   InlineMessage,
 } from "@navikt/ds-react";
+import { type RefObject, useRef, useState } from "react";
 import { usePlanDelingContext } from "@/components/FerdigstiltPlanSider/AktivPlanSide/PlanDelingContext.tsx";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
-import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime.ts";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime.ts";
 
 interface Props {
   planId: string;
@@ -126,6 +126,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
 
       <form action={handleSubmit}>
         {sentToFastlege ? (
+          // biome-ignore lint/style/noNonNullAssertion: sentToFastlege er true, så deltMedLegeTidspunkt kan ikke være null
           <SentMessage timestamp={deltMedLegeTidspunkt!} recipient="fastlege" />
         ) : (
           <RecipientCheckbox
@@ -141,6 +142,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
 
         {sentToVeileder ? (
           <SentMessage
+            // biome-ignore lint/style/noNonNullAssertion: sentToVeileder er true, så deltMedVeilederTidspunkt kan ikke være null
             timestamp={deltMedVeilederTidspunkt!}
             recipient="Nav-veileder"
           />

@@ -1,6 +1,10 @@
 "use client";
 
-import { Button, ButtonProps, OverridableComponent } from "@navikt/ds-react";
+import {
+  Button,
+  type ButtonProps,
+  type OverridableComponent,
+} from "@navikt/ds-react";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 
 interface TrackedButtonOwnProps {

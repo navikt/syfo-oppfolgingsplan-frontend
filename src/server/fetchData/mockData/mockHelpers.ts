@@ -1,4 +1,4 @@
-import { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
+import type { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockPlanFormSnapshot } from "./mockOPFormSnapshot";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";

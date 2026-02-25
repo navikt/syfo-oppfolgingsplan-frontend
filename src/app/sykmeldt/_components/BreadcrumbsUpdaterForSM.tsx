@@ -1,12 +1,12 @@
 "use client";
 
-import { useLayoutEffect } from "react";
-import { useParams, useSelectedLayoutSegments } from "next/navigation";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
+import { useParams, useSelectedLayoutSegments } from "next/navigation";
+import { useLayoutEffect } from "react";
 import {
-  SM_BREADCRUMB_TITLES,
   createFullUrl,
   getBaseBreadcrumbsForSM,
+  SM_BREADCRUMB_TITLES,
 } from "@/common/breadcrumbs";
 import { SM_SEGMENT } from "@/common/route-hrefs";
 

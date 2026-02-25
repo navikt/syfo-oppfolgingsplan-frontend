@@ -1,12 +1,12 @@
 import { getEndpointOversiktForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  OppfolgingsplanerOversiktForAG,
+  type OppfolgingsplanerOversiktForAG,
   OppfolgingsplanerOversiktResponseSchemaForAG,
 } from "@/schema/oversiktResponseSchemas";
 import { getRedirectAfterLoginUrlForAG } from "@/server/auth/redirectToLogin";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
-import { FetchGetResult } from "@/server/tokenXFetch/FetchResult";
+import type { FetchGetResult } from "@/server/tokenXFetch/FetchResult";
 import { tokenXFetchGetWithResult } from "@/server/tokenXFetch/tokenXFetchGetWithResult";
 import { mockOversiktDataMedPlanerForAG } from "../mockData/mockOversiktData";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";

@@ -1,6 +1,6 @@
 "use client";
 
-import { EventName, type TaxonomyEvent } from "@navikt/analytics-types";
+import type { EventName, TaxonomyEvent } from "@navikt/analytics-types";
 import { getAnalyticsInstance } from "@navikt/nav-dekoratoren-moduler";
 import { isLocalOrDemo } from "@/env-variables/envHelpers.ts";
 

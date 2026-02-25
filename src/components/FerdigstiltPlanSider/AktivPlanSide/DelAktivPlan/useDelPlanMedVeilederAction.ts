@@ -1,7 +1,7 @@
-import { useActionState } from "react";
 import { useParams } from "next/navigation";
+import { useActionState } from "react";
 import {
-  DelPlanMedVeilederActionState,
+  type DelPlanMedVeilederActionState,
   delPlanMedVeilederServerAction,
 } from "@/server/actions/delPlanMedVeileder";
 

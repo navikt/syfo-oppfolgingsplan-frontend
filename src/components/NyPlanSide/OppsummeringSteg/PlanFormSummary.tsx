@@ -1,5 +1,5 @@
 import { Box, FormSummary } from "@navikt/ds-react";
-import { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import { formHeadings, formLabels } from "../form-labels";
 

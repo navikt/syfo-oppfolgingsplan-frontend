@@ -1,5 +1,5 @@
 import {
-  OppfolgingsplanFormUnderArbeid,
+  type OppfolgingsplanFormUnderArbeid,
   oppfolgingsplanFormUnderArbeidSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
@@ -32,6 +32,7 @@ export function convertPlanContentToCurrentSchema(
 
       if (success) {
         return {
+          // biome-ignore lint/performance/noAccumulatingSpread: false positive impact on readability, and number of fields is small so performance impact is negligible
           ...acc,
           [fieldId]: parsedFieldValue,
         };

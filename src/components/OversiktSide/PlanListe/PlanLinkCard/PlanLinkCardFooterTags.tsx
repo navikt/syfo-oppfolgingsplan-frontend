@@ -1,4 +1,4 @@
-import { Tag, TagProps } from "@navikt/ds-react";
+import { Tag, type TagProps } from "@navikt/ds-react";
 
 interface Props {
   tagSize: TagProps["size"];

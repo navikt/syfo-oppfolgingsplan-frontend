@@ -1,17 +1,17 @@
 "use server";
 
-import z from "zod";
 import { logger } from "@navikt/next-logger";
+import z from "zod";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
-  OppfolgingsplanFormUnderArbeid,
+  type OppfolgingsplanFormUnderArbeid,
   oppfolgingsplanFormUnderArbeidSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
-import { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
+import type { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
 import { isNonEmptyString } from "./serverActionsInputValidation";

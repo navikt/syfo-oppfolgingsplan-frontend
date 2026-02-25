@@ -1,11 +1,11 @@
 import TilbakeTilOversiktButtonForAG from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForAG.tsx";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import FyllUtPlanButtonsAndSavingInfo from "./FyllUtPlanButtonsAndSavingInfo";
-import UtkastLagringInfo from "./UtkastLagringInfo";
-import FormErrorSummary from "./form/OPFormErrorSummary";
-import OPFormFields from "./form/OPFormFields";
 import { oppfolgingsplanFormDefaultValues } from "./form/form-options";
 import { withForm } from "./form/hooks/form";
+import FormErrorSummary from "./form/OPFormErrorSummary";
+import OPFormFields from "./form/OPFormFields";
+import UtkastLagringInfo from "./UtkastLagringInfo";
 
 interface Props {
   utkastSistLagretTidspunkt: string | null;

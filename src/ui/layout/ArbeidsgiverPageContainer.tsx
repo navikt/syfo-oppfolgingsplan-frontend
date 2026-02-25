@@ -1,12 +1,12 @@
 "use client";
 
-import { ReactNode } from "react";
 import { PersonIcon } from "@navikt/aksel-icons";
 import {
   PageContainer,
   RootPages,
   SideMenu,
 } from "@navikt/dinesykmeldte-sidemeny";
+import type { ReactNode } from "react";
 
 interface Props {
   narmesteLederId: string;

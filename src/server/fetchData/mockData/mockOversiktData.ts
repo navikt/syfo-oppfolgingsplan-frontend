@@ -1,4 +1,4 @@
-import {
+import type {
   OppfolgingsplanerOversiktForAG,
   OppfolgingsplanerOversiktForSM,
 } from "@/schema/oversiktResponseSchemas";

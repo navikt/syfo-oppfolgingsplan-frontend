@@ -1,9 +1,9 @@
 import { logger } from "@navikt/next-logger";
 import {
-  CombinedErrorType,
+  type CombinedErrorType,
   combinedErrorTypeSchema,
 } from "@/schema/errorSchemas";
-import { FetchResultError } from "@/server/tokenXFetch/FetchResult";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
 const DEFAULT_GENERAL_MESSAGE =
   "Beklager, noe gikk galt. Vennligst prøv igjen senere.";

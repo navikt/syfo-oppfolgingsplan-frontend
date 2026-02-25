@@ -1,8 +1,8 @@
 "use client";
 
-import { startTransition, useActionState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { HStack } from "@navikt/ds-react";
+import { useParams, useRouter } from "next/navigation";
+import { startTransition, useActionState, useRef } from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
