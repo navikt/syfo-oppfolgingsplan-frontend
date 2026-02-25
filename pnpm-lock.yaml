@@ -15,26 +15,26 @@ importers:
         specifier: ^2.2.3
         version: 2.2.4
       '@navikt/aksel-icons':
-        specifier: ^8.3.0
-        version: 8.5.0
+        specifier: ^8.5.1
+        version: 8.5.1
       '@navikt/analytics-types':
         specifier: ^0.0.6
         version: 0.0.6
       '@navikt/dinesykmeldte-sidemeny':
         specifier: ^8.0.0
-        version: 8.0.0(@navikt/aksel-icons@8.5.0)(@navikt/ds-react@8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 8.0.0(@navikt/aksel-icons@8.5.1)(@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@navikt/ds-css':
-        specifier: ^8.3.0
-        version: 8.5.0
+        specifier: ^8.5.1
+        version: 8.5.1
       '@navikt/ds-react':
-        specifier: ^8.3.0
-        version: 8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^8.5.1
+        version: 8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@navikt/ds-tailwind':
-        specifier: ^8.3.0
-        version: 8.5.0
+        specifier: ^8.5.1
+        version: 8.5.1
       '@navikt/lumi-survey':
         specifier: ^0.0.5
-        version: 0.0.5(@navikt/ds-css@8.5.0)(@navikt/ds-react@8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.0.5(@navikt/ds-css@8.5.1)(@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@navikt/nav-dekoratoren-moduler':
         specifier: ^3.6.2
         version: 3.6.2(csp-header@6.3.0)(html-react-parser@5.2.17(@types/react@19.2.14)(react@19.2.4))(jsdom@28.1.0)(react@19.2.4)
@@ -700,8 +700,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@navikt/aksel-icons@8.5.0':
-    resolution: {integrity: sha512-yEF3acxTDpP7Bn8XjtYvwTqTUH8gyIeyG+MFEqQz13U4SI5O942vU76BtV5p3YRKKmd92D3vh/sER3Vs5Qq2DQ==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/8.5.0/52f219af9bdfaca59f9548af94e58541bbf26b66}
+  '@navikt/aksel-icons@8.5.1':
+    resolution: {integrity: sha512-H0dNtb/1dgiCOPWPGT/joHM27fYXUbdvNTBtF4q7Aj9G7huwUr9YhjHNq9vO/mF1KeNpgYg+8K65zLaQOeX2sA==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/8.5.1/c7f3aee3bae9346d651975cdc6748e27c0eadb3d}
 
   '@navikt/analytics-types@0.0.6':
     resolution: {integrity: sha512-CetUbKB8vzqc252xROiOr8JheC4BSigBUcixbVP5KmUZVUd2paApYrUQOQ6rB/Lx0UoKuUh2cLs5SLX7BRuPmw==, tarball: https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.6/bb5b59e6866d652cff4db836c9176c17f48c3b7d}
@@ -716,21 +716,21 @@ packages:
       react: '19'
       react-dom: '19'
 
-  '@navikt/ds-css@8.5.0':
-    resolution: {integrity: sha512-jSZxwNAVBE8587//jtL1dvs+JxuRNSy9fTvzheWeJCPJRGvsQ9Dgn3qzUuZG5qRo8/sif8iJNVBKCj5qH9yNcg==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/8.5.0/7a866b3dcedf8b53729dc40a254768be89580128}
+  '@navikt/ds-css@8.5.1':
+    resolution: {integrity: sha512-ZbUCgP3jNC4ISsNkogCgfA99yYT8n/qk0JPW7y6/XoSeKJtYiSvWx+vSKGANAP2WRsY/UEXqSM67ezAklZ2xJA==, tarball: https://npm.pkg.github.com/download/@navikt/ds-css/8.5.1/c91c4122a32d49e49f411e1cb2773ccd90e1fba3}
 
-  '@navikt/ds-react@8.5.0':
-    resolution: {integrity: sha512-45uYSeTqWlBepDFFzlMLRAwflyy8u/Axrmh0WsxYsmgP46uv7hQvR6HEoby4ctvcfNdF5MtyJv+NKlpa1+Z4aQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/8.5.0/e1a3b7175e2f1e968c9f27d4afefc0bc226f5bb1}
+  '@navikt/ds-react@8.5.1':
+    resolution: {integrity: sha512-XiWQfxnuC4QI/tJNPSZeVVB12YntqJ0hZ6RGt/W+9HSO8Y58EzvyYsX61wJ94IZTnyXJOhu3KiEB8zBaw6qbQw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-react/8.5.1/0bccdd75de5e27d83cd40c2ee5cbb2b61a24c086}
     peerDependencies:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
       react-dom: ^17 || ^18 || ^19
 
-  '@navikt/ds-tailwind@8.5.0':
-    resolution: {integrity: sha512-M1CRi/7lO4J61SABjBaDFBszavMUMl0ZikE4q1x89cL8Bmr88oO5OX0q3MOJiw/YCrXYAOG7cq8LwjOIn9K4+Q==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/8.5.0/847fab90d760f0957ad73fae54a1d1144dc539c0}
+  '@navikt/ds-tailwind@8.5.1':
+    resolution: {integrity: sha512-F4loMHBEj23PbizFyOV5+e4ntsbU2y5NDiZ0o0a9Y/4qag7yFBqP3KM5TD4maNjAzGSuLIPBWsVHGBgXWEVBiw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/8.5.1/8f27e6eb9ae1f814d01c9a2b0ee1c2d76b0b1d7e}
 
-  '@navikt/ds-tokens@8.5.0':
-    resolution: {integrity: sha512-Ln2KKEjU6s2tU/afoK++rE7137FN013MfHqxczgkJWwMF3rDQ7iRwlHjGMb27JcpBl13Zn46mvEoU7eINcdV7w==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/8.5.0/29599e403ef6820c462c7a8190ccbfc41b2e8f70}
+  '@navikt/ds-tokens@8.6.0':
+    resolution: {integrity: sha512-MdnPFvi7wPF0N5ms6psNqW0IevlHhoswUCOYFQl7hFwL+uRcqFna6rT8fm/co04z/HDUKKfadbrW0yodzDxj1w==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/8.6.0/acac1517c2bc4c4eda259f1bc591db24656f102f}
 
   '@navikt/lumi-survey@0.0.5':
     resolution: {integrity: sha512-/KIhYmpDePAwrwwsIts1VPsQsH8d5Kdq5HHilWnW5iN8jaH92FJCHn/ZAG/8lFkLZL6u4rsraCOgbwaXhSaklA==, tarball: https://npm.pkg.github.com/download/@navikt/lumi-survey/0.0.5/8e996791e530af8d57e398476a85864e07a92d76}
@@ -2706,40 +2706,40 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@navikt/aksel-icons@8.5.0': {}
+  '@navikt/aksel-icons@8.5.1': {}
 
   '@navikt/analytics-types@0.0.6': {}
 
-  '@navikt/dinesykmeldte-sidemeny@8.0.0(@navikt/aksel-icons@8.5.0)(@navikt/ds-react@8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@navikt/dinesykmeldte-sidemeny@8.0.0(@navikt/aksel-icons@8.5.1)(@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@navikt/aksel-icons': 8.5.0
-      '@navikt/ds-react': 8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@navikt/aksel-icons': 8.5.1
+      '@navikt/ds-react': 8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@navikt/ds-css@8.5.0': {}
+  '@navikt/ds-css@8.5.1': {}
 
-  '@navikt/ds-react@8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@floating-ui/react': 0.27.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@floating-ui/react-dom': 2.1.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@navikt/aksel-icons': 8.5.0
-      '@navikt/ds-tokens': 8.5.0
+      '@navikt/aksel-icons': 8.5.1
+      '@navikt/ds-tokens': 8.6.0
       '@types/react': 19.2.14
       date-fns: 4.1.0
       react: 19.2.4
       react-day-picker: 9.7.0(react@19.2.4)
       react-dom: 19.2.4(react@19.2.4)
 
-  '@navikt/ds-tailwind@8.5.0': {}
+  '@navikt/ds-tailwind@8.5.1': {}
 
-  '@navikt/ds-tokens@8.5.0': {}
+  '@navikt/ds-tokens@8.6.0': {}
 
-  '@navikt/lumi-survey@0.0.5(@navikt/ds-css@8.5.0)(@navikt/ds-react@8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@navikt/lumi-survey@0.0.5(@navikt/ds-css@8.5.1)(@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@navikt/ds-css': 8.5.0
-      '@navikt/ds-react': 8.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@navikt/ds-css': 8.5.1
+      '@navikt/ds-react': 8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
