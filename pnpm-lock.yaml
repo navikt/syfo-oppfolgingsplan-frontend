@@ -18,8 +18,8 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1
       '@navikt/analytics-types':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^0.0.7
+        version: 0.0.7
       '@navikt/dinesykmeldte-sidemeny':
         specifier: ^8.0.0
         version: 8.0.0(@navikt/aksel-icons@8.5.1)(@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -703,8 +703,8 @@ packages:
   '@navikt/aksel-icons@8.5.1':
     resolution: {integrity: sha512-H0dNtb/1dgiCOPWPGT/joHM27fYXUbdvNTBtF4q7Aj9G7huwUr9YhjHNq9vO/mF1KeNpgYg+8K65zLaQOeX2sA==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/8.5.1/c7f3aee3bae9346d651975cdc6748e27c0eadb3d}
 
-  '@navikt/analytics-types@0.0.6':
-    resolution: {integrity: sha512-CetUbKB8vzqc252xROiOr8JheC4BSigBUcixbVP5KmUZVUd2paApYrUQOQ6rB/Lx0UoKuUh2cLs5SLX7BRuPmw==, tarball: https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.6/bb5b59e6866d652cff4db836c9176c17f48c3b7d}
+  '@navikt/analytics-types@0.0.7':
+    resolution: {integrity: sha512-rwSKrTd+cN8j9JoSs7FZhAqsyluPIvw8YI+lvDxAEwFVM0M/p7lW9N625Fz0AIMxgASQ5e+sM+ixGkBclpPdpg==, tarball: https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.7/5fc7a2c116b8ce4cd8ae8e9cea57788399824c25}
     engines: {node: '>=20.0.0', npm: '>=9.0.0'}
 
   '@navikt/dinesykmeldte-sidemeny@8.0.0':
@@ -725,9 +725,6 @@ packages:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
       react-dom: ^17 || ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   '@navikt/ds-tailwind@8.5.1':
     resolution: {integrity: sha512-F4loMHBEj23PbizFyOV5+e4ntsbU2y5NDiZ0o0a9Y/4qag7yFBqP3KM5TD4maNjAzGSuLIPBWsVHGBgXWEVBiw==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/8.5.1/8f27e6eb9ae1f814d01c9a2b0ee1c2d76b0b1d7e}
@@ -751,9 +748,6 @@ packages:
       html-react-parser: '>=5.x'
       jsdom: '>=16.x'
       react: '>=17.x'
-    peerDependenciesMeta:
-      react:
-        optional: true
 
   '@navikt/next-logger@4.5.1':
     resolution: {integrity: sha512-qfiBT/kPK92sCVKGHlUeD2N9vDvJzEFpjn2qRVZiatQivD9IE+qRZwsdCpuvdU1Hylsc/fcF9/i03YQzXBf0iQ==, tarball: https://npm.pkg.github.com/download/@navikt/next-logger/4.5.1/e8c32873a7931396b0871c77b94673cbfb12d376}
@@ -2714,7 +2708,7 @@ snapshots:
 
   '@navikt/aksel-icons@8.5.1': {}
 
-  '@navikt/analytics-types@0.0.6': {}
+  '@navikt/analytics-types@0.0.7': {}
 
   '@navikt/dinesykmeldte-sidemeny@8.0.0(@navikt/aksel-icons@8.5.1)(@navikt/ds-react@8.5.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
@@ -2732,12 +2726,11 @@ snapshots:
       '@floating-ui/react-dom': 2.1.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@navikt/aksel-icons': 8.5.1
       '@navikt/ds-tokens': 8.6.0
+      '@types/react': 19.2.14
       date-fns: 4.1.0
       react: 19.2.4
       react-day-picker: 9.7.0(react@19.2.4)
       react-dom: 19.2.4(react@19.2.4)
-    optionalDependencies:
-      '@types/react': 19.2.14
 
   '@navikt/ds-tailwind@8.5.1': {}
 
@@ -2756,7 +2749,6 @@ snapshots:
       html-react-parser: 5.2.17(@types/react@19.2.14)(react@19.2.4)
       js-cookie: 3.0.5
       jsdom: 28.1.0
-    optionalDependencies:
       react: 19.2.4
 
   '@navikt/next-logger@4.5.1(next@16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pino@10.3.1)':
