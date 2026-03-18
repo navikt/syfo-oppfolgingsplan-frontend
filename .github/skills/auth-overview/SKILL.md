@@ -1,5 +1,5 @@
 ---
-description: NAV authentication overview — Azure AD, TokenX, ID-porten, Maskinporten configuration and best practices
+description: Nav authentication overview — Azure AD, TokenX, ID-porten, Maskinporten configuration and best practices
 ---
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
      For repo-specific customizations, create your own files without this header. -->
