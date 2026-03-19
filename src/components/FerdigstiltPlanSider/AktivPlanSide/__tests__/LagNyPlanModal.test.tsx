@@ -85,7 +85,7 @@ describe("LagNyPlanModal", () => {
 
     expect(
       screen.getByText(
-        /Du kan lage en ny oppfølgingsplan med utgangspunkt i den forrige planen du lagde\./i,
+        /Du kan ta utgangspunkt i den forrige planen, eller begynne på nytt\./i,
       ),
     ).toBeInTheDocument();
   });
@@ -95,7 +95,7 @@ describe("LagNyPlanModal", () => {
 
     expect(
       screen.getByText(
-        /Du har allerede et påbegynt utkast. Hvis du fortsetter, vil det eksisterende utkastet bli erstattet\./i,
+        /Du har allerede et påbegynt utkast. Hvis du fortsetter, blir utkastet erstattet\./i,
       ),
     ).toBeInTheDocument();
   });
@@ -105,7 +105,7 @@ describe("LagNyPlanModal", () => {
 
     expect(
       screen.queryByText(
-        /Du har allerede et påbegynt utkast. Hvis du fortsetter, vil det eksisterende utkastet bli erstattet\./i,
+        /Du har allerede et påbegynt utkast. Hvis du fortsetter, blir utkastet erstattet\./i,
       ),
     ).not.toBeInTheDocument();
   });

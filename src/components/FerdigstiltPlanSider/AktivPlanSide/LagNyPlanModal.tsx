@@ -71,14 +71,14 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
       <Modal.Body>
         <VStack gap="space-16">
           <BodyLong>
-            Du kan lage en ny oppfølgingsplan med utgangspunkt i den forrige
-            planen du lagde.
+            Du kan ta utgangspunkt i den forrige planen, eller begynne på
+            nytt.
           </BodyLong>
 
           {hasUtkast && (
             <Alert variant="warning">
-              Du har allerede et påbegynt utkast. Hvis du fortsetter, vil det
-              eksisterende utkastet bli erstattet.
+              Du har allerede et påbegynt utkast. Hvis du fortsetter, blir
+              utkastet erstattet.
             </Alert>
           )}
 
