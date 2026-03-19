@@ -21,7 +21,9 @@ vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
 
 vi.mock("@navikt/ds-react", async () => {
   const actual =
-    await vi.importActual<typeof import("@navikt/ds-react")>("@navikt/ds-react");
+    await vi.importActual<typeof import("@navikt/ds-react")>(
+      "@navikt/ds-react",
+    );
 
   const Modal = Object.assign(
     ({
@@ -38,7 +40,9 @@ vi.mock("@navikt/ds-react", async () => {
         <button
           type="button"
           aria-label="Lukk modal"
-          onClick={() => onClose?.({} as React.SyntheticEvent<HTMLDialogElement>)}
+          onClick={() =>
+            onClose?.({} as React.SyntheticEvent<HTMLDialogElement>)
+          }
         >
           Lukk
         </button>
@@ -46,7 +50,9 @@ vi.mock("@navikt/ds-react", async () => {
       </div>
     ),
     {
-      Body: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+      Body: ({ children }: { children: React.ReactNode }) => (
+        <div>{children}</div>
+      ),
       Footer: ({ children }: { children: React.ReactNode }) => (
         <div>{children}</div>
       ),
@@ -68,14 +74,42 @@ describe("LagNyPlanModal", () => {
     cleanup();
   });
 
+  test("shows the heading", () => {
+    render(<LagNyPlanModal ref={{ current: null }} hasUtkast={false} />);
+
+    expect(
+      screen.getByRole("heading", { name: /Lag ny oppfølgingsplan/i }),
+    ).toBeInTheDocument();
+  });
+
+  test("shows explanatory body text", () => {
+    render(<LagNyPlanModal ref={{ current: null }} hasUtkast={false} />);
+
+    expect(
+      screen.getByText(
+        /Du kan lage en ny oppfølgingsplan med utgangspunkt i den forrige planen du lagde\./i,
+      ),
+    ).toBeInTheDocument();
+  });
+
   test("shows warning when an existing draft will be replaced", () => {
     render(<LagNyPlanModal ref={{ current: null }} hasUtkast />);
 
     expect(
       screen.getByText(
-        /Du har allerede et påbegynt utkast. Hvis du fortsetter, vil det eksisterende utkastet bli erstattet./i,
+        /Du har allerede et påbegynt utkast. Hvis du fortsetter, vil det eksisterende utkastet bli erstattet\./i,
       ),
     ).toBeInTheDocument();
+  });
+
+  test("does not show warning when there is no existing draft", () => {
+    render(<LagNyPlanModal ref={{ current: null }} hasUtkast={false} />);
+
+    expect(
+      screen.queryByText(
+        /Du har allerede et påbegynt utkast. Hvis du fortsetter, vil det eksisterende utkastet bli erstattet\./i,
+      ),
+    ).not.toBeInTheDocument();
   });
 
   test("navigates to a blank new plan when user starts without draft", async () => {
