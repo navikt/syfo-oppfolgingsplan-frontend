@@ -1,21 +1,17 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { mockAnalytics } from "@/test/mocks/analyticsMock";
 import { mockAkselModal } from "@/test/mocks/akselModalMock";
 import { render } from "@/test/test-utils";
 import { AktivPlanButtons } from "../AktivPlanButtons";
 
-const { mockPush } = vi.hoisted(() => ({
-  mockPush: vi.fn(),
-}));
+vi.mock("next/navigation", async () => {
+  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
 
-vi.mock("next/navigation", () => ({
-  useParams: () => ({ narmesteLederId: "test-leder-id" }),
-  useRouter: () => ({ push: mockPush }),
-}));
+  return mockNextNavigation();
+});
 
-vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
-  logAnalyticsEvent: vi.fn(),
-}));
+vi.mock("@/common/analytics/logAnalyticsEvent", () => mockAnalytics());
 
 vi.mock("@navikt/ds-react", () => mockAkselModal());
 

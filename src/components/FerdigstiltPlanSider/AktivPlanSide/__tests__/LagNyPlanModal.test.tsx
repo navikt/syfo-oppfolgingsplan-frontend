@@ -3,19 +3,20 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { mockAkselModal } from "@/test/mocks/akselModalMock";
+import {
+  mockAnalytics,
+  mockLogAnalyticsEvent,
+} from "@/test/mocks/analyticsMock";
+import { mockRouter } from "@/test/mocks/nextNavigationMock";
 import { render } from "@/test/test-utils";
 import { LagNyPlanModal } from "../LagNyPlanModal";
 
 const {
-  mockPush,
-  mockLogAnalyticsEvent,
   mockSlettUtkastAndRedirectToNyPlanServerAction,
   mockUpsertUtkastWithAktivPlanServerAction,
   mockUseActionState,
   mockUseTransition,
 } = vi.hoisted(() => ({
-  mockPush: vi.fn(),
-  mockLogAnalyticsEvent: vi.fn(),
   mockSlettUtkastAndRedirectToNyPlanServerAction: vi.fn(),
   mockUpsertUtkastWithAktivPlanServerAction: vi.fn(),
   mockUseActionState: vi.fn(),
@@ -33,14 +34,13 @@ vi.mock("react", async () => {
   };
 });
 
-vi.mock("next/navigation", () => ({
-  useParams: () => ({ narmesteLederId: "test-leder-id" }),
-  useRouter: () => ({ push: mockPush }),
-}));
+vi.mock("next/navigation", async () => {
+  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
 
-vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
-  logAnalyticsEvent: mockLogAnalyticsEvent,
-}));
+  return mockNextNavigation();
+});
+
+vi.mock("@/common/analytics/logAnalyticsEvent", () => mockAnalytics());
 
 vi.mock("@/server/actions/slettUtkast", () => ({
   slettUtkastAndRedirectToNyPlanServerAction:
@@ -119,7 +119,7 @@ describe("LagNyPlanModal", () => {
       screen.getByRole("button", { name: /Begynn med tom plan/i }),
     );
 
-    expect(mockPush).toHaveBeenCalledWith(
+    expect(mockRouter.push).toHaveBeenCalledWith(
       getAGOpprettNyPlanHref("test-leder-id"),
     );
   });
@@ -133,7 +133,7 @@ describe("LagNyPlanModal", () => {
       screen.getByRole("button", { name: /Begynn med tom plan/i }),
     );
 
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockRouter.push).not.toHaveBeenCalled();
   });
 
   test("logs cancel analytics when modal is closed", async () => {

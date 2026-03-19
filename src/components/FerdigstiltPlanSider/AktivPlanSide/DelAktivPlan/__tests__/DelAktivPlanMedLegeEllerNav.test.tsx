@@ -1,5 +1,6 @@
 import { cleanup, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import * as delPlanMedLegeModule from "@/server/actions/delPlanMedLege";
 import * as delPlanMedVeilederModule from "@/server/actions/delPlanMedVeileder";
@@ -10,15 +11,18 @@ import DelAktivPlanMedLegeEllerNav from "../DelAktivPlanMedLegeEllerNav";
 const MOCK_PLAN_ID = "test-plan-123";
 const MOCK_LEDER_ID = "test-leder-123";
 
-vi.mock("next/navigation", () => ({
-  useParams: () => ({ narmesteLederId: MOCK_LEDER_ID }),
-}));
+vi.mock("next/navigation", async () => {
+  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
+
+  return mockNextNavigation();
+});
 
 describe("DelAktivPlanMedLegeEllerNav", () => {
   let delMedLegeSpy: ReturnType<typeof vi.spyOn>;
   let delMedVeilederSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
+    vi.mocked(useParams).mockReturnValue({ narmesteLederId: MOCK_LEDER_ID });
     delMedLegeSpy = vi.spyOn(
       delPlanMedLegeModule,
       "delPlanMedLegeServerAction",

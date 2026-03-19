@@ -6,8 +6,6 @@ import { mockOversiktDataNoEditAccess } from "@/server/fetchData/mockData/mockOv
 import { renderAsync } from "@/test/test-utils";
 import { AnsattIkkeSykmeldtAlert } from "../AnsattIkkeSykmeldtAlert";
 
-vi.mock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
-
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
 
 describe("AnsattIkkeSykmeldtAlert", () => {

@@ -12,12 +12,11 @@ import {
 } from "@/server/fetchData/mockData/mockOversiktDataVariants";
 import { renderAsync } from "@/test/test-utils";
 
-vi.mock("next/navigation", () => ({
-  useParams: () => ({ narmesteLederId: "12345" }),
-  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
-}));
+vi.mock("next/navigation", async () => {
+  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
 
-vi.mock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
+  return mockNextNavigation();
+});
 
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
 
