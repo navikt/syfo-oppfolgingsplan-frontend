@@ -5,10 +5,32 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import { render } from "@/test/test-utils";
 import { LagNyPlanModal } from "../LagNyPlanModal";
 
-const { mockPush, mockLogAnalyticsEvent } = vi.hoisted(() => ({
+const {
+  mockPush,
+  mockLogAnalyticsEvent,
+  mockSlettUtkastAndRedirectToNyPlanServerAction,
+  mockUpsertUtkastWithAktivPlanServerAction,
+  mockUseActionState,
+  mockUseTransition,
+} = vi.hoisted(() => ({
   mockPush: vi.fn(),
   mockLogAnalyticsEvent: vi.fn(),
+  mockSlettUtkastAndRedirectToNyPlanServerAction: vi.fn(),
+  mockUpsertUtkastWithAktivPlanServerAction: vi.fn(),
+  mockUseActionState: vi.fn(),
+  mockUseTransition: vi.fn(),
 }));
+
+vi.mock("react", async () => {
+  const actual = await vi.importActual<typeof import("react")>("react");
+
+  return {
+    ...actual,
+    startTransition: (callback: () => void) => callback(),
+    useActionState: mockUseActionState,
+    useTransition: mockUseTransition,
+  };
+});
 
 vi.mock("next/navigation", () => ({
   useParams: () => ({ narmesteLederId: "test-leder-id" }),
@@ -17,6 +39,16 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
   logAnalyticsEvent: mockLogAnalyticsEvent,
+}));
+
+vi.mock("@/server/actions/slettUtkast", () => ({
+  slettUtkastAndRedirectToNyPlanServerAction:
+    mockSlettUtkastAndRedirectToNyPlanServerAction,
+}));
+
+vi.mock("@/server/actions/upsertUtkastWithAktivPlan", () => ({
+  upsertUtkastWithAktivPlanServerAction:
+    mockUpsertUtkastWithAktivPlanServerAction,
 }));
 
 vi.mock("@navikt/ds-react", async () => {
@@ -30,19 +62,25 @@ vi.mock("@navikt/ds-react", async () => {
       children,
       header,
       onClose,
+      onBeforeClose,
     }: {
       children: React.ReactNode;
       header?: { heading?: string };
       onClose?: React.ReactEventHandler<HTMLDialogElement>;
+      onBeforeClose?: () => boolean;
     }) => (
       <div>
         {header?.heading ? <h2>{header.heading}</h2> : null}
         <button
           type="button"
           aria-label="Lukk modal"
-          onClick={() =>
-            onClose?.({} as React.SyntheticEvent<HTMLDialogElement>)
-          }
+          onClick={() => {
+            if (onBeforeClose?.() === false) {
+              return;
+            }
+
+            onClose?.({} as React.SyntheticEvent<HTMLDialogElement>);
+          }}
         >
           Lukk
         </button>
@@ -68,6 +106,15 @@ vi.mock("@navikt/ds-react", async () => {
 describe("LagNyPlanModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseActionState.mockImplementation((_action, initialState) => [
+      initialState,
+      vi.fn(),
+      false,
+    ]);
+    mockUseTransition.mockImplementation(() => [
+      false,
+      (callback: () => void) => callback(),
+    ]);
   });
 
   afterEach(() => {
@@ -126,6 +173,18 @@ describe("LagNyPlanModal", () => {
     );
   });
 
+  test("does not navigate directly when user starts with blank plan and an existing draft", async () => {
+    const user = userEvent.setup();
+
+    render(<LagNyPlanModal ref={{ current: null }} hasUtkast />);
+
+    await user.click(
+      screen.getByRole("button", { name: /Begynn med tom plan/i }),
+    );
+
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
   test("logs cancel analytics when modal is closed", async () => {
     const user = userEvent.setup();
 
@@ -141,5 +200,27 @@ describe("LagNyPlanModal", () => {
         kontekst: "AktivPlanSide-LagNyPlanModal",
       },
     });
+  });
+
+  test("does not log cancel analytics when modal close is blocked while an action is pending", async () => {
+    const user = userEvent.setup();
+
+    mockUseActionState
+      .mockImplementationOnce((_action, initialState) => [
+        initialState,
+        vi.fn(),
+        false,
+      ])
+      .mockImplementationOnce((_action, initialState) => [
+        initialState,
+        vi.fn(),
+        true,
+      ]);
+
+    render(<LagNyPlanModal ref={{ current: null }} hasUtkast />);
+
+    await user.click(screen.getByRole("button", { name: /Lukk modal/i }));
+
+    expect(mockLogAnalyticsEvent).not.toHaveBeenCalled();
   });
 });

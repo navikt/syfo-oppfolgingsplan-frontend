@@ -2,7 +2,7 @@
 
 import { Alert, BodyLong, Modal, VStack } from "@navikt/ds-react";
 import { useParams, useRouter } from "next/navigation";
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useState, useTransition } from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
@@ -19,15 +19,26 @@ interface Props {
 export function LagNyPlanModal({ ref, hasUtkast }: Props) {
   const router = useRouter();
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
+  const [lastAction, setLastAction] = useState<"upsert" | "slett" | null>(null);
+  const [isPendingPush, startPushTransition] = useTransition();
 
   const [{ error: upsertError }, upsertUtkastAction, isPendingUpsert] =
     useActionState(upsertUtkastWithAktivPlanServerAction, { error: null });
   const [{ error: slettError }, slettUtkastAction, isPendingSlett] =
     useActionState(slettUtkastAndRedirectToNyPlanServerAction, { error: null });
 
-  const isPending = isPendingUpsert || isPendingSlett;
+  const isPending = isPendingUpsert || isPendingSlett || isPendingPush;
+
+  const error =
+    lastAction === "upsert"
+      ? upsertError
+      : lastAction === "slett"
+        ? slettError
+        : null;
 
   function handleBegynnMedTomPlanClick() {
+    setLastAction("slett");
+
     if (hasUtkast) {
       startTransition(() => {
         slettUtkastAction(narmesteLederId);
@@ -35,7 +46,9 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
       return;
     }
 
-    router.push(getAGOpprettNyPlanHref(narmesteLederId));
+    startPushTransition(() => {
+      router.push(getAGOpprettNyPlanHref(narmesteLederId));
+    });
   }
 
   return (
@@ -44,7 +57,8 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
       header={{
         heading: "Lag ny oppfølgingsplan",
       }}
-      closeOnBackdropClick
+      closeOnBackdropClick={!isPending}
+      onBeforeClose={() => !isPending}
       onClose={() => {
         logAnalyticsEvent({
           name: "knapp klikket",
@@ -68,12 +82,17 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
             </Alert>
           )}
 
-          <FetchErrorAlert error={upsertError ?? slettError} />
+          <FetchErrorAlert error={error} />
         </VStack>
       </Modal.Body>
 
       <Modal.Footer>
-        <form action={() => upsertUtkastAction(narmesteLederId)}>
+        <form
+          action={() => {
+            setLastAction("upsert");
+            upsertUtkastAction(narmesteLederId);
+          }}
+        >
           <TrackedButton
             type="submit"
             variant="primary"
@@ -91,7 +110,7 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
         <TrackedButton
           variant="secondary"
           onClick={handleBegynnMedTomPlanClick}
-          loading={isPendingSlett}
+          loading={hasUtkast ? isPendingSlett : isPendingPush}
           disabled={isPending}
           tracking={knappKlikket.aktivPlanSide.lagNyPlanModal.begynnMedTomPlan}
         >
