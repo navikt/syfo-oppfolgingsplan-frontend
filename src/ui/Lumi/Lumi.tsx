@@ -19,5 +19,10 @@ interface Props {
 }
 
 export const Lumi = ({ feedbackId, survey }: Props) => (
-  <LumiSurveyDock surveyId={feedbackId} survey={survey} transport={transport} />
+  <LumiSurveyDock
+    surveyId={feedbackId}
+    survey={survey}
+    transport={transport}
+    behavior={{ questionLayout: "steps" }}
+  />
 );
