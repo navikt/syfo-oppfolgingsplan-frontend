@@ -1,5 +1,6 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { mockAkselModal } from "@/test/mocks/akselModalMock";
 import { render } from "@/test/test-utils";
 import { AktivPlanButtons } from "../AktivPlanButtons";
 
@@ -16,51 +17,7 @@ vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
   logAnalyticsEvent: vi.fn(),
 }));
 
-vi.mock("@navikt/ds-react", async () => {
-  const actual =
-    await vi.importActual<typeof import("@navikt/ds-react")>(
-      "@navikt/ds-react",
-    );
-
-  const Modal = Object.assign(
-    ({
-      children,
-      header,
-      onClose,
-    }: {
-      children: React.ReactNode;
-      header?: { heading?: string };
-      onClose?: React.ReactEventHandler<HTMLDialogElement>;
-    }) => (
-      <div>
-        {header?.heading ? <h2>{header.heading}</h2> : null}
-        <button
-          type="button"
-          aria-label="Lukk modal"
-          onClick={() =>
-            onClose?.({} as React.SyntheticEvent<HTMLDialogElement>)
-          }
-        >
-          Lukk
-        </button>
-        {children}
-      </div>
-    ),
-    {
-      Body: ({ children }: { children: React.ReactNode }) => (
-        <div>{children}</div>
-      ),
-      Footer: ({ children }: { children: React.ReactNode }) => (
-        <div>{children}</div>
-      ),
-    },
-  );
-
-  return {
-    ...actual,
-    Modal,
-  };
-});
+vi.mock("@navikt/ds-react", () => mockAkselModal());
 
 vi.mock("../VisPdfButtonAG", () => ({
   VisPdfButtonAG: () => <button type="button">Vis PDF</button>,

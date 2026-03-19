@@ -2,6 +2,7 @@ import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
+import { mockAkselModal } from "@/test/mocks/akselModalMock";
 import { render } from "@/test/test-utils";
 import { LagNyPlanModal } from "../LagNyPlanModal";
 
@@ -51,57 +52,7 @@ vi.mock("@/server/actions/upsertUtkastWithAktivPlan", () => ({
     mockUpsertUtkastWithAktivPlanServerAction,
 }));
 
-vi.mock("@navikt/ds-react", async () => {
-  const actual =
-    await vi.importActual<typeof import("@navikt/ds-react")>(
-      "@navikt/ds-react",
-    );
-
-  const Modal = Object.assign(
-    ({
-      children,
-      header,
-      onClose,
-      onBeforeClose,
-    }: {
-      children: React.ReactNode;
-      header?: { heading?: string };
-      onClose?: React.ReactEventHandler<HTMLDialogElement>;
-      onBeforeClose?: () => boolean;
-    }) => (
-      <div>
-        {header?.heading ? <h2>{header.heading}</h2> : null}
-        <button
-          type="button"
-          aria-label="Lukk modal"
-          onClick={() => {
-            if (onBeforeClose?.() === false) {
-              return;
-            }
-
-            onClose?.({} as React.SyntheticEvent<HTMLDialogElement>);
-          }}
-        >
-          Lukk
-        </button>
-        {children}
-      </div>
-    ),
-    {
-      Body: ({ children }: { children: React.ReactNode }) => (
-        <div>{children}</div>
-      ),
-      Footer: ({ children }: { children: React.ReactNode }) => (
-        <div>{children}</div>
-      ),
-    },
-  );
-
-  return {
-    ...actual,
-    Modal,
-  };
-});
+vi.mock("@navikt/ds-react", () => mockAkselModal());
 
 describe("LagNyPlanModal", () => {
   beforeEach(() => {
