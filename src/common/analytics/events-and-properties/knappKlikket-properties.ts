@@ -73,6 +73,28 @@ export const knappKlikket = {
       tekst: "Lag en ny plan",
       kontekst: "AktivPlanSide",
     },
+    lagNyOppfolgingsplanModalTrigger: {
+      komponentId: "lag-ny-oppfolgingsplan-modal-trigger-knapp",
+      tekst: "Lag ny oppfølgingsplan",
+      kontekst: "AktivPlanSide",
+    },
+    lagNyPlanModal: {
+      begynnMedInnholdFraForrigePlan: {
+        komponentId: "begynn-med-innhold-fra-forrige-plan-knapp",
+        tekst: "Begynn med innhold fra forrige plan",
+        kontekst: "AktivPlanSide-LagNyPlanModal",
+      },
+      begynnMedTomPlan: {
+        komponentId: "begynn-med-tom-plan-knapp",
+        tekst: "Begynn med tom plan",
+        kontekst: "AktivPlanSide-LagNyPlanModal",
+      },
+      avbryt: {
+        komponentId: "lag-ny-plan-modal-avbryt-knapp",
+        tekst: "Avbryt",
+        kontekst: "AktivPlanSide-LagNyPlanModal",
+      },
+    },
     delMedFastlege: {
       komponentId: "del-med-fastlege-knapp",
       tekst: "Send til fastlege",
