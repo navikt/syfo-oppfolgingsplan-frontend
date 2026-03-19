@@ -63,16 +63,6 @@ export const knappKlikket = {
     },
   },
   aktivPlanSide: {
-    endreOppfolgingsplan: {
-      komponentId: "endre-oppfolgingsplan-knapp",
-      tekst: "Endre oppfølgingsplanen",
-      kontekst: "AktivPlanSide",
-    },
-    lagNyOppfolgingsplan: {
-      komponentId: "lag-ny-oppfolgingsplan-knapp",
-      tekst: "Lag en ny plan",
-      kontekst: "AktivPlanSide",
-    },
     lagNyOppfolgingsplanModalTrigger: {
       komponentId: "lag-ny-oppfolgingsplan-modal-trigger-knapp",
       tekst: "Lag ny oppfølgingsplan",
@@ -104,30 +94,6 @@ export const knappKlikket = {
       komponentId: "del-med-nav-knapp",
       tekst: "Send til Nav-veileder",
       kontekst: "AktivPlanSide",
-    },
-    overskriveUtkastForAEndreModal: {
-      bekreft: {
-        komponentId: "erstatt-utkast-og-fortsett-knapp",
-        tekst: "Erstatt utkast og fortsett",
-        kontekst: "AktivPlanSide-OverskriveUtkastForAEndreModal",
-      },
-      avbryt: {
-        komponentId: "avbryt-erstatt-utkast-knapp",
-        tekst: "Avbryt",
-        kontekst: "AktivPlanSide-OverskriveUtkastForAEndreModal",
-      },
-    },
-    sletteUtkastForALageNyModal: {
-      bekreft: {
-        komponentId: "slett-utkast-og-fortsett-knapp",
-        tekst: "Slett utkast og fortsett",
-        kontekst: "AktivPlanSide-SletteUtkastForALageNyModal",
-      },
-      avbryt: {
-        komponentId: "avbryt-slett-utkast-knapp",
-        tekst: "Avbryt",
-        kontekst: "AktivPlanSide-SletteUtkastForALageNyModal",
-      },
     },
   },
 };
