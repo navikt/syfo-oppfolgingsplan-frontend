@@ -1,16 +1,16 @@
 ---
-description: Nav authentication overview — Azure AD, TokenX, ID-porten, Maskinporten configuration and best practices
+description: Sett opp autentisering i en Nav-applikasjon — Azure AD, TokenX, ID-porten, Maskinporten konfigurering og beste praksis
 ---
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
      For repo-specific customizations, create your own files without this header. -->
 
 # Authentication Overview — Nav
 
-Oversikt over autentiseringsmekanismer i NAV. Bruk denne som referanse ved oppsett av auth i nye eller eksisterende tjenester.
+Oversikt over autentiseringsmekanismer i Nav. Bruk denne som referanse ved oppsett av auth i nye eller eksisterende tjenester.
 
 ## Autentiseringstyper
 
-### 1. Azure AD / Entra ID (interne NAV-brukere)
+### 1. Azure AD / Entra ID (interne Nav-brukere)
 ```yaml
 azure:
   application:

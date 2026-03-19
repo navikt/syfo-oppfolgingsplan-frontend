@@ -1,5 +1,5 @@
 ---
-description: Create and manage GitHub Issues linked to the Team eSyfo GitHub Projects board
+description: Opprett og administrer GitHub Issues, epics, sub-issues og prosjektstatus på Team eSyfos GitHub Projects-board
 ---
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
      For repo-specific customizations, create your own files without this header. -->

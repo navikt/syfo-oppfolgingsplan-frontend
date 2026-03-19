@@ -1,4 +1,5 @@
 ---
+description: 'Sikkerhetsstandarder — hemmeligheter, inputvalidering, accessPolicy, PII'
 applyTo: "**/*"
 ---
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.

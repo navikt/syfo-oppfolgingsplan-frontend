@@ -7,6 +7,8 @@ user-invocable: false
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
      For repo-specific customizations, create your own files without this header. -->
 
+# Kokk 👨‍🍳
+
 Verifiser alltid API-er og biblioteker mot dokumentasjon. Bruk web-søk eller eksisterende kode i repoet som referanse. Anta aldri at du kan svaret — ting endres hyppig.
 
 ## Arbeidsflyt

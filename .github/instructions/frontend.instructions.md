@@ -1,4 +1,5 @@
 ---
+description: 'Frontend-standarder — Aksel Design System, spacing, responsivt design'
 applyTo: "**/*.{ts,tsx,css}"
 ---
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
