@@ -1,5 +1,5 @@
 ---
-description: Sikkerhetsgjennomgang før commit/push/PR — OWASP Top 10, skanning, sjekkliste
+description: Sikkerhetsgjennomgang før commit/push/PR — OWASP Top 10, Dependabot, Trivy, hemmeligheter, inputvalidering
 ---
 <!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
      For repo-specific customizations, create your own files without this header. -->
