@@ -26,7 +26,7 @@
     "@navikt/ds-react": "^8.7.0",
     "@navikt/ds-tailwind": "^8.7.0",
     "@navikt/lumi-survey": "^0.1.1",
-    "@navikt/nav-dekoratoren-moduler": "^3.6.2",
+    "@navikt/nav-dekoratoren-moduler": "^3.6.3",
     "@navikt/next-logger": "^4.5.1",
     "@navikt/oasis": "^4.1.4",
     "@tanstack/react-form": "^1.28.4",
