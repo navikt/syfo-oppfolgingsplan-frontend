@@ -87,6 +87,16 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
       </Modal.Body>
 
       <Modal.Footer>
+        <TrackedButton
+          variant="secondary"
+          onClick={handleBegynnMedTomPlanClick}
+          loading={hasUtkast ? isPendingSlett : isPendingPush}
+          disabled={isPending}
+          tracking={knappKlikket.aktivPlanSide.lagNyPlanModal.begynnMedTomPlan}
+        >
+          Begynn med tom plan
+        </TrackedButton>
+
         <form
           action={() => {
             setLastAction("upsert");
@@ -106,16 +116,6 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
             Begynn med innhold fra forrige plan
           </TrackedButton>
         </form>
-
-        <TrackedButton
-          variant="secondary"
-          onClick={handleBegynnMedTomPlanClick}
-          loading={hasUtkast ? isPendingSlett : isPendingPush}
-          disabled={isPending}
-          tracking={knappKlikket.aktivPlanSide.lagNyPlanModal.begynnMedTomPlan}
-        >
-          Begynn med tom plan
-        </TrackedButton>
       </Modal.Footer>
     </Modal>
   );

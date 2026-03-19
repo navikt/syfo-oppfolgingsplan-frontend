@@ -22,7 +22,7 @@ export function AktivPlanButtons({ planId, hasUtkast }: Props) {
       <LagNyPlanModal ref={lagNyPlanModalRef} hasUtkast={hasUtkast} />
       <HStack justify="space-between">
         <TrackedButton
-          variant="primary"
+          variant="secondary"
           onClick={() => lagNyPlanModalRef.current?.showModal()}
           tracking={knappKlikket.aktivPlanSide.lagNyOppfolgingsplanModalTrigger}
         >
