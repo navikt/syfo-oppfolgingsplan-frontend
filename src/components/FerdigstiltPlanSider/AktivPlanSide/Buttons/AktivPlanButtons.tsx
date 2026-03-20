@@ -1,15 +1,11 @@
 "use client";
 
 import { HStack } from "@navikt/ds-react";
-import { useParams, useRouter } from "next/navigation";
-import { startTransition, useActionState, useRef } from "react";
+import { useParams } from "next/navigation";
+import { useRef } from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
-import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
-import { upsertUtkastWithAktivPlanServerAction } from "@/server/actions/upsertUtkastWithAktivPlan";
-import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import { TrackedButton } from "@/ui/TrackedButton";
-import { VilDuOverskriveUtkastForAEndrePlanModal } from "../HarAlleredeUtkastModaler/VilDuOverskriveUtkastForAEndrePlanModal";
-import { VilDuSletteUtkastForALageNyPlanModal } from "../HarAlleredeUtkastModaler/VilDuSletteUtkastForALageNyPlanModal";
+import { LagNyPlanModal } from "../LagNyPlanModal";
 import { VisPdfButtonAG } from "./VisPdfButtonAG";
 
 interface Props {
@@ -18,74 +14,23 @@ interface Props {
 }
 
 export function AktivPlanButtons({ planId, hasUtkast }: Props) {
-  const { push } = useRouter();
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
-
-  const vilDuOverskriveUtkastMedInnholdFraAktivPlanModalRef =
-    useRef<HTMLDialogElement | null>(null);
-  const vilDuSletteUtkastForALageNyPlanModalRef =
-    useRef<HTMLDialogElement | null>(null);
-
-  const [
-    { error: upsertUtkastWithAktivPlanError },
-    upsertUtkastWithAktivPlanAction,
-    isPendingUpsertUtkastWithAktivPlan,
-  ] = useActionState(upsertUtkastWithAktivPlanServerAction, {
-    error: null,
-  });
-
-  function handleEndreOppfolgingsplanClick() {
-    if (hasUtkast) {
-      vilDuOverskriveUtkastMedInnholdFraAktivPlanModalRef.current?.showModal();
-    } else {
-      startTransition(() => {
-        upsertUtkastWithAktivPlanAction(narmesteLederId);
-      });
-    }
-  }
-
-  function handleNyPlanClick() {
-    if (hasUtkast) {
-      vilDuSletteUtkastForALageNyPlanModalRef.current?.showModal();
-    } else {
-      push(getAGOpprettNyPlanHref(narmesteLederId));
-    }
-  }
+  const lagNyPlanModalRef = useRef<HTMLDialogElement | null>(null);
 
   return (
     <>
-      <VilDuOverskriveUtkastForAEndrePlanModal
-        ref={vilDuOverskriveUtkastMedInnholdFraAktivPlanModalRef}
-      />
-      <VilDuSletteUtkastForALageNyPlanModal
-        ref={vilDuSletteUtkastForALageNyPlanModalRef}
-      />
+      <LagNyPlanModal ref={lagNyPlanModalRef} hasUtkast={hasUtkast} />
       <HStack justify="space-between">
-        <HStack gap="space-16">
-          <TrackedButton
-            variant="secondary"
-            onClick={handleEndreOppfolgingsplanClick}
-            loading={isPendingUpsertUtkastWithAktivPlan}
-            tracking={knappKlikket.aktivPlanSide.endreOppfolgingsplan}
-          >
-            Endre oppfølgingsplanen
-          </TrackedButton>
-
-          <TrackedButton
-            variant="secondary"
-            onClick={handleNyPlanClick}
-            tracking={knappKlikket.aktivPlanSide.lagNyOppfolgingsplan}
-          >
-            Lag en ny plan
-          </TrackedButton>
-        </HStack>
+        <TrackedButton
+          variant="secondary"
+          onClick={() => lagNyPlanModalRef.current?.showModal()}
+          tracking={knappKlikket.aktivPlanSide.lagNyOppfolgingsplanModalTrigger}
+        >
+          Lag ny oppfølgingsplan
+        </TrackedButton>
 
         <VisPdfButtonAG narmesteLederId={narmesteLederId} planId={planId} />
       </HStack>
-      <FetchErrorAlert
-        error={upsertUtkastWithAktivPlanError}
-        className="mt-4"
-      />
     </>
   );
 }

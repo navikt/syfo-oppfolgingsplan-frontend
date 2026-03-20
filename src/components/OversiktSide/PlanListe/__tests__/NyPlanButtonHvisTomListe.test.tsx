@@ -12,14 +12,11 @@ import {
 import { renderAsync } from "@/test/test-utils";
 import NyPlanButtonHvisTomListe from "../NyPlanButtonHvisTomListe";
 
-// Mock the fetch function
-vi.mock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
+vi.mock("next/navigation", async () => {
+  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
 
-// Mock Next.js navigation (needed by LagNyOppfolgingsplanButton)
-vi.mock("next/navigation", () => ({
-  useParams: () => ({ narmesteLederId: "12345" }),
-  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
-}));
+  return mockNextNavigation();
+});
 
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
 

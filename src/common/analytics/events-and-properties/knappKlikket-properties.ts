@@ -63,15 +63,27 @@ export const knappKlikket = {
     },
   },
   aktivPlanSide: {
-    endreOppfolgingsplan: {
-      komponentId: "endre-oppfolgingsplan-knapp",
-      tekst: "Endre oppfølgingsplanen",
+    lagNyOppfolgingsplanModalTrigger: {
+      komponentId: "lag-ny-oppfolgingsplan-modal-trigger-knapp",
+      tekst: "Lag ny oppfølgingsplan",
       kontekst: "AktivPlanSide",
     },
-    lagNyOppfolgingsplan: {
-      komponentId: "lag-ny-oppfolgingsplan-knapp",
-      tekst: "Lag en ny plan",
-      kontekst: "AktivPlanSide",
+    lagNyPlanModal: {
+      begynnMedInnholdFraForrigePlan: {
+        komponentId: "begynn-med-innhold-fra-forrige-plan-knapp",
+        tekst: "Begynn med innhold fra forrige plan",
+        kontekst: "AktivPlanSide-LagNyPlanModal",
+      },
+      begynnMedTomPlan: {
+        komponentId: "begynn-med-tom-plan-knapp",
+        tekst: "Begynn med tom plan",
+        kontekst: "AktivPlanSide-LagNyPlanModal",
+      },
+      avbryt: {
+        komponentId: "lag-ny-plan-modal-avbryt-knapp",
+        tekst: "Avbryt",
+        kontekst: "AktivPlanSide-LagNyPlanModal",
+      },
     },
     delMedFastlege: {
       komponentId: "del-med-fastlege-knapp",
@@ -82,30 +94,6 @@ export const knappKlikket = {
       komponentId: "del-med-nav-knapp",
       tekst: "Send til Nav-veileder",
       kontekst: "AktivPlanSide",
-    },
-    overskriveUtkastForAEndreModal: {
-      bekreft: {
-        komponentId: "erstatt-utkast-og-fortsett-knapp",
-        tekst: "Erstatt utkast og fortsett",
-        kontekst: "AktivPlanSide-OverskriveUtkastForAEndreModal",
-      },
-      avbryt: {
-        komponentId: "avbryt-erstatt-utkast-knapp",
-        tekst: "Avbryt",
-        kontekst: "AktivPlanSide-OverskriveUtkastForAEndreModal",
-      },
-    },
-    sletteUtkastForALageNyModal: {
-      bekreft: {
-        komponentId: "slett-utkast-og-fortsett-knapp",
-        tekst: "Slett utkast og fortsett",
-        kontekst: "AktivPlanSide-SletteUtkastForALageNyModal",
-      },
-      avbryt: {
-        komponentId: "avbryt-slett-utkast-knapp",
-        tekst: "Avbryt",
-        kontekst: "AktivPlanSide-SletteUtkastForALageNyModal",
-      },
     },
   },
 };

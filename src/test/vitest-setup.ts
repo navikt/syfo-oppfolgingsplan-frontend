@@ -1,2 +1,4 @@
-// Can set up global test utilities and mocks here
 import "@testing-library/jest-dom/vitest";
+import { vi } from "vitest";
+
+vi.mock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
