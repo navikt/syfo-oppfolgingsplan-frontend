@@ -9,8 +9,6 @@ export const lumiSurveySM: LumiSurveyConfig = {
       variant: "emoji",
       required: true,
       prompt: "Hvordan opplevde du å lage oppfølgingsplanen med lederen din?",
-      description:
-        "Vi vil gjerne vite mer om opplevelsen din. Svarene er anonyme.",
     },
     {
       id: "samarbeid",

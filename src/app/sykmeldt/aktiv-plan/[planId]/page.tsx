@@ -15,6 +15,7 @@ export default async function AktivPlanPageForSM({
 
       <Lumi
         feedbackId="Oppfølgingsplan medvirkning - sykmeldt"
+        behavior={{ questionLayout: "steps", showProgress: true }}
         survey={lumiSurveySM}
       />
     </Suspense>
