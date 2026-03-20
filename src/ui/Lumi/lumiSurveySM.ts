@@ -16,7 +16,7 @@ export const lumiSurveySM: LumiSurveyConfig = {
       id: "samarbeid",
       type: "singleChoice",
       required: true,
-      prompt: "Hvordan var samarbeidet om oppfølgingsplanen?",
+      prompt: "Hvordan samarbeidet dere om å lage oppfølgingsplanen?",
       visibleIf: {
         field: "ANSWER",
         questionId: "opplevelse",
@@ -126,7 +126,8 @@ export const lumiSurveySM: LumiSurveyConfig = {
       id: "deling-holdning",
       type: "singleChoice",
       required: true,
-      prompt: "Lederen din kan dele planen med lege og Nav uten at du godkjenner den. Hvor greit er dette for deg?",
+      prompt:
+        "Lederen din kan dele planen med lege og Nav uten at du godkjenner den. Hvor greit er dette for deg?",
       visibleIf: {
         field: "ANSWER",
         questionId: "deling-kunnskap",
