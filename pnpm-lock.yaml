@@ -33,8 +33,8 @@ importers:
         specifier: ^8.7.0
         version: 8.7.0
       '@navikt/lumi-survey':
-        specifier: ^0.1.1
-        version: 0.1.1(@navikt/ds-css@8.7.0)(@navikt/ds-react@8.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^0.3.0
+        version: 0.3.0(@navikt/ds-css@8.7.0)(@navikt/ds-react@8.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@navikt/nav-dekoratoren-moduler':
         specifier: ^3.6.3
         version: 3.6.3(csp-header@6.3.0)(html-react-parser@5.2.17(@types/react@19.2.14)(react@19.2.4))(jsdom@28.1.0)(react@19.2.4)
@@ -725,6 +725,9 @@ packages:
       '@types/react': ^17.0.30 || ^18 || ^19
       react: ^17 || ^18 || ^19
       react-dom: ^17 || ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@navikt/ds-tailwind@8.7.0':
     resolution: {integrity: sha512-J/ResgmF2WfjcDOoj/55Ero2Wfv1UZSxh+n/wpcnjAH+iEHhE/imPV042OLXi1/DLwcXUxkEg23gk7uHojTfKg==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tailwind/8.7.0/99ec8b29ec7dbf154362952f78a512234c7a3ec3}
@@ -732,8 +735,8 @@ packages:
   '@navikt/ds-tokens@8.7.0':
     resolution: {integrity: sha512-YEeAzjJNFXwTrx2R9xf4Sue/sTCLaygFlJ0MVgje8Q5KzLiQSaVoK6gIGZHZ4wHVU6Q1uOAlIkdaHKlPvCfu7A==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/8.7.0/17a22dcaa2107ac81431db172701e0debe4e3fe3}
 
-  '@navikt/lumi-survey@0.1.1':
-    resolution: {integrity: sha512-84Uniy8b4CIwYsBuPIIdMHjilIq2261EvvRJU5mqLOwWtZo4ZfANjQ+oLcPQvYscqkZs2wD92ZobYtBQVLFvvg==, tarball: https://npm.pkg.github.com/download/@navikt/lumi-survey/0.1.1/ac3055547e8d91b984d3ca673d76cb068bb432ad}
+  '@navikt/lumi-survey@0.3.0':
+    resolution: {integrity: sha512-iK/glrk2kB0drXg5UX21HA5uCD8nEo9Zpc4q9LAOstFU9Gw2y+L6e9/8JSl63zr4y+DFi1aGS5YCJ0bIDoan6g==, tarball: https://npm.pkg.github.com/download/@navikt/lumi-survey/0.3.0/d38bfd469f0c8f976ee2ee760660d98a5dfad480}
     peerDependencies:
       '@navikt/ds-css': '>=8'
       '@navikt/ds-react': '>=8'
@@ -748,6 +751,9 @@ packages:
       html-react-parser: '>=5.x'
       jsdom: '>=16.x'
       react: '>=17.x'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@navikt/next-logger@4.5.1':
     resolution: {integrity: sha512-qfiBT/kPK92sCVKGHlUeD2N9vDvJzEFpjn2qRVZiatQivD9IE+qRZwsdCpuvdU1Hylsc/fcF9/i03YQzXBf0iQ==, tarball: https://npm.pkg.github.com/download/@navikt/next-logger/4.5.1/e8c32873a7931396b0871c77b94673cbfb12d376}
@@ -2733,17 +2739,18 @@ snapshots:
       '@floating-ui/react-dom': 2.1.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@navikt/aksel-icons': 8.7.0
       '@navikt/ds-tokens': 8.7.0
-      '@types/react': 19.2.14
       date-fns: 4.1.0
       react: 19.2.4
       react-day-picker: 9.7.0(react@19.2.4)
       react-dom: 19.2.4(react@19.2.4)
+    optionalDependencies:
+      '@types/react': 19.2.14
 
   '@navikt/ds-tailwind@8.7.0': {}
 
   '@navikt/ds-tokens@8.7.0': {}
 
-  '@navikt/lumi-survey@0.1.1(@navikt/ds-css@8.7.0)(@navikt/ds-react@8.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@navikt/lumi-survey@0.3.0(@navikt/ds-css@8.7.0)(@navikt/ds-react@8.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@navikt/ds-css': 8.7.0
       '@navikt/ds-react': 8.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -2756,6 +2763,7 @@ snapshots:
       html-react-parser: 5.2.17(@types/react@19.2.14)(react@19.2.4)
       js-cookie: 3.0.5
       jsdom: 28.1.0
+    optionalDependencies:
       react: 19.2.4
 
   '@navikt/next-logger@4.5.1(next@16.1.7(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pino@10.3.1)':

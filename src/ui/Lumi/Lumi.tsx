@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type LumiSurveyBehavior,
   type LumiSurveyConfig,
   LumiSurveyDock,
   type LumiSurveyTransport,
@@ -15,9 +16,15 @@ const transport: LumiSurveyTransport = {
 
 interface Props {
   feedbackId: string;
+  behavior?: LumiSurveyBehavior;
   survey: LumiSurveyConfig;
 }
 
-export const Lumi = ({ feedbackId, survey }: Props) => (
-  <LumiSurveyDock surveyId={feedbackId} survey={survey} transport={transport} />
+export const Lumi = ({ feedbackId, behavior, survey }: Props) => (
+  <LumiSurveyDock
+    surveyId={feedbackId}
+    survey={survey}
+    transport={transport}
+    behavior={behavior}
+  />
 );

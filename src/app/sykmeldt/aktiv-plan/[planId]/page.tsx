@@ -13,7 +13,11 @@ export default async function AktivPlanPageForSM({
     <Suspense fallback={<FerdigstiltPlanSkeleton />}>
       <AktivPlanForSM planId={planId} />
 
-      <Lumi feedbackId="Ny oppfølgingsplan - sykmeldt" survey={lumiSurveySM} />
+      <Lumi
+        feedbackId="Oppfølgingsplan medvirkning - sykmeldt"
+        behavior={{ questionLayout: "steps", showProgress: true }}
+        survey={lumiSurveySM}
+      />
     </Suspense>
   );
 }
