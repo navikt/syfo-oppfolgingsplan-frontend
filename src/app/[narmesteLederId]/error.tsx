@@ -22,7 +22,6 @@ export default function ErrorPage({
   const errorText = "Beklager! Det har oppstått en uventet feil";
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: role="status" is semantically correct for dynamic status messages
     <div className="flex max-w-3xl flex-col" role="status" aria-live="polite">
       <Image
         src={ERROR_PAGE_DAD_SVG}

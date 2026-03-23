@@ -15,11 +15,11 @@ import {
 
 // These date values are important for testing "Gå til oppsummering" behavior, since the
 // form must be valid to proceed to the next step.
-export const mockCurrentTime = new Date("2026-01-14T12:00:00Z");
+const mockCurrentTime = new Date("2026-01-14T12:00:00Z");
 // Must be between one day and one year after mockCurrentTime for form to be valid.
 const mockEvalueringsDatoFormValue = "2026-03-15";
 
-export function createValidFormContent(): OppfolgingsplanFormUtfyllt {
+function createValidFormContent(): OppfolgingsplanFormUtfyllt {
   return {
     typiskArbeidshverdag: "Kontorarbeid med møter",
     arbeidsoppgaverSomKanUtfores: "Skrivearbeid og telefonmøter",
