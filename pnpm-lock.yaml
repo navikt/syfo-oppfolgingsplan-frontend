@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@grafana/faro-web-sdk':
-        specifier: ^2.3.0
-        version: 2.3.0
+        specifier: ^2.3.1
+        version: 2.3.1
       '@grafana/faro-web-tracing':
         specifier: ^2.3.1
         version: 2.3.1
@@ -524,9 +524,6 @@ packages:
 
   '@grafana/faro-core@2.3.1':
     resolution: {integrity: sha512-htDKO0YFKr0tfntrPoM151vOPSZzmP6oE0+0MDvbI1WDaBW4erXmYi3feGJLWDXt5/vZBg9iQRmZoRzTLTTcOA==}
-
-  '@grafana/faro-web-sdk@2.3.0':
-    resolution: {integrity: sha512-lFHnYWmk+a5B7MgXNWX+Iwt6ZaexymPu1qpy5hG85PWi928jk343DuhKR6HyyhShcGQm0yb+h91rXv2lFW2Bqg==}
 
   '@grafana/faro-web-sdk@2.3.1':
     resolution: {integrity: sha512-WMfErl2YSP+CcfcobMpCdK6apX86hc8bymMXsvYLQpBBkQ0KJjIilEQS/YXd+g/cg6F1kwbeweisBKluNNy5sA==}
@@ -2248,9 +2245,6 @@ packages:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
 
-  web-vitals@5.1.0:
-    resolution: {integrity: sha512-ArI3kx5jI0atlTtmV0fWU3fjpLmq/nD3Zr1iFFlJLaqa5wLBkUSzINwBPySCX/8jRyjlmy1Volw1kz1g9XE4Jg==}
-
   web-vitals@5.2.0:
     resolution: {integrity: sha512-i2z98bEmaCqSDiHEDu+gHl/dmR4Q+TxFmG3/13KkMO+o8UxQzCqWaDRCiLgEa41nlO4VpXSI0ASa1xWmO9sBlA==}
 
@@ -2609,12 +2603,6 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/otlp-transformer': 0.213.0(@opentelemetry/api@1.9.1)
-
-  '@grafana/faro-web-sdk@2.3.0':
-    dependencies:
-      '@grafana/faro-core': 2.3.1
-      ua-parser-js: 1.0.41
-      web-vitals: 5.1.0
 
   '@grafana/faro-web-sdk@2.3.1':
     dependencies:
@@ -4180,8 +4168,6 @@ snapshots:
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
-
-  web-vitals@5.1.0: {}
 
   web-vitals@5.2.0: {}
 
