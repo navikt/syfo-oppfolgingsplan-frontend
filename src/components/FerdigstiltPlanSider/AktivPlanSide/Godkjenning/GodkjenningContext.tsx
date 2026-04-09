@@ -18,6 +18,7 @@ const GodkjenningContext = createContext<GodkjenningContextValue | null>(null);
 
 interface ProviderProps {
   planId: string;
+  initialStatus?: GodkjenningStatus;
   children: React.ReactNode;
 }
 
@@ -42,12 +43,22 @@ function isGodkjenningStatus(value: unknown): value is GodkjenningStatus {
   }
 }
 
-export function GodkjenningProvider({ planId, children }: ProviderProps) {
-  const [status, setStatus] = useState<GodkjenningStatus>(IKKE_BESVART_STATUS);
-  const [hasHydrated, setHasHydrated] = useState(false);
+export function GodkjenningProvider({
+  planId,
+  initialStatus,
+  children,
+}: ProviderProps) {
+  const [status, setStatus] = useState<GodkjenningStatus>(
+    initialStatus ?? IKKE_BESVART_STATUS,
+  );
+  const [hasHydrated, setHasHydrated] = useState(!!initialStatus);
   const storageKey = `godkjenning-prototype-status-${planId}`;
 
   useEffect(() => {
+    if (initialStatus) {
+      return;
+    }
+
     try {
       const storedStatus = window.localStorage.getItem(storageKey);
 
@@ -77,7 +88,7 @@ export function GodkjenningProvider({ planId, children }: ProviderProps) {
     }
 
     setHasHydrated(true);
-  }, [storageKey]);
+  }, [storageKey, initialStatus]);
 
   useEffect(() => {
     if (!hasHydrated) {

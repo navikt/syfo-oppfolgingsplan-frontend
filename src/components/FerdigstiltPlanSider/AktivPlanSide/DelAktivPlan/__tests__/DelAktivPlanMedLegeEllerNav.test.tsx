@@ -5,11 +5,14 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import * as delPlanMedLegeModule from "@/server/actions/delPlanMedLege";
 import * as delPlanMedVeilederModule from "@/server/actions/delPlanMedVeileder";
 import { render } from "@/test/test-utils";
+import { GodkjenningProvider } from "../../Godkjenning/GodkjenningContext";
+import type { GodkjenningStatus } from "../../Godkjenning/godkjenningTypes";
 import { PlanDelingProvider } from "../../PlanDelingContext";
 import DelAktivPlanMedLegeEllerNav from "../DelAktivPlanMedLegeEllerNav";
 
 const MOCK_PLAN_ID = "test-plan-123";
 const MOCK_LEDER_ID = "test-leder-123";
+const GODKJENT_STATUS: GodkjenningStatus = { type: "GODKJENT" };
 
 vi.mock("next/navigation", async () => {
   const { mockNextNavigation } = await import(
@@ -44,14 +47,20 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
   function renderComponent(
     initialDeltMedLegeTidspunkt: string | null = null,
     initialDeltMedVeilederTidspunkt: string | null = null,
+    godkjenningStatus: GodkjenningStatus = GODKJENT_STATUS,
   ) {
     return render(
-      <PlanDelingProvider
-        initialDeltMedLegeTidspunkt={initialDeltMedLegeTidspunkt}
-        initialDeltMedVeilederTidspunkt={initialDeltMedVeilederTidspunkt}
+      <GodkjenningProvider
+        planId={MOCK_PLAN_ID}
+        initialStatus={godkjenningStatus}
       >
-        <DelAktivPlanMedLegeEllerNav planId={MOCK_PLAN_ID} />
-      </PlanDelingProvider>,
+        <PlanDelingProvider
+          initialDeltMedLegeTidspunkt={initialDeltMedLegeTidspunkt}
+          initialDeltMedVeilederTidspunkt={initialDeltMedVeilederTidspunkt}
+        >
+          <DelAktivPlanMedLegeEllerNav planId={MOCK_PLAN_ID} />
+        </PlanDelingProvider>
+      </GodkjenningProvider>,
     );
   }
 
