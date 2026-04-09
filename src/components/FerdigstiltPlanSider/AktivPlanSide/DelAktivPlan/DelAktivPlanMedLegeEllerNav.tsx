@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Alert,
   BodyLong,
   Box,
   Button,
@@ -10,6 +11,7 @@ import {
   InlineMessage,
 } from "@navikt/ds-react";
 import { type RefObject, useRef, useState } from "react";
+import { useGodkjenningContext } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Godkjenning/GodkjenningContext";
 import { usePlanDelingContext } from "@/components/FerdigstiltPlanSider/AktivPlanSide/PlanDelingContext.tsx";
 import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
@@ -27,6 +29,7 @@ interface RecipientSectionProps {
   error: FetchResultError | null;
   errorMessage: string;
   checkboxRef: RefObject<HTMLInputElement | null>;
+  disabled?: boolean;
 }
 
 function SentMessage({
@@ -51,10 +54,11 @@ function RecipientCheckbox({
   error,
   errorMessage,
   checkboxRef,
+  disabled = false,
 }: RecipientSectionProps) {
   return (
     <div>
-      <Checkbox id={id} ref={checkboxRef} name={name}>
+      <Checkbox id={id} ref={checkboxRef} name={name} disabled={disabled}>
         {label}
       </Checkbox>
       {error && (
@@ -69,6 +73,7 @@ function RecipientCheckbox({
 }
 
 function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
+  const { status } = useGodkjenningContext();
   const {
     deltMedLegeTidspunkt,
     deltMedVeilederTidspunkt,
@@ -88,6 +93,8 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
   const sentToFastlege = Boolean(deltMedLegeTidspunkt);
   const sentToVeileder = Boolean(deltMedVeilederTidspunkt);
   const hasUnsentRecipients = !sentToFastlege || !sentToVeileder;
+  const godkjenningBlokkert =
+    status.type === "IKKE_BESVART" || status.type === "AVSLATT";
 
   const handleSubmit = (formData: FormData) => {
     const sendToFastlege = formData.get("sendToFastlege") === "on";
@@ -117,6 +124,12 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
       <Heading level="2" size="medium" spacing>
         Hvem vil du sende planen til
       </Heading>
+      {godkjenningBlokkert && (
+        <Alert variant="info" className="mb-4">
+          Planen kan ikke sendes før den sykmeldte har godkjent, eller du
+          overstyrer godkjenningen.
+        </Alert>
+      )}
       <BodyLong>
         Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært
         helt eller delvis borte fra jobben i 4 uker. I tillegg kan du sende
@@ -137,6 +150,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
             error={errorDelMedLege}
             errorMessage="Kunne ikke sende planen til fastlege. Prøv igjen."
             checkboxRef={fastlegeCheckboxRef}
+            disabled={godkjenningBlokkert}
           />
         )}
 
@@ -155,6 +169,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
             error={errorDelMedVeileder}
             errorMessage="Kunne ikke sende planen til Nav-veileder. Prøv igjen."
             checkboxRef={veilederCheckboxRef}
+            disabled={godkjenningBlokkert}
           />
         )}
 
@@ -167,7 +182,12 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
         )}
 
         {hasUnsentRecipients && (
-          <Button type="submit" loading={isSending} className="mt-4">
+          <Button
+            type="submit"
+            loading={isSending}
+            disabled={godkjenningBlokkert}
+            className="mt-4"
+          >
             Send planen
           </Button>
         )}

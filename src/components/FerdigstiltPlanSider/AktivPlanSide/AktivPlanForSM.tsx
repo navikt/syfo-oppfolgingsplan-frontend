@@ -1,10 +1,13 @@
 import { HStack, VStack } from "@navikt/ds-react";
+import { getSMAktivPlanHref } from "@/common/route-hrefs";
 import { VisPdfButtonSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Buttons/VisPdfButtonSM";
 import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM";
 import TilbakeTilOversiktButtonForSM from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForSM";
 import { fetchFerdigstiltPlanForSM } from "@/server/fetchData/sykmeldt/fetchFerdigstiltPlanForSM";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
-import { DeltMedDegAlert } from "./DeltMedDegAlert";
+import { GodkjenningProvider } from "./Godkjenning/GodkjenningContext";
+import { GodkjenningDebugPanel } from "./Godkjenning/GodkjenningDebugPanel";
+import { GodkjenningSeksjonSM } from "./Godkjenning/GodkjenningSeksjonSM";
 import { AktivPlanHeadingAndTagsSM } from "./HeadingAndTags/AktivPlanHeadingAndTagsSM";
 
 interface Props {
@@ -29,28 +32,31 @@ export default async function AktivPlanForSM({ planId }: Props) {
 
   return (
     <section>
-      <VStack gap="space-32">
-        <AktivPlanHeadingAndTagsSM
-          arbeidsstedNavn={arbeidsstedNavn}
-          isDeltMedVeileder={isDeltMedVeileder}
-          isDeltMedLege={isDeltMedLege}
-        />
-
-        <HStack>
-          <AktivPlanDetailsSM
-            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
-            evalueringsDato={evalueringsDato}
+      <GodkjenningProvider planId={planId}>
+        <VStack gap="space-32">
+          <AktivPlanHeadingAndTagsSM
+            arbeidsstedNavn={arbeidsstedNavn}
+            isDeltMedVeileder={isDeltMedVeileder}
+            isDeltMedLege={isDeltMedLege}
           />
 
-          <VisPdfButtonSM planId={planId} className="ml-auto" />
-        </HStack>
+          <HStack>
+            <AktivPlanDetailsSM
+              ferdigstiltTidspunkt={ferdigstiltTidspunkt}
+              evalueringsDato={evalueringsDato}
+            />
 
-        <FormSummaryFromSnapshot formSnapshot={content} />
+            <VisPdfButtonSM planId={planId} className="ml-auto" />
+          </HStack>
 
-        <DeltMedDegAlert isDeltMedVeileder={isDeltMedVeileder} />
+          <GodkjenningSeksjonSM />
 
-        <TilbakeTilOversiktButtonForSM />
-      </VStack>
+          <FormSummaryFromSnapshot formSnapshot={content} />
+
+          <TilbakeTilOversiktButtonForSM />
+        </VStack>
+        <GodkjenningDebugPanel smHref={getSMAktivPlanHref(planId)} />
+      </GodkjenningProvider>
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import { VStack } from "@navikt/ds-react";
+import { getAGAktivPlanHref, getSMAktivPlanHref } from "@/common/route-hrefs";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
@@ -7,6 +8,9 @@ import TilbakeTilOversiktButtonForAG from "../Shared/Buttons/TilbakeTilOversiktB
 import { AktivPlanButtons } from "./Buttons/AktivPlanButtons";
 import DelAktivPlanMedLegeEllerNav from "./DelAktivPlan/DelAktivPlanMedLegeEllerNav";
 import { AktivPlanDetailsAG } from "./Details/AktivPlanDetailsAG";
+import { GodkjenningProvider } from "./Godkjenning/GodkjenningContext";
+import { GodkjenningDebugPanel } from "./Godkjenning/GodkjenningDebugPanel";
+import { GodkjenningStatusSeksjonAG } from "./Godkjenning/GodkjenningStatusSeksjonAG";
 import { AktivPlanHeadingAndTags } from "./HeadingAndTags/AktivPlanHeadingAndTags";
 import { PlanDelingProvider } from "./PlanDelingContext";
 
@@ -48,25 +52,33 @@ export default async function AktivPlanForAG({
           initialDeltMedLegeTidspunkt={deltMedLegeTidspunkt}
           initialDeltMedVeilederTidspunkt={deltMedVeilederTidspunkt}
         >
-          <AktivPlanHeadingAndTags employeeName={employee.name} />
+          <GodkjenningProvider planId={planId}>
+            <AktivPlanHeadingAndTags employeeName={employee.name} />
 
-          <AktivPlanDetailsAG
-            nyligOprettet={nyligOpprettet}
-            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
-            evalueringsDato={evalueringsDato}
-          />
+            <AktivPlanDetailsAG
+              nyligOprettet={nyligOpprettet}
+              ferdigstiltTidspunkt={ferdigstiltTidspunkt}
+              evalueringsDato={evalueringsDato}
+            />
 
-          {userHasEditAccess && (
-            <>
-              <DelAktivPlanMedLegeEllerNav planId={planId} />
+            <GodkjenningStatusSeksjonAG />
 
-              <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
-            </>
-          )}
+            {userHasEditAccess && (
+              <>
+                <DelAktivPlanMedLegeEllerNav planId={planId} />
 
-          <FormSummaryFromSnapshot formSnapshot={content} />
+                <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
+              </>
+            )}
 
-          <TilbakeTilOversiktButtonForAG />
+            <FormSummaryFromSnapshot formSnapshot={content} />
+
+            <TilbakeTilOversiktButtonForAG />
+            <GodkjenningDebugPanel
+              agHref={getAGAktivPlanHref(narmesteLederId)}
+              smHref={getSMAktivPlanHref(planId)}
+            />
+          </GodkjenningProvider>
         </PlanDelingProvider>
       </VStack>
     </section>

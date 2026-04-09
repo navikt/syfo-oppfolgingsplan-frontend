@@ -2,7 +2,12 @@
 
 import { Alert, BodyLong, Modal, VStack } from "@navikt/ds-react";
 import { useParams, useRouter } from "next/navigation";
-import { startTransition, useActionState, useState, useTransition } from "react";
+import {
+  startTransition,
+  useActionState,
+  useState,
+  useTransition,
+} from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
@@ -71,8 +76,7 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
       <Modal.Body>
         <VStack gap="space-16">
           <BodyLong>
-            Du kan ta utgangspunkt i den forrige planen, eller begynne på
-            nytt.
+            Du kan ta utgangspunkt i den forrige planen, eller begynne på nytt.
           </BodyLong>
 
           {hasUtkast && (

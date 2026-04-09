@@ -12,7 +12,9 @@ const MOCK_PLAN_ID = "test-plan-123";
 const MOCK_LEDER_ID = "test-leder-123";
 
 vi.mock("next/navigation", async () => {
-  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
+  const { mockNextNavigation } = await import(
+    "@/test/mocks/nextNavigationMock"
+  );
 
   return mockNextNavigation();
 });

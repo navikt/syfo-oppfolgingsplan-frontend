@@ -18,7 +18,9 @@ interface ModalSectionProps {
 
 export async function mockAkselModal() {
   const actual =
-    await vi.importActual<typeof import("@navikt/ds-react")>("@navikt/ds-react");
+    await vi.importActual<typeof import("@navikt/ds-react")>(
+      "@navikt/ds-react",
+    );
 
   const Modal = Object.assign(
     ({ children, header, onClose, onBeforeClose }: ModalProps) => (
