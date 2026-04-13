@@ -1,8 +1,8 @@
 ---
-description: Universell utforming (UU) — WCAG 2.1 AA med Aksel-komponenter for Nav-frontend
+description: "Universell utforming (UU) — WCAG 2.1 AA med Aksel-komponenter for Nav-frontend"
+applyTo: "**/*.tsx, **/*.jsx"
 ---
-<!-- Managed by esyfo-cli. Do not edit manually. Changes will be overwritten.
-     For repo-specific customizations, create your own files without this header. -->
+
 # Tilgjengelighet (UU) — WCAG 2.1 AA
 
 Universell utforming er lovpålagt i Norge. All frontend-kode i Nav skal oppfylle WCAG 2.1 AA.
@@ -14,6 +14,8 @@ Aksel-komponenter (`@navikt/ds-react`) håndterer mange tilgjengelighetskrav aut
 **Bruk alltid Aksel-komponenter fremfor egne `<div>`/`<button>`-løsninger.**
 
 ## Semantisk HTML
+
+Bruk `<main>`, `<nav>`, `<article>`, `<section>` — ikke generiske `<div>`-er.
 
 ```tsx
 // ✅ Semantiske elementer
@@ -36,7 +38,7 @@ Aksel-komponenter (`@navikt/ds-react`) håndterer mange tilgjengelighetskrav aut
 
 ## Heading-hierarki
 
-Overskriftsnivåer skal være logiske og uten hopp:
+Overskriftsnivåer skal være logiske og uten hopp (h1 → h2 → h3).
 
 ```tsx
 // ✅ Sammenhengende nivåer
@@ -50,6 +52,8 @@ Overskriftsnivåer skal være logiske og uten hopp:
 ```
 
 ## Skjemaer
+
+Bruk Aksel-skjemaelementer (`TextField`, `Select`) — de har innebygd label-kobling. Vis `ErrorSummary` øverst ved feil.
 
 ```tsx
 import { TextField, Select, ErrorSummary } from "@navikt/ds-react";
@@ -70,6 +74,8 @@ import { TextField, Select, ErrorSummary } from "@navikt/ds-react";
 
 ## Bilder og ikoner
 
+Meningsbærende bilder trenger beskrivende `alt`-tekst, dekorative bilder får `alt=""`. Ikonknapper må ha tilgjengelig navn via `title`-prop.
+
 ```tsx
 // ✅ Meningsbærende bilder
 <img src="/chart.png" alt="Bruksstatistikk siste 30 dager: 450 aktive brukere" />
@@ -85,6 +91,8 @@ import { TextField, Select, ErrorSummary } from "@navikt/ds-react";
 ```
 
 ## Interaktive elementer
+
+Alle klikkbare elementer trenger synlig fokusindikator og tilgjengelig navn. Bruk beskrivende lenketekst, aldri "Klikk her".
 
 ```tsx
 // ✅ Synlig fokusindikator, tilgjengelig navn
@@ -122,20 +130,7 @@ Bruk kun ARIA når HTML-semantikk ikke er tilstrekkelig:
 </div>
 ```
 
-## Fargekontrast
-
-- **Tekst**: Minimum 4.5:1 (AA)
-- **Stor tekst** (≥18px bold / ≥24px): Minimum 3:1
-- **Ikke-tekst UI**: Minimum 3:1
-- Bruk Aksel semantiske farger — de oppfyller kontrastkrav automatisk
-- Aldri bruk farge alene for å formidle informasjon
-
-## Tastaturnavigasjon
-
-- `Tab` / `Shift+Tab`: Naviger mellom elementer
-- `Enter` / `Space`: Aktiver knapper og lenker
-- `Escape`: Lukk modaler og menyer
-- `Arrow keys`: Naviger i lister, tabs og menyer
+## Modal med fokusfelle
 
 ```tsx
 // ✅ Fokusfelle i modal — Aksel Modal håndterer dette
@@ -148,9 +143,29 @@ Bruk kun ARIA når HTML-semantikk ikke er tilstrekkelig:
 </Modal>
 ```
 
+## Fargekontrast
+
+- **Tekst**: Minimum 4.5:1 (AA)
+- **Stor tekst** (>=18px bold / >=24px): Minimum 3:1
+- **Ikke-tekst UI**: Minimum 3:1
+- Bruk Aksel semantiske farger — de oppfyller kontrastkrav automatisk
+- Aldri bruk farge alene for å formidle informasjon
+
+## Tastaturnavigasjon
+
+- `Tab` / `Shift+Tab`: Naviger mellom elementer
+- `Enter` / `Space`: Aktiver knapper og lenker
+- `Escape`: Lukk modaler og menyer
+- `Arrow keys`: Naviger i lister, tabs og menyer
+
+Aksel Modal håndterer fokusfelle automatisk.
+
 ## Testing
 
+Bruk `jest-axe` for enhetstesting, Playwright + `@axe-core/playwright` for E2E, og Lighthouse CLI for CI-sjekker.
+
 ```tsx
+// jest-axe (enhetstest)
 import { axe, toHaveNoViolations } from "jest-axe";
 expect.extend(toHaveNoViolations);
 
@@ -160,11 +175,8 @@ it("should have no accessibility violations", async () => {
 });
 ```
 
-## E2E-tilgjengelighetstesting
-
-### Playwright + axe-core
-
 ```tsx
+// Playwright + axe-core (E2E)
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -173,48 +185,31 @@ test("side har ingen tilgjengelighetsfeil", async ({ page }) => {
   const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations).toEqual([]);
 });
-
-test("skjema er brukbart med tastatur", async ({ page }) => {
-  await page.goto("/skjema");
-  await page.keyboard.press("Tab");
-  const focused = await page.evaluate(() => document.activeElement?.tagName);
-  expect(focused).toBe("INPUT");
-});
-```
-
-### Lighthouse CLI
-
-```bash
-# Kjør Lighthouse-tilgjengelighetssjekk
-npx lighthouse http://localhost:3000 --only-categories=accessibility --output=json --output-path=./a11y-report.json
-
-# Sjekk score i CI
-npx lighthouse http://localhost:3000 --only-categories=accessibility --budget-path=./lighthouse-budget.json
 ```
 
 ## Sjekkliste
 
-- [ ] Heading-nivåer er logiske (h1 → h2 → h3, ingen hopp)
-- [ ] Alle skjema-elementer har synlige labels
-- [ ] Alle bilder har meningsfull `alt`-tekst eller `alt=""`
-- [ ] Alle interaktive elementer har tilgjengelig navn
-- [ ] Ingen informasjon formidles kun med farge
-- [ ] Siden er fullt brukbar med kun tastatur
-- [ ] Dynamisk innhold annonseres med `aria-live`
-- [ ] Feilmeldinger er koblet til rett felt og samlet i en oppsummering
+- Heading-nivåer er logiske (h1 → h2 → h3, ingen hopp)
+- Alle skjema-elementer har synlige labels
+- Alle bilder har meningsfull `alt`-tekst eller `alt=""`
+- Alle interaktive elementer har tilgjengelig navn
+- Ingen informasjon formidles kun med farge
+- Siden er fullt brukbar med kun tastatur
+- Dynamisk innhold annonseres med `aria-live`
+- Feilmeldinger er koblet til rett felt og samlet i en oppsummering
 
 ## Grenser
 
-### ✅ Alltid
+### Alltid
 - Bruk Aksel-komponenter — de har innebygd tilgjengelighet
 - Test med tastatur (Tab gjennom hele siden)
 - Sjekk heading-hierarki
 
-### ⚠️ Spør først
+### Spør først
 - Egendefinerte ARIA-roller utover standard HTML-semantikk
 - Avvik fra Aksel-mønster for tilgjengelighet
 
-### 🚫 Aldri
+### Aldri
 - `<div onClick>` uten `role="button"` og `tabIndex`
 - Ikonknapper uten tilgjengelig navn
 - Fjern fokusindikator (`outline: none`) uten erstatning
