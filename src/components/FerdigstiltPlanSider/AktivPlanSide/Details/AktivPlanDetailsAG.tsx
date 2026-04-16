@@ -5,18 +5,31 @@ interface Props {
   nyligOprettet: boolean;
   ferdigstiltTidspunkt: string;
   evalueringsDato: string;
+  stillingstittel?: string | null;
+  stillingsprosent?: number | null;
+  orgName: string;
 }
 
 export function AktivPlanDetailsAG({
   nyligOprettet,
   ferdigstiltTidspunkt,
   evalueringsDato,
+  stillingstittel,
+  stillingsprosent,
+  orgName,
 }: Props) {
   const evalueringsDatoInfo = (
     <BodyShort size="medium">
       Evalueringsdato: {getFormattedDateString(evalueringsDato)}
     </BodyShort>
   );
+
+  const stillingsInfo = stillingstittel ? (
+    <BodyShort size="medium">
+      Stilling: {stillingstittel} i {orgName}
+      {stillingsprosent != null && ` i ${stillingsprosent}% stilling`}
+    </BodyShort>
+  ) : null;
 
   return nyligOprettet ? (
     <VStack className="gap-8">
@@ -25,6 +38,7 @@ export function AktivPlanDetailsAG({
       </Alert>
 
       {evalueringsDatoInfo}
+      {stillingsInfo}
     </VStack>
   ) : (
     <VStack className="gap-4">
@@ -33,6 +47,7 @@ export function AktivPlanDetailsAG({
       </BodyShort>
 
       {evalueringsDatoInfo}
+      {stillingsInfo}
     </VStack>
   );
 }

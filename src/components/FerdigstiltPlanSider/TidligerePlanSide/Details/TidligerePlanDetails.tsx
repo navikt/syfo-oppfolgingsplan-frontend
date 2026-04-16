@@ -9,6 +9,9 @@ interface Props {
   evalueringsDato: string;
   deltMedLegeTidspunkt: string | null;
   deltMedVeilederTidspunkt: string | null;
+  stillingstittel?: string | null;
+  stillingsprosent?: number | null;
+  orgName: string;
 }
 
 export function TidligerePlanDetails({
@@ -16,6 +19,9 @@ export function TidligerePlanDetails({
   evalueringsDato,
   deltMedLegeTidspunkt,
   deltMedVeilederTidspunkt,
+  stillingstittel,
+  stillingsprosent,
+  orgName,
 }: Props) {
   return (
     <VStack className="gap-4">
@@ -27,6 +33,13 @@ export function TidligerePlanDetails({
         <BodyShort size="medium">
           Evalueringsdato: {getFormattedDateString(evalueringsDato)}
         </BodyShort>
+
+        {stillingstittel && (
+          <BodyShort size="medium">
+            Stilling: {stillingstittel} i {orgName}
+            {stillingsprosent != null && ` i ${stillingsprosent}% stilling`}
+          </BodyShort>
+        )}
       </VStack>
       <VStack gap="space-8">
         {deltMedLegeTidspunkt && (
