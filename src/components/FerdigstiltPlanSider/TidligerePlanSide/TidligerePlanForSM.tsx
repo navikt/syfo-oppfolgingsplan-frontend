@@ -17,6 +17,8 @@ export default async function TidligerePlanForSM({ planId }: Props) {
     oppfolgingsplan: {
       evalueringsDato,
       ferdigstiltTidspunkt,
+      stillingstittel,
+      stillingsprosent,
       deltMedLegeTidspunkt,
       deltMedVeilederTidspunkt,
       content,
@@ -40,6 +42,9 @@ export default async function TidligerePlanForSM({ planId }: Props) {
           <AktivPlanDetailsSM
             ferdigstiltTidspunkt={ferdigstiltTidspunkt}
             evalueringsDato={evalueringsDato}
+            stillingstittel={stillingstittel}
+            stillingsprosent={stillingsprosent}
+            orgName={arbeidsstedNavn}
           />
 
           <VisPdfButtonSM planId={planId} className="ml-auto" />

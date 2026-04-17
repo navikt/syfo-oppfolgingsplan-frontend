@@ -19,6 +19,8 @@ export const mockAktivPlanData: OppfolgingsplanMetadata = {
   // deltMedLegeTidspunkt: getDayjsDateFromIsoString("2025-10-25T09:03:00Z"),
   deltMedVeilederTidspunkt: null,
   //deltMedVeilederTidspunkt: "2025-10-25T09:27:00Z",
+  stillingstittel: "Brødkontrollør",
+  stillingsprosent: 50,
   organization: mockOrganization,
 };
 
@@ -29,6 +31,8 @@ export const mockTidligerePlanerData: OppfolgingsplanMetadata[] = [
     evalueringsDato: "2025-08-31",
     deltMedVeilederTidspunkt: null,
     deltMedLegeTidspunkt: "2025-05-20T14:30:00Z",
+    stillingstittel: "Rådgiver",
+    stillingsprosent: 100,
     organization: mockOrganization,
   },
   {
@@ -37,6 +41,8 @@ export const mockTidligerePlanerData: OppfolgingsplanMetadata[] = [
     evalueringsDato: "2025-05-12",
     deltMedVeilederTidspunkt: "2025-01-15T10:28:00Z",
     deltMedLegeTidspunkt: "2025-01-20T11:52:00Z",
+    stillingstittel: null,
+    stillingsprosent: null,
     organization: mockOrganization,
   },
 ];

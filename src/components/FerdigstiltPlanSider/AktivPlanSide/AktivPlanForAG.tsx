@@ -25,11 +25,14 @@ export default async function AktivPlanForAG({
   const [
     {
       employee,
+      organization,
       userHasEditAccess,
       oppfolgingsplan: {
         id: planId,
         evalueringsDato,
         ferdigstiltTidspunkt,
+        stillingstittel,
+        stillingsprosent,
         deltMedLegeTidspunkt,
         deltMedVeilederTidspunkt,
         content,
@@ -39,6 +42,7 @@ export default async function AktivPlanForAG({
   ] = await Promise.all([aktivPlanPromise, utkastPromise]);
 
   const hasUtkast = utkast !== null;
+  const orgName = organization.orgName ?? organization.orgNumber;
 
   return (
     <section>
@@ -50,12 +54,6 @@ export default async function AktivPlanForAG({
         >
           <AktivPlanHeadingAndTags employeeName={employee.name} />
 
-          <AktivPlanDetailsAG
-            nyligOprettet={nyligOpprettet}
-            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
-            evalueringsDato={evalueringsDato}
-          />
-
           {userHasEditAccess && (
             <>
               <DelAktivPlanMedLegeEllerNav planId={planId} />
@@ -63,6 +61,15 @@ export default async function AktivPlanForAG({
               <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
             </>
           )}
+
+          <AktivPlanDetailsAG
+            nyligOprettet={nyligOpprettet}
+            ferdigstiltTidspunkt={ferdigstiltTidspunkt}
+            evalueringsDato={evalueringsDato}
+            stillingstittel={stillingstittel}
+            stillingsprosent={stillingsprosent}
+            orgName={orgName}
+          />
 
           <FormSummaryFromSnapshot formSnapshot={content} />
 

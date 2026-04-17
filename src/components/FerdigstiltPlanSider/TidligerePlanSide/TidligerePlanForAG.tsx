@@ -17,9 +17,12 @@ export default async function TidligerePlanForAG({
 }: Props) {
   const {
     employee,
+    organization,
     oppfolgingsplan: {
       evalueringsDato,
       ferdigstiltTidspunkt,
+      stillingstittel,
+      stillingsprosent,
       deltMedLegeTidspunkt,
       deltMedVeilederTidspunkt,
       content,
@@ -28,6 +31,7 @@ export default async function TidligerePlanForAG({
 
   const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
   const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
+  const orgName = organization.orgName ?? organization.orgNumber;
 
   return (
     <section>
@@ -44,6 +48,9 @@ export default async function TidligerePlanForAG({
             evalueringsDato={evalueringsDato}
             deltMedLegeTidspunkt={deltMedLegeTidspunkt}
             deltMedVeilederTidspunkt={deltMedVeilederTidspunkt}
+            stillingstittel={stillingstittel}
+            stillingsprosent={stillingsprosent}
+            orgName={orgName}
           />
 
           <HStack justify="end">
