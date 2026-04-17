@@ -3,6 +3,7 @@ import {
   getFormattedDateAndTimeString,
   getFormattedDateString,
 } from "@/ui-helpers/dateAndTime";
+import { StillingsInfo } from "../../Shared/StillingsInfo";
 
 interface Props {
   ferdigstiltTidspunkt: string;
@@ -34,12 +35,11 @@ export function TidligerePlanDetails({
           Evalueringsdato: {getFormattedDateString(evalueringsDato)}
         </BodyShort>
 
-        {stillingstittel && (
-          <BodyShort size="medium">
-            Stilling: {stillingstittel} i {orgName}
-            {stillingsprosent != null && ` i ${stillingsprosent}% stilling`}
-          </BodyShort>
-        )}
+        <StillingsInfo
+          stillingstittel={stillingstittel}
+          stillingsprosent={stillingsprosent}
+          orgName={orgName}
+        />
       </VStack>
       <VStack gap="space-8">
         {deltMedLegeTidspunkt && (

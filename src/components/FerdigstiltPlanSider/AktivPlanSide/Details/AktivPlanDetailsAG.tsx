@@ -1,5 +1,6 @@
 import { Alert, BodyShort, VStack } from "@navikt/ds-react";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
+import { StillingsInfo } from "../../Shared/StillingsInfo";
 
 interface Props {
   nyligOprettet: boolean;
@@ -24,13 +25,6 @@ export function AktivPlanDetailsAG({
     </BodyShort>
   );
 
-  const stillingsInfo = stillingstittel ? (
-    <BodyShort size="medium">
-      Stilling: {stillingstittel} i {orgName}
-      {stillingsprosent != null && ` i ${stillingsprosent}% stilling`}
-    </BodyShort>
-  ) : null;
-
   return nyligOprettet ? (
     <VStack gap="space-8">
       <Alert variant="success" size="medium">
@@ -38,7 +32,11 @@ export function AktivPlanDetailsAG({
       </Alert>
 
       {evalueringsDatoInfo}
-      {stillingsInfo}
+      <StillingsInfo
+        stillingstittel={stillingstittel}
+        stillingsprosent={stillingsprosent}
+        orgName={orgName}
+      />
     </VStack>
   ) : (
     <VStack gap="space-4">
@@ -47,7 +45,11 @@ export function AktivPlanDetailsAG({
       </BodyShort>
 
       {evalueringsDatoInfo}
-      {stillingsInfo}
+      <StillingsInfo
+        stillingstittel={stillingstittel}
+        stillingsprosent={stillingsprosent}
+        orgName={orgName}
+      />
     </VStack>
   );
 }
