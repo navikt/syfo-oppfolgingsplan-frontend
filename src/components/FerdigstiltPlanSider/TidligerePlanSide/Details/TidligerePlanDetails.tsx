@@ -9,8 +9,8 @@ interface Props {
   evalueringsDato: string;
   deltMedLegeTidspunkt: string | null;
   deltMedVeilederTidspunkt: string | null;
-  stillingstittel?: string | null;
-  stillingsprosent?: number | null;
+  stillingstittel: string | null;
+  stillingsprosent: number | null;
   orgName: string;
 }
 
@@ -24,7 +24,7 @@ export function TidligerePlanDetails({
   orgName,
 }: Props) {
   return (
-    <VStack className="gap-4">
+    <VStack gap="space-4">
       <VStack gap="space-8">
         <BodyShort size="medium">
           Opprettet dato: {getFormattedDateString(ferdigstiltTidspunkt)}

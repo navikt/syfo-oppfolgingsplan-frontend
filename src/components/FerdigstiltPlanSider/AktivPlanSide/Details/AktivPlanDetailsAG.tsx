@@ -5,8 +5,8 @@ interface Props {
   nyligOprettet: boolean;
   ferdigstiltTidspunkt: string;
   evalueringsDato: string;
-  stillingstittel?: string | null;
-  stillingsprosent?: number | null;
+  stillingstittel: string | null;
+  stillingsprosent: number | null;
   orgName: string;
 }
 
@@ -32,7 +32,7 @@ export function AktivPlanDetailsAG({
   ) : null;
 
   return nyligOprettet ? (
-    <VStack className="gap-8">
+    <VStack gap="space-8">
       <Alert variant="success" size="medium">
         Oppfølgingsplanen er ferdigstilt og delt med den ansatte.
       </Alert>
@@ -41,7 +41,7 @@ export function AktivPlanDetailsAG({
       {stillingsInfo}
     </VStack>
   ) : (
-    <VStack className="gap-4">
+    <VStack gap="space-4">
       <BodyShort size="medium">
         Opprettet dato: {getFormattedDateString(ferdigstiltTidspunkt)}
       </BodyShort>

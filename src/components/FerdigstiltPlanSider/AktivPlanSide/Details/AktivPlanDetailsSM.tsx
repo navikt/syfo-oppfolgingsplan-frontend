@@ -4,8 +4,8 @@ import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 interface Props {
   ferdigstiltTidspunkt: string;
   evalueringsDato: string;
-  stillingstittel?: string | null;
-  stillingsprosent?: number | null;
+  stillingstittel: string | null;
+  stillingsprosent: number | null;
   orgName: string;
 }
 
