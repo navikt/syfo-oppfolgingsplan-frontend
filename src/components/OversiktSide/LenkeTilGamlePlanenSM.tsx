@@ -7,7 +7,7 @@ export const LenkeTilGamlePlanenSM = () => {
     publicEnv.NEXT_PUBLIC_GAMMEL_OPPFOLGINGSPLAN_URL;
 
   return (
-    <div className="mt-16">
+    <div className="mt-16 mb-16">
       <Heading level="3" size="medium" spacing>
         Leter du etter den gamle oppfølgingsplanen?
       </Heading>
