@@ -21,7 +21,7 @@ export const LenkeTilGamlePlanenAG = ({ narmesteLederId }: Props) => {
           <LinkCardAnchor
             href={`${gammelOppfolgingsplanUrl}/arbeidsgiver/${narmesteLederId}`}
           >
-            Klikk her for å gå til den gamle oppfølgingsplanen
+            Gå til den gamle oppfølgingsplanen
           </LinkCardAnchor>
         </LinkCardTitle>
       </LinkCard>

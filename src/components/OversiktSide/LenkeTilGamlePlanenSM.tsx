@@ -15,7 +15,7 @@ export const LenkeTilGamlePlanenSM = () => {
       <LinkCard className="bg-ax-bg-info-soft">
         <LinkCardTitle>
           <LinkCardAnchor href={`${gammelOppfolgingsplanUrl}/sykmeldt`}>
-            Klikk her for å gå til den gamle oppfølgingsplanen
+            Gå til den gamle oppfølgingsplanen
           </LinkCardAnchor>
         </LinkCardTitle>
       </LinkCard>
