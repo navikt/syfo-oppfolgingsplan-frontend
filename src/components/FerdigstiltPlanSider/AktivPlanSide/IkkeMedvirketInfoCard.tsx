@@ -31,7 +31,7 @@ export function IkkeMedvirketInfoCard({ isDeltMedVeileder }: Props) {
             Lederen din har sendt oppfølgingsplanen til Nav-veilederen din. Får
             du ikke laget en ny plan med lederen din, kan du ta{" "}
             <Link href="https://www.nav.no/kontaktoss">kontakt med Nav</Link>{" "}
-            for å å gi tilleggsopplysninger du mener er viktig.
+            for å gi tilleggsopplysninger du mener er viktig.
           </BodyLong>
         )}
       </InfoCardContent>
