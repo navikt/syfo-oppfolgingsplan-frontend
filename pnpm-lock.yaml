@@ -21,8 +21,8 @@ importers:
         specifier: ^8.9.1
         version: 8.9.1
       '@navikt/analytics-types':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.8
+        version: 0.0.8
       '@navikt/dinesykmeldte-sidemeny':
         specifier: ^8.0.0
         version: 8.0.0(@navikt/aksel-icons@8.9.1)(@navikt/ds-react@8.9.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(clsx@2.1.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -706,8 +706,8 @@ packages:
   '@navikt/aksel-icons@8.9.1':
     resolution: {integrity: sha512-yjeyQPBHvaeRs5BMRRgzwo1cMC/249f4rkxmeIX2CjZDjJvqDycJphqrddjQKUmBcf6XVfv0nx6dcqnf0Z8obQ==, tarball: https://npm.pkg.github.com/download/@navikt/aksel-icons/8.9.1/ff1f10cabbda2ee7f6baa457cadcabb13adc64cc}
 
-  '@navikt/analytics-types@0.0.7':
-    resolution: {integrity: sha512-rwSKrTd+cN8j9JoSs7FZhAqsyluPIvw8YI+lvDxAEwFVM0M/p7lW9N625Fz0AIMxgASQ5e+sM+ixGkBclpPdpg==, tarball: https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.7/5fc7a2c116b8ce4cd8ae8e9cea57788399824c25}
+  '@navikt/analytics-types@0.0.8':
+    resolution: {integrity: sha512-h+JVrGmIdEpWG2CjUI9XdW8sxG/loFj4qJTgC9xanw1CDVjGrDxia4WI19+jV+frBPGV/onP+f02fkRr33tUQw==, tarball: https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.8/a7634f8854ca6d40b95ece91c0c6f5e206c3178e}
     engines: {node: '>=20.0.0', npm: '>=9.0.0'}
 
   '@navikt/dinesykmeldte-sidemeny@8.0.0':
@@ -2751,7 +2751,7 @@ snapshots:
 
   '@navikt/aksel-icons@8.9.1': {}
 
-  '@navikt/analytics-types@0.0.7': {}
+  '@navikt/analytics-types@0.0.8': {}
 
   '@navikt/dinesykmeldte-sidemeny@8.0.0(@navikt/aksel-icons@8.9.1)(@navikt/ds-react@8.9.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(clsx@2.1.1)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
