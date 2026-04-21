@@ -38,7 +38,7 @@ export const formLabels = {
       "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Den ansatte skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
   },
   denAnsatteHarIkkeMedvirketBegrunnelse: {
-    label: "Hvorfor har ikke den ansatte deltatt?",
+    label: "Hvorfor har dere ikke snakket sammen om innholdet i planen?",
     description:
       "Du kan for eksempel opplyse om at den ansatte er for syk, eller at den ansatte er utilgjengelig.",
   },
