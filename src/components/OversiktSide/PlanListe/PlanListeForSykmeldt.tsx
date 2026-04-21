@@ -1,4 +1,4 @@
-import { VStack } from "@navikt/ds-react";
+import { BodyShort, VStack } from "@navikt/ds-react";
 import {
   getSMAktivPlanHref,
   getSMTidligerePlanHref,
@@ -37,6 +37,10 @@ export default async function PlanListeForSykmeldt() {
       )}
       {harTidligerePlaner && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
+          <BodyShort size="small" textColor="subtle" className="mb-4">
+            Tidligere planer er tilgjengelige i 4 måneder etter at du er
+            friskmeldt.
+          </BodyShort>
           <VStack gap="space-16">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
