@@ -30,6 +30,7 @@ export default async function AktivPlanForSM({ planId }: Props) {
   const arbeidsstedNavn = organization.orgName ?? organization.orgNumber;
   const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
   const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
+  const hasSykmeldtMedvirket = hasMedvirket(content);
 
   return (
     <section>
@@ -39,7 +40,7 @@ export default async function AktivPlanForSM({ planId }: Props) {
           isDeltMedVeileder={isDeltMedVeileder}
           isDeltMedLege={isDeltMedLege}
         />
-        {!hasMedvirket(content) && (
+        {!hasSykmeldtMedvirket && (
           <IkkeMedvirketInfoCard isDeltMedVeileder={isDeltMedVeileder} />
         )}
         <HStack>
@@ -56,7 +57,7 @@ export default async function AktivPlanForSM({ planId }: Props) {
 
         <FormSummaryFromSnapshot formSnapshot={content} />
 
-        {hasMedvirket(content) && (
+        {hasSykmeldtMedvirket && (
           <MedvirketInfoCard isDeltMedVeileder={isDeltMedVeileder} />
         )}
 
