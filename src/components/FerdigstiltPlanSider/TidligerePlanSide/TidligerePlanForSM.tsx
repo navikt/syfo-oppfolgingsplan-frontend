@@ -1,6 +1,5 @@
 import { HStack, VStack } from "@navikt/ds-react";
 import { VisPdfButtonSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Buttons/VisPdfButtonSM";
-import { DeltMedDegAlert } from "@/components/FerdigstiltPlanSider/AktivPlanSide/DeltMedDegAlert";
 import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM";
 import { AktivPlanHeadingAndTagsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/HeadingAndTags/AktivPlanHeadingAndTagsSM";
 import TilbakeTilOversiktButtonForSM from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForSM";
@@ -51,8 +50,6 @@ export default async function TidligerePlanForSM({ planId }: Props) {
         </HStack>
 
         <FormSummaryFromSnapshot formSnapshot={content} />
-
-        <DeltMedDegAlert isDeltMedVeileder={isDeltMedVeileder} />
 
         <TilbakeTilOversiktButtonForSM />
       </VStack>

@@ -79,11 +79,11 @@ export default function OversiktSideInformasjon() {
 
       <InformasjonListItem
         illustrationSrc={CLIPBOARD_SVG}
-        heading="Last ned en oppfølgingsplan som PDF"
+        heading="Oppfølgingsplanen sendes til Altinn"
       >
         <BodyLong>
-          Hvis du ønsker å lagre en oppfølgingsplan i eget system, kan du laste
-          ned en PDF-versjon av planen.
+          Når oppfølgingsplanen er ferdigstilt og delt med den ansatte, sendes
+          den også til bedriften sin innboks i Altinn.
         </BodyLong>
       </InformasjonListItem>
     </section>

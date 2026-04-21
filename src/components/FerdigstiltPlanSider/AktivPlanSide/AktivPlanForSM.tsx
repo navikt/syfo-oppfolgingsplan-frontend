@@ -1,10 +1,12 @@
 import { HStack, VStack } from "@navikt/ds-react";
 import { VisPdfButtonSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Buttons/VisPdfButtonSM";
 import { AktivPlanDetailsSM } from "@/components/FerdigstiltPlanSider/AktivPlanSide/Details/AktivPlanDetailsSM";
+import { IkkeMedvirketInfoCard } from "@/components/FerdigstiltPlanSider/AktivPlanSide/IkkeMedvirketInfoCard";
+import { MedvirketInfoCard } from "@/components/FerdigstiltPlanSider/AktivPlanSide/MedvirketInfoCard";
 import TilbakeTilOversiktButtonForSM from "@/components/FerdigstiltPlanSider/Shared/Buttons/TilbakeTilOversiktButtonForSM";
 import { fetchFerdigstiltPlanForSM } from "@/server/fetchData/sykmeldt/fetchFerdigstiltPlanForSM";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
-import { DeltMedDegAlert } from "./DeltMedDegAlert";
+import { hasMedvirket } from "@/utils/planUtils";
 import { AktivPlanHeadingAndTagsSM } from "./HeadingAndTags/AktivPlanHeadingAndTagsSM";
 
 interface Props {
@@ -28,6 +30,7 @@ export default async function AktivPlanForSM({ planId }: Props) {
   const arbeidsstedNavn = organization.orgName ?? organization.orgNumber;
   const isDeltMedLege = Boolean(deltMedLegeTidspunkt);
   const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
+  const hasSykmeldtMedvirket = hasMedvirket(content);
 
   return (
     <section>
@@ -37,7 +40,9 @@ export default async function AktivPlanForSM({ planId }: Props) {
           isDeltMedVeileder={isDeltMedVeileder}
           isDeltMedLege={isDeltMedLege}
         />
-
+        {!hasSykmeldtMedvirket && (
+          <IkkeMedvirketInfoCard isDeltMedVeileder={isDeltMedVeileder} />
+        )}
         <HStack>
           <AktivPlanDetailsSM
             ferdigstiltTidspunkt={ferdigstiltTidspunkt}
@@ -52,7 +57,9 @@ export default async function AktivPlanForSM({ planId }: Props) {
 
         <FormSummaryFromSnapshot formSnapshot={content} />
 
-        <DeltMedDegAlert isDeltMedVeileder={isDeltMedVeileder} />
+        {hasSykmeldtMedvirket && (
+          <MedvirketInfoCard isDeltMedVeileder={isDeltMedVeileder} />
+        )}
 
         <TilbakeTilOversiktButtonForSM />
       </VStack>
