@@ -1,4 +1,4 @@
-import { BodyLong, HelpText, HStack, Loader } from "@navikt/ds-react";
+import { BodyLong, HStack, Loader } from "@navikt/ds-react";
 import {
   getFormattedDateAndTimeString,
   getFormattedTimeString,
@@ -49,11 +49,6 @@ export default function UtkastLagringInfo({
         <BodyLong size="medium" className="text-ax-text-neutral-subtle">
           <span>Utkast sist lagret {sistLagretTidspunktFormatted}</span>
         </BodyLong>
-        <HelpText className="relative -top-px">
-          Dine endringer lagres som et utkast mens du skriver. Hvis du ønsker å
-          jobbe videre med oppfølgingsplanen senere kan du velge «Avslutt og
-          fortsett senere».
-        </HelpText>
       </HStack>
     );
   }

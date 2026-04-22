@@ -79,10 +79,11 @@ export default function OversiktSideInformasjon() {
 
       <InformasjonListItem
         illustrationSrc={CLIPBOARD_SVG}
-        heading="Planen blir tilgjengelig i Altinn"
+        heading="Oppfølgingsplanen sendes til Altinn"
       >
         <BodyLong>
-          Når oppfølgingsplanen er fullført, blir den tilgjengelig i Altinn.
+          Når oppfølgingsplanen er ferdigstilt og delt med den ansatte, sendes
+          den også til bedriften sin innboks i Altinn.
         </BodyLong>
       </InformasjonListItem>
     </section>
