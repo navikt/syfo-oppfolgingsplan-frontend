@@ -1,13 +1,18 @@
 import { Alert, BodyShort, Box, Heading } from "@navikt/ds-react";
+import type { DemoScenario } from "@/common/demoScenario";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt.ts";
 
 export async function AnsattIkkeSykmeldtAlert({
   narmesteLederId,
+  scenario,
 }: {
   narmesteLederId: string;
+  scenario?: DemoScenario;
 }) {
-  const oversiktResult =
-    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  const oversiktResult = await fetchOppfolgingsplanOversiktForAG(
+    narmesteLederId,
+    scenario,
+  );
 
   if (oversiktResult.error) return null;
 

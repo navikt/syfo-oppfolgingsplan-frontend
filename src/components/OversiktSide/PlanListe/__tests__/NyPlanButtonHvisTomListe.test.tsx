@@ -13,7 +13,9 @@ import { renderAsync } from "@/test/test-utils";
 import NyPlanButtonHvisTomListe from "../NyPlanButtonHvisTomListe";
 
 vi.mock("next/navigation", async () => {
-  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
+  const { mockNextNavigation } = await import(
+    "@/test/mocks/nextNavigationMock"
+  );
 
   return mockNextNavigation();
 });
@@ -39,7 +41,7 @@ describe("NyPlanButtonHvisTomListe", () => {
       NyPlanButtonHvisTomListe({ narmesteLederId: "test-123" }),
     );
 
-    expect(mockFetch).toHaveBeenCalledWith("test-123");
+    expect(mockFetch).toHaveBeenCalledWith("test-123", undefined);
   });
 
   test("shows button when list is empty and user has edit access", async () => {

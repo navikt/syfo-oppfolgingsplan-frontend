@@ -1,13 +1,18 @@
+import type { DemoScenario } from "@/common/demoScenario";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
+  scenario,
 }: {
   narmesteLederId: string;
+  scenario?: DemoScenario;
 }) {
-  const oversiktResult =
-    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  const oversiktResult = await fetchOppfolgingsplanOversiktForAG(
+    narmesteLederId,
+    scenario,
+  );
 
   if (oversiktResult.error) return null;
 

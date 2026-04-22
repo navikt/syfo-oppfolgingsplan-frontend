@@ -3,7 +3,11 @@ import Script from "next/script";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import "@navikt/lumi-survey/styles.css";
 import { Theme } from "@navikt/ds-react";
+import { Suspense } from "react";
 import "@/app/globals.css";
+import { AG_SCENARIO_OPTIONS } from "@/common/demoScenario";
+import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
@@ -19,10 +23,10 @@ export default async function RootLayoutForAG({
 }: LayoutProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
 
-  // This fetch is also done in server components for the oversikt page, so when
-  // visiting the oversikt page first, all these fetch calls made from different
-  // server components (this component included) will be deduplicated by
-  // Next.js.
+  // This fetch always uses the default scenario (no scenario param) because the
+  // layout only needs employee metadata (name, fnr) for the decorator and page
+  // container — not the actual plan data. Plan-specific scenario selection
+  // happens in the page-level server components.
   const oversiktResult =
     await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
@@ -54,6 +58,12 @@ export default async function RootLayoutForAG({
         <Decorator.Footer />
 
         <Decorator.Scripts loader={Script} />
+
+        {isLocalOrDemo && (
+          <Suspense>
+            <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
+          </Suspense>
+        )}
       </body>
     </html>
   );

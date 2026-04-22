@@ -13,7 +13,9 @@ import {
 import { renderAsync } from "@/test/test-utils";
 
 vi.mock("next/navigation", async () => {
-  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
+  const { mockNextNavigation } = await import(
+    "@/test/mocks/nextNavigationMock"
+  );
 
   return mockNextNavigation();
 });
@@ -39,7 +41,7 @@ describe("PlanListeForArbeidsgiver", () => {
       PlanListeForArbeidsgiver({ narmesteLederId: "test-123" }),
     );
 
-    expect(mockFetch).toHaveBeenCalledWith("test-123");
+    expect(mockFetch).toHaveBeenCalledWith("test-123", undefined);
   });
 
   test("displays error alert when fetch fails", async () => {

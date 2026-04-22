@@ -1,4 +1,5 @@
 import { BodyShort, VStack } from "@navikt/ds-react";
+import type { DemoScenario } from "@/common/demoScenario";
 import {
   getSMAktivPlanHref,
   getSMTidligerePlanHref,
@@ -9,9 +10,13 @@ import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import PlanListeDel from "./PlanListeDel";
 
-export default async function PlanListeForSykmeldt() {
+export default async function PlanListeForSykmeldt({
+  scenario,
+}: {
+  scenario?: DemoScenario;
+}) {
   const { aktiveOppfolgingsplaner, tidligerePlaner } =
-    await fetchOppfolgingsplanOversiktForSM();
+    await fetchOppfolgingsplanOversiktForSM(scenario);
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
   const harTidligerePlaner = tidligerePlaner.length > 0;

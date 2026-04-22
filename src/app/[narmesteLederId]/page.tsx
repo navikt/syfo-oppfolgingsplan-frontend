@@ -7,6 +7,7 @@ import {
   InfoCardTitle,
 } from "@navikt/ds-react/InfoCard";
 import { Suspense } from "react";
+import { DEMO_SCENARIO_PARAM, parseDemoScenario } from "@/common/demoScenario";
 import TextContentBox from "@/components/layout/TextContentBox";
 import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
@@ -14,11 +15,17 @@ import { LenkeTilGamlePlanenAG } from "@/components/OversiktSide/LenkeTilGamlePl
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 
 export default async function OversiktPageForAG({
   params,
+  searchParams,
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
+  const resolvedSearchParams = await searchParams;
+  const scenario = isLocalOrDemo
+    ? parseDemoScenario(resolvedSearchParams[DEMO_SCENARIO_PARAM])
+    : undefined;
 
   return (
     <>
@@ -45,9 +52,18 @@ export default async function OversiktPageForAG({
       </TextContentBox>
 
       <Suspense fallback={<PlanListeSkeleton />}>
-        <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
-        <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
-        <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
+        <AnsattIkkeSykmeldtAlert
+          narmesteLederId={narmesteLederId}
+          scenario={scenario}
+        />
+        <NyPlanButtonHvisTomListe
+          narmesteLederId={narmesteLederId}
+          scenario={scenario}
+        />
+        <PlanListeForArbeidsgiver
+          narmesteLederId={narmesteLederId}
+          scenario={scenario}
+        />
       </Suspense>
 
       <OversiktSideInformasjon />

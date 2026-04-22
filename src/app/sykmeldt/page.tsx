@@ -7,11 +7,20 @@ import {
   InfoCardTitle,
 } from "@navikt/ds-react/InfoCard";
 import { Suspense } from "react";
+import { DEMO_SCENARIO_PARAM, parseDemoScenario } from "@/common/demoScenario";
 import TextContentBox from "@/components/layout/TextContentBox.tsx";
 import PlanListeForSykmeldt from "@/components/OversiktSide/PlanListe/PlanListeForSykmeldt.tsx";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton.tsx";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 
-export default async function OversiktPageForSM() {
+export default async function OversiktPageForSM({
+  searchParams,
+}: PageProps<"/sykmeldt">) {
+  const resolvedSearchParams = await searchParams;
+  const scenario = isLocalOrDemo
+    ? parseDemoScenario(resolvedSearchParams[DEMO_SCENARIO_PARAM])
+    : undefined;
+
   return (
     <>
       <Heading level="2" size="xlarge" spacing>
@@ -43,7 +52,7 @@ export default async function OversiktPageForSM() {
       </TextContentBox>
 
       <Suspense fallback={<PlanListeSkeleton />}>
-        <PlanListeForSykmeldt />
+        <PlanListeForSykmeldt scenario={scenario} />
       </Suspense>
     </>
   );

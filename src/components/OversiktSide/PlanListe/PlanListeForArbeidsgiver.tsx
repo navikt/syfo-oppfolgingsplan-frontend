@@ -1,4 +1,5 @@
 import { BodyShort, VStack } from "@navikt/ds-react";
+import type { DemoScenario } from "@/common/demoScenario";
 import {
   getAGAktivPlanHref,
   getAGTidligerePlanHref,
@@ -13,13 +14,17 @@ import { SlettUtkastButtonAndModal } from "./SlettUtkast/SlettUtkastButtonAndMod
 
 interface Props {
   narmesteLederId: string;
+  scenario?: DemoScenario;
 }
 
 export default async function PlanListeForArbeidsgiver({
   narmesteLederId,
+  scenario,
 }: Props) {
-  const oversiktResult =
-    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
+  const oversiktResult = await fetchOppfolgingsplanOversiktForAG(
+    narmesteLederId,
+    scenario,
+  );
 
   if (oversiktResult.error) {
     return (
