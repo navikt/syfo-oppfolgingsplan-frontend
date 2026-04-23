@@ -9,10 +9,7 @@ import { mockOversiktDataAktivOgTidligere } from "@/server/fetchData/mockData/mo
 // Opphev global mock fra vitest-setup.ts slik at vi kan teste den faktiske implementasjonen
 vi.unmock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
 
-// Dynamisk import etter unmock for å få den ekte modulen
-const { getMockDataForScenario } = await import(
-  "../fetchOppfolgingsplanOversikt"
-);
+import { getMockDataForScenario } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 
 describe("getMockDataForScenario", () => {
   test("returnerer tom oversikt for 'tom'-scenarioet", () => {

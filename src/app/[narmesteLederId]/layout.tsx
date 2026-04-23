@@ -51,6 +51,11 @@ export default async function RootLayoutForAG({
           >
             <Theme>
               <main className="max-w-[730px]">{children}</main>
+              {isLocalOrDemo && (
+                <Suspense>
+                  <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
+                </Suspense>
+              )}
             </Theme>
           </ArbeidsgiverPageContainer>
         </Instrumentation>
@@ -58,12 +63,6 @@ export default async function RootLayoutForAG({
         <Decorator.Footer />
 
         <Decorator.Scripts loader={Script} />
-
-        {isLocalOrDemo && (
-          <Suspense>
-            <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
-          </Suspense>
-        )}
       </body>
     </html>
   );

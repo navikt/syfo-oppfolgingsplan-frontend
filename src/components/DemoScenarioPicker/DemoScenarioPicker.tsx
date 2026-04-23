@@ -34,15 +34,18 @@ export function DemoScenarioPicker({
       (scenario) => scenario.value === parsed,
     )
       ? parsed
-      : (scenarios[0]?.value ?? DEFAULT_DEMO_SCENARIO);
+      : scenarios.some((s) => s.value === DEFAULT_DEMO_SCENARIO)
+        ? DEFAULT_DEMO_SCENARIO
+        : (scenarios[0]?.value ?? DEFAULT_DEMO_SCENARIO);
 
     setSelected(currentScenario);
     setOpen(true);
   }
 
   function handleApply() {
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
     // biome-ignore lint/suspicious/noDocumentCookie: task requires document.cookie to support current local/demo flow
-    document.cookie = `${DEMO_SCENARIO_COOKIE}=${selected}; path=/; max-age=86400; SameSite=Lax`;
+    document.cookie = `${DEMO_SCENARIO_COOKIE}=${selected}; path=/; max-age=86400; SameSite=Lax${secure}`;
     router.refresh();
     setOpen(false);
   }

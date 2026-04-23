@@ -4,7 +4,7 @@ import {
   mockOversiktDataMedPlanerForSM,
   mockOversiktDataTomForSM,
 } from "@/server/fetchData/mockData/mockOversiktData";
-import { getMockDataForScenarioSM } from "../fetchOppfolgingsplanOversiktForSM";
+import { getMockDataForScenarioSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
 
 describe("getMockDataForScenarioSM", () => {
   test("returnerer tom oversikt for 'tom'-scenarioet", () => {

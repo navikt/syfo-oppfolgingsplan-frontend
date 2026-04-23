@@ -41,18 +41,17 @@ export default async function RootLayoutForSM({
           <Theme>
             <BreadcrumbsUpdaterForSM />
             <MainContent>{children}</MainContent>
+            {isLocalOrDemo && (
+              <Suspense>
+                <DemoScenarioPicker scenarios={SM_SCENARIO_OPTIONS} />
+              </Suspense>
+            )}
           </Theme>
         </Instrumentation>
 
         <Decorator.Footer />
 
         <Decorator.Scripts loader={Script} />
-
-        {isLocalOrDemo && (
-          <Suspense>
-            <DemoScenarioPicker scenarios={SM_SCENARIO_OPTIONS} />
-          </Suspense>
-        )}
       </body>
     </html>
   );
