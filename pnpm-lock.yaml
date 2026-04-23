@@ -79,8 +79,8 @@ importers:
         specifier: 2.4.12
         version: 2.4.12
       '@next/env':
-        specifier: ^16.2.3
-        version: 16.2.3
+        specifier: ^16.2.4
+        version: 16.2.4
       '@tailwindcss/postcss':
         specifier: ^4.2.2
         version: 4.2.2
@@ -773,6 +773,9 @@ packages:
 
   '@next/env@16.2.3':
     resolution: {integrity: sha512-ZWXyj4uNu4GCWQw9cjRxWlbD+33mcDszIo9iQxFnBX3Wmgq9ulaSJcl6VhuWx5pCWqqD+9W6Wfz7N0lM5lYPMA==}
+
+  '@next/env@16.2.4':
+    resolution: {integrity: sha512-dKkkOzOSwFYe5RX6y26fZgkSpVAlIOJKQHIiydQcrWH6y/97+RceSOAdjZ14Qa3zLduVUy0TXcn+EiM6t4rPgw==}
 
   '@next/swc-darwin-arm64@16.2.3':
     resolution: {integrity: sha512-u37KDKTKQ+OQLvY+z7SNXixwo4Q2/IAJFDzU1fYe66IbCE51aDSAzkNDkWmLN0yjTUh4BKBd+hb69jYn6qqqSg==}
@@ -2816,6 +2819,8 @@ snapshots:
   '@navikt/texas@4.1.4': {}
 
   '@next/env@16.2.3': {}
+
+  '@next/env@16.2.4': {}
 
   '@next/swc-darwin-arm64@16.2.3':
     optional: true
