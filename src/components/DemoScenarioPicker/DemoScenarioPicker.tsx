@@ -44,7 +44,7 @@ export function DemoScenarioPicker({
   function handleApply() {
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
     // biome-ignore lint/suspicious/noDocumentCookie: task requires document.cookie to support current local/demo flow
-    document.cookie = `${DEMO_SCENARIO_COOKIE}=${selected}; path=/; max-age=86400; SameSite=Lax${secure}`;
+    document.cookie = `${DEMO_SCENARIO_COOKIE}=${selected}; path=/; max-age=0; SameSite=Lax${secure}`;
     router.refresh();
     setOpen(false);
   }
@@ -64,7 +64,6 @@ export function DemoScenarioPicker({
           size="medium"
           icon={<TestFlaskIcon aria-hidden />}
           onClick={handleOpen}
-          aria-label="Velg demo-scenario"
         >
           Demo
         </Button>
@@ -79,7 +78,7 @@ export function DemoScenarioPicker({
         <Modal.Body>
           <RadioGroup
             legend="Velg scenario"
-            value={selected ?? DEFAULT_DEMO_SCENARIO}
+            value={selected}
             onChange={(value) => setSelected(parseDemoScenario(value))}
           >
             {scenarios.map(({ value, label }) => (
