@@ -52,7 +52,7 @@ export default async function RootLayoutForAG({
             <Theme>
               <main className="max-w-[730px]">{children}</main>
               {isLocalOrDemo && (
-                <Suspense>
+                <Suspense fallback={null}>
                   <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
                 </Suspense>
               )}

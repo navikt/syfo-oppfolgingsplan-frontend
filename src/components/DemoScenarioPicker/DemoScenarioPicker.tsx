@@ -3,7 +3,7 @@
 import { TestFlaskIcon } from "@navikt/aksel-icons";
 import { Box, Button, Modal, Radio, RadioGroup } from "@navikt/ds-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   DEFAULT_DEMO_SCENARIO,
   DEMO_SCENARIO_COOKIE,
@@ -18,7 +18,6 @@ export function DemoScenarioPicker({
   scenarios: DemoScenarioOption[];
 }) {
   const router = useRouter();
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<DemoScenario>(DEFAULT_DEMO_SCENARIO);
 
@@ -61,7 +60,6 @@ export function DemoScenarioPicker({
         }}
       >
         <Button
-          ref={buttonRef}
           variant="primary"
           size="medium"
           icon={<TestFlaskIcon aria-hidden />}

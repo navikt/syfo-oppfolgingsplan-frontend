@@ -42,7 +42,7 @@ export default async function RootLayoutForSM({
             <BreadcrumbsUpdaterForSM />
             <MainContent>{children}</MainContent>
             {isLocalOrDemo && (
-              <Suspense>
+              <Suspense fallback={null}>
                 <DemoScenarioPicker scenarios={SM_SCENARIO_OPTIONS} />
               </Suspense>
             )}
