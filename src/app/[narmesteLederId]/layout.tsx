@@ -3,7 +3,11 @@ import Script from "next/script";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import "@navikt/lumi-survey/styles.css";
 import { Theme } from "@navikt/ds-react";
+import { Suspense } from "react";
 import "@/app/globals.css";
+import { AG_SCENARIO_OPTIONS } from "@/common/demoScenario";
+import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
@@ -54,6 +58,12 @@ export default async function RootLayoutForAG({
         <Decorator.Footer />
 
         <Decorator.Scripts loader={Script} />
+
+        {isLocalOrDemo && (
+          <Suspense>
+            <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
+          </Suspense>
+        )}
       </body>
     </html>
   );

@@ -71,3 +71,14 @@ export const mockOversiktDataEmptyNoAccess: OppfolgingsplanerOversiktForAG = {
     tidligerePlaner: [],
   },
 };
+
+// Active plan + previous plans, no draft
+export const mockOversiktDataAktivOgTidligere: OppfolgingsplanerOversiktForAG =
+  {
+    ...mockCommonAGResponseFields,
+    oversikt: {
+      utkast: null,
+      aktivPlan: mockAktivPlanData,
+      tidligerePlaner: mockTidligerePlanerData,
+    },
+  };

@@ -1,5 +1,5 @@
 import { Alert, BodyShort, Box, Heading } from "@navikt/ds-react";
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt.ts";
+import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 
 export async function AnsattIkkeSykmeldtAlert({
   narmesteLederId,
