@@ -1,48 +1,36 @@
 import { expect, test } from "vitest";
 import { lumiSurveySM } from "./lumiSurveySM";
 
-test("uses the medvirkning survey configuration for sykmeldt", () => {
-  expect(lumiSurveySM.type).toBe("custom");
+test("uses the nytteverdi survey configuration for sykmeldt", () => {
+  expect(lumiSurveySM.type).toBe("rating");
   expect(lumiSurveySM.questions).toHaveLength(4);
 
   expect(lumiSurveySM.questions).toEqual([
     expect.objectContaining({
-      id: "opplevelse",
+      id: "nytteverdi",
       type: "rating",
       variant: "emoji",
       required: true,
     }),
     expect.objectContaining({
-      id: "samarbeid",
-      type: "singleChoice",
-      required: true,
-      options: [
-        { value: "sammen", label: "Ja, vi satt sammen og lagde den" },
-        {
-          value: "snakket",
-          label: "Ja, vi snakket sammen, og lederen min lagde den etterpå",
-        },
-        {
-          value: "uten-meg",
-          label: "Nei, lederen min lagde den uten at vi snakket sammen",
-        },
-        { value: "annet", label: "Annet" },
-      ],
-    }),
-    expect.objectContaining({
-      id: "deling-holdning",
-      type: "singleChoice",
-      required: true,
-      options: [
-        { value: "helt-greit", label: "Helt greit" },
-        { value: "greit", label: "Greit" },
-        { value: "ikke-greit", label: "Ikke greit" },
-      ],
-    }),
-    expect.objectContaining({
-      id: "annet",
+      id: "nytteverdi-utdypning",
       type: "text",
       required: false,
+    }),
+    expect.objectContaining({
+      id: "gjenkjennelse",
+      type: "singleChoice",
+      required: true,
+      options: [
+        { value: "ja", label: "Ja" },
+        { value: "nei", label: "Nei" },
+      ],
+    }),
+    expect.objectContaining({
+      id: "gjenkjennelse-utdypning",
+      type: "text",
+      required: false,
+      visibleIf: { questionId: "gjenkjennelse", operator: "EQ", value: "nei" },
     }),
   ]);
 });

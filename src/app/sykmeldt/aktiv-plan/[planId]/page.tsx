@@ -14,7 +14,7 @@ export default async function AktivPlanPageForSM({
       <AktivPlanForSM planId={planId} />
 
       <Lumi
-        feedbackId="Oppfølgingsplan medvirkning - sykmeldt"
+        feedbackId="Oppfølgingsplan nytteverdi - sykmeldt"
         behavior={{ questionLayout: "steps", showProgress: true }}
         survey={lumiSurveySM}
       />
