@@ -7,7 +7,7 @@ import {
 import { getMockDataForScenarioSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
 
 describe("getMockDataForScenarioSM", () => {
-  test("returnerer tom oversikt for 'tom'-scenarioet", () => {
+  test("returns empty oversikt for the 'tom' scenario", () => {
     const result = getMockDataForScenarioSM("tom");
 
     expect(result).toEqual(mockOversiktDataTomForSM);
@@ -15,7 +15,7 @@ describe("getMockDataForScenarioSM", () => {
     expect(result.tidligerePlaner).toEqual([]);
   });
 
-  test("returnerer planer for 'aktiv-og-tidligere'", () => {
+  test("returns plans for 'aktiv-og-tidligere'", () => {
     const result = getMockDataForScenarioSM("aktiv-og-tidligere");
 
     expect(result).toEqual(mockOversiktDataMedPlanerForSM);
@@ -23,7 +23,7 @@ describe("getMockDataForScenarioSM", () => {
     expect(result.tidligerePlaner.length).toBeGreaterThan(0);
   });
 
-  test("returnerer same data for 'aktiv-utkast-og-tidligere' som for 'aktiv-og-tidligere'", () => {
+  test("returns same data for 'aktiv-utkast-og-tidligere' as for 'aktiv-og-tidligere'", () => {
     const resultAktiv = getMockDataForScenarioSM("aktiv-og-tidligere");
     const resultUtkast = getMockDataForScenarioSM("aktiv-utkast-og-tidligere");
 
@@ -31,7 +31,7 @@ describe("getMockDataForScenarioSM", () => {
     expect(resultUtkast).toEqual(mockOversiktDataMedPlanerForSM);
   });
 
-  test("kaster feil for ukjent scenario", () => {
+  test("throws error for unknown scenario", () => {
     expect(() => getMockDataForScenarioSM("ukjent" as DemoScenario)).toThrow(
       "Unknown demo scenario",
     );

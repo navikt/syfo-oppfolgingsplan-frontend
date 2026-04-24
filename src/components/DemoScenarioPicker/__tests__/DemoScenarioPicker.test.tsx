@@ -39,14 +39,14 @@ describe("DemoScenarioPicker", () => {
     vi.clearAllMocks();
     mockEnv.isLocalOrDemo = true;
     // biome-ignore lint/suspicious/noDocumentCookie: tests need to control the browser cookie directly
-    document.cookie = `${DEMO_SCENARIO_COOKIE}=; path=/; max-age=0`;
+    document.cookie = `${DEMO_SCENARIO_COOKIE}=; path=/`;
   });
 
   afterEach(() => {
     cleanup();
   });
 
-  test("rendrer Demo-knappen med riktig label", () => {
+  test("renders the Demo button with correct label", () => {
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
     const button = screen.getByRole("button", { name: /demo/i });
@@ -54,7 +54,7 @@ describe("DemoScenarioPicker", () => {
     expect(button).toHaveTextContent("Demo");
   });
 
-  test("åpner modal ved klikk på Demo-knappen", async () => {
+  test("opens modal when clicking the Demo button", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
@@ -65,7 +65,7 @@ describe("DemoScenarioPicker", () => {
     ).toBeInTheDocument();
   });
 
-  test("viser alle AG-scenarioer som radio-knapper", async () => {
+  test("shows all AG scenarios as radio buttons", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
@@ -78,20 +78,19 @@ describe("DemoScenarioPicker", () => {
     }
   });
 
-  test("viser kun SM-scenarioer når SM-options sendes som prop", async () => {
+  test("shows only SM scenarios when SM options are passed as prop", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={SM_SCENARIO_OPTIONS} />);
 
     await user.click(screen.getByRole("button", { name: /demo/i }));
 
-    // SM-scenarioer skal vises
     for (const option of SM_SCENARIO_OPTIONS) {
       expect(
         screen.getByRole("radio", { name: option.label }),
       ).toBeInTheDocument();
     }
 
-    // AG-only scenario "aktiv-utkast-og-tidligere" skal IKKE vises
+    // AG-only scenario "aktiv-utkast-og-tidligere" should NOT be shown
     const agOnlyOption = AG_SCENARIO_OPTIONS.find(
       (o) => !SM_SCENARIO_OPTIONS.some((s) => s.value === o.value),
     );
@@ -102,23 +101,21 @@ describe("DemoScenarioPicker", () => {
     }
   });
 
-  test("velger scenario og lagrer cookie før refresh", async () => {
+  test("selects scenario and saves cookie before refresh", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
     await user.click(screen.getByRole("button", { name: /demo/i }));
 
-    // Velg "Tom"-scenarioet
     await user.click(screen.getByRole("radio", { name: "Tom" }));
 
-    // Klikk "Bruk scenario"
     await user.click(screen.getByRole("button", { name: /Bruk scenario/i }));
 
     expect(document.cookie).toContain(`${DEMO_SCENARIO_COOKIE}=tom`);
     expect(mockRouter.refresh).toHaveBeenCalled();
   });
 
-  test("lukker modal ved Avbryt", async () => {
+  test("closes modal when clicking cancel", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
@@ -134,7 +131,7 @@ describe("DemoScenarioPicker", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("modal viser 'Velg scenario'-tekst som legend", async () => {
+  test("modal shows 'Velg scenario' text as legend", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
@@ -143,20 +140,19 @@ describe("DemoScenarioPicker", () => {
     expect(screen.getByText("Velg scenario")).toBeInTheDocument();
   });
 
-  test("default-scenario er forhåndsvalgt ved åpning av modal", async () => {
+  test("default scenario is preselected when opening modal", async () => {
     const user = userEvent.setup();
     render(<DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />);
 
     await user.click(screen.getByRole("button", { name: /demo/i }));
 
-    // Default er "aktiv-og-tidligere"
     const defaultRadio = screen.getByRole("radio", {
       name: "Aktiv plan + tidligere planer",
     });
     expect(defaultRadio).toBeChecked();
   });
 
-  test("forhåndsvelger scenario fra cookie", async () => {
+  test("preselects scenario from cookie", async () => {
     // biome-ignore lint/suspicious/noDocumentCookie: tests need to control the browser cookie directly
     document.cookie = `${DEMO_SCENARIO_COOKIE}=tom`;
 
@@ -168,13 +164,13 @@ describe("DemoScenarioPicker", () => {
     expect(screen.getByRole("radio", { name: "Tom" })).toBeChecked();
   });
 
-  describe("produksjonsbeskyttelse (isLocalOrDemo-guard)", () => {
+  describe("production guard (isLocalOrDemo)", () => {
     /**
-     * Layoutene bruker `{isLocalOrDemo && <DemoScenarioPicker ... />}`.
-     * Vi simulerer dette mønsteret her for å verifisere at pickeren
-     * ikke rendres når isLocalOrDemo er false (prod / dev-gcp).
+     * Layouts use `{isLocalOrDemo && <DemoScenarioPicker ... />}`.
+     * We simulate this pattern to verify the picker is not rendered
+     * when isLocalOrDemo is false (prod / dev-gcp).
      */
-    test("rendrer IKKE DemoScenarioPicker når isLocalOrDemo er false", () => {
+    test("does NOT render DemoScenarioPicker when isLocalOrDemo is false", () => {
       mockEnv.isLocalOrDemo = false;
 
       render(
@@ -190,7 +186,7 @@ describe("DemoScenarioPicker", () => {
       ).not.toBeInTheDocument();
     });
 
-    test("rendrer DemoScenarioPicker når isLocalOrDemo er true", () => {
+    test("renders DemoScenarioPicker when isLocalOrDemo is true", () => {
       mockEnv.isLocalOrDemo = true;
 
       render(
