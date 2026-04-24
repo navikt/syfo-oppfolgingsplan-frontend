@@ -29,3 +29,8 @@ export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [mockAktivPlanData],
   tidligerePlaner: mockTidligerePlanerData,
 };
+
+export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
+  aktiveOppfolgingsplaner: [],
+  tidligerePlaner: [],
+};

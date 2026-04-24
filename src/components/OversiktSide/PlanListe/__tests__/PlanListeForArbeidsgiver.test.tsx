@@ -13,7 +13,9 @@ import {
 import { renderAsync } from "@/test/test-utils";
 
 vi.mock("next/navigation", async () => {
-  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
+  const { mockNextNavigation } = await import(
+    "@/test/mocks/nextNavigationMock"
+  );
 
   return mockNextNavigation();
 });
