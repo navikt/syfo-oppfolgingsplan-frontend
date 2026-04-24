@@ -6,13 +6,13 @@ import {
 } from "@/server/fetchData/mockData/mockOversiktData";
 import { mockOversiktDataAktivOgTidligere } from "@/server/fetchData/mockData/mockOversiktDataVariants";
 
-// Opphev global mock fra vitest-setup.ts slik at vi kan teste den faktiske implementasjonen
+// Remove global mock from vitest-setup.ts so we can test the actual implementation
 vi.unmock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
 
 import { getMockDataForScenario } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 
 describe("getMockDataForScenario", () => {
-  test("returnerer tom oversikt for 'tom'-scenarioet", () => {
+  test("returns empty oversikt for the 'tom' scenario", () => {
     const result = getMockDataForScenario("tom");
 
     expect(result).toEqual(mockOversiktDataTom);
@@ -21,7 +21,7 @@ describe("getMockDataForScenario", () => {
     expect(result.oversikt.tidligerePlaner).toEqual([]);
   });
 
-  test("returnerer aktiv plan og tidligere planer for 'aktiv-og-tidligere'", () => {
+  test("returns active plan and previous plans for 'aktiv-og-tidligere'", () => {
     const result = getMockDataForScenario("aktiv-og-tidligere");
 
     expect(result).toEqual(mockOversiktDataAktivOgTidligere);
@@ -30,7 +30,7 @@ describe("getMockDataForScenario", () => {
     expect(result.oversikt.tidligerePlaner.length).toBeGreaterThan(0);
   });
 
-  test("returnerer aktiv plan, utkast og tidligere planer for 'aktiv-utkast-og-tidligere'", () => {
+  test("returns active plan, draft and previous plans for 'aktiv-utkast-og-tidligere'", () => {
     const result = getMockDataForScenario("aktiv-utkast-og-tidligere");
 
     expect(result).toEqual(mockOversiktDataMedPlanerForAG);
@@ -39,7 +39,7 @@ describe("getMockDataForScenario", () => {
     expect(result.oversikt.tidligerePlaner.length).toBeGreaterThan(0);
   });
 
-  test("kaster feil for ukjent scenario", () => {
+  test("throws error for unknown scenario", () => {
     expect(() => getMockDataForScenario("ukjent" as DemoScenario)).toThrow(
       "Unknown demo scenario",
     );

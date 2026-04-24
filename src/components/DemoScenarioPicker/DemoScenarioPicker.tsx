@@ -44,7 +44,7 @@ export function DemoScenarioPicker({
   function handleApply() {
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
     // biome-ignore lint/suspicious/noDocumentCookie: task requires document.cookie to support current local/demo flow
-    document.cookie = `${DEMO_SCENARIO_COOKIE}=${selected}; path=/; max-age=0; SameSite=Lax${secure}`;
+    document.cookie = `${DEMO_SCENARIO_COOKIE}=${selected}; path=/; SameSite=Lax${secure}`;
     router.refresh();
     setOpen(false);
   }
