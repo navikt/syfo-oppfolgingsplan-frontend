@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   DEMO_SIMULATED_BACKEND_DELAY_MS,
   SAVE_UTKAST_DEBOUNCE_DELAY,
+  TEXT_FIELD_MAX_LENGTH,
 } from "@/common/app-config";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import { formLabels } from "./form-labels";
@@ -142,6 +143,29 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
     });
 
     // Verify no saving has happened
+    expect(lagreUtkastSpy).not.toHaveBeenCalled();
+  });
+
+  test("should not autosave when text exceeds maxLength", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
+
+    const typiskArbeidshverdagTextarea = screen.getByLabelText(
+      formLabels.typiskArbeidshverdag.label,
+    );
+
+    // Paste text that exceeds the max length (2001 chars > 2000 limit)
+    const tooLongText = "a".repeat(TEXT_FIELD_MAX_LENGTH + 1);
+    await user.click(typiskArbeidshverdagTextarea);
+    await user.paste(tooLongText);
+
+    // Advance timers past the debounce delay to trigger autosave
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
+    });
+
+    // Auto-save should not send invalid data to the server
     expect(lagreUtkastSpy).not.toHaveBeenCalled();
   });
 });

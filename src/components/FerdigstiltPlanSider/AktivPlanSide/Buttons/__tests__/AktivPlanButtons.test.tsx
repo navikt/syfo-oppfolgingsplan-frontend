@@ -1,12 +1,14 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { mockAnalytics } from "@/test/mocks/analyticsMock";
 import { mockAkselModal } from "@/test/mocks/akselModalMock";
+import { mockAnalytics } from "@/test/mocks/analyticsMock";
 import { render } from "@/test/test-utils";
 import { AktivPlanButtons } from "../AktivPlanButtons";
 
 vi.mock("next/navigation", async () => {
-  const { mockNextNavigation } = await import("@/test/mocks/nextNavigationMock");
+  const { mockNextNavigation } = await import(
+    "@/test/mocks/nextNavigationMock"
+  );
 
   return mockNextNavigation();
 });
