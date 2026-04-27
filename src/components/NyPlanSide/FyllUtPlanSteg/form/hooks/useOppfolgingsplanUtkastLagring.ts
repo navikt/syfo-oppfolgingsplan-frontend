@@ -78,10 +78,12 @@ export default function useOppfolgingsplanUtkastLagring({
     let newActionState: LagreUtkastActionState;
 
     if (hasValuesChangedFromPreviousSave) {
-      const { success: isValid } =
-        oppfolgingsplanFormUnderArbeidSchema.safeParse(values);
-      if (!isValid && skipIfInvalid) {
-        return previousState;
+      if (skipIfInvalid === true) {
+        const { success: isValid } =
+          oppfolgingsplanFormUnderArbeidSchema.safeParse(values);
+        if (!isValid) {
+          return previousState;
+        }
       }
 
       const result = await lagreUtkastServerAction(narmesteLederId, values);
