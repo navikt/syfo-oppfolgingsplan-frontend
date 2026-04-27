@@ -2,7 +2,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nextEnv from "@next/env";
 import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 // NODE_ENV will be set to 'test' by Vitest automatically
@@ -12,12 +11,13 @@ nextEnv.loadEnvConfig(process.cwd(), false);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
+  plugins: [react()],
   test: {
     environment: "jsdom",
     setupFiles: "./src/test/vitest-setup.ts",
   },
   resolve: {
+    tsconfigPaths: true,
     alias: {
       // server-only is automatically provided by Next.js, so we need to mock it in Vitest.
       // Could also install 'server-only' as dev dep, but this seems like good practice.
