@@ -165,9 +165,7 @@ describe("LagPlanVeiviser continuous autosaving while typing feature", () => {
       await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
     });
 
-    // Auto-save should NOT send invalid data to the server
-    // BUG #761: Currently auto-save sends data without validating maxLength,
-    // so this test FAILS because lagreUtkastServerAction IS called with >2000 chars
+    // Auto-save should not send invalid data to the server
     expect(lagreUtkastSpy).not.toHaveBeenCalled();
   });
 });
