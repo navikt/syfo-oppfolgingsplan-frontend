@@ -55,7 +55,7 @@ export async function lagreUtkastServerAction(
     }
 
     if (!isFormValuesValid) {
-      logger.error(
+      logger.warn(
         `lagreUtkastServerAction formValues validation error: ${inputValidationError.message}`,
       );
     }

@@ -1,6 +1,9 @@
 import { useParams } from "next/navigation";
 import { startTransition, useActionState } from "react";
-import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import {
+  type OppfolgingsplanFormUnderArbeid,
+  oppfolgingsplanFormUnderArbeidSchema,
+} from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { lagreUtkastServerAction } from "@/server/actions/lagreUtkast";
 import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 
@@ -51,9 +54,11 @@ export default function useOppfolgingsplanUtkastLagring({
     {
       values,
       onSuccess,
+      skipIfInvalid,
     }: {
       values: OppfolgingsplanFormUnderArbeid;
       onSuccess?: () => void;
+      skipIfInvalid?: boolean;
     },
   ) {
     /* Uten denne sjekken, slik det er satt opp nå, vil det alltid bli trigget
@@ -73,6 +78,12 @@ export default function useOppfolgingsplanUtkastLagring({
     let newActionState: LagreUtkastActionState;
 
     if (hasValuesChangedFromPreviousSave) {
+      const { success: isValid } =
+        oppfolgingsplanFormUnderArbeidSchema.safeParse(values);
+      if (!isValid && skipIfInvalid) {
+        return previousState;
+      }
+
       const result = await lagreUtkastServerAction(narmesteLederId, values);
 
       if (result.error) {
@@ -102,12 +113,14 @@ export default function useOppfolgingsplanUtkastLagring({
   function startLagreUtkastIfChanges({
     values,
     onSuccess,
+    skipIfInvalid,
   }: {
     values: OppfolgingsplanFormUnderArbeid;
     onSuccess?: () => void;
+    skipIfInvalid?: boolean;
   }) {
     startTransition(() => {
-      lagreUtkastIfChangesAction({ values, onSuccess });
+      lagreUtkastIfChangesAction({ values, onSuccess, skipIfInvalid });
     });
   }
 

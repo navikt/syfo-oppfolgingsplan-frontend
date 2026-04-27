@@ -56,7 +56,10 @@ export default function useOppfolgingsplanForm({
     },
     listeners: {
       onChange: ({ formApi }) =>
-        startLagreUtkastIfChanges({ values: formApi.state.values }),
+        startLagreUtkastIfChanges({
+          values: formApi.state.values,
+          skipIfInvalid: true,
+        }),
       onChangeDebounceMs: SAVE_UTKAST_DEBOUNCE_DELAY,
     },
     onSubmitInvalid: () => {
