@@ -6,34 +6,24 @@
 ![Biome](https://img.shields.io/badge/Biome-2-60a5fa?logo=biome&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest&logoColor=white)
 
-## Formål
+## Miljøer
 
-Frontend for oppfølgingsplan mellom sykmeldt arbeidstaker og arbeidsgiver. Appen lar begge parter opprette, redigere og dele en felles oppfølgingsplan som brukes i sykefraværsoppfølgingen.
+🚀 [Produksjon](https://www.nav.no/syk/oppfolgingsplan)
+
+🛠️ [Utvikling](https://www.ekstern.dev.nav.no/syk/oppfolgingsplan)
+
+🎬 [Demo — arbeidsgiver ny plan](https://demo.ekstern.dev.nav.no/syk/oppfolgingsplan/1/ny-plan)
+
+🎬 [Demo — arbeidstaker aktiv plan](https://demo.ekstern.dev.nav.no/syk/oppfolgingsplan/sykmeldt/aktiv-plan/223e4567-e89b-12d3-a456-426614174002)
+
+## Formålet med appen
+
+Frontend for oppfølgingsplan mellom sykmeldt arbeidstaker og arbeidsgiver. Appen lar arbeidsgiver opprette, redigere og dele en felles oppfølgingsplan som brukes i sykefraværsoppfølgingen.
 
 - **Sykmeldt** ser sine planer under [Ditt sykefravær](https://www.nav.no/syk/sykefravaer)
 - **Arbeidsgiver** ser planene via [Dine sykmeldte](https://www.nav.no/arbeidsgiver/sykmeldte)
 
 Appen lever under `basePath` `/syk/oppfolgingsplan`[^basepath].
-
-## Teknologier
-
-| Kategori | Teknologi |
-|---|---|
-| Rammeverk | Next.js 16 (App Router, standalone output) |
-| UI | [Aksel](https://aksel.nav.no/) (`@navikt/ds-react`), Tailwind CSS 4 |
-| Skjema | `@tanstack/react-form`, Zod 4 |
-| Auth | ID-porten (sidecar med autoLogin), TokenX for backend-kall |
-| Observability | Grafana Faro (frontend), OpenTelemetry auto-instrumentation, Prometheus, Loki |
-| Test | Vitest, Testing Library |
-| Lint/format | Biome |
-
-## Miljøer
-
-| Miljø | URL |
-|---|---|
-| Dev | https://www.ekstern.dev.nav.no/syk/oppfolgingsplan |
-| Prod | https://www.nav.no/syk/oppfolgingsplan |
-| Demo | Dynamisk ingress per branch |
 
 ## Backend-avhengigheter
 
