@@ -25,6 +25,18 @@ Frontend for oppfølgingsplan mellom sykmeldt arbeidstaker og arbeidsgiver. Appe
 
 Appen lever under `basePath` `/syk/oppfolgingsplan`[^basepath].
 
+## Arkitektur
+
+```mermaid
+graph LR
+    SM[Sykmeldt] --> ID[ID-porten]
+    AG[Arbeidsgiver] --> ID
+    ID --> FE[syfo-oppfolgingsplan-frontend]
+    FE -- TokenX --> BE[syfo-oppfolgingsplan-backend]
+    FE -- TokenX --> LUMI[lumi-api]
+    FE --> DEK[nav-dekoratoren]
+```
+
 ## Backend-avhengigheter
 
 ### [syfo-oppfolgingsplan-backend](https://github.com/navikt/syfo-oppfolgingsplan-backend)
