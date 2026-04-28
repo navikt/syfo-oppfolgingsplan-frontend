@@ -20,7 +20,7 @@
     "@grafana/faro-web-sdk": "^2.4.0",
     "@grafana/faro-web-tracing": "^2.4.0",
     "@navikt/aksel-icons": "^8.10.1",
-    "@navikt/analytics-types": "^0.0.8",
+    "@navikt/analytics-types": "^0.0.9",
     "@navikt/dinesykmeldte-sidemeny": "^8.0.0",
     "@navikt/ds-css": "^8.10.1",
     "@navikt/ds-react": "^8.10.1",
