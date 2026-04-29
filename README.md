@@ -1,25 +1,64 @@
-# syfo-oppfolgingsplan-frontend
+# Oppfølgingsplan – frontend
 
-## Run locally during development
+[![Build & Deploy](https://github.com/navikt/syfo-oppfolgingsplan-frontend/actions/workflows/build-and-deploy.yaml/badge.svg)](https://github.com/navikt/syfo-oppfolgingsplan-frontend/actions/workflows/build-and-deploy.yaml)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Biome](https://img.shields.io/badge/Biome-2-60a5fa?logo=biome&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest&logoColor=white)
 
-Se [eSyfo-Wiki - Next bygg og kjør](https://github.com/navikt/esyfo-dev-tools/wiki/nextjs-build-run).
+## Miljøer
 
-Når dev-server kjører kan du gå til en av "start-sidene":
-- [http://localhost:3000/syk/oppfolgingsplan/123](http://localhost:3000/syk/oppfolgingsplan/123) for arbeidsgiver
-- [http://localhost:3000/syk/oppfolgingsplan/sykmeldt](http://localhost:3000/syk/oppfolgingsplan/sykmeldt) for sykmeldt/personbruker
+🚀 [Produksjon](https://www.nav.no/syk/oppfolgingsplan)
 
-## Checks you can run before pushing
+🛠️ [Utvikling](https://www.ekstern.dev.nav.no/syk/oppfolgingsplan)
 
-`mise ci`
+🎬 [Demo — arbeidsgiver ny plan](https://demo.ekstern.dev.nav.no/syk/oppfolgingsplan/1/ny-plan)
 
-These are also run in CI pipeline by Github Actions, and will stop the build and deploy if they fail. It can therefore be convenient to run them locally first.
+🎬 [Demo — arbeidstaker aktiv plan](https://demo.ekstern.dev.nav.no/syk/oppfolgingsplan/sykmeldt/aktiv-plan/223e4567-e89b-12d3-a456-426614174002)
 
-## Testing
+## Formålet med appen
 
-The project uses Vitest for unit and component testing.
+Frontend for oppfølgingsplan mellom sykmeldt arbeidstaker og arbeidsgiver. Appen lar arbeidsgiver opprette, redigere og dele en felles oppfølgingsplan som brukes i sykefraværsoppfølgingen.
 
-Run `npm run test` to run Vitest, which will find and run all unit test files in the project. You can have it running in the terminal while editing code, and the affected tests will automatically rerun when saving files.
+- **Sykmeldt** ser sine planer under [Ditt sykefravær](https://www.nav.no/syk/sykefravaer)
+- **Arbeidsgiver** ser planene via [Dine sykmeldte](https://www.nav.no/arbeidsgiver/sykmeldte)
 
-For VS Code the [Vitest extension](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) is nice.
+Appen lever under `basePath` `/syk/oppfolgingsplan`[^basepath].
 
-See more documentation in `Testing.md`.
+## Arkitektur
+
+```mermaid
+graph LR
+    SM[Sykmeldt] --> ID[ID-porten]
+    AG[Arbeidsgiver] --> ID
+    ID --> FE[syfo-oppfolgingsplan-frontend]
+    FE -- TokenX --> BE[syfo-oppfolgingsplan-backend]
+    FE -- TokenX --> LUMI[lumi-api]
+    FE --> DEK[nav-dekoratoren]
+```
+
+## Backend-avhengigheter
+
+### [syfo-oppfolgingsplan-backend](https://github.com/navikt/syfo-oppfolgingsplan-backend)
+
+Oppfølgingsplanens hoveddatakilde. Håndterer planer, utkast, ferdigstilling og deling.
+
+### [lumi-api](https://github.com/navikt/lumi-api)
+
+Brukerundersøkelser og tilbakemeldinger.
+
+### [nav-dekoratoren](https://github.com/navikt/nav-dekoratoren)
+
+Navs felles header og footer.
+
+## Utvikling (kjøre lokalt)
+
+For å komme i gang med å bygge og kjøre appen, se vår [Wiki for frontendapper](https://navikt.github.io/team-esyfo/utvikling/frontend/).
+
+## For Nav-ansatte
+
+Interne henvendelser kan sendes via Slack i kanalen [#esyfo](https://nav-it.slack.com/archives/C012X796B4L).
+
+---
+
+[^basepath]: `basePath`-verdien settes i Next.js-konfigurasjonen i `next.config.ts` og angir URL-prefikset som hele appen lever under.
