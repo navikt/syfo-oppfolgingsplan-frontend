@@ -10,6 +10,7 @@ export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   oversikt: {
     utkast: {
       sistLagretTidspunkt: "2025-10-28T10:17:31Z",
+      utkastUtloperDato: "2026-02-28T10:17:31Z",
     },
     aktivPlan: mockAktivPlanData,
     tidligerePlaner: mockTidligerePlanerData,
@@ -34,3 +35,14 @@ export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [],
   tidligerePlaner: [],
 };
+
+export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
+  aktiveOppfolgingsplaner: [mockAktivPlanData],
+  tidligerePlaner: [],
+};
+
+export const mockOversiktDataOnlyPreviousForSM: OppfolgingsplanerOversiktForSM =
+  {
+    aktiveOppfolgingsplaner: [],
+    tidligerePlaner: mockTidligerePlanerData,
+  };

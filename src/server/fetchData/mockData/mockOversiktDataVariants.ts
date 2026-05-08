@@ -23,6 +23,7 @@ export const mockOversiktDataOnlyDraft: OppfolgingsplanerOversiktForAG = {
   oversikt: {
     utkast: {
       sistLagretTidspunkt: "2025-10-28T10:17:31Z",
+      utkastUtloperDato: "2026-02-28T10:17:31Z",
     },
     aktivPlan: null,
     tidligerePlaner: [],
@@ -80,5 +81,18 @@ export const mockOversiktDataAktivOgTidligere: OppfolgingsplanerOversiktForAG =
       utkast: null,
       aktivPlan: mockAktivPlanData,
       tidligerePlaner: mockTidligerePlanerData,
+    },
+  };
+
+// Only draft without expiry date (utkastUtloperDato missing)
+export const mockOversiktDataOnlyDraftWithoutExpiry: OppfolgingsplanerOversiktForAG =
+  {
+    ...mockCommonAGResponseFields,
+    oversikt: {
+      utkast: {
+        sistLagretTidspunkt: "2025-10-28T10:17:31Z",
+      },
+      aktivPlan: null,
+      tidligerePlaner: [],
     },
   };

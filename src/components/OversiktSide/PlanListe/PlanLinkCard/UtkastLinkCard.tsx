@@ -13,6 +13,7 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import type { UtkastMetadata } from "@/schema/utkastMetadataSchema";
 import {
   getFormattedDateAndTimeString,
+  getFormattedDateString,
   getFormattedTimeString,
 } from "@/ui-helpers/dateAndTime";
 import { isDateToday } from "@/utils/dateAndTime/dateUtils";
@@ -24,7 +25,7 @@ interface Props {
 }
 
 export default function UtkastLinkPanel({
-  utkast: { sistLagretTidspunkt },
+  utkast: { sistLagretTidspunkt, utkastUtloperDato },
   linkCardTitle,
   narmesteLederId,
 }: Props) {
@@ -60,6 +61,11 @@ export default function UtkastLinkPanel({
       <LinkCardDescription>
         <BodyShort size="small">
           <em>Sist lagret {utkastSistLagretFormatted}.</em>
+        </BodyShort>
+        <BodyShort size="small" textColor="subtle">
+          {utkastUtloperDato
+            ? `Utkastet slettes ${getFormattedDateString(utkastUtloperDato)} hvis du ikke gjør endringer.`
+            : "Utkastet slettes automatisk 4 måneder etter siste lagring."}
         </BodyShort>
       </LinkCardDescription>
       <LinkCardFooter>

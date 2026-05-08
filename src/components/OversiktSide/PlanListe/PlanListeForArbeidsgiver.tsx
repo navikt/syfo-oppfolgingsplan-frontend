@@ -35,11 +35,19 @@ export default async function PlanListeForArbeidsgiver({
   } = oversiktResult.data;
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
+  const harPlaner = !!aktivPlan || harTidligerePlaner;
 
   const linkCardTitle = orgName || "Oppfølgingsplan";
 
   return (
     <section className="mb-12">
+      {harPlaner && (
+        <BodyShort size="small" textColor="subtle" className="mb-4">
+          Planer blir utilgjengelige når den ansatte ikke har hatt aktiv
+          sykmelding hos dere på 6 måneder. Dere kan lagre planen som PDF hvis
+          dere vil ta vare på den.
+        </BodyShort>
+      )}
       {aktivPlan && (
         <PlanListeDel>
           <AktivPlanLinkCard
@@ -51,9 +59,6 @@ export default async function PlanListeForArbeidsgiver({
       )}
       {utkast && (
         <PlanListeDel heading="Oppfølgingsplan under arbeid">
-          <BodyShort size="small" textColor="subtle" className="mb-4">
-            Oppfølgingsplan under arbeid slettes 4 måneder etter siste lagring.
-          </BodyShort>
           <VStack gap="space-16">
             <UtkastLinkPanel
               utkast={utkast}
@@ -67,10 +72,6 @@ export default async function PlanListeForArbeidsgiver({
       )}
       {harTidligerePlaner && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
-          <BodyShort size="small" textColor="subtle" className="mb-4">
-            Tidligere planer er tilgjengelige i 4 måneder etter at den ansatte
-            er friskmeldt.
-          </BodyShort>
           <VStack gap="space-16">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard

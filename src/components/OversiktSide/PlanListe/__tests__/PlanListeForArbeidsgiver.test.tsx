@@ -8,6 +8,7 @@ import {
   mockOversiktDataNoEditAccess,
   mockOversiktDataOnlyActivePlan,
   mockOversiktDataOnlyDraft,
+  mockOversiktDataOnlyDraftWithoutExpiry,
   mockOversiktDataOnlyPreviousPlans,
 } from "@/server/fetchData/mockData/mockOversiktDataVariants";
 import { renderAsync } from "@/test/test-utils";
@@ -184,5 +185,158 @@ describe("PlanListeForArbeidsgiver", () => {
     // Should still display plans even without edit access
     const orgNames = screen.getAllByText("Holmen skole");
     expect(orgNames.length).toBeGreaterThan(0);
+  });
+
+  test("displays concrete expiry date when utkastUtloperDato is present", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataOnlyDraft,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    // mockOversiktDataOnlyDraft has utkastUtloperDato: "2026-02-28T10:17:31Z"
+    // getFormattedDateString formats this as "28. februar" (year hidden when same as current year)
+    // or "28. februar 2026" (year shown when different from current year)
+    expect(
+      screen.getByText(
+        /^Utkastet slettes 28\. februar( 2026)? hvis du ikke gjør endringer\.$/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        /Utkastet slettes automatisk 4 måneder etter siste lagring\./,
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  test("displays fallback expiry text when utkastUtloperDato is missing", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataOnlyDraftWithoutExpiry,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.getByText(
+        "Utkastet slettes automatisk 4 måneder etter siste lagring.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("does not display old 4-month/friskmeldt text for previous plans", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataMedPlanerForAG,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.queryByText(
+        /Tidligere planer er tilgjengelige i 4 måneder etter at den ansatte er friskmeldt/,
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  test("displays new 6-month AG text for previous plans section", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataMedPlanerForAG,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.getByText(
+        /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("displays 6-month AG text when only active plan exists (no previous plans)", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataOnlyActivePlan,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.getByText(
+        /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("displays 6-month AG text when only previous plans exist (no active plan)", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataOnlyPreviousPlans,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.getByText(
+        /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("displays 6-month AG text exactly once when both active and previous plans exist", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataMedPlanerForAG,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    const matches = screen.getAllByText(
+      /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+    );
+    expect(matches).toHaveLength(1);
+  });
+
+  test("does not display 6-month AG text when no plans exist", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataEmptyWithAccess,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.queryByText(/Planer blir utilgjengelige/),
+    ).not.toBeInTheDocument();
+  });
+
+  test("does not display old section-level utkast expiry text", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataOnlyDraft,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.queryByText(
+        /Oppfølgingsplan under arbeid slettes 4 måneder etter siste lagring/,
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  test("does not display fullført-plan availability text when only draft exists", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataOnlyDraft,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    expect(
+      screen.queryByText(/Planer blir utilgjengelige/),
+    ).not.toBeInTheDocument();
   });
 });
