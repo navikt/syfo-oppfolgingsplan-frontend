@@ -19,8 +19,8 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
     alias: {
-      // Explicit @/ alias needed because resolve.tsconfigPaths does not resolve
-      // tsconfig paths in Vite 7's import-analysis plugin.
+      // Explicit "@" alias needed because resolve.tsconfigPaths does not resolve
+      // the "@" -> "./src" mapping for @/... imports during import analysis.
       "@": path.resolve(__dirname, "src"),
       // server-only is automatically provided by Next.js, so we need to mock it in Vitest.
       // Could also install 'server-only' as dev dep, but this seems like good practice.
