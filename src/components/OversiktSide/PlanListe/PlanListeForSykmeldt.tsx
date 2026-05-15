@@ -15,10 +15,18 @@ export default async function PlanListeForSykmeldt() {
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
   const harTidligerePlaner = tidligerePlaner.length > 0;
+  const harPlaner = harAktivePlaner || harTidligerePlaner;
 
   return (
     <section className="mb-12">
       {!harAktivePlaner && <IngenAktivPlanAlert />}
+      {harPlaner && (
+        <BodyShort size="small" textColor="subtle" className="mb-4">
+          Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos
+          arbeidsgiveren på 6 måneder. Du kan lagre planen som PDF hvis du vil
+          ta vare på den.
+        </BodyShort>
+      )}
       {harAktivePlaner && (
         <PlanListeDel>
           <VStack gap="space-16">
@@ -37,10 +45,6 @@ export default async function PlanListeForSykmeldt() {
       )}
       {harTidligerePlaner && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
-          <BodyShort size="small" textColor="subtle" className="mb-4">
-            Tidligere planer er tilgjengelige i 4 måneder etter at du er
-            friskmeldt.
-          </BodyShort>
           <VStack gap="space-16">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
