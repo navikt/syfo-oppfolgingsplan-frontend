@@ -28,7 +28,7 @@ jobs:
           set -euo pipefail
 
           if [[ "$GITHUB_EVENT_NAME" == "merge_group" ]]; then
-            echo "✅ Merge queue - verification already completed on pull_request"
+            echo "✅ Merge queue required check is intentionally a no-op for merge_group"
             exit 0
           fi
 
