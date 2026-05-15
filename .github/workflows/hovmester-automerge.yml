@@ -10,6 +10,10 @@ permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: hovmester-automerge
+  cancel-in-progress: false
+
 jobs:
   automerge-hovmester-sync:
     if: github.event.workflow_run.conclusion == 'success'
@@ -24,17 +28,14 @@ jobs:
           EXPECTED_BRANCH: "hovmester-sync"
           EXPECTED_PR_AUTHOR: "teamesyfo-automerge[bot]"
           REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          RUN_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+          RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
-
-          OWNER="${REPO%%/*}"
-
-          RUN_EVENT=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.event')
-          RUN_CONCLUSION=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.conclusion')
-          RUN_HEAD_BRANCH=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.head_branch')
-          RUN_HEAD_SHA=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.head_sha')
-          RUN_HEAD_REPO=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.head_repository.full_name')
 
           if [[ "$RUN_CONCLUSION" != "success" ]]; then
             echo "::error::Unexpected workflow conclusion: $RUN_CONCLUSION"
@@ -56,19 +57,21 @@ jobs:
             exit 1
           fi
 
-          PR_COUNT=$(gh api "repos/${REPO}/pulls?state=open&head=${OWNER}:${EXPECTED_BRANCH}&base=${DEFAULT_BRANCH}" --jq 'length')
+          PR_NUMBERS=$(gh api "repos/${REPO}/pulls?state=open&head=${REPO_OWNER}:${EXPECTED_BRANCH}&base=${DEFAULT_BRANCH}" \
+            --jq '.[].number')
+          PR_COUNT=$(printf '%s\n' "$PR_NUMBERS" | sed '/^$/d' | wc -l | tr -d ' ')
 
-          if [[ "$PR_COUNT" == "0" ]]; then
+          if [[ "$PR_COUNT" -eq 0 ]]; then
             echo "No open hovmester sync PR found - skipping automerge"
             exit 0
           fi
 
-          if [[ "$PR_COUNT" != "1" ]]; then
+          if [[ "$PR_COUNT" -ne 1 ]]; then
             echo "::error::Expected exactly one open hovmester sync PR, found $PR_COUNT"
             exit 1
           fi
 
-          PR_NUMBER=$(gh api "repos/${REPO}/pulls?state=open&head=${OWNER}:${EXPECTED_BRANCH}&base=${DEFAULT_BRANCH}" --jq '.[0].number')
+          PR_NUMBER=$(printf '%s\n' "$PR_NUMBERS" | sed -n '1p')
           PR_AUTHOR=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.user.login')
           HEAD_REF=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.head.ref')
           HEAD_REPO=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.head.repo.full_name')
@@ -153,6 +156,8 @@ jobs:
         uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         with:
           app-id: "2906300"
+          permission-contents: write
+          permission-pull-requests: write
           private-key: ${{ secrets.AUTOMERGE_APP_PRIVATE_KEY }}
 
       - name: Enable auto-merge
