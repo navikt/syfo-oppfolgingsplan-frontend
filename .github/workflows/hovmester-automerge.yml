@@ -1,0 +1,166 @@
+name: Automerge hovmester sync
+
+on:
+  workflow_run:
+    workflows: ["Verify hovmester sync"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+
+jobs:
+  automerge-hovmester-sync:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Re-verify sync PR
+        id: verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          EXPECTED_BRANCH: "hovmester-sync"
+          EXPECTED_PR_AUTHOR: "teamesyfo-automerge[bot]"
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+
+          OWNER="${REPO%%/*}"
+
+          RUN_EVENT=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.event')
+          RUN_CONCLUSION=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.conclusion')
+          RUN_HEAD_BRANCH=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.head_branch')
+          RUN_HEAD_SHA=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.head_sha')
+          RUN_HEAD_REPO=$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.head_repository.full_name')
+
+          if [[ "$RUN_CONCLUSION" != "success" ]]; then
+            echo "::error::Unexpected workflow conclusion: $RUN_CONCLUSION"
+            exit 1
+          fi
+
+          if [[ "$RUN_EVENT" != "pull_request" ]]; then
+            echo "Workflow run event is $RUN_EVENT - skipping automerge"
+            exit 0
+          fi
+
+          if [[ "$RUN_HEAD_BRANCH" != "$EXPECTED_BRANCH" ]]; then
+            echo "Workflow run branch is $RUN_HEAD_BRANCH - skipping automerge"
+            exit 0
+          fi
+
+          if [[ "$RUN_HEAD_REPO" != "$REPO" ]]; then
+            echo "::error::Unexpected workflow head repository: $RUN_HEAD_REPO"
+            exit 1
+          fi
+
+          PR_COUNT=$(gh api "repos/${REPO}/pulls?state=open&head=${OWNER}:${EXPECTED_BRANCH}&base=${DEFAULT_BRANCH}" --jq 'length')
+
+          if [[ "$PR_COUNT" == "0" ]]; then
+            echo "No open hovmester sync PR found - skipping automerge"
+            exit 0
+          fi
+
+          if [[ "$PR_COUNT" != "1" ]]; then
+            echo "::error::Expected exactly one open hovmester sync PR, found $PR_COUNT"
+            exit 1
+          fi
+
+          PR_NUMBER=$(gh api "repos/${REPO}/pulls?state=open&head=${OWNER}:${EXPECTED_BRANCH}&base=${DEFAULT_BRANCH}" --jq '.[0].number')
+          PR_AUTHOR=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.user.login')
+          HEAD_REF=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.head.ref')
+          HEAD_REPO=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.head.repo.full_name')
+          HEAD_SHA=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.head.sha')
+
+          if [[ "$PR_AUTHOR" != "$EXPECTED_PR_AUTHOR" ]]; then
+            echo "::error::Unexpected PR author: $PR_AUTHOR"
+            echo "Expected PR author: $EXPECTED_PR_AUTHOR"
+            exit 1
+          fi
+
+          if [[ "$HEAD_REF" != "$EXPECTED_BRANCH" ]]; then
+            echo "::error::Unexpected PR branch: $HEAD_REF"
+            echo "Expected PR branch: $EXPECTED_BRANCH"
+            exit 1
+          fi
+
+          if [[ "$HEAD_REPO" != "$REPO" ]]; then
+            echo "::error::Unexpected PR head repository: $HEAD_REPO"
+            exit 1
+          fi
+
+          if [[ "$HEAD_SHA" != "$RUN_HEAD_SHA" ]]; then
+            echo "::error::Head SHA mismatch between verify run and PR"
+            echo "Workflow run head SHA: $RUN_HEAD_SHA"
+            echo "Pull request head SHA: $HEAD_SHA"
+            exit 1
+          fi
+
+          FILES=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
+            --paginate --jq '.[] | .filename, (.previous_filename // empty)')
+
+          if [[ -z "$FILES" ]]; then
+            echo "::error::No files found from pull request files API; failing closed"
+            exit 1
+          fi
+
+          echo "Changed files:"
+          echo "$FILES"
+
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+
+            if [[ "$file" == .github/workflows/* ]]; then
+              echo "::error::Workflow changes are not allowed in hovmester sync PRs: $file"
+              exit 1
+            fi
+
+            case "$file" in
+              .github/agents/*|\
+              .github/instructions/*|\
+              .github/skills/*|\
+              .github/ISSUE_TEMPLATE/*|\
+              .github/PULL_REQUEST_TEMPLATE.md|\
+              .github/.hovmester-manifest.json|\
+              .github/.copilot-kitchen-manifest.json)
+                ;;
+              *)
+                echo "::error::File outside sync scope: $file"
+                echo "Only hovmester-managed paths are allowed in sync PRs"
+                exit 1
+                ;;
+            esac
+          done <<< "$FILES"
+
+          echo "✅ Sync PR re-verified"
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Approve sync PR
+        if: steps.verify.outputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.verify.outputs.pr_number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr review "$PR_NUMBER" --repo "$REPO" --approve --body "Auto-approved after workflow_run re-verification ✅"
+
+      - name: Create GitHub App token for merge
+        if: steps.verify.outputs.pr_number != ''
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: "2906300"
+          private-key: ${{ secrets.AUTOMERGE_APP_PRIVATE_KEY }}
+
+      - name: Enable auto-merge
+        if: steps.verify.outputs.pr_number != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          HEAD_SHA: ${{ steps.verify.outputs.head_sha }}
+          PR_NUMBER: ${{ steps.verify.outputs.pr_number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --auto --squash --match-head-commit "$HEAD_SHA"
