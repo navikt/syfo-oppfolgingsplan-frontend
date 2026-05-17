@@ -150,37 +150,35 @@ function AlreadyRequestedCard({
     arbeidsforhold.organisasjonsnavn ?? arbeidsforhold.organisasjonsnummer;
 
   return (
-    <div className="mb-8">
-      <InfoCard data-color="info">
-        <InfoCardHeader icon={<InformationSquareIcon aria-hidden />}>
-          <InfoCardTitle as="h3">
-            {showOrgName
-              ? `Be lederen din hos ${orgNavn} om å lage en oppfølgingsplan`
-              : "Be lederen din om å lage en oppfølgingsplan"}
-          </InfoCardTitle>
-        </InfoCardHeader>
+    <InfoCard data-color="info" className="mb-8">
+      <InfoCardHeader icon={<InformationSquareIcon aria-hidden />}>
+        <InfoCardTitle as="h3">
+          {showOrgName
+            ? `Be lederen din hos ${orgNavn} om å lage en oppfølgingsplan`
+            : "Be lederen din om å lage en oppfølgingsplan"}
+        </InfoCardTitle>
+      </InfoCardHeader>
 
-        <InfoCardContent>
-          <BodyLong>
-            {showOrgName
-              ? `Du har bedt lederen din hos ${orgNavn} om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen.`
-              : "Du har bedt lederen din om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen."}
-          </BodyLong>
-        </InfoCardContent>
-      </InfoCard>
-
-      <div className="mt-4 flex items-center gap-2" role="status">
-        <CheckmarkCircleFillIcon
-          aria-hidden
-          className="text-icon-success text-2xl shrink-0"
-        />
-        <BodyLong>
-          {formattedDate
-            ? `Varsel sendt til lederen din ${formattedDate}`
-            : "Du har allerede bedt lederen din om å lage en oppfølgingsplan."}
+      <InfoCardContent>
+        <BodyLong spacing>
+          {showOrgName
+            ? `Du har bedt lederen din hos ${orgNavn} om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen.`
+            : "Du har bedt lederen din om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen."}
         </BodyLong>
-      </div>
-    </div>
+
+        <div className="flex items-center gap-2" role="status">
+          <CheckmarkCircleFillIcon
+            aria-hidden
+            className="text-icon-success text-2xl shrink-0"
+          />
+          <BodyLong>
+            {formattedDate
+              ? `Varsel sendt til lederen din ${formattedDate}`
+              : "Du har allerede bedt lederen din om å lage en oppfølgingsplan."}
+          </BodyLong>
+        </div>
+      </InfoCardContent>
+    </InfoCard>
   );
 }
 

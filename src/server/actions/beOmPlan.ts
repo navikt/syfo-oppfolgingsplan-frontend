@@ -1,7 +1,9 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { cookies } from "next/headers";
 import { getEndpointBeOmPlan } from "@/common/backend-endpoints";
+import { DEMO_SCENARIO_COOKIE } from "@/common/demoScenario";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -23,6 +25,7 @@ export async function beOmPlanServerAction(
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
+    (await cookies()).set(DEMO_SCENARIO_COOKIE, "allerede-bedt-om-plan");
     refresh();
     return { error: null };
   }
