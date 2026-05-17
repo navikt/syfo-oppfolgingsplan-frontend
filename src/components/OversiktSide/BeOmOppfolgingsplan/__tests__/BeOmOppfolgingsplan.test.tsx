@@ -156,9 +156,7 @@ describe("BeOmOppfolgingsplan", () => {
     );
 
     expect(
-      screen.getByText(
-        /Du har allerede bedt lederen din om å lage en oppfølgingsplan/i,
-      ),
+      screen.getByText(/Varsel sendt til lederen din/i),
     ).toBeInTheDocument();
   });
 

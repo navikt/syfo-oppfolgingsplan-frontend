@@ -25,7 +25,10 @@ export async function beOmPlanServerAction(
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
-    (await cookies()).set(DEMO_SCENARIO_COOKIE, "allerede-bedt-om-plan");
+    (await cookies()).set(DEMO_SCENARIO_COOKIE, "allerede-bedt-om-plan", {
+      path: "/",
+      sameSite: "lax",
+    });
     refresh();
     return { error: null };
   }

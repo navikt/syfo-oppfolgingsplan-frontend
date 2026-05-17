@@ -203,7 +203,7 @@ function AlreadyRequestedCard({
           <BodyLong>
             {formattedDate
               ? `Varsel sendt til lederen din ${formattedDate}`
-              : "Du har allerede bedt lederen din om å lage en oppfølgingsplan."}
+              : "Varsel sendt til lederen din"}
           </BodyLong>
         </div>
       </InfoCardContent>
