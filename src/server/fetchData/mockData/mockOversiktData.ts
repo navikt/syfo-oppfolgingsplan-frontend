@@ -92,7 +92,7 @@ export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
 export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [],
   tidligerePlaner: [],
-  sykmeldteArbeidsforhold: [mockSykmeldtArbeidsforholdCanRequest],
+  sykmeldteArbeidsforhold: [],
 };
 
 export const mockOversiktDataCanRequestForSM: OppfolgingsplanerOversiktForSM = {

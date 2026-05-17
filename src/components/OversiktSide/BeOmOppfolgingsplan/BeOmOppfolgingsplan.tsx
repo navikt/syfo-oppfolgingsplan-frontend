@@ -29,6 +29,10 @@ interface BeOmOppfolgingsplanProps {
 export function BeOmOppfolgingsplan({
   arbeidsforhold,
 }: BeOmOppfolgingsplanProps) {
+  if (arbeidsforhold.length === 0) {
+    return <MissingSykmeldingCard />;
+  }
+
   const showOrgName = arbeidsforhold.length > 1;
 
   return (
@@ -231,6 +235,23 @@ function MissingNarmesteLederCard({
         <BodyLong>
           Vi har ikke registrert en nærmeste leder for deg hos {orgNavn}. Ta
           kontakt med arbeidsgiveren din for å få registrert en nærmeste leder.
+        </BodyLong>
+      </InfoCardContent>
+    </InfoCard>
+  );
+}
+
+function MissingSykmeldingCard() {
+  return (
+    <InfoCard data-color="warning" className="mb-8">
+      <InfoCardHeader icon={<ExclamationmarkTriangleIcon aria-hidden />}>
+        <InfoCardTitle as="h3">Du har ingen aktiv sykmelding</InfoCardTitle>
+      </InfoCardHeader>
+
+      <InfoCardContent>
+        <BodyLong>
+          Vi finner ingen aktiv sykmelding knyttet til deg. Oppfølgingsplan kan
+          bare opprettes når du har en aktiv sykmelding.
         </BodyLong>
       </InfoCardContent>
     </InfoCard>
