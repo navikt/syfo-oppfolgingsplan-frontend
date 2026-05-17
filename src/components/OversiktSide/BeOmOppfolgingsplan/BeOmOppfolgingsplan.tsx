@@ -16,9 +16,11 @@ import { useActionState } from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import type { SykmeldtArbeidsforhold } from "@/schema/oversiktResponseSchemas";
 import { beOmPlanServerAction } from "@/server/actions/beOmPlan";
-import type { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
+import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { TrackedButton } from "@/ui/TrackedButton";
 import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime";
+
+type BeOmPlanState = { error: FetchResultError | null; submitted: boolean };
 
 interface BeOmOppfolgingsplanProps {
   arbeidsforhold: SykmeldtArbeidsforhold[];
@@ -84,15 +86,18 @@ function CanRequestCard({
   arbeidsforhold: SykmeldtArbeidsforhold;
   showOrgName: boolean;
 }) {
-  const [{ error }, beOmPlanAction, isPending] = useActionState(
+  const [{ error, submitted }, beOmPlanAction, isPending] = useActionState(
     innerBeOmPlanAction,
-    { error: null },
+    { error: null, submitted: false } as BeOmPlanState,
   );
 
   async function innerBeOmPlanAction(
-    _previousState: FetchUpdateResult,
-  ): Promise<FetchUpdateResult> {
-    return beOmPlanServerAction(arbeidsforhold.organisasjonsnummer);
+    _previousState: BeOmPlanState,
+  ): Promise<BeOmPlanState> {
+    const result = await beOmPlanServerAction(
+      arbeidsforhold.organisasjonsnummer,
+    );
+    return { error: result.error, submitted: !result.error };
   }
 
   const orgNavn =
@@ -109,27 +114,47 @@ function CanRequestCard({
       </InfoCardHeader>
 
       <InfoCardContent>
-        <BodyLong spacing>
-          {showOrgName
-            ? `Du har ingen oppfølgingsplan hos ${orgNavn}. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan.`
-            : "Du har ingen oppfølgingsplan på denne siden. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan."}
-        </BodyLong>
+        {submitted ? (
+          <>
+            <BodyLong spacing>
+              {showOrgName
+                ? `Du har bedt lederen din hos ${orgNavn} om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen.`
+                : "Du har bedt lederen din om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen."}
+            </BodyLong>
 
-        {error && (
-          <Alert variant="error" size="small" className="mb-4">
-            Noe gikk galt. Prøv igjen senere.
-          </Alert>
+            <div className="flex items-center gap-2" role="status">
+              <CheckmarkCircleFillIcon
+                aria-hidden
+                className="text-[var(--ax-text-success-decoration)] text-2xl shrink-0"
+              />
+              <BodyLong>Varsel sendt til lederen din</BodyLong>
+            </div>
+          </>
+        ) : (
+          <>
+            <BodyLong spacing>
+              {showOrgName
+                ? `Du har ingen oppfølgingsplan hos ${orgNavn}. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan.`
+                : "Du har ingen oppfølgingsplan på denne siden. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan."}
+            </BodyLong>
+
+            {error && (
+              <Alert variant="error" size="small" className="mb-4">
+                Noe gikk galt. Prøv igjen senere.
+              </Alert>
+            )}
+
+            <form action={beOmPlanAction}>
+              <TrackedButton
+                type="submit"
+                tracking={knappKlikket.oversiktSide.beOmOppfolgingsplan}
+                loading={isPending}
+              >
+                Be lederen din om å lage en oppfølgingsplan
+              </TrackedButton>
+            </form>
+          </>
         )}
-
-        <form action={beOmPlanAction}>
-          <TrackedButton
-            type="submit"
-            tracking={knappKlikket.oversiktSide.beOmOppfolgingsplan}
-            loading={isPending}
-          >
-            Be lederen din om å lage en oppfølgingsplan
-          </TrackedButton>
-        </form>
       </InfoCardContent>
     </InfoCard>
   );
@@ -169,7 +194,7 @@ function AlreadyRequestedCard({
         <div className="flex items-center gap-2" role="status">
           <CheckmarkCircleFillIcon
             aria-hidden
-            className="text-icon-success text-2xl shrink-0"
+            className="text-[var(--ax-text-success-decoration)] text-2xl shrink-0"
           />
           <BodyLong>
             {formattedDate
