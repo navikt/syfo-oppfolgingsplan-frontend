@@ -13,7 +13,10 @@ import { getRedirectAfterLoginUrlForSM } from "@/server/auth/redirectToLogin";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchGet } from "@/server/tokenXFetch/tokenXFetchGet";
 import {
+  mockOversiktDataAlreadyRequestedForSM,
+  mockOversiktDataCanRequestForSM,
   mockOversiktDataMedPlanerForSM,
+  mockOversiktDataMissingNLForSM,
   mockOversiktDataTomForSM,
 } from "../mockData/mockOversiktData";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
@@ -26,6 +29,12 @@ export function getMockDataForScenarioSM(scenario: DemoScenario) {
     case "aktiv-og-tidligere":
     case "aktiv-utkast-og-tidligere":
       return mockOversiktDataMedPlanerForSM;
+    case "kan-be-om-plan":
+      return mockOversiktDataCanRequestForSM;
+    case "allerede-bedt-om-plan":
+      return mockOversiktDataAlreadyRequestedForSM;
+    case "mangler-leder":
+      return mockOversiktDataMissingNLForSM;
     default: {
       const _exhaustive: never = scenario;
       throw new Error(`Unknown demo scenario: ${_exhaustive}`);
