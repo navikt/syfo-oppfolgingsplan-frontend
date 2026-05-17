@@ -1,6 +1,17 @@
 "use client";
 
-import { Alert, BodyLong, Heading } from "@navikt/ds-react";
+import {
+  CheckmarkCircleFillIcon,
+  ExclamationmarkTriangleIcon,
+  InformationSquareIcon,
+} from "@navikt/aksel-icons";
+import { Alert, BodyLong } from "@navikt/ds-react";
+import {
+  InfoCard,
+  InfoCardContent,
+  InfoCardHeader,
+  InfoCardTitle,
+} from "@navikt/ds-react/InfoCard";
 import { useActionState } from "react";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import type { SykmeldtArbeidsforhold } from "@/schema/oversiktResponseSchemas";
@@ -88,34 +99,39 @@ function CanRequestCard({
     arbeidsforhold.organisasjonsnavn ?? arbeidsforhold.organisasjonsnummer;
 
   return (
-    <Alert variant="info" className="mb-8">
-      <Heading level="3" size="small" spacing>
-        {showOrgName
-          ? `Be lederen din hos ${orgNavn} om å lage en oppfølgingsplan`
-          : "Be lederen din om å lage en oppfølgingsplan"}
-      </Heading>
-      <BodyLong spacing>
-        {showOrgName
-          ? `Du har ingen oppfølgingsplan hos ${orgNavn}. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan.`
-          : "Du har ingen oppfølgingsplan. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan."}
-      </BodyLong>
+    <InfoCard data-color="info" className="mb-8">
+      <InfoCardHeader icon={<InformationSquareIcon aria-hidden />}>
+        <InfoCardTitle as="h3">
+          {showOrgName
+            ? `Be lederen din hos ${orgNavn} om å lage en oppfølgingsplan`
+            : "Be lederen din om å lage en oppfølgingsplan"}
+        </InfoCardTitle>
+      </InfoCardHeader>
 
-      {error && (
-        <Alert variant="error" size="small" className="mb-4">
-          Noe gikk galt. Prøv igjen senere.
-        </Alert>
-      )}
+      <InfoCardContent>
+        <BodyLong spacing>
+          {showOrgName
+            ? `Du har ingen oppfølgingsplan hos ${orgNavn}. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan.`
+            : "Du har ingen oppfølgingsplan på denne siden. Hvis du mener at det er behov for å lage en plan nå, kan du be lederen din om å begynne på en oppfølgingsplan. Når du trykker på knappen nedenfor sendes et varsel til lederen din om at du trenger en plan."}
+        </BodyLong>
 
-      <form action={beOmPlanAction}>
-        <TrackedButton
-          type="submit"
-          tracking={knappKlikket.oversiktSide.beOmOppfolgingsplan}
-          loading={isPending}
-        >
-          Be lederen din om å lage en oppfølgingsplan
-        </TrackedButton>
-      </form>
-    </Alert>
+        {error && (
+          <Alert variant="error" size="small" className="mb-4">
+            Noe gikk galt. Prøv igjen senere.
+          </Alert>
+        )}
+
+        <form action={beOmPlanAction}>
+          <TrackedButton
+            type="submit"
+            tracking={knappKlikket.oversiktSide.beOmOppfolgingsplan}
+            loading={isPending}
+          >
+            Be lederen din om å lage en oppfølgingsplan
+          </TrackedButton>
+        </form>
+      </InfoCardContent>
+    </InfoCard>
   );
 }
 
@@ -134,18 +150,37 @@ function AlreadyRequestedCard({
     arbeidsforhold.organisasjonsnavn ?? arbeidsforhold.organisasjonsnummer;
 
   return (
-    <Alert variant="success" className="mb-8">
-      <Heading level="3" size="small" spacing>
-        {showOrgName
-          ? `Du har bedt om en oppfølgingsplan hos ${orgNavn}`
-          : "Du har bedt om en oppfølgingsplan"}
-      </Heading>
-      <BodyLong>
-        {formattedDate
-          ? `Du ba lederen din om å lage en oppfølgingsplan ${formattedDate}.`
-          : "Du har allerede bedt lederen din om å lage en oppfølgingsplan."}
-      </BodyLong>
-    </Alert>
+    <div className="mb-8">
+      <InfoCard data-color="info">
+        <InfoCardHeader icon={<InformationSquareIcon aria-hidden />}>
+          <InfoCardTitle as="h3">
+            {showOrgName
+              ? `Be lederen din hos ${orgNavn} om å lage en oppfølgingsplan`
+              : "Be lederen din om å lage en oppfølgingsplan"}
+          </InfoCardTitle>
+        </InfoCardHeader>
+
+        <InfoCardContent>
+          <BodyLong>
+            {showOrgName
+              ? `Du har bedt lederen din hos ${orgNavn} om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen.`
+              : "Du har bedt lederen din om å lage en oppfølgingsplan. Lederen din har fått et varsel og kan begynne på planen."}
+          </BodyLong>
+        </InfoCardContent>
+      </InfoCard>
+
+      <div className="mt-4 flex items-center gap-2" role="status">
+        <CheckmarkCircleFillIcon
+          aria-hidden
+          className="text-icon-success text-2xl shrink-0"
+        />
+        <BodyLong>
+          {formattedDate
+            ? `Varsel sendt til lederen din ${formattedDate}`
+            : "Du har allerede bedt lederen din om å lage en oppfølgingsplan."}
+        </BodyLong>
+      </div>
+    </div>
   );
 }
 
@@ -160,16 +195,21 @@ function MissingNarmesteLederCard({
     arbeidsforhold.organisasjonsnavn ?? arbeidsforhold.organisasjonsnummer;
 
   return (
-    <Alert variant="warning" className="mb-8">
-      <Heading level="3" size="small" spacing>
-        {showOrgName
-          ? `Vi mangler informasjon om nærmeste leder hos ${orgNavn}`
-          : "Vi mangler informasjon om nærmeste leder"}
-      </Heading>
-      <BodyLong>
-        Vi har ikke registrert en nærmeste leder for deg hos {orgNavn}. Ta
-        kontakt med arbeidsgiveren din for å få registrert en nærmeste leder.
-      </BodyLong>
-    </Alert>
+    <InfoCard data-color="warning" className="mb-8">
+      <InfoCardHeader icon={<ExclamationmarkTriangleIcon aria-hidden />}>
+        <InfoCardTitle as="h3">
+          {showOrgName
+            ? `Vi mangler informasjon om nærmeste leder hos ${orgNavn}`
+            : "Vi mangler informasjon om nærmeste leder"}
+        </InfoCardTitle>
+      </InfoCardHeader>
+
+      <InfoCardContent>
+        <BodyLong>
+          Vi har ikke registrert en nærmeste leder for deg hos {orgNavn}. Ta
+          kontakt med arbeidsgiveren din for å få registrert en nærmeste leder.
+        </BodyLong>
+      </InfoCardContent>
+    </InfoCard>
   );
 }

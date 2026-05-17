@@ -52,7 +52,7 @@ describe("BeOmOppfolgingsplan", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Du har ingen oppfølgingsplan\./i),
+      screen.getByText(/Du har ingen oppfølgingsplan på denne siden\./i),
     ).toBeInTheDocument();
   });
 
@@ -71,14 +71,19 @@ describe("BeOmOppfolgingsplan", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Du har bedt om en oppfølgingsplan",
+        name: "Be lederen din om å lage en oppfølgingsplan",
         level: 3,
       }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(/Du ba lederen din om å lage en oppfølgingsplan/i),
+      screen.getByText(
+        /Du har bedt lederen din om å lage en oppfølgingsplan\. Lederen din har fått et varsel og kan begynne på planen\./i,
+      ),
     ).toBeInTheDocument();
+
+    const statusElement = screen.getByRole("status");
+    expect(statusElement).toHaveTextContent(/Varsel sendt til lederen din/i);
 
     // Should not show request button
     expect(
