@@ -32,6 +32,7 @@ export function getMockDataForScenario(scenario: DemoScenario) {
     case "kan-be-om-plan":
     case "allerede-bedt-om-plan":
     case "mangler-leder":
+    case "flere-arbeidsforhold":
       // SM-only scenarios — fallback to default AG data
       return mockOversiktDataTom;
     default: {

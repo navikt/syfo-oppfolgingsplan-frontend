@@ -7,6 +7,7 @@ const VALID_SCENARIOS = [
   "kan-be-om-plan",
   "allerede-bedt-om-plan",
   "mangler-leder",
+  "flere-arbeidsforhold",
 ] as const;
 
 export type DemoScenario = (typeof VALID_SCENARIOS)[number];
@@ -45,4 +46,8 @@ export const SM_SCENARIO_OPTIONS: DemoScenarioOption[] = [
   { value: "kan-be-om-plan", label: "Kan be om oppfølgingsplan" },
   { value: "allerede-bedt-om-plan", label: "Allerede bedt om plan" },
   { value: "mangler-leder", label: "Mangler nærmeste leder" },
+  {
+    value: "flere-arbeidsforhold",
+    label: "Flere arbeidsforhold (ulike statuser)",
+  },
 ];

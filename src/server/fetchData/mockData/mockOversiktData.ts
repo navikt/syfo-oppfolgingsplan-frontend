@@ -38,6 +38,31 @@ const mockSykmeldtArbeidsforholdHasActivePlan: SykmeldtArbeidsforhold = {
   foresporselTidspunkt: null,
 };
 
+const mockSykmeldtArbeidsforholdCanRequestBedrift2: SykmeldtArbeidsforhold = {
+  organisasjonsnummer: "987654321",
+  organisasjonsnavn: "Konsulent Partner AS",
+  narmesteLederNavn: "Kari Hansen",
+  foresporselStatus: "CAN_REQUEST",
+  foresporselTidspunkt: null,
+};
+
+const mockSykmeldtArbeidsforholdAlreadyRequestedBedrift3: SykmeldtArbeidsforhold =
+  {
+    organisasjonsnummer: "555666777",
+    organisasjonsnavn: "Tech Solutions AS",
+    narmesteLederNavn: "Per Olsen",
+    foresporselStatus: "ALREADY_REQUESTED",
+    foresporselTidspunkt: "2025-06-10T09:30:00Z",
+  };
+
+const mockSykmeldtArbeidsforholdMissingNLBedrift4: SykmeldtArbeidsforhold = {
+  organisasjonsnummer: "111222333",
+  organisasjonsnavn: "Varehandel AS",
+  narmesteLederNavn: null,
+  foresporselStatus: "MISSING_NARMESTELEDER",
+  foresporselTidspunkt: null,
+};
+
 export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
   oversikt: {
@@ -88,3 +113,15 @@ export const mockOversiktDataMissingNLForSM: OppfolgingsplanerOversiktForSM = {
   tidligerePlaner: [],
   sykmeldteArbeidsforhold: [mockSykmeldtArbeidsforholdMissingNL],
 };
+
+export const mockOversiktDataFlereArbeidsforholdForSM: OppfolgingsplanerOversiktForSM =
+  {
+    aktiveOppfolgingsplaner: [],
+    tidligerePlaner: [],
+    sykmeldteArbeidsforhold: [
+      mockSykmeldtArbeidsforholdCanRequest,
+      mockSykmeldtArbeidsforholdCanRequestBedrift2,
+      mockSykmeldtArbeidsforholdAlreadyRequestedBedrift3,
+      mockSykmeldtArbeidsforholdMissingNLBedrift4,
+    ],
+  };

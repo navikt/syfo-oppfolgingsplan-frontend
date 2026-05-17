@@ -15,6 +15,7 @@ import { tokenXFetchGet } from "@/server/tokenXFetch/tokenXFetchGet";
 import {
   mockOversiktDataAlreadyRequestedForSM,
   mockOversiktDataCanRequestForSM,
+  mockOversiktDataFlereArbeidsforholdForSM,
   mockOversiktDataMedPlanerForSM,
   mockOversiktDataMissingNLForSM,
   mockOversiktDataTomForSM,
@@ -35,6 +36,8 @@ export function getMockDataForScenarioSM(scenario: DemoScenario) {
       return mockOversiktDataAlreadyRequestedForSM;
     case "mangler-leder":
       return mockOversiktDataMissingNLForSM;
+    case "flere-arbeidsforhold":
+      return mockOversiktDataFlereArbeidsforholdForSM;
     default: {
       const _exhaustive: never = scenario;
       throw new Error(`Unknown demo scenario: ${_exhaustive}`);
