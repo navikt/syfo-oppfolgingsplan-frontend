@@ -29,6 +29,12 @@ export function getMockDataForScenario(scenario: DemoScenario) {
       return mockOversiktDataAktivOgTidligere;
     case "aktiv-utkast-og-tidligere":
       return mockOversiktDataMedPlanerForAG;
+    case "kan-be-om-plan":
+    case "allerede-bedt-om-plan":
+    case "mangler-leder":
+    case "flere-arbeidsforhold":
+      // SM-only scenarios — fallback to default AG data
+      return mockOversiktDataTom;
     default: {
       const _exhaustive: never = scenario;
       throw new Error(`Unknown demo scenario: ${_exhaustive}`);

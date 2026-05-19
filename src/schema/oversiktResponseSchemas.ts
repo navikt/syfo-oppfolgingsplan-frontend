@@ -15,6 +15,28 @@ const oppfolgingsplanMetadataSchema = z.object({
   organization: organizationDetailsSchema,
 });
 
+export const foresporselStatusSchema = z.enum([
+  "CAN_REQUEST",
+  "ALREADY_REQUESTED",
+  "HAS_ACTIVE_PLAN",
+  "MISSING_NARMESTELEDER",
+  "NARMESTELEDER_UNKNOWN",
+]);
+
+export type ForesporselStatus = z.infer<typeof foresporselStatusSchema>;
+
+export const sykmeldtArbeidsforholdSchema = z.object({
+  organisasjonsnummer: z.string(),
+  organisasjonsnavn: z.string().nullable(),
+  narmesteLederNavn: z.string().nullable(),
+  foresporselStatus: foresporselStatusSchema,
+  foresporselTidspunkt: z.string().datetime().nullable(),
+});
+
+export type SykmeldtArbeidsforhold = z.infer<
+  typeof sykmeldtArbeidsforholdSchema
+>;
+
 export const OppfolgingsplanerOversiktResponseSchemaForAG = z.object({
   ...commonResponseFieldsSchema.shape,
   oversikt: z.object({
@@ -31,6 +53,7 @@ export type OppfolgingsplanerOversiktForAG = z.infer<
 export const OppfolgingsplanerOversiktResponseSchemaForSM = z.object({
   aktiveOppfolgingsplaner: z.array(oppfolgingsplanMetadataSchema),
   tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
+  sykmeldteArbeidsforhold: z.array(sykmeldtArbeidsforholdSchema),
 });
 
 export type OppfolgingsplanerOversiktForSM = z.infer<
