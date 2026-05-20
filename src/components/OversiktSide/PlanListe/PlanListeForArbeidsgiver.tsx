@@ -23,7 +23,7 @@ export default async function PlanListeForArbeidsgiver({
 
   if (oversiktResult.error) {
     return (
-      <section className="mb-12">
+      <section className="mb-8">
         <FetchErrorAlert error={oversiktResult.error} />
       </section>
     );
@@ -79,7 +79,7 @@ export default async function PlanListeForArbeidsgiver({
       {/* Backend derives aktivPlan and tidligerePlaner from the same sorted plan list.
         If tidligerePlaner exists, aktivPlan also exists. */}
       {aktivPlan && (
-        <InlineMessage status="info" size="small" className="mt-4">
+        <InlineMessage status="info" className="mt-4">
           Aktive og tidligere oppfølgingsplaner blir utilgjengelige når den
           ansatte ikke har hatt sykmelding hos dere på 6 måneder. Åpne planen og
           velg «Vis PDF» for å lagre en kopi.
