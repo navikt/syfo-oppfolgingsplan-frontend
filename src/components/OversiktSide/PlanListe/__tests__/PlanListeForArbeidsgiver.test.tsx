@@ -250,7 +250,7 @@ describe("PlanListeForArbeidsgiver", () => {
 
     expect(
       screen.getByText(
-        /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+        /Aktive og tidligere oppfølgingsplaner blir utilgjengelige når den ansatte ikke har hatt sykmelding hos dere på 6 måneder/,
       ),
     ).toBeInTheDocument();
   });
@@ -265,7 +265,7 @@ describe("PlanListeForArbeidsgiver", () => {
 
     expect(
       screen.getByText(
-        /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+        /Aktive og tidligere oppfølgingsplaner blir utilgjengelige når den ansatte ikke har hatt sykmelding hos dere på 6 måneder/,
       ),
     ).toBeInTheDocument();
   });
@@ -279,7 +279,7 @@ describe("PlanListeForArbeidsgiver", () => {
     await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
     const matches = screen.getAllByText(
-      /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
+      /Aktive og tidligere oppfølgingsplaner blir utilgjengelige når den ansatte ikke har hatt sykmelding hos dere på 6 måneder/,
     );
     expect(matches).toHaveLength(1);
   });
@@ -293,7 +293,7 @@ describe("PlanListeForArbeidsgiver", () => {
     await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
     expect(
-      screen.queryByText(/Planer blir utilgjengelige/),
+      screen.queryByText(/oppfølgingsplaner blir utilgjengelige/),
     ).not.toBeInTheDocument();
   });
 
@@ -321,7 +321,7 @@ describe("PlanListeForArbeidsgiver", () => {
     await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
     expect(
-      screen.queryByText(/Planer blir utilgjengelige/),
+      screen.queryByText(/oppfølgingsplaner blir utilgjengelige/),
     ).not.toBeInTheDocument();
   });
 });

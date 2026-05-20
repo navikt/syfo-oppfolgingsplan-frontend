@@ -15,15 +15,17 @@ export default async function PlanListeForSykmeldt() {
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
   const harTidligerePlaner = tidligerePlaner.length > 0;
+  // Backend derives aktiveOppfolgingsplaner and tidligerePlaner from the same sorted plan lists per employer.
+  // If tidligerePlaner exists, an active/newest plan also exists.
 
   return (
     <section className="mb-12">
       {!harAktivePlaner && <IngenAktivPlanAlert />}
       {harAktivePlaner && (
         <InlineMessage status="info" size="small" className="mb-4">
-          Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos
-          arbeidsgiveren på 6 måneder. Åpne planen og velg «Vis PDF» for å lagre
-          den.
+          Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke
+          har hatt sykmelding hos arbeidsgiveren på 6 måneder. Åpne planen og
+          velg «Vis PDF» for å lagre en kopi.
         </InlineMessage>
       )}
       {harAktivePlaner && (

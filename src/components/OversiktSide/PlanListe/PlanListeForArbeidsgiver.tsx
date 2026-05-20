@@ -35,6 +35,8 @@ export default async function PlanListeForArbeidsgiver({
   } = oversiktResult.data;
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
+  // Backend derives aktivPlan and tidligerePlaner from the same sorted plan list.
+  // If tidligerePlaner exists, aktivPlan also exists.
 
   const linkCardTitle = orgName || "Oppfølgingsplan";
 
@@ -42,9 +44,9 @@ export default async function PlanListeForArbeidsgiver({
     <section className="mb-12">
       {aktivPlan && (
         <InlineMessage status="info" size="small" className="mb-4">
-          Planer blir utilgjengelige når den ansatte ikke har hatt aktiv
-          sykmelding hos dere på 6 måneder. Åpne planen og velg «Vis PDF» for å
-          lagre den.
+          Aktive og tidligere oppfølgingsplaner blir utilgjengelige når den
+          ansatte ikke har hatt sykmelding hos dere på 6 måneder. Åpne planen og
+          velg «Vis PDF» for å lagre en kopi.
         </InlineMessage>
       )}
       {aktivPlan && (

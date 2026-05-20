@@ -42,7 +42,7 @@ describe("PlanListeForSykmeldt", () => {
 
     expect(
       screen.getByText(
-        /Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos arbeidsgiveren på 6 måneder/,
+        /Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke har hatt sykmelding hos arbeidsgiveren på 6 måneder/,
       ),
     ).toBeInTheDocument();
   });
@@ -65,7 +65,7 @@ describe("PlanListeForSykmeldt", () => {
     await renderAsync(PlanListeForSykmeldt());
 
     expect(
-      screen.queryByText(/Planer blir utilgjengelige/),
+      screen.queryByText(/oppfølgingsplaner blir utilgjengelige/),
     ).not.toBeInTheDocument();
   });
 
@@ -76,7 +76,7 @@ describe("PlanListeForSykmeldt", () => {
 
     expect(
       screen.getByText(
-        /Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos arbeidsgiveren på 6 måneder/,
+        /Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke har hatt sykmelding hos arbeidsgiveren på 6 måneder/,
       ),
     ).toBeInTheDocument();
   });
@@ -87,7 +87,7 @@ describe("PlanListeForSykmeldt", () => {
     await renderAsync(PlanListeForSykmeldt());
 
     const matches = screen.getAllByText(
-      /Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos arbeidsgiveren på 6 måneder/,
+      /Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke har hatt sykmelding hos arbeidsgiveren på 6 måneder/,
     );
     expect(matches).toHaveLength(1);
   });

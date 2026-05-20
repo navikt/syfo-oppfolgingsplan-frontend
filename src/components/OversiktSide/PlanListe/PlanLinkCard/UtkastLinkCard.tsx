@@ -1,6 +1,12 @@
 "use client";
 
-import { BodyShort, InlineMessage, LinkCard, Tag } from "@navikt/ds-react";
+import {
+  BodyShort,
+  InlineMessage,
+  LinkCard,
+  Tag,
+  VStack,
+} from "@navikt/ds-react";
 import {
   LinkCardAnchor,
   LinkCardDescription,
@@ -59,14 +65,16 @@ export default function UtkastLinkPanel({
         </LinkCardAnchor>
       </LinkCardTitle>
       <LinkCardDescription>
-        <BodyShort size="small">
-          <em>Sist lagret {utkastSistLagretFormatted}.</em>
-        </BodyShort>
-        <InlineMessage status="warning" size="small">
-          {utkastUtloperDato
-            ? `Utkastet slettes ${getFormattedDateString(utkastUtloperDato)} hvis dere ikke gjør endringer innen da.`
-            : "Utkastet slettes automatisk 4 måneder etter siste lagring."}
-        </InlineMessage>
+        <VStack gap="space-8">
+          <BodyShort size="small">
+            <em>Sist lagret {utkastSistLagretFormatted}.</em>
+          </BodyShort>
+          <InlineMessage status="warning" size="small">
+            {utkastUtloperDato
+              ? `Utkastet slettes ${getFormattedDateString(utkastUtloperDato)} hvis dere ikke gjør endringer innen da.`
+              : "Utkastet slettes automatisk 4 måneder etter siste lagring."}
+          </InlineMessage>
+        </VStack>
       </LinkCardDescription>
       <LinkCardFooter>
         <Tag data-color="neutral" variant="moderate" size="small">
