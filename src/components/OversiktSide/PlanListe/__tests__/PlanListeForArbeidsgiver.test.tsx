@@ -324,4 +324,26 @@ describe("PlanListeForArbeidsgiver", () => {
       screen.queryByText(/oppfølgingsplaner blir utilgjengelige/),
     ).not.toBeInTheDocument();
   });
+
+  test("6-month info message renders after plan cards, not before", async () => {
+    mockFetch.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataMedPlanerForAG,
+    });
+
+    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+    const previousPlansHeading = screen.getByRole("heading", {
+      name: /Tidligere oppfølgingsplaner/i,
+    });
+    const infoMessage = screen.getByText(
+      /oppfølgingsplaner blir utilgjengelige/,
+    );
+
+    // InlineMessage should come after the previous plans heading in DOM order
+    expect(
+      previousPlansHeading.compareDocumentPosition(infoMessage) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
 });

@@ -91,4 +91,23 @@ describe("PlanListeForSykmeldt", () => {
     );
     expect(matches).toHaveLength(1);
   });
+
+  test("6-month info message renders after plan cards, not before", async () => {
+    mockFetch.mockResolvedValue(mockOversiktDataMedPlanerForSM);
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    const previousPlansHeading = screen.getByRole("heading", {
+      name: /Tidligere oppfølgingsplaner/i,
+    });
+    const infoMessage = screen.getByText(
+      /oppfølgingsplaner blir utilgjengelige/,
+    );
+
+    // InlineMessage should come after the previous plans heading in DOM order
+    expect(
+      previousPlansHeading.compareDocumentPosition(infoMessage) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
 });
