@@ -1,6 +1,12 @@
 "use client";
 
-import { BodyShort, LinkCard, Tag } from "@navikt/ds-react";
+import {
+  BodyShort,
+  InlineMessage,
+  LinkCard,
+  Tag,
+  VStack,
+} from "@navikt/ds-react";
 import {
   LinkCardAnchor,
   LinkCardDescription,
@@ -13,6 +19,7 @@ import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
 import type { UtkastMetadata } from "@/schema/utkastMetadataSchema";
 import {
   getFormattedDateAndTimeString,
+  getFormattedDateString,
   getFormattedTimeString,
 } from "@/ui-helpers/dateAndTime";
 import { isDateToday } from "@/utils/dateAndTime/dateUtils";
@@ -24,7 +31,7 @@ interface Props {
 }
 
 export default function UtkastLinkPanel({
-  utkast: { sistLagretTidspunkt },
+  utkast: { sistLagretTidspunkt, utkastUtloperDato },
   linkCardTitle,
   narmesteLederId,
 }: Props) {
@@ -58,9 +65,16 @@ export default function UtkastLinkPanel({
         </LinkCardAnchor>
       </LinkCardTitle>
       <LinkCardDescription>
-        <BodyShort size="small">
-          <em>Sist lagret {utkastSistLagretFormatted}.</em>
-        </BodyShort>
+        <VStack gap="space-8">
+          <BodyShort size="small">
+            <em>Sist lagret {utkastSistLagretFormatted}.</em>
+          </BodyShort>
+          <InlineMessage status="warning" size="small">
+            {utkastUtloperDato
+              ? `Utkastet slettes ${getFormattedDateString(utkastUtloperDato)} hvis dere ikke gjør endringer innen da.`
+              : "Utkastet slettes automatisk 4 måneder etter siste lagring."}
+          </InlineMessage>
+        </VStack>
       </LinkCardDescription>
       <LinkCardFooter>
         <Tag data-color="neutral" variant="moderate" size="small">

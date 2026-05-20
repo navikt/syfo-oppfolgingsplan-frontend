@@ -1,4 +1,4 @@
-import { BodyShort, VStack } from "@navikt/ds-react";
+import { InlineMessage, VStack } from "@navikt/ds-react";
 import {
   getSMAktivPlanHref,
   getSMTidligerePlanHref,
@@ -17,7 +17,7 @@ export default async function PlanListeForSykmeldt() {
   const harTidligerePlaner = tidligerePlaner.length > 0;
 
   return (
-    <section className="mb-12">
+    <section className="mb-8">
       {!harAktivePlaner && <IngenAktivPlanAlert />}
       {harAktivePlaner && (
         <PlanListeDel>
@@ -37,10 +37,6 @@ export default async function PlanListeForSykmeldt() {
       )}
       {harTidligerePlaner && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
-          <BodyShort size="small" textColor="subtle" className="mb-4">
-            Tidligere planer er tilgjengelige i 4 måneder etter at du er
-            friskmeldt.
-          </BodyShort>
           <VStack gap="space-16">
             {tidligerePlaner.map((plan) => (
               <TidligerePlanLinkCard
@@ -54,6 +50,15 @@ export default async function PlanListeForSykmeldt() {
             ))}
           </VStack>
         </PlanListeDel>
+      )}
+      {/* Backend derives aktiveOppfolgingsplaner and tidligerePlaner from the same sorted plan lists per employer.
+        If tidligerePlaner exists, an active/newest plan also exists. */}
+      {harAktivePlaner && (
+        <InlineMessage status="info" className="mt-4">
+          Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke
+          har hatt sykmelding hos arbeidsgiveren på 6 måneder. Åpne planen og
+          velg «Vis PDF» for å lagre en kopi.
+        </InlineMessage>
       )}
     </section>
   );
