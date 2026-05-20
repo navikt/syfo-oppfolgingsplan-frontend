@@ -40,9 +40,3 @@ export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [mockAktivPlanData],
   tidligerePlaner: [],
 };
-
-export const mockOversiktDataOnlyPreviousForSM: OppfolgingsplanerOversiktForSM =
-  {
-    aktiveOppfolgingsplaner: [],
-    tidligerePlaner: mockTidligerePlanerData,
-  };

@@ -200,7 +200,7 @@ describe("PlanListeForArbeidsgiver", () => {
     // or "28. februar 2026" (year shown when different from current year)
     expect(
       screen.getByText(
-        /^Utkastet slettes 28\. februar( 2026)? hvis du ikke gjør endringer\.$/,
+        /^Utkastet slettes 28\. februar( 2026)? hvis dere ikke gjør endringer innen da\.$/,
       ),
     ).toBeInTheDocument();
     expect(
@@ -259,21 +259,6 @@ describe("PlanListeForArbeidsgiver", () => {
     mockFetch.mockResolvedValue({
       error: null,
       data: mockOversiktDataOnlyActivePlan,
-    });
-
-    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
-
-    expect(
-      screen.getByText(
-        /Planer blir utilgjengelige når den ansatte ikke har hatt aktiv sykmelding hos dere på 6 måneder/,
-      ),
-    ).toBeInTheDocument();
-  });
-
-  test("displays 6-month AG text when only previous plans exist (no active plan)", async () => {
-    mockFetch.mockResolvedValue({
-      error: null,
-      data: mockOversiktDataOnlyPreviousPlans,
     });
 
     await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));

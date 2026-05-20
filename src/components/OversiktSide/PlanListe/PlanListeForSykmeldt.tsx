@@ -1,4 +1,4 @@
-import { BodyShort, VStack } from "@navikt/ds-react";
+import { InlineMessage, VStack } from "@navikt/ds-react";
 import {
   getSMAktivPlanHref,
   getSMTidligerePlanHref,
@@ -15,17 +15,16 @@ export default async function PlanListeForSykmeldt() {
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
   const harTidligerePlaner = tidligerePlaner.length > 0;
-  const harPlaner = harAktivePlaner || harTidligerePlaner;
 
   return (
     <section className="mb-12">
       {!harAktivePlaner && <IngenAktivPlanAlert />}
-      {harPlaner && (
-        <BodyShort size="small" textColor="subtle" className="mb-4">
+      {harAktivePlaner && (
+        <InlineMessage status="info" size="small" className="mb-4">
           Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos
-          arbeidsgiveren på 6 måneder. Du kan lagre planen som PDF hvis du vil
-          ta vare på den.
-        </BodyShort>
+          arbeidsgiveren på 6 måneder. Åpne planen og velg «Vis PDF» for å lagre
+          den.
+        </InlineMessage>
       )}
       {harAktivePlaner && (
         <PlanListeDel>

@@ -4,7 +4,6 @@ import PlanListeForSykmeldt from "@/components/OversiktSide/PlanListe/PlanListeF
 import {
   mockOversiktDataMedPlanerForSM,
   mockOversiktDataOnlyActiveForSM,
-  mockOversiktDataOnlyPreviousForSM,
   mockOversiktDataTomForSM,
 } from "@/server/fetchData/mockData/mockOversiktData";
 import { fetchOppfolgingsplanOversiktForSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
@@ -72,18 +71,6 @@ describe("PlanListeForSykmeldt", () => {
 
   test("displays 6-month SM text when only active plans exist (no previous plans)", async () => {
     mockFetch.mockResolvedValue(mockOversiktDataOnlyActiveForSM);
-
-    await renderAsync(PlanListeForSykmeldt());
-
-    expect(
-      screen.getByText(
-        /Planer blir utilgjengelige når du ikke har hatt aktiv sykmelding hos arbeidsgiveren på 6 måneder/,
-      ),
-    ).toBeInTheDocument();
-  });
-
-  test("displays 6-month SM text when only previous plans exist (no active plans)", async () => {
-    mockFetch.mockResolvedValue(mockOversiktDataOnlyPreviousForSM);
 
     await renderAsync(PlanListeForSykmeldt());
 
