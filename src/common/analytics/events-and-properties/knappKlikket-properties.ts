@@ -6,6 +6,11 @@ export const knappKlikket = {
       tekst: "Lag en ny oppfølgingsplan",
       kontekst: "OversiktSide",
     },
+    beOmOppfolgingsplan: {
+      komponentId: "be-om-oppfolgingsplan-knapp",
+      tekst: "Be lederen din om å lage en oppfølgingsplan",
+      kontekst: "OversiktSide",
+    },
     slettUtkastModalTrigger: {
       komponentId: "slett-utkast-modal-trigger-knapp",
       tekst: "Slett utkast",

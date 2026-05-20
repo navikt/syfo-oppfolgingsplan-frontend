@@ -42,3 +42,9 @@ export const getEndpointPDFForAG = (
 // Lumi survey submissions (sendes til eksisterende endpoint i backend)
 export const getLumiSurveyFeedbackEndpoint = () =>
   `${getServerEnv().LUMI_API_HOST}/api/tokenx/v1/feedback`;
+
+// Sykmeldt-endepunkter
+const getSMEndpointPrefix = () =>
+  `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt`;
+
+export const getEndpointBeOmPlan = () => `${getSMEndpointPrefix()}/be-om-plan`;

@@ -3,14 +3,14 @@ import {
   getSMAktivPlanHref,
   getSMTidligerePlanHref,
 } from "@/common/route-hrefs";
-import { IngenAktivPlanAlert } from "@/components/OversiktSide/IngenAktivPlanAlert";
+import { BeOmOppfolgingsplan } from "@/components/OversiktSide/BeOmOppfolgingsplan/BeOmOppfolgingsplan";
 import { fetchOppfolgingsplanOversiktForSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import PlanListeDel from "./PlanListeDel";
 
 export default async function PlanListeForSykmeldt() {
-  const { aktiveOppfolgingsplaner, tidligerePlaner } =
+  const { aktiveOppfolgingsplaner, tidligerePlaner, sykmeldteArbeidsforhold } =
     await fetchOppfolgingsplanOversiktForSM();
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
@@ -18,7 +18,7 @@ export default async function PlanListeForSykmeldt() {
 
   return (
     <section className="mb-12">
-      {!harAktivePlaner && <IngenAktivPlanAlert />}
+      <BeOmOppfolgingsplan arbeidsforhold={sykmeldteArbeidsforhold} />
       {harAktivePlaner && (
         <PlanListeDel>
           <VStack gap="space-16">
