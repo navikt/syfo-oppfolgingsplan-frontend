@@ -3,5 +3,6 @@ allowBuilds:
   lefthook: false
   protobufjs: false
   sharp: false
-overrides:
-  undici: ^7.24.0
+
+minimumReleaseAge: 4320
+blockExoticSubdeps: true
