@@ -12,8 +12,8 @@ importers:
         specifier: ^2.7.1
         version: 2.7.1
       '@grafana/faro-web-tracing':
-        specifier: ^2.7.0
-        version: 2.7.0
+        specifier: ^2.7.1
+        version: 2.7.1
       '@navikt/aksel-icons':
         specifier: ^8.11.1
         version: 8.11.1
@@ -319,8 +319,8 @@ packages:
   '@grafana/faro-web-sdk@2.7.1':
     resolution: {integrity: sha512-ZK3MuE6FWBmiT5tTivcMovTVe8fG1tPm1ctc84blVoJkpQXlgODxOX7/fNmDBOjaHZ3EWdoGplZmjoXQ3g0mDw==}
 
-  '@grafana/faro-web-tracing@2.7.0':
-    resolution: {integrity: sha512-k6eIJeLwm60FpCB+OevL+VLqnoibtCsnozs3ZCQpiUMt6G2PUIQ6/wkHfSEF46R2H+AuVB3nk9oHUKpS5o2wQQ==}
+  '@grafana/faro-web-tracing@2.7.1':
+    resolution: {integrity: sha512-BCgFfxme4geu3glzHTbgdQpt1foKLS7Vu+jtuTYtelmR6VWBNcgrmrrzzOfJKTEmruk3Sq7SLM6/iAQS4CV1zA==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -2060,7 +2060,7 @@ snapshots:
       ua-parser-js: 1.0.41
       web-vitals: 5.3.0
 
-  '@grafana/faro-web-tracing@2.7.0':
+  '@grafana/faro-web-tracing@2.7.1':
     dependencies:
       '@grafana/faro-web-sdk': 2.7.1
       '@opentelemetry/api': 1.9.1
