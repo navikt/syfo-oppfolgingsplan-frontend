@@ -55,8 +55,8 @@ export function DemoScenarioPicker({
       <Box
         position="fixed"
         style={{
-          bottom: "var(--a-spacing-6)",
-          right: "var(--a-spacing-6)",
+          bottom: "var(--ax-space-24)",
+          right: "var(--ax-space-24)",
           zIndex: 100,
         }}
       >

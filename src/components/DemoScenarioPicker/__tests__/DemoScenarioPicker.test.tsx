@@ -174,11 +174,11 @@ describe("DemoScenarioPicker", () => {
       mockEnv.isLocalOrDemo = false;
 
       render(
-        <>
+        <div>
           {isLocalOrDemo && (
             <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
           )}
-        </>,
+        </div>,
       );
 
       expect(
@@ -190,11 +190,11 @@ describe("DemoScenarioPicker", () => {
       mockEnv.isLocalOrDemo = true;
 
       render(
-        <>
+        <div>
           {isLocalOrDemo && (
             <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
           )}
-        </>,
+        </div>,
       );
 
       expect(screen.getByRole("button", { name: /demo/i })).toBeInTheDocument();
