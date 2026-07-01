@@ -5,8 +5,5 @@ export function hasMedvirket(content: FormSnapshot): boolean {
     .flatMap((s) => s.fields)
     .find((f) => f.fieldId === "harDenAnsatteMedvirket");
 
-  if (!field || field.fieldType !== "RADIO_GROUP") {
-    return false;
-  }
-  return field.selectedOptionId === "ja";
+  return field?.fieldType === "RADIO_GROUP" && field.selectedOptionId === "ja";
 }
