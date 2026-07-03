@@ -26,7 +26,7 @@ export function AktivPlanButtons({ planId, hasUtkast }: Props) {
           onClick={() => lagNyPlanModalRef.current?.showModal()}
           tracking={knappKlikket.aktivPlanSide.lagNyOppfolgingsplanModalTrigger}
         >
-          Lag ny oppfølgingsplan
+          Oppdater planen
         </TrackedButton>
 
         <VisPdfButtonAG narmesteLederId={narmesteLederId} planId={planId} />

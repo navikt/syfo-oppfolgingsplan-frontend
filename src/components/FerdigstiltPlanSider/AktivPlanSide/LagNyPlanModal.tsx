@@ -60,7 +60,7 @@ export function LagNyPlanModal({ ref, hasUtkast }: Props) {
     <Modal
       ref={ref}
       header={{
-        heading: "Lag ny oppfølgingsplan",
+        heading: "Oppdater planen",
       }}
       closeOnBackdropClick={!isPending}
       onBeforeClose={() => !isPending}
