@@ -78,7 +78,7 @@ describe("LagNyPlanModal", () => {
     render(<LagNyPlanModal ref={{ current: null }} hasUtkast={false} />);
 
     expect(
-      screen.getByRole("heading", { name: /Lag ny oppfølgingsplan/i }),
+      screen.getByRole("heading", { name: /Oppdater planen/i }),
     ).toBeInTheDocument();
   });
 

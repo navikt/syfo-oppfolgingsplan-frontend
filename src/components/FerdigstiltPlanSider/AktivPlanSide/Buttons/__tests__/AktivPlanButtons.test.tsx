@@ -34,7 +34,7 @@ describe("AktivPlanButtons", () => {
     render(<AktivPlanButtons planId="plan-123" hasUtkast={false} />);
 
     expect(
-      screen.getByRole("button", { name: /Lag ny oppfølgingsplan/i }),
+      screen.getByRole("button", { name: /Oppdater planen/i }),
     ).toBeInTheDocument();
   });
 
