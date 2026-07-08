@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "^2.8.2",
-    "@grafana/faro-web-tracing": "^2.8.1",
+    "@grafana/faro-web-tracing": "^2.8.2",
     "@navikt/aksel-icons": "^8.14.0",
     "@navikt/analytics-types": "^0.0.9",
     "@navikt/dinesykmeldte-sidemeny": "^8.0.0",
