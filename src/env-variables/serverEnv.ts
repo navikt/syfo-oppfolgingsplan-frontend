@@ -8,6 +8,7 @@ export const serverEnvSchema = z.object({
   // Provided by nais-*.yaml
   SYFO_OPPFOLGINGSPLAN_BACKEND_HOST: z.string(),
   SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID: z.string(),
+  FLAGGSKIPET_HOST: z.string(),
   LUMI_API_HOST: z.string(),
   LUMI_API_CLIENT_ID: z.string(),
   // Provided by nais
@@ -25,6 +26,7 @@ const rawServerEnv = {
     process.env.SYFO_OPPFOLGINGSPLAN_BACKEND_HOST,
   SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID:
     process.env.SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID,
+  FLAGGSKIPET_HOST: process.env.FLAGGSKIPET_HOST,
   LUMI_API_HOST: process.env.LUMI_API_HOST,
   LUMI_API_CLIENT_ID: process.env.LUMI_API_CLIENT_ID,
 
