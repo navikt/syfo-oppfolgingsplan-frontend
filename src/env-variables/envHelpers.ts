@@ -4,6 +4,8 @@ export const isLocalOrDemo =
   process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT === "local" ||
   process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT === "demo";
 
+export const isNotProd = process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT !== "prod";
+
 export function throwEnvSchemaParsingError(e: unknown): never {
   if (e instanceof z.ZodError) {
     throw new Error(

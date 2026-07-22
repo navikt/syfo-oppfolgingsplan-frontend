@@ -21,11 +21,6 @@ vi.mock("next/navigation", async () => {
 
   return mockNextNavigation();
 });
-vi.mock("@/env-variables/publicEnv", () => ({
-  publicEnv: {
-    NEXT_PUBLIC_RUNTIME_ENVIRONMENT: "dev",
-  },
-}));
 vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
   erOrgINavTiltaksgruppe: vi.fn(),
 }));

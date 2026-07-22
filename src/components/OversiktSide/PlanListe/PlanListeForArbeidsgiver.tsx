@@ -1,9 +1,10 @@
 import { InlineMessage, VStack } from "@navikt/ds-react";
+import { logger } from "@navikt/next-logger";
 import {
   getAGAktivPlanHref,
   getAGTidligerePlanHref,
 } from "@/common/route-hrefs";
-import { publicEnv } from "@/env-variables/publicEnv";
+import { isNotProd } from "@/env-variables/envHelpers";
 import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
@@ -36,7 +37,16 @@ export default async function PlanListeForArbeidsgiver({
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
 
-  if (publicEnv.NEXT_PUBLIC_RUNTIME_ENVIRONMENT !== "prod") {
+  if (isNotProd) {
+    logger.info(
+      {
+        event_type: "flaggskipet_vurdering_callsite",
+        orgnummer: orgNumber,
+        runtimeEnvironment:
+          process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT ?? "unknown",
+      },
+      "flaggskipet_vurdering_callsite",
+    );
     await erOrgINavTiltaksgruppe(orgNumber);
   }
 
