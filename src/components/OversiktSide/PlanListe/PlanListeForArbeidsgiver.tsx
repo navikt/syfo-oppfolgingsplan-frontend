@@ -3,6 +3,8 @@ import {
   getAGAktivPlanHref,
   getAGTidligerePlanHref,
 } from "@/common/route-hrefs";
+import { publicEnv } from "@/env-variables/publicEnv";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
@@ -30,9 +32,13 @@ export default async function PlanListeForArbeidsgiver({
   }
 
   const {
-    organization: { orgName },
+    organization: { orgName, orgNumber },
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
+
+  if (publicEnv.NEXT_PUBLIC_RUNTIME_ENVIRONMENT !== "prod") {
+    await erOrgINavTiltaksgruppe(orgNumber);
+  }
 
   const harTidligerePlaner = tidligerePlaner.length > 0;
 
