@@ -37,7 +37,11 @@ export default async function OversiktPageForAG({
     organization: { orgNumber },
   } = oversiktResult.data;
 
-  console.log(erOrgINavTiltaksgruppe(orgNumber));
+  console.log("Før fetch av erOrgINavTiltaksgruppe");
+  erOrgINavTiltaksgruppe(orgNumber).then((result) => {
+    console.log("Etter call :", result);
+  });
+
   return (
     <>
       <Heading level="2" size="xlarge" spacing>
