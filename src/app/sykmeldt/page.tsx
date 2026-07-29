@@ -8,7 +8,6 @@ import {
 } from "@navikt/ds-react/InfoCard";
 import { Suspense } from "react";
 import TextContentBox from "@/components/layout/TextContentBox.tsx";
-import { LenkeTilGamlePlanenSM } from "@/components/OversiktSide/LenkeTilGamlePlanenSM";
 import PlanListeForSykmeldt from "@/components/OversiktSide/PlanListe/PlanListeForSykmeldt.tsx";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton.tsx";
 
@@ -46,8 +45,6 @@ export default async function OversiktPageForSM(_: PageProps<"/sykmeldt">) {
       <Suspense fallback={<PlanListeSkeleton />}>
         <PlanListeForSykmeldt />
       </Suspense>
-
-      <LenkeTilGamlePlanenSM />
     </>
   );
 }
