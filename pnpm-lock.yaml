@@ -21,8 +21,8 @@ importers:
         specifier: ^0.0.9
         version: 0.0.9
       '@navikt/dinesykmeldte-sidemeny':
-        specifier: ^8.0.0
-        version: 8.0.0(@navikt/aksel-icons@8.15.0)(@navikt/ds-react@8.15.0(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^8.0.1
+        version: 8.0.1(@navikt/aksel-icons@8.15.0)(@navikt/ds-react@8.15.0(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@navikt/ds-css':
         specifier: ^8.15.0
         version: 8.15.0
@@ -507,8 +507,8 @@ packages:
     resolution: {integrity: sha512-bopCvqEogyFcmrJiBxK/Mr25d6yPKF7GR36MGrJqiHCPJYf1rDu6lK4cpooTG4Q//D/1xTkHRom8ZH5BI6dTew==, tarball: https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.9/5919241a6dbb782eb101fff3234ce5c36d16e942}
     engines: {node: '>=20.0.0', npm: '>=9.0.0'}
 
-  '@navikt/dinesykmeldte-sidemeny@8.0.0':
-    resolution: {integrity: sha512-fc6cytwkdVBMWoB7bwD5i1G9pLOJkjjBBaTy7uyE84NARQnXSjHjZd+uKqBVJVuy2bXsnQAf73m97rxTkLXvOg==, tarball: https://npm.pkg.github.com/download/@navikt/dinesykmeldte-sidemeny/8.0.0/ded8be8b2a2d731d59b66b456b0bd7a666060995}
+  '@navikt/dinesykmeldte-sidemeny@8.0.1':
+    resolution: {integrity: sha512-pAgfbDCCAn/c1Kv7TmRwcz5wlTHU/xYuQDsHnQ/8En6/U1USTlNjRamxn3c5ImDIQ+CTIdrK3A42P0yNsG0q8g==, tarball: https://npm.pkg.github.com/download/@navikt/dinesykmeldte-sidemeny/8.0.1/468846b49c536368fe03a6923dd9ba3687dee8f1}
     peerDependencies:
       '@navikt/aksel-icons': ^8.0.0
       '@navikt/ds-react': ^8.0.0
@@ -2308,7 +2308,7 @@ snapshots:
 
   '@navikt/analytics-types@0.0.9': {}
 
-  '@navikt/dinesykmeldte-sidemeny@8.0.0(@navikt/aksel-icons@8.15.0)(@navikt/ds-react@8.15.0(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@navikt/dinesykmeldte-sidemeny@8.0.1(@navikt/aksel-icons@8.15.0)(@navikt/ds-react@8.15.0(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(clsx@2.1.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@navikt/aksel-icons': 8.15.0
       '@navikt/ds-react': 8.15.0(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

@@ -8,7 +8,7 @@ describe("ArbeidsgiverPageContainer", () => {
     cleanup();
   });
 
-  test("links Oppfolgingsplaner to the new app", () => {
+  test("uses the sidemeny route to link Oppfolgingsplaner to the new app", () => {
     render(
       <ArbeidsgiverPageContainer
         narmesteLederId="test-leder-id"
@@ -25,7 +25,10 @@ describe("ArbeidsgiverPageContainer", () => {
 
     expect(oppfolgingsplanLinks).toHaveLength(2);
     for (const link of oppfolgingsplanLinks) {
-      expect(link).toHaveAttribute("href", "/test-leder-id");
+      expect(link).toHaveAttribute(
+        "href",
+        "/syk/oppfolgingsplan/test-leder-id",
+      );
     }
   });
 });

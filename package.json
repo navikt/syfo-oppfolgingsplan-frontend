@@ -21,7 +21,7 @@
     "@grafana/faro-web-tracing": "^2.8.2",
     "@navikt/aksel-icons": "^8.15.0",
     "@navikt/analytics-types": "^0.0.9",
-    "@navikt/dinesykmeldte-sidemeny": "^8.0.0",
+    "@navikt/dinesykmeldte-sidemeny": "^8.0.1",
     "@navikt/ds-css": "^8.15.0",
     "@navikt/ds-react": "^8.15.0",
     "@navikt/ds-tailwind": "^8.15.0",
