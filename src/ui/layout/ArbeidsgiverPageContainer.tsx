@@ -6,7 +6,9 @@ import {
   RootPages,
   SideMenu,
 } from "@navikt/dinesykmeldte-sidemeny";
+import Link from "next/link";
 import type { ReactNode } from "react";
+import { getAGOversiktHref } from "@/common/route-hrefs";
 
 interface Props {
   narmesteLederId: string;
@@ -41,7 +43,14 @@ export const ArbeidsgiverPageContainer = ({
             Sykmeldinger: 0,
             Meldinger: false,
             Dialogmoter: 0,
-            Oppfolgingsplaner: 0,
+            Oppfolgingsplaner: {
+              notifications: 0,
+              internalRoute: ({ children, ...rest }) => (
+                <Link {...rest} href={getAGOversiktHref(narmesteLederId)}>
+                  {children}
+                </Link>
+              ),
+            },
             DineSykmeldte: 0,
           }}
         />
