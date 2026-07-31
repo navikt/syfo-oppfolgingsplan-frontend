@@ -1,5 +1,6 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { mockOversiktDataMedPlanerForAG } from "@/server/fetchData/mockData/mockOversiktData";
 import {
@@ -12,6 +13,10 @@ import {
 import { renderAsync } from "@/test/test-utils";
 import NyPlanButtonHvisTomListe from "../NyPlanButtonHvisTomListe";
 
+const envMock = vi.hoisted(() => ({
+  isLocalOrDemo: false,
+}));
+
 vi.mock("next/navigation", async () => {
   const { mockNextNavigation } = await import(
     "@/test/mocks/nextNavigationMock"
@@ -20,11 +25,24 @@ vi.mock("next/navigation", async () => {
   return mockNextNavigation();
 });
 
+vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
+  erOrgINavTiltaksgruppe: vi.fn(),
+}));
+
+vi.mock("@/env-variables/envHelpers", () => ({
+  get isLocalOrDemo() {
+    return envMock.isLocalOrDemo;
+  },
+}));
+
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
+const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
 
 describe("NyPlanButtonHvisTomListe", () => {
   beforeEach(() => {
+    envMock.isLocalOrDemo = false;
     vi.clearAllMocks();
+    mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
   });
 
   afterEach(() => {
@@ -133,9 +151,103 @@ describe("NyPlanButtonHvisTomListe", () => {
 
     await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
 
-    // Component returns null, button should not be present
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
     ).not.toBeInTheDocument();
+  });
+
+  describe("Flaggskipet-gating", () => {
+    test("kaller ikke Flaggskipet når listen ikke er tom (aktiv plan)", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataOnlyActivePlan,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    });
+
+    test("kaller ikke Flaggskipet når listen ikke er tom (utkast)", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataOnlyDraft,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    });
+
+    test("kaller ikke Flaggskipet når listen ikke er tom (tidligere planer)", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataOnlyPreviousPlans,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    });
+
+    test("kaller ikke Flaggskipet når bruker mangler edit access", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataEmptyNoAccess,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    });
+
+    test("kaller ikke Flaggskipet i ikke-local/demo-miljø selv om tom liste og edit access", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataEmptyWithAccess,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    });
+
+    test("viser lokal behovsvurdering når local/demo, tom liste, edit access og tiltaksgruppe", async () => {
+      envMock.isLocalOrDemo = true;
+      mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataEmptyWithAccess,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
+      expect(
+        screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Oppfølgingsplan er ikke aktuell nå/i),
+      ).toBeInTheDocument();
+    });
+
+    test("viser ikke lokal behovsvurdering når local/demo og org ikke er i tiltaksgruppe", async () => {
+      envMock.isLocalOrDemo = true;
+      mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataEmptyWithAccess,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
+      expect(
+        screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText(/Oppfølgingsplan er ikke aktuell nå/i),
+      ).not.toBeInTheDocument();
+    });
   });
 });

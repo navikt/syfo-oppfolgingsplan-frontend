@@ -36,7 +36,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     vi.doUnmock("@/env-variables/serverEnv");
   });
 
-  test("sends POST request to Flaggskipet with only orgnumre and no Authorization header", async () => {
+  test("sends POST request to Flaggskipet with only orgnumre, timeout signal and no Authorization header", async () => {
     const fetchMock = vi
       .fn<typeof fetch>()
       .mockResolvedValue(jsonResponse(mockFlaggskipetVurderingTiltaksgruppe));
@@ -65,6 +65,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     expect(headers["Nav-Consumer-Id"]).toBe("syfo-oppfolgingsplan-frontend");
     expect(headers["Nav-Call-Id"]).toEqual(expect.any(String));
     expect(headers.Authorization).toBeUndefined();
+    expect(requestInit.signal).toBeInstanceOf(AbortSignal);
   });
 
   test("returns error result when Flaggskipet responds with non-ok status", async () => {
@@ -113,10 +114,57 @@ describe("fetchTiltakspakkeVurdering", () => {
     });
   });
 
+  test("returns network error result when Flaggskipet times out", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn<typeof fetch>()
+        .mockRejectedValue(new DOMException("Timed out", "TimeoutError")),
+    );
+    const { fetchTiltakspakkeVurdering } = await importFetcher({
+      isLocalOrDemo: false,
+    });
+
+    const result = await fetchTiltakspakkeVurdering("123456789");
+
+    expect(result).toEqual({
+      error: {
+        type: "FETCH_NETWORK_ERROR",
+      },
+      data: null,
+    });
+  });
+
   test("returns invalid response error when Flaggskipet response does not match schema", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn<typeof fetch>().mockResolvedValue(jsonResponse({ ugyldig: true })),
+    );
+    const { fetchTiltakspakkeVurdering } = await importFetcher({
+      isLocalOrDemo: false,
+    });
+
+    const result = await fetchTiltakspakkeVurdering("123456789");
+
+    expect(result).toEqual({
+      error: {
+        type: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
+      },
+      data: null,
+    });
+  });
+
+  test("returns invalid response error when Flaggskipet responds with invalid JSON", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockResolvedValue(
+        new Response("ikke json", {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }),
+      ),
     );
     const { fetchTiltakspakkeVurdering } = await importFetcher({
       isLocalOrDemo: false,

@@ -14,33 +14,11 @@ import { LenkeTilGamlePlanenAG } from "@/components/OversiktSide/LenkeTilGamlePl
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe.ts";
-import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt.ts";
-import { FetchErrorAlert } from "@/ui/FetchErrorAlert.tsx";
 
 export default async function OversiktPageForAG({
   params,
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
-  const oversiktResult =
-    await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
-
-  if (oversiktResult.error) {
-    return (
-      <section className="mb-8">
-        <FetchErrorAlert error={oversiktResult.error} />
-      </section>
-    );
-  }
-
-  const {
-    organization: { orgNumber },
-  } = oversiktResult.data;
-
-  console.log("Før fetch av erOrgINavTiltaksgruppe");
-  erOrgINavTiltaksgruppe(orgNumber).then((result) => {
-    console.log("Etter call :", result);
-  });
 
   return (
     <>

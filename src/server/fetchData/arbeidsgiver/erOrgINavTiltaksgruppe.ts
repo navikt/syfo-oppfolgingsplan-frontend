@@ -8,20 +8,6 @@ import {
 
 const FLAGGSKIPET_VURDERING_EVENT_TYPE = "flaggskipet_vurdering";
 
-//TODO fjern etter testing
-function logFlaggskipetResultToConsole(result: {
-  orgnummer: string;
-  deltakelse?: string;
-  erITiltaksgruppe: boolean;
-  errorType?: string;
-}) {
-  console.info("[Flaggskipet] Tiltakspakke-vurdering", {
-    event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
-    tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
-    ...result,
-  });
-}
-
 export async function erOrgINavTiltaksgruppe(
   orgnummer: string,
 ): Promise<boolean> {
@@ -35,19 +21,12 @@ export async function erOrgINavTiltaksgruppe(
     logger.info(
       {
         event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
-        orgnummer,
         tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
         erITiltaksgruppe: false,
         errorType: result.error.type,
       },
       FLAGGSKIPET_VURDERING_EVENT_TYPE,
     );
-    //TODO fjern etter testing
-    logFlaggskipetResultToConsole({
-      orgnummer,
-      erITiltaksgruppe: false,
-      errorType: result.error.type,
-    });
 
     return false;
   }
@@ -64,18 +43,12 @@ export async function erOrgINavTiltaksgruppe(
   logger.info(
     {
       event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
-      orgnummer,
       tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
       deltakelse: virksomhet?.deltakelse ?? "MANGLER",
       erITiltaksgruppe,
     },
     FLAGGSKIPET_VURDERING_EVENT_TYPE,
   );
-  logFlaggskipetResultToConsole({
-    orgnummer,
-    deltakelse: virksomhet?.deltakelse ?? "MANGLER",
-    erITiltaksgruppe,
-  });
 
   return erITiltaksgruppe;
 }

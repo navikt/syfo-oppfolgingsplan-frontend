@@ -1,7 +1,6 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { mockOversiktDataMedPlanerForAG } from "@/server/fetchData/mockData/mockOversiktData";
 import {
@@ -21,17 +20,12 @@ vi.mock("next/navigation", async () => {
 
   return mockNextNavigation();
 });
-vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
-  erOrgINavTiltaksgruppe: vi.fn(),
-}));
 
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
-const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
 
 describe("PlanListeForArbeidsgiver", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
   });
 
   afterEach(() => {
@@ -49,7 +43,6 @@ describe("PlanListeForArbeidsgiver", () => {
     );
 
     expect(mockFetch).toHaveBeenCalledWith("test-123");
-    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
   });
 
   test("displays error alert when fetch fails", async () => {

@@ -10,13 +10,12 @@ import { FrontendErrorType } from "@/server/actions/FrontendErrorTypeEnum";
 import { mockFlaggskipetVurderingTiltaksgruppe } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 import { simulateBackendDelay } from "@/server/fetchData/mockData/simulateBackendDelay";
 import {
-  getAndLogErrorResultFromNonOkResponse,
-  getAndLogFetchNetworkError,
-} from "@/server/tokenXFetch/errorHandling";
-import type { FetchGetResult } from "@/server/tokenXFetch/FetchResult";
-import { validateResponseBody } from "@/server/tokenXFetch/validateResponseBody";
+  type FetchGetResult,
+  fetchResultErrorSchema,
+} from "@/server/tokenXFetch/FetchResult";
 
 export const ORGNUMMER_REGEX = /^\d{9}$/;
+const FLAGGSKIPET_FETCH_TIMEOUT_MS = 5000;
 
 const NAV_CONSUMER_ID_REQUEST_HEADER = "syfo-oppfolgingsplan-frontend";
 
@@ -25,6 +24,17 @@ const getFlaggskipetRequestHeaders = () => ({
   "Nav-Consumer-Id": NAV_CONSUMER_ID_REQUEST_HEADER,
   "Nav-Call-Id": nanoid(),
 });
+
+async function getErrorResultFromNonOkResponse(response: Response) {
+  try {
+    const errorResponseJson = await response.json();
+    return fetchResultErrorSchema.parse(errorResponseJson);
+  } catch {
+    return {
+      type: FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE,
+    };
+  }
+}
 
 export async function fetchTiltakspakkeVurdering(
   orgnummer: string,
@@ -56,36 +66,44 @@ export async function fetchTiltakspakkeVurdering(
       method,
       body: JSON.stringify({ orgnumre: [orgnummer] }),
       headers: getFlaggskipetRequestHeaders(),
+      signal: AbortSignal.timeout(FLAGGSKIPET_FETCH_TIMEOUT_MS),
     });
-  } catch (error) {
+  } catch {
     return {
-      error: getAndLogFetchNetworkError({ error, endpoint, method }),
+      error: {
+        type: FrontendErrorType.FETCH_NETWORK_ERROR,
+      },
       data: null,
     };
   }
 
   if (!response.ok) {
     return {
-      error: await getAndLogErrorResultFromNonOkResponse({
-        response,
-        endpoint,
-        method,
-      }),
+      error: await getErrorResultFromNonOkResponse(response),
       data: null,
     };
   }
 
-  const { success, validatedData } = await validateResponseBody({
-    response,
-    responseDataSchema: flaggskipetVurderingResponseSchema,
-    endpoint,
-    method,
-  });
+  let responseJson: unknown;
 
-  if (success) {
+  try {
+    responseJson = await response.json();
+  } catch {
+    return {
+      error: {
+        type: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
+      },
+      data: null,
+    };
+  }
+
+  const parsedResponse =
+    flaggskipetVurderingResponseSchema.safeParse(responseJson);
+
+  if (parsedResponse.success) {
     return {
       error: null,
-      data: validatedData,
+      data: parsedResponse.data,
     };
   }
 
