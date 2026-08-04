@@ -65,6 +65,8 @@ spec:
       value: "prod-gcp:team-esyfo:syfo-oppfolgingsplan-backend"
     - name: FLAGGSKIPET_HOST
       value: http://flaggskipet
+    - name: TILTAKSPAKKEVURDERING_FEATURE_TOGGLE
+      value: 'false'
   accessPolicy:
     outbound:
       rules:

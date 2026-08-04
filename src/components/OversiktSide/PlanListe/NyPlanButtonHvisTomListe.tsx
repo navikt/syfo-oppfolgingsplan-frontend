@@ -1,8 +1,6 @@
-import { VStack } from "@navikt/ds-react";
-import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
 import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
-import { BehovsvurderingLokalDemo } from "../Behovsvurdering/BehovsvurderingLokalDemo";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
@@ -28,17 +26,11 @@ export default async function NyPlanButtonHvisTomListe({
     return null;
   }
 
-  const orgErITiltaksgruppe =
-    isLocalOrDemo && (await erOrgINavTiltaksgruppe(organization.orgNumber));
-
-  if (!orgErITiltaksgruppe) {
-    return <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />;
+  if (isTiltakspakkevurderingFeatureToggleEnabled()) {
+    // Observasjonsmodus: behold det blokkerende Flaggskipet-kallet i dev for å
+    // verifisere logging, feilrate og rendertid før UI-et i #891 finnes.
+    await erOrgINavTiltaksgruppe(organization.orgNumber);
   }
 
-  return (
-    <VStack gap="space-12">
-      <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
-      <BehovsvurderingLokalDemo />
-    </VStack>
-  );
+  return <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />;
 }

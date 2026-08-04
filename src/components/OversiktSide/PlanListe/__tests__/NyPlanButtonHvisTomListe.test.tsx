@@ -14,7 +14,7 @@ import { renderAsync } from "@/test/test-utils";
 import NyPlanButtonHvisTomListe from "../NyPlanButtonHvisTomListe";
 
 const envMock = vi.hoisted(() => ({
-  isLocalOrDemo: false,
+  tiltakspakkevurderingFeatureToggleEnabled: false,
 }));
 
 vi.mock("next/navigation", async () => {
@@ -30,9 +30,8 @@ vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
 }));
 
 vi.mock("@/env-variables/envHelpers", () => ({
-  get isLocalOrDemo() {
-    return envMock.isLocalOrDemo;
-  },
+  isTiltakspakkevurderingFeatureToggleEnabled: () =>
+    envMock.tiltakspakkevurderingFeatureToggleEnabled,
 }));
 
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
@@ -40,7 +39,7 @@ const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
 
 describe("NyPlanButtonHvisTomListe", () => {
   beforeEach(() => {
-    envMock.isLocalOrDemo = false;
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
     vi.clearAllMocks();
     mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
   });
@@ -201,7 +200,7 @@ describe("NyPlanButtonHvisTomListe", () => {
       expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
     });
 
-    test("kaller ikke Flaggskipet i ikke-local/demo-miljø selv om tom liste og edit access", async () => {
+    test("kaller ikke Flaggskipet når toggelen er av selv om listen er tom og bruker har edit access", async () => {
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataEmptyWithAccess,
@@ -210,30 +209,17 @@ describe("NyPlanButtonHvisTomListe", () => {
       await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
 
       expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-    });
-
-    test("viser lokal behovsvurdering når local/demo, tom liste, edit access og tiltaksgruppe", async () => {
-      envMock.isLocalOrDemo = true;
-      mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataEmptyWithAccess,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
-      expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
       expect(
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
-      expect(
-        screen.getByText(/Oppfølgingsplan er ikke aktuell nå/i),
-      ).toBeInTheDocument();
     });
 
-    test("viser ikke lokal behovsvurdering når local/demo og org ikke er i tiltaksgruppe", async () => {
-      envMock.isLocalOrDemo = true;
-      mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
+    test.each([
+      true,
+      false,
+    ])("kaller Flaggskipet i observasjonsmodus uten å endre UI når orgErITiltaksgruppe=%s", async (orgErITiltaksgruppe) => {
+      envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+      mockErOrgINavTiltaksgruppe.mockResolvedValue(orgErITiltaksgruppe);
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataEmptyWithAccess,
