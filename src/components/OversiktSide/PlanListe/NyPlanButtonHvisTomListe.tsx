@@ -3,6 +3,12 @@ import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINa
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
+async function loggTiltakspakkevurderingIObservasjonsmodus(orgnummer: string) {
+  // Frem til UI-et i #891 faktisk bruker returverdien, kalles predikatet kun
+  // for den strukturerte loggingen i erOrgINavTiltaksgruppe.
+  await erOrgINavTiltaksgruppe(orgnummer);
+}
+
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
 }: {
@@ -27,9 +33,7 @@ export default async function NyPlanButtonHvisTomListe({
   }
 
   if (isTiltakspakkevurderingFeatureToggleEnabled()) {
-    // Observasjonsmodus: behold det blokkerende Flaggskipet-kallet i dev for å
-    // verifisere logging, feilrate og rendertid før UI-et i #891 finnes.
-    await erOrgINavTiltaksgruppe(organization.orgNumber);
+    await loggTiltakspakkevurderingIObservasjonsmodus(organization.orgNumber);
   }
 
   return <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />;

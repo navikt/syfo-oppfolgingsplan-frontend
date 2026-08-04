@@ -29,10 +29,17 @@ vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
   erOrgINavTiltaksgruppe: vi.fn(),
 }));
 
-vi.mock("@/env-variables/envHelpers", () => ({
-  isTiltakspakkevurderingFeatureToggleEnabled: () =>
-    envMock.tiltakspakkevurderingFeatureToggleEnabled,
-}));
+vi.mock("@/env-variables/envHelpers", async () => {
+  const actual = await vi.importActual<
+    typeof import("@/env-variables/envHelpers")
+  >("@/env-variables/envHelpers");
+
+  return {
+    ...actual,
+    isTiltakspakkevurderingFeatureToggleEnabled: () =>
+      envMock.tiltakspakkevurderingFeatureToggleEnabled,
+  };
+});
 
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
 const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
