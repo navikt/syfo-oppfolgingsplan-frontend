@@ -10,7 +10,6 @@ import { Suspense } from "react";
 import TextContentBox from "@/components/layout/TextContentBox";
 import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
-import { LenkeTilGamlePlanenAG } from "@/components/OversiktSide/LenkeTilGamlePlanenAG";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
@@ -51,8 +50,6 @@ export default async function OversiktPageForAG({
       </Suspense>
 
       <OversiktSideInformasjon />
-
-      <LenkeTilGamlePlanenAG narmesteLederId={narmesteLederId} />
     </>
   );
 }
