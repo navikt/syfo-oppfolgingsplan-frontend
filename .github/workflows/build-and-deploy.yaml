@@ -13,7 +13,6 @@ jobs:
       id-token: write
       packages: write
     secrets: inherit
-
     with:
       app: syfo-oppfolgingsplan-frontend
       base-path: /syk/oppfolgingsplan
