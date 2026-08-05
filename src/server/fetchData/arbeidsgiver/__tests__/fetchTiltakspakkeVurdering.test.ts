@@ -103,21 +103,30 @@ describe("fetchTiltakspakkeVurdering", () => {
     });
   });
 
-  test.each([
-    "",
-    "12345",
-    "abcdefghi",
-  ])("does not call Flaggskipet for invalid orgnummer '%s'", async (orgnummer) => {
+  test("delegates malformed orgnummer to Flaggskipet wrapper", async () => {
+    tokenXFetchUpdateWithResponseMock.mockResolvedValue({
+      error: {
+        type: "BAD_REQUEST",
+      },
+      data: null,
+    });
     const { fetchTiltakspakkeVurdering } = await importFetcher({
       isLocalOrDemo: false,
     });
 
-    const result = await fetchTiltakspakkeVurdering(orgnummer);
+    const result = await fetchTiltakspakkeVurdering("abc");
 
-    expect(tokenXFetchUpdateWithResponseMock).not.toHaveBeenCalled();
+    expect(tokenXFetchUpdateWithResponseMock).toHaveBeenCalledOnce();
+    expect(tokenXFetchUpdateWithResponseMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestBody: {
+          orgnumre: ["abc"],
+        },
+      }),
+    );
     expect(result).toEqual({
       error: {
-        type: "SERVER_ACTION_INPUT_VALIDATION_ERROR",
+        type: "BAD_REQUEST",
       },
       data: null,
     });
