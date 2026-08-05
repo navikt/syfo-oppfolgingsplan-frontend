@@ -1,5 +1,4 @@
 import "server-only";
-import { nanoid } from "nanoid";
 import { getEndpointFlaggskipetVurdering } from "@/common/backend-endpoints";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
@@ -10,31 +9,15 @@ import { FrontendErrorType } from "@/server/actions/FrontendErrorTypeEnum";
 import { mockFlaggskipetVurderingTiltaksgruppe } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 import { simulateBackendDelay } from "@/server/fetchData/mockData/simulateBackendDelay";
 import {
-  type FetchGetResult,
-  fetchResultErrorSchema,
-} from "@/server/tokenXFetch/FetchResult";
+  getAndLogErrorResultFromNonOkResponse,
+  getAndLogFetchNetworkError,
+} from "@/server/tokenXFetch/errorHandling";
+import type { FetchGetResult } from "@/server/tokenXFetch/FetchResult";
+import { getBackendRequestHeadersWithoutAuth } from "@/server/tokenXFetch/helpers";
+import { validateResponseBody } from "@/server/tokenXFetch/validateResponseBody";
 
-export const ORGNUMMER_REGEX = /^\d{9}$/;
+const ORGNUMMER_REGEX = /^\d{9}$/;
 const FLAGGSKIPET_FETCH_TIMEOUT_MS = 5000;
-
-const NAV_CONSUMER_ID_REQUEST_HEADER = "syfo-oppfolgingsplan-frontend";
-
-const getFlaggskipetRequestHeaders = () => ({
-  "Content-Type": "application/json",
-  "Nav-Consumer-Id": NAV_CONSUMER_ID_REQUEST_HEADER,
-  "Nav-Call-Id": nanoid(),
-});
-
-async function getErrorResultFromNonOkResponse(response: Response) {
-  try {
-    const errorResponseJson = await response.json();
-    return fetchResultErrorSchema.parse(errorResponseJson);
-  } catch {
-    return {
-      type: FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE,
-    };
-  }
-}
 
 export async function fetchTiltakspakkeVurdering(
   orgnummer: string,
@@ -65,30 +48,43 @@ export async function fetchTiltakspakkeVurdering(
     response = await fetch(endpoint, {
       method,
       body: JSON.stringify({ orgnumre: [orgnummer] }),
-      headers: getFlaggskipetRequestHeaders(),
+      headers: getBackendRequestHeadersWithoutAuth(),
       signal: AbortSignal.timeout(FLAGGSKIPET_FETCH_TIMEOUT_MS),
     });
-  } catch {
+  } catch (error) {
+    const errorResult = getAndLogFetchNetworkError({
+      error,
+      endpoint,
+      method,
+    });
+
     return {
-      error: {
-        type: FrontendErrorType.FETCH_NETWORK_ERROR,
-      },
+      error: errorResult,
       data: null,
     };
   }
 
   if (!response.ok) {
+    const errorResult = await getAndLogErrorResultFromNonOkResponse({
+      response,
+      endpoint,
+      method,
+    });
+
     return {
-      error: await getErrorResultFromNonOkResponse(response),
+      error: errorResult,
       data: null,
     };
   }
 
-  let responseJson: unknown;
+  const { success, validatedData } = await validateResponseBody({
+    response,
+    responseDataSchema: flaggskipetVurderingResponseSchema,
+    endpoint,
+    method,
+  });
 
-  try {
-    responseJson = await response.json();
-  } catch {
+  if (!success) {
     return {
       error: {
         type: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
@@ -97,20 +93,8 @@ export async function fetchTiltakspakkeVurdering(
     };
   }
 
-  const parsedResponse =
-    flaggskipetVurderingResponseSchema.safeParse(responseJson);
-
-  if (parsedResponse.success) {
-    return {
-      error: null,
-      data: parsedResponse.data,
-    };
-  }
-
   return {
-    error: {
-      type: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
-    },
-    data: null,
+    error: null,
+    data: validatedData,
   };
 }

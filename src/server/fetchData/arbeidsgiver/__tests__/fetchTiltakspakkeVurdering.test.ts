@@ -1,7 +1,17 @@
+import { logger } from "@navikt/next-logger";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { mockFlaggskipetVurderingTiltaksgruppe } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 
+vi.mock("@navikt/next-logger", () => ({
+  logger: {
+    error: vi.fn(),
+    info: vi.fn(),
+  },
+}));
+
 const flaggskipetHost = "http://flaggskipet";
+const endpoint = `${flaggskipetHost}/api/v1/tiltakspakker/vurdering`;
+const loggerErrorMock = vi.mocked(logger.error);
 
 async function importFetcher({ isLocalOrDemo }: { isLocalOrDemo: boolean }) {
   vi.resetModules();
@@ -29,6 +39,7 @@ function jsonResponse(body: unknown, init?: ResponseInit) {
 
 describe("fetchTiltakspakkeVurdering", () => {
   afterEach(() => {
+    vi.clearAllMocks();
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     vi.resetModules();
@@ -52,7 +63,7 @@ describe("fetchTiltakspakkeVurdering", () => {
       data: mockFlaggskipetVurderingTiltaksgruppe,
     });
     expect(fetchMock).toHaveBeenCalledWith(
-      `${flaggskipetHost}/api/v1/tiltakspakker/vurdering`,
+      endpoint,
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ orgnumre: ["123456789"] }),
@@ -93,6 +104,15 @@ describe("fetchTiltakspakkeVurdering", () => {
       },
       data: null,
     });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        type: "INTERNAL_SERVER_ERROR",
+        message: "Noe gikk galt",
+        method: "POST",
+        endpoint,
+      },
+      expect.stringContaining(`fetch to POST ${endpoint}`),
+    );
   });
 
   test("returns network error result when fetch throws", async () => {
@@ -112,14 +132,26 @@ describe("fetchTiltakspakkeVurdering", () => {
       },
       data: null,
     });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        type: "FETCH_NETWORK_ERROR",
+        method: "POST",
+        endpoint,
+      },
+      expect.stringContaining(
+        `Unexpected network error on fetch to POST ${endpoint}: errorName=Error message=Network down`,
+      ),
+    );
   });
 
   test("returns network error result when Flaggskipet times out", async () => {
+    const timeoutSignal = AbortSignal.timeout(0);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const timeoutError = timeoutSignal.reason;
+
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn<typeof fetch>()
-        .mockRejectedValue(new DOMException("Timed out", "TimeoutError")),
+      vi.fn<typeof fetch>().mockRejectedValue(timeoutError),
     );
     const { fetchTiltakspakkeVurdering } = await importFetcher({
       isLocalOrDemo: false,
@@ -133,6 +165,16 @@ describe("fetchTiltakspakkeVurdering", () => {
       },
       data: null,
     });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        type: "FETCH_NETWORK_ERROR",
+        method: "POST",
+        endpoint,
+      },
+      expect.stringContaining(
+        `Unexpected network error on fetch to POST ${endpoint}: errorName=TimeoutError message=The operation was aborted due to timeout`,
+      ),
+    );
   });
 
   test("returns invalid response error when Flaggskipet response does not match schema", async () => {
@@ -152,6 +194,47 @@ describe("fetchTiltakspakkeVurdering", () => {
       },
       data: null,
     });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `Got invalid response data from POST ${endpoint}: name=`,
+      ),
+    );
+    expect(loggerErrorMock.mock.calls[0]?.[0]).toContain("message=");
+  });
+
+  test("returns unknown error response when Flaggskipet responds with unrecognized non-ok body", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockResolvedValue(
+        new Response("ukjent feilbody fra flaggskipet", {
+          status: 500,
+          statusText: "Internal Server Error",
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        }),
+      ),
+    );
+    const { fetchTiltakspakkeVurdering } = await importFetcher({
+      isLocalOrDemo: false,
+    });
+
+    const result = await fetchTiltakspakkeVurdering("123456789");
+
+    expect(result).toEqual({
+      error: {
+        type: "FETCH_UNKOWN_ERROR_RESPONSE",
+      },
+      data: null,
+    });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        type: "FETCH_UNKOWN_ERROR_RESPONSE",
+        method: "POST",
+        endpoint,
+      },
+      expect.stringContaining("body=ukjent feilbody fra flaggskipet"),
+    );
   });
 
   test("returns invalid response error when Flaggskipet responds with invalid JSON", async () => {
@@ -178,6 +261,12 @@ describe("fetchTiltakspakkeVurdering", () => {
       },
       data: null,
     });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `Got invalid response data from POST ${endpoint}: name=`,
+      ),
+    );
+    expect(loggerErrorMock.mock.calls[0]?.[0]).toContain("message=");
   });
 
   test.each([

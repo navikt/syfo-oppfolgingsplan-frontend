@@ -1,3 +1,4 @@
+import { logger } from "@navikt/next-logger";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { OPPFOLGINGSPLAN_TILTAKSPAKKE_1 } from "@/schema/flaggskipetSchemas";
 import {
@@ -7,6 +8,13 @@ import {
 } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 import { erOrgINavTiltaksgruppe } from "../erOrgINavTiltaksgruppe";
 import { fetchTiltakspakkeVurdering } from "../fetchTiltakspakkeVurdering";
+
+vi.mock("@navikt/next-logger", () => ({
+  logger: {
+    error: vi.fn(),
+    info: vi.fn(),
+  },
+}));
 
 vi.mock("../fetchTiltakspakkeVurdering", async () => {
   const actual = await vi.importActual<
@@ -20,6 +28,8 @@ vi.mock("../fetchTiltakspakkeVurdering", async () => {
 });
 
 const fetchTiltakspakkeVurderingMock = vi.mocked(fetchTiltakspakkeVurdering);
+const loggerInfoMock = vi.mocked(logger.info);
+const loggerErrorMock = vi.mocked(logger.error);
 
 describe("erOrgINavTiltaksgruppe", () => {
   afterEach(() => {
@@ -33,6 +43,15 @@ describe("erOrgINavTiltaksgruppe", () => {
     });
 
     await expect(erOrgINavTiltaksgruppe("123456789")).resolves.toBe(true);
+    expect(loggerInfoMock).toHaveBeenCalledWith(
+      {
+        event_type: "flaggskipet_vurdering",
+        tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+        deltakelse: "TILTAKSGRUPPE",
+        erITiltaksgruppe: true,
+      },
+      "flaggskipet_vurdering",
+    );
   });
 
   test("returns false for KONTROLLGRUPPE", async () => {
@@ -100,15 +119,42 @@ describe("erOrgINavTiltaksgruppe", () => {
     });
 
     await expect(erOrgINavTiltaksgruppe("123456789")).resolves.toBe(false);
+    expect(loggerInfoMock).toHaveBeenCalledWith(
+      {
+        event_type: "flaggskipet_vurdering",
+        tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+        erITiltaksgruppe: false,
+        errorType: "FETCH_NETWORK_ERROR",
+      },
+      "flaggskipet_vurdering",
+    );
+    expect(loggerErrorMock).not.toHaveBeenCalled();
   });
 
   test.each([
     "",
     "12345",
     "abcdefghi",
-  ])("returns false without calling fetcher for invalid orgnummer '%s'", async (orgnummer) => {
+  ])("returns false and logs typed error event for invalid orgnummer '%s'", async (orgnummer) => {
+    fetchTiltakspakkeVurderingMock.mockResolvedValue({
+      error: {
+        type: "SERVER_ACTION_INPUT_VALIDATION_ERROR",
+      },
+      data: null,
+    });
+
     await expect(erOrgINavTiltaksgruppe(orgnummer)).resolves.toBe(false);
 
-    expect(fetchTiltakspakkeVurderingMock).not.toHaveBeenCalled();
+    expect(fetchTiltakspakkeVurderingMock).toHaveBeenCalledWith(orgnummer);
+    expect(loggerInfoMock).toHaveBeenCalledWith(
+      {
+        event_type: "flaggskipet_vurdering",
+        tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+        erITiltaksgruppe: false,
+        errorType: "SERVER_ACTION_INPUT_VALIDATION_ERROR",
+      },
+      "flaggskipet_vurdering",
+    );
+    expect(loggerErrorMock).not.toHaveBeenCalled();
   });
 });

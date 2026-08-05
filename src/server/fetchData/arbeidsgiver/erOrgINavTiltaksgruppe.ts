@@ -1,20 +1,13 @@
 import "server-only";
 import { logger } from "@navikt/next-logger";
 import { OPPFOLGINGSPLAN_TILTAKSPAKKE_1 } from "@/schema/flaggskipetSchemas";
-import {
-  fetchTiltakspakkeVurdering,
-  ORGNUMMER_REGEX,
-} from "./fetchTiltakspakkeVurdering";
+import { fetchTiltakspakkeVurdering } from "./fetchTiltakspakkeVurdering";
 
 const FLAGGSKIPET_VURDERING_EVENT_TYPE = "flaggskipet_vurdering";
 
 export async function erOrgINavTiltaksgruppe(
   orgnummer: string,
 ): Promise<boolean> {
-  if (!ORGNUMMER_REGEX.test(orgnummer)) {
-    return false;
-  }
-
   const result = await fetchTiltakspakkeVurdering(orgnummer);
 
   if (result.error) {
