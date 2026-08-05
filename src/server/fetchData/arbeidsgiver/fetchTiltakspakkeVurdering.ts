@@ -6,15 +6,11 @@ import {
   flaggskipetVurderingResponseSchema,
 } from "@/schema/flaggskipetSchemas";
 import { FrontendErrorType } from "@/server/actions/FrontendErrorTypeEnum";
+import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { mockFlaggskipetVurderingTiltaksgruppe } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 import { simulateBackendDelay } from "@/server/fetchData/mockData/simulateBackendDelay";
-import {
-  getAndLogErrorResultFromNonOkResponse,
-  getAndLogFetchNetworkError,
-} from "@/server/tokenXFetch/errorHandling";
 import type { FetchGetResult } from "@/server/tokenXFetch/FetchResult";
-import { getBackendRequestHeadersWithoutAuth } from "@/server/tokenXFetch/helpers";
-import { validateResponseBody } from "@/server/tokenXFetch/validateResponseBody";
+import { tokenXFetchUpdateWithResponse } from "@/server/tokenXFetch/tokenXFetchUpdate";
 
 const ORGNUMMER_REGEX = /^\d{9}$/;
 const FLAGGSKIPET_FETCH_TIMEOUT_MS = 5000;
@@ -40,61 +36,13 @@ export async function fetchTiltakspakkeVurdering(
     };
   }
 
-  const endpoint = getEndpointFlaggskipetVurdering();
-  const method = "POST";
-  let response: Response;
-
-  try {
-    response = await fetch(endpoint, {
-      method,
-      body: JSON.stringify({ orgnumre: [orgnummer] }),
-      headers: getBackendRequestHeadersWithoutAuth(),
-      signal: AbortSignal.timeout(FLAGGSKIPET_FETCH_TIMEOUT_MS),
-    });
-  } catch (error) {
-    const errorResult = getAndLogFetchNetworkError({
-      error,
-      endpoint,
-      method,
-    });
-
-    return {
-      error: errorResult,
-      data: null,
-    };
-  }
-
-  if (!response.ok) {
-    const errorResult = await getAndLogErrorResultFromNonOkResponse({
-      response,
-      endpoint,
-      method,
-    });
-
-    return {
-      error: errorResult,
-      data: null,
-    };
-  }
-
-  const { success, validatedData } = await validateResponseBody({
-    response,
+  return await tokenXFetchUpdateWithResponse({
+    targetApi: TokenXTargetApi.FLAGGSKIPET,
+    endpoint: getEndpointFlaggskipetVurdering(),
+    requestBody: {
+      orgnumre: [orgnummer],
+    },
     responseDataSchema: flaggskipetVurderingResponseSchema,
-    endpoint,
-    method,
+    signal: AbortSignal.timeout(FLAGGSKIPET_FETCH_TIMEOUT_MS),
   });
-
-  if (!success) {
-    return {
-      error: {
-        type: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
-      },
-      data: null,
-    };
-  }
-
-  return {
-    error: null,
-    data: validatedData,
-  };
 }
