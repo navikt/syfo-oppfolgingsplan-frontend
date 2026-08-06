@@ -12,11 +12,13 @@ export function AktivPlanTopTags() {
   const isDeltMedVeileder = Boolean(deltMedVeilederTidspunkt);
 
   return (
-    <HStack gap="space-8">
+    <HStack gap="space-8" aria-live="polite">
       <PlanDelingStatusTags
         tagSize="small"
         isDeltMedLege={isDeltMedLege}
         isDeltMedVeileder={isDeltMedVeileder}
+        deltMedLegeTidspunkt={deltMedLegeTidspunkt}
+        deltMedVeilederTidspunkt={deltMedVeilederTidspunkt}
       />
     </HStack>
   );

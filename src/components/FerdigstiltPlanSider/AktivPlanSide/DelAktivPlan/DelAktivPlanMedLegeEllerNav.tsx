@@ -106,6 +106,12 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
     if (sendToVeileder) delMedVeilederAction({ planId });
   };
 
+  // Når planen er sendt til både fastlege og Nav-veileder, er delingsboksen
+  // ikke lenger relevant. Delingsstatusen vises da i taggene øverst på siden.
+  if (!hasUnsentRecipients) {
+    return null;
+  }
+
   return (
     <Box
       background="info-soft"
@@ -160,7 +166,11 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
 
         {validationError && (
           <ErrorSummary heading="Feil ved sending av plan" className="my-4">
-            <ErrorSummary.Item href="#fastlege-checkbox">
+            <ErrorSummary.Item
+              href={
+                sentToFastlege ? "#veileder-checkbox" : "#fastlege-checkbox"
+              }
+            >
               {validationError}
             </ErrorSummary.Item>
           </ErrorSummary>
