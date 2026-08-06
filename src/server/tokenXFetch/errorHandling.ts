@@ -39,7 +39,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
   method: string;
 }): Promise<FetchResultError> {
   try {
-    const errorResponseJson = await response.json();
+    const errorResponseJson = await response.clone().json();
     const parsedErrorResponse = fetchResultErrorSchema.parse(errorResponseJson);
 
     const logMessage = `Got structured error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): type=${parsedErrorResponse.type}${parsedErrorResponse.message ? ` message=${parsedErrorResponse.message}` : ""}`;
@@ -55,7 +55,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
   } catch {
     let bodySnippet: string | undefined;
     try {
-      const text = await response.text();
+      const text = await response.clone().text();
       bodySnippet = text.slice(0, 200);
     } catch {
       /* ignore response.text() error */

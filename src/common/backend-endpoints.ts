@@ -39,6 +39,9 @@ export const getEndpointPDFForAG = (
 ) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/${documentId}/pdf`;
 
+export const getEndpointFlaggskipetVurdering = () =>
+  `${getServerEnv().FLAGGSKIPET_HOST}/api/v1/tiltakspakker/vurdering`;
+
 // Lumi survey submissions (sendes til eksisterende endpoint i backend)
 export const getLumiSurveyFeedbackEndpoint = () =>
   `${getServerEnv().LUMI_API_HOST}/api/tokenx/v1/feedback`;

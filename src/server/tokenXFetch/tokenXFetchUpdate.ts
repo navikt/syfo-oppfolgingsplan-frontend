@@ -29,11 +29,13 @@ export async function tokenXFetchUpdate({
   endpoint,
   requestBody,
   method = "POST",
+  signal,
 }: {
   targetApi: TokenXTargetApi;
   endpoint: string;
   requestBody?: unknown;
   method?: "POST" | "PUT" | "DELETE";
+  signal?: AbortSignal;
 }): Promise<FetchUpdateResult> {
   let oboToken: string;
   try {
@@ -55,6 +57,7 @@ export async function tokenXFetchUpdate({
       method,
       body: requestBody ? JSON.stringify(requestBody) : undefined,
       headers: getBackendRequestHeaders(oboToken),
+      signal,
     });
   } catch (error) {
     const errorResult = getAndLogFetchNetworkError({ error, endpoint, method });
@@ -88,12 +91,14 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
   requestBody,
   method = "POST",
   responseDataSchema,
+  signal,
 }: {
   targetApi: TokenXTargetApi;
   endpoint: string;
   requestBody?: unknown;
   method?: "POST" | "PUT" | "DELETE";
   responseDataSchema: S;
+  signal?: AbortSignal;
 }): Promise<FetchUpdateResultWithResponse<z.infer<S>>> {
   let oboToken: string;
   try {
@@ -116,6 +121,7 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
       method,
       body: requestBody ? JSON.stringify(requestBody) : undefined,
       headers: getBackendRequestHeaders(oboToken),
+      signal,
     });
   } catch (error) {
     const errorResult = getAndLogFetchNetworkError({ error, endpoint, method });
