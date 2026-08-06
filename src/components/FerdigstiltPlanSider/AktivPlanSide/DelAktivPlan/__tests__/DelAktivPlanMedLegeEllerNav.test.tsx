@@ -92,12 +92,33 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       ).toBeInTheDocument();
     });
 
-    test("does not render send button when all recipients have received plan", () => {
+    test("shows the sharing box when only one recipient has received the plan", () => {
+      renderComponent("2026-01-15T10:00:00Z", null);
+
+      expect(
+        screen.getByRole("heading", {
+          name: /hvem vil du sende planen til/i,
+          level: 2,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /send planen/i }),
+      ).toBeInTheDocument();
+    });
+
+    test("hides the whole sharing box when all recipients have received plan", () => {
       renderComponent("2026-01-15T10:00:00Z", "2026-01-15T11:00:00Z");
 
       expect(
+        screen.queryByRole("heading", {
+          name: /hvem vil du sende planen til/i,
+        }),
+      ).not.toBeInTheDocument();
+      expect(
         screen.queryByRole("button", { name: /send planen/i }),
       ).not.toBeInTheDocument();
+      expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+      expect(screen.queryByText(/sendt til fastlege/i)).not.toBeInTheDocument();
     });
   });
 
@@ -128,11 +149,13 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       ).toBeInTheDocument();
     });
 
-    test("shows both success messages when sent to both recipients", () => {
-      renderComponent("2026-01-15T10:00:00Z", "2026-01-15T11:00:00Z");
+    test("keeps the checkbox for the recipient that has not received the plan", () => {
+      renderComponent("2026-01-15T10:00:00Z", null);
 
       expect(screen.getByText(/sendt til fastlege/i)).toBeInTheDocument();
-      expect(screen.getByText(/sendt til nav-veileder/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole("checkbox", { name: /nav-veileder/i }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -257,6 +280,30 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
         );
       });
     });
+
+    test("hides the sharing box without reload when the last recipient receives the plan", async () => {
+      const user = userEvent.setup();
+      delMedVeilederSpy.mockResolvedValue({
+        deltMedVeilederTidspunkt: "2026-01-16T11:00:00Z",
+        errorDelMedVeileder: null,
+      });
+
+      renderComponent("2026-01-15T10:00:00Z", null);
+
+      const veilederCheckbox = screen.getByRole("checkbox", {
+        name: /nav-veileder/i,
+      });
+      await user.click(veilederCheckbox);
+      await user.click(screen.getByRole("button", { name: /send planen/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.queryByRole("heading", {
+            name: /hvem vil du sende planen til/i,
+          }),
+        ).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe("Accessibility", () => {
@@ -275,10 +322,10 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
     });
 
     test("success messages have proper role", () => {
-      renderComponent("2026-01-15T10:00:00Z", "2026-01-15T11:00:00Z");
+      renderComponent("2026-01-15T10:00:00Z", null);
 
       const successMessages = screen.getAllByRole("status");
-      expect(successMessages).toHaveLength(2);
+      expect(successMessages).toHaveLength(1);
     });
 
     test("error summary has proper heading", async () => {
