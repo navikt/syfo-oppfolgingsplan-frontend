@@ -63,10 +63,17 @@ spec:
       value: http://syfo-oppfolgingsplan-backend
     - name: SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID
       value: "prod-gcp:team-esyfo:syfo-oppfolgingsplan-backend"
+    - name: FLAGGSKIPET_HOST
+      value: http://flaggskipet
+    - name: FLAGGSKIPET_CLIENT_ID
+      value: "prod-gcp:team-esyfo:flaggskipet"
+    - name: TILTAKSPAKKEVURDERING_FEATURE_TOGGLE
+      value: 'false'
   accessPolicy:
     outbound:
       rules:
         - application: syfo-oppfolgingsplan-backend
+        - application: flaggskipet
         - application: lumi-api
         - application: nav-dekoratoren
           namespace: personbruker
