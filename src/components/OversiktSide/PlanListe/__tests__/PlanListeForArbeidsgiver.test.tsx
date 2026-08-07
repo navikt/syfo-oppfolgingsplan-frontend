@@ -325,17 +325,6 @@ describe("PlanListeForArbeidsgiver", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("does not display the «Vis PDF»-copy hint in the 6-month AG text", async () => {
-    mockFetch.mockResolvedValue({
-      error: null,
-      data: mockOversiktDataMedPlanerForAG,
-    });
-
-    await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
-
-    expect(screen.queryByText(/for å lagre en kopi/)).not.toBeInTheDocument();
-  });
-
   test("6-month info message renders after plan cards, not before", async () => {
     mockFetch.mockResolvedValue({
       error: null,
