@@ -368,11 +368,17 @@ describe("PlanListeForArbeidsgiver", () => {
       ).not.toBeInTheDocument();
 
       const unntakEntries = screen.getAllByText(
-        /Oppfølgingsplan ikke aktuell/i,
+        /Ikke aktuelt med oppfølgingsplan nå/i,
       );
       expect(unntakEntries).toHaveLength(2);
-      expect(screen.getByText(/10\. februar( \d{4})?/)).toBeInTheDocument();
-      expect(screen.getByText(/Meldt av: Maren Hegna/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Registrert 10\. februar( \d{4})?/),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Av Maren Hegna \(arbeidsgiver\)/i),
+      ).toBeInTheDocument();
+      // Grå status-tag på hvert innslag (eksakt tekstmatch treffer kun taggene).
+      expect(screen.getAllByText("Ikke aktuelt")).toHaveLength(2);
     });
 
     test("takler at meldtAv.navn mangler", async () => {
@@ -383,9 +389,11 @@ describe("PlanListeForArbeidsgiver", () => {
 
       await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
-      // Det eldste mock-unntaket mangler navn — raden vises uten «Meldt av».
-      expect(screen.getByText(/2\. september 2025/)).toBeInTheDocument();
-      expect(screen.getAllByText(/Meldt av:/i)).toHaveLength(1);
+      // Det eldste mock-unntaket mangler navn — raden vises uten «Av …»-linje.
+      expect(
+        screen.getByText(/Registrert 2\. september 2025/),
+      ).toBeInTheDocument();
+      expect(screen.getAllByText(/^Av /i)).toHaveLength(1);
     });
 
     test("sidestiller unntak og tidligere planer kronologisk, nyeste først", async () => {
@@ -400,8 +408,8 @@ describe("PlanListeForArbeidsgiver", () => {
       // unntak 2026-02-10 > plan 2025-05-14 > plan 2025-03-05 > unntak 2025-09-02
       // → sortert: 2026-02-10 (unntak), 2025-09-02 (unntak), 2025-05-14 (plan), 2025-03-05 (plan)
       const datoer = [
-        screen.getByText(/10\. februar( \d{4})?/),
-        screen.getByText(/2\. september 2025/),
+        screen.getByText(/Registrert 10\. februar( \d{4})?/),
+        screen.getByText(/Registrert 2\. september 2025/),
         screen.getByText(/14\. mai 2025/),
         screen.getByText(/5\. mars 2025/),
       ];

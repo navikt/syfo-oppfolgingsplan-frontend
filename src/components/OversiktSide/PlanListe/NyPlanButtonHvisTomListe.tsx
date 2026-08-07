@@ -17,6 +17,7 @@ export default async function NyPlanButtonHvisTomListe({
   const {
     userHasEditAccess,
     organization,
+    employee,
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
 
@@ -36,7 +37,7 @@ export default async function NyPlanButtonHvisTomListe({
   return (
     <>
       <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
-      {visUnntaksvalg && <MeldUnntakSection />}
+      {visUnntaksvalg && <MeldUnntakSection ansattNavn={employee.name} />}
     </>
   );
 }

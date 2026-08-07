@@ -29,8 +29,8 @@ export default async function OversiktPageForAG({
 
       <Suspense fallback={<PlanListeSkeleton />}>
         <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
-        <GjeldendeUnntakInfoCard narmesteLederId={narmesteLederId} />
         <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
+        <GjeldendeUnntakInfoCard narmesteLederId={narmesteLederId} />
         <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>
 

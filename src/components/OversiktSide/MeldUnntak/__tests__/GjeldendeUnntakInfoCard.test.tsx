@@ -29,11 +29,12 @@ describe("GjeldendeUnntakInfoCard", () => {
     await renderAsync(GjeldendeUnntakInfoCard({ narmesteLederId: "12345" }));
 
     expect(
-      screen.getByText(/Dere har meldt at oppfølgingsplan ikke er aktuell/i),
+      screen.getByText(/Ikke aktuelt med oppfølgingsplan nå/i),
     ).toBeInTheDocument();
     // Nyeste unntak: 2026-02-10, meldt av Maren Hegna.
-    expect(screen.getByText(/10\. februar( \d{4})?/)).toBeInTheDocument();
-    expect(screen.getByText(/Maren Hegna/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Registrert 10\. februar( \d{4})? av Maren Hegna/),
+    ).toBeInTheDocument();
   });
 
   test("rendrer ingenting når det ikke finnes gjeldende unntak", async () => {
@@ -45,7 +46,7 @@ describe("GjeldendeUnntakInfoCard", () => {
     await renderAsync(GjeldendeUnntakInfoCard({ narmesteLederId: "12345" }));
 
     expect(
-      screen.queryByText(/meldt at oppfølgingsplan ikke er aktuell/i),
+      screen.queryByText(/Ikke aktuelt med oppfølgingsplan nå/i),
     ).not.toBeInTheDocument();
   });
 
@@ -66,7 +67,7 @@ describe("GjeldendeUnntakInfoCard", () => {
     await renderAsync(GjeldendeUnntakInfoCard({ narmesteLederId: "12345" }));
 
     expect(
-      screen.queryByText(/meldt at oppfølgingsplan ikke er aktuell/i),
+      screen.queryByText(/Ikke aktuelt med oppfølgingsplan nå/i),
     ).not.toBeInTheDocument();
   });
 
@@ -79,7 +80,7 @@ describe("GjeldendeUnntakInfoCard", () => {
     await renderAsync(GjeldendeUnntakInfoCard({ narmesteLederId: "12345" }));
 
     expect(
-      screen.queryByText(/meldt at oppfølgingsplan ikke er aktuell/i),
+      screen.queryByText(/Ikke aktuelt med oppfølgingsplan nå/i),
     ).not.toBeInTheDocument();
   });
 });

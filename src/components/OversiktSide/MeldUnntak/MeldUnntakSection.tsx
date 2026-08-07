@@ -5,13 +5,15 @@ import {
   Button,
   Checkbox,
   ErrorSummary,
-  ExpansionCard,
   LocalAlert,
+  ReadMore,
   VStack,
 } from "@navikt/ds-react";
 // Subkomponenter importeres flatt fra subpath — compound-varianten
-// (LocalAlert.Header) brekker under Next sin optimizePackageImports.
+// (List.Item, LocalAlert.Header) brekker under Next sin optimizePackageImports.
+import { List, ListItem } from "@navikt/ds-react/List";
 import {
+  LocalAlertCloseButton,
   LocalAlertContent,
   LocalAlertHeader,
   LocalAlertTitle,
@@ -30,15 +32,22 @@ import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
 
 const BEKREFTELSE_CHECKBOX_ID = "meld-unntak-bekreftelse";
 
+interface Props {
+  /** Den ansattes navn, brukes i bekreftelsesteksten og kvitteringen. */
+  ansattNavn: string;
+}
+
 /**
  * Lar arbeidsgiver melde at oppfølgingsplan ikke er aktuell nå
  * (unntaksvurdering). Vises kun når det ikke finnes plan eller utkast, og kun
  * for virksomheter i tiltaksgruppen — se NyPlanButtonHvisTomListe.
  *
- * Sendeknappen er aldri disabled: validering skjer ved klikk, med fokus til
- * ErrorSummary (Aksel fraråder deaktiverte knapper).
+ * Følger Figma-skissen «Behov for oppfølgingsplan vs. unntak», med
+ * korrigeringene fra #891: sendeknappen er aldri disabled (validering ved
+ * klikk med fokus til ErrorSummary), og knapp/kvittering sier kun «Nav» —
+ * ikke «og den ansatte» — til sykmeldt-visningen (#888) finnes.
  */
-export default function MeldUnntakSection() {
+export default function MeldUnntakSection({ ansattNavn }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [erBekreftet, setErBekreftet] = useState(false);
@@ -65,15 +74,23 @@ export default function MeldUnntakSection() {
     }
   }, [visValideringsfeil]);
 
+  function lukkKvitteringOgNullstill() {
+    setErSendt(false);
+    setErBekreftet(false);
+    setVisValideringsfeil(false);
+  }
+
   if (erSendt) {
     return (
       <LocalAlert status="success" className="mb-8">
         <LocalAlertHeader>
-          <LocalAlertTitle as="h3">Vurderingen er registrert</LocalAlertTitle>
+          <LocalAlertTitle as="h3">Meldingen er sendt til Nav</LocalAlertTitle>
+          <LocalAlertCloseButton onClick={lukkKvitteringOgNullstill} />
         </LocalAlertHeader>
         <LocalAlertContent>
-          Du har meldt at oppfølgingsplan ikke er aktuell nå. Du kan når som
-          helst lage en oppfølgingsplan hvis situasjonen endrer seg.
+          Nav har registrert at det ikke er aktuelt med en oppfølgingsplan for{" "}
+          {ansattNavn} nå. Endrer situasjonen seg, kan det bli aktuelt at dere
+          lager en plan.
         </LocalAlertContent>
       </LocalAlert>
     );
@@ -106,64 +123,60 @@ export default function MeldUnntakSection() {
   }
 
   return (
-    <ExpansionCard
-      aria-label="Oppfølgingsplan er ikke aktuell nå"
-      size="small"
+    <ReadMore
+      header="Det finnes noen unntak fra å lage oppfølgingsplan"
       className="mb-8"
     >
-      <ExpansionCard.Header>
-        <ExpansionCard.Title as="h3" size="small">
-          Oppfølgingsplan er ikke aktuell nå
-        </ExpansionCard.Title>
-        <ExpansionCard.Description>
-          Meld fra hvis dere ikke skal lage oppfølgingsplan i denne
-          sykefraværsperioden.
-        </ExpansionCard.Description>
-      </ExpansionCard.Header>
+      <form onSubmit={handleSubmit} noValidate>
+        <VStack gap="space-16">
+          <div>
+            <BodyLong>Disse kan for eksempel være:</BodyLong>
 
-      <ExpansionCard.Content>
-        <form onSubmit={handleSubmit} noValidate>
-          <VStack gap="space-16">
-            <BodyLong>
-              Hvis du vurderer at det ikke er behov for en oppfølgingsplan nå,
-              kan du melde fra om det her. Du kan ombestemme deg senere og lage
-              en plan når som helst.
-            </BodyLong>
+            <List>
+              <ListItem>Den ansatte er for syk til å lage plan</ListItem>
+              <ListItem>Den ansatte er snart tilbake i full jobb</ListItem>
+              <ListItem>Arbeidsforholdet skal snart avsluttes</ListItem>
+              <ListItem>
+                Det er ikke mulig å få kontakt med den ansatte
+              </ListItem>
+            </List>
+          </div>
 
-            {visValideringsfeil && (
-              <ErrorSummary
-                ref={errorSummaryRef}
-                heading="Du må rette dette før du kan melde fra:"
-              >
-                <ErrorSummary.Item href={`#${BEKREFTELSE_CHECKBOX_ID}`}>
-                  Du må bekrefte at oppfølgingsplan ikke er aktuell nå
-                </ErrorSummary.Item>
-              </ErrorSummary>
-            )}
-
-            <Checkbox
-              id={BEKREFTELSE_CHECKBOX_ID}
-              checked={erBekreftet}
-              onChange={handleBekreftelseChange}
-              error={visValideringsfeil}
-              description="Du kan ombestemme deg og lage en plan senere."
+          {visValideringsfeil && (
+            <ErrorSummary
+              ref={errorSummaryRef}
+              heading="Du må rette dette før du kan sende til Nav:"
             >
-              Jeg bekrefter at det ikke er aktuelt å lage en oppfølgingsplan nå
-            </Checkbox>
+              <ErrorSummary.Item href={`#${BEKREFTELSE_CHECKBOX_ID}`}>
+                Du må bekrefte at en oppfølgingsplan ikke er nødvendig nå
+              </ErrorSummary.Item>
+            </ErrorSummary>
+          )}
 
-            <FetchErrorAlert error={error} />
+          <Checkbox
+            id={BEKREFTELSE_CHECKBOX_ID}
+            checked={erBekreftet}
+            onChange={handleBekreftelseChange}
+            error={visValideringsfeil}
+            description="Unntakene følger av arbeidsmiljøloven § 4-6: Planen kan utelates «med mindre det er åpenbart unødvendig»."
+          >
+            Jeg bekrefter at en oppfølgingsplan ikke er nødvendig for{" "}
+            {ansattNavn} slik situasjonen er nå.
+          </Checkbox>
 
-            <Button
-              type="submit"
-              variant="secondary"
-              loading={isPending}
-              className="w-fit"
-            >
-              Meld fra
-            </Button>
-          </VStack>
-        </form>
-      </ExpansionCard.Content>
-    </ExpansionCard>
+          <FetchErrorAlert error={error} />
+
+          <Button
+            type="submit"
+            variant="primary-neutral"
+            size="small"
+            loading={isPending}
+            className="w-fit"
+          >
+            Send til Nav
+          </Button>
+        </VStack>
+      </form>
+    </ReadMore>
   );
 }

@@ -237,7 +237,7 @@ describe("NyPlanButtonHvisTomListe", () => {
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Oppfølgingsplan er ikke aktuell nå/i),
+        screen.getByText(/Det finnes noen unntak fra å lage oppfølgingsplan/i),
       ).toBeInTheDocument();
     });
 
@@ -256,7 +256,9 @@ describe("NyPlanButtonHvisTomListe", () => {
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(/Oppfølgingsplan er ikke aktuell nå/i),
+        screen.queryByText(
+          /Det finnes noen unntak fra å lage oppfølgingsplan/i,
+        ),
       ).not.toBeInTheDocument();
     });
 
@@ -270,7 +272,9 @@ describe("NyPlanButtonHvisTomListe", () => {
       await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
 
       expect(
-        screen.queryByText(/Oppfølgingsplan er ikke aktuell nå/i),
+        screen.queryByText(
+          /Det finnes noen unntak fra å lage oppfølgingsplan/i,
+        ),
       ).not.toBeInTheDocument();
     });
   });

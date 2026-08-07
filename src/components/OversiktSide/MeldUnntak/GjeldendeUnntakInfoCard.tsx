@@ -39,13 +39,13 @@ export default async function GjeldendeUnntakInfoCard({
     <InfoCard data-color="neutral" className="mb-8">
       <InfoCardHeader>
         <InfoCardTitle as="h3">
-          Dere har meldt at oppfølgingsplan ikke er aktuell nå
+          Ikke aktuelt med oppfølgingsplan nå
         </InfoCardTitle>
       </InfoCardHeader>
       <InfoCardContent>
-        Meldt {getFormattedDateString(meldtTidspunkt)}
-        {meldtAv.navn ? ` av ${meldtAv.navn}` : ""}. Du kan når som helst lage
-        en oppfølgingsplan hvis situasjonen endrer seg.
+        Registrert {getFormattedDateString(meldtTidspunkt)}
+        {meldtAv.navn ? ` av ${meldtAv.navn}` : ""}. Endrer situasjonen seg, kan
+        dere når som helst lage en plan.
       </InfoCardContent>
     </InfoCard>
   );
