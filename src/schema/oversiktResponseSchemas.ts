@@ -2,6 +2,10 @@ import { z } from "zod";
 import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
 import { organizationDetailsSchema } from "./organizationDetailsSchema";
+import {
+  gjeldendeStatusSchema,
+  unntaksvurderingMetadataSchema,
+} from "./unntaksvurderingSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
 /**
@@ -21,6 +25,16 @@ export const OppfolgingsplanerOversiktResponseSchemaForAG = z.object({
     utkast: utkastMetadataSchema.nullable(),
     aktivPlan: oppfolgingsplanMetadataSchema.nullable(),
     tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
+    /**
+     * Meldte unntaksvurderinger, nyeste først. Egen liste i kontrakten —
+     * skal aldri blandes inn i tidligerePlaner (gatingen av «Lag ny plan»
+     * skal ikke påvirkes av meldte unntak).
+     *
+     * default/optional til backend-PR navikt/syfo-oppfolgingsplan-backend#400
+     * er ute i prod; kan da strammes til påkrevd.
+     */
+    unntaksvurderinger: z.array(unntaksvurderingMetadataSchema).default([]),
+    gjeldendeStatus: gjeldendeStatusSchema.optional(),
   }),
 });
 

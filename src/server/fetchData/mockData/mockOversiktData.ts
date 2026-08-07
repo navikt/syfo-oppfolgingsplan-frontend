@@ -14,6 +14,8 @@ export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
     },
     aktivPlan: mockAktivPlanData,
     tidligerePlaner: mockTidligerePlanerData,
+    unntaksvurderinger: [],
+    gjeldendeStatus: "AKTIV_PLAN",
   },
 };
 
@@ -23,6 +25,8 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
     utkast: null,
     aktivPlan: null,
     tidligerePlaner: [],
+    unntaksvurderinger: [],
+    gjeldendeStatus: "INGEN",
   },
 };
 

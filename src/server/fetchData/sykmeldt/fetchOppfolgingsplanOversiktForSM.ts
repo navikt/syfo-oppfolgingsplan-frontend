@@ -22,6 +22,8 @@ import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 export function getMockDataForScenarioSM(scenario: DemoScenario) {
   switch (scenario) {
     case "tom":
+    // Sykmeldt-visningen av unntak bygges i #888 — til da ser sykmeldt tom liste.
+    case "unntak-meldt":
       return mockOversiktDataTomForSM;
     case "aktiv-og-tidligere":
     case "aktiv-utkast-og-tidligere":

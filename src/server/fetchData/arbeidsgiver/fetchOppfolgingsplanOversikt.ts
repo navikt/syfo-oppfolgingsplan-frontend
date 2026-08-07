@@ -17,7 +17,10 @@ import {
   mockOversiktDataMedPlanerForAG,
   mockOversiktDataTom,
 } from "../mockData/mockOversiktData";
-import { mockOversiktDataAktivOgTidligere } from "../mockData/mockOversiktDataVariants";
+import {
+  mockOversiktDataAktivOgTidligere,
+  mockOversiktDataMedUnntak,
+} from "../mockData/mockOversiktDataVariants";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 
 /** @visibleForTesting */
@@ -29,6 +32,8 @@ export function getMockDataForScenario(scenario: DemoScenario) {
       return mockOversiktDataAktivOgTidligere;
     case "aktiv-utkast-og-tidligere":
       return mockOversiktDataMedPlanerForAG;
+    case "unntak-meldt":
+      return mockOversiktDataMedUnntak;
     default: {
       const _exhaustive: never = scenario;
       throw new Error(`Unknown demo scenario: ${_exhaustive}`);

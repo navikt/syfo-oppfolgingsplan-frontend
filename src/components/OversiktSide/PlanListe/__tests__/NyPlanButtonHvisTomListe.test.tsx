@@ -221,12 +221,29 @@ describe("NyPlanButtonHvisTomListe", () => {
       ).toBeInTheDocument();
     });
 
-    test.each([
-      true,
-      false,
-    ])("kaller Flaggskipet i observasjonsmodus uten å endre UI når orgErITiltaksgruppe=%s", async (orgErITiltaksgruppe) => {
+    test("viser unntaksvalget sammen med hovedvalget når org er i tiltaksgruppen", async () => {
       envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-      mockErOrgINavTiltaksgruppe.mockResolvedValue(orgErITiltaksgruppe);
+      mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataEmptyWithAccess,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
+      expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
+      // Hovedvalget er fortsatt tydelig til stede — unntaket erstatter det ikke.
+      expect(
+        screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Oppfølgingsplan er ikke aktuell nå/i),
+      ).toBeInTheDocument();
+    });
+
+    test("viser ikke unntaksvalget når org ikke er i tiltaksgruppen", async () => {
+      envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+      mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataEmptyWithAccess,
@@ -238,6 +255,20 @@ describe("NyPlanButtonHvisTomListe", () => {
       expect(
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
+      expect(
+        screen.queryByText(/Oppfølgingsplan er ikke aktuell nå/i),
+      ).not.toBeInTheDocument();
+    });
+
+    test("viser ikke unntaksvalget når toggelen er av", async () => {
+      envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataEmptyWithAccess,
+      });
+
+      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+
       expect(
         screen.queryByText(/Oppfølgingsplan er ikke aktuell nå/i),
       ).not.toBeInTheDocument();

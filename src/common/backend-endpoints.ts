@@ -21,6 +21,9 @@ export const getEndpointFerdigstiltPlanForAG = (
 export const getEndpointOppfolgingsplanerForAG = (narmesteLederId: string) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner`;
 
+export const getEndpointUnntaksvurderingerForAG = (narmesteLederId: string) =>
+  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/unntaksvurderinger`;
+
 export const getEndpointDelMedLegeForAG = (
   narmesteLederId: string,
   planId: string,

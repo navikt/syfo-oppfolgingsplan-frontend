@@ -39,6 +39,16 @@ describe("getMockDataForScenario", () => {
     expect(result.oversikt.tidligerePlaner.length).toBeGreaterThan(0);
   });
 
+  test("returns unntak meldt uten planer for 'unntak-meldt'", () => {
+    const result = getMockDataForScenario("unntak-meldt");
+
+    expect(result.oversikt.aktivPlan).toBeNull();
+    expect(result.oversikt.utkast).toBeNull();
+    expect(result.oversikt.tidligerePlaner).toEqual([]);
+    expect(result.oversikt.unntaksvurderinger.length).toBeGreaterThan(0);
+    expect(result.oversikt.gjeldendeStatus).toBe("IKKE_AKTUELT");
+  });
+
   test("throws error for unknown scenario", () => {
     expect(() => getMockDataForScenario("ukjent" as DemoScenario)).toThrow(
       "Unknown demo scenario",

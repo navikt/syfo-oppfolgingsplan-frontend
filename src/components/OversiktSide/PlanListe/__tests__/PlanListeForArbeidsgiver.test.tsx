@@ -5,11 +5,13 @@ import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiv
 import { mockOversiktDataMedPlanerForAG } from "@/server/fetchData/mockData/mockOversiktData";
 import {
   mockOversiktDataEmptyWithAccess,
+  mockOversiktDataMedUnntak,
   mockOversiktDataNoEditAccess,
   mockOversiktDataOnlyActivePlan,
   mockOversiktDataOnlyDraft,
   mockOversiktDataOnlyDraftWithoutExpiry,
   mockOversiktDataOnlyPreviousPlans,
+  mockOversiktDataUnntakOgTidligerePlaner,
 } from "@/server/fetchData/mockData/mockOversiktDataVariants";
 import { renderAsync } from "@/test/test-utils";
 
@@ -345,5 +347,84 @@ describe("PlanListeForArbeidsgiver", () => {
       previousPlansHeading.compareDocumentPosition(infoMessage) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
+  });
+
+  describe("unntaksvurderinger i historikken", () => {
+    test("viser meldte unntak med dato og hvem som meldte, under nøytral overskrift", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataMedUnntak,
+      });
+
+      await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+      expect(
+        screen.getByRole("heading", { name: /Historikk/i }),
+      ).toBeInTheDocument();
+      // Overskriften «Tidligere oppfølgingsplaner» er faktuelt feil når
+      // seksjonen (også) inneholder unntak.
+      expect(
+        screen.queryByRole("heading", { name: /Tidligere oppfølgingsplaner/i }),
+      ).not.toBeInTheDocument();
+
+      const unntakEntries = screen.getAllByText(
+        /Oppfølgingsplan ikke aktuell/i,
+      );
+      expect(unntakEntries).toHaveLength(2);
+      expect(screen.getByText(/10\. februar( \d{4})?/)).toBeInTheDocument();
+      expect(screen.getByText(/Meldt av: Maren Hegna/i)).toBeInTheDocument();
+    });
+
+    test("takler at meldtAv.navn mangler", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataMedUnntak,
+      });
+
+      await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+      // Det eldste mock-unntaket mangler navn — raden vises uten «Meldt av».
+      expect(screen.getByText(/2\. september 2025/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Meldt av:/i)).toHaveLength(1);
+    });
+
+    test("sidestiller unntak og tidligere planer kronologisk, nyeste først", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataUnntakOgTidligerePlaner,
+      });
+
+      await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+      // Forventet rekkefølge på tidsstempler:
+      // unntak 2026-02-10 > plan 2025-05-14 > plan 2025-03-05 > unntak 2025-09-02
+      // → sortert: 2026-02-10 (unntak), 2025-09-02 (unntak), 2025-05-14 (plan), 2025-03-05 (plan)
+      const datoer = [
+        screen.getByText(/10\. februar( \d{4})?/),
+        screen.getByText(/2\. september 2025/),
+        screen.getByText(/14\. mai 2025/),
+        screen.getByText(/5\. mars 2025/),
+      ];
+
+      for (let i = 0; i < datoer.length - 1; i++) {
+        expect(
+          datoer[i].compareDocumentPosition(datoer[i + 1]) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy();
+      }
+    });
+
+    test("endrer ikke overskriften når det bare finnes tidligere planer", async () => {
+      mockFetch.mockResolvedValue({
+        error: null,
+        data: mockOversiktDataOnlyPreviousPlans,
+      });
+
+      await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
+
+      expect(
+        screen.getByRole("heading", { name: /Tidligere oppfølgingsplaner/i }),
+      ).toBeInTheDocument();
+    });
   });
 });

@@ -1,13 +1,8 @@
 import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
 import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
+import MeldUnntakSection from "../MeldUnntak/MeldUnntakSection";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
-
-async function loggTiltakspakkevurderingIObservasjonsmodus(orgnummer: string) {
-  // Frem til UI-et i #891 faktisk bruker returverdien, kalles predikatet kun
-  // for den strukturerte loggingen i erOrgINavTiltaksgruppe.
-  await erOrgINavTiltaksgruppe(orgnummer);
-}
 
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
@@ -25,6 +20,8 @@ export default async function NyPlanButtonHvisTomListe({
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
 
+  // Gates kun på plan-listene — meldte unntaksvurderinger skal IKKE inn her.
+  // Både hovedvalget og unntaksvalget skal bestå etter et meldt unntak (#891).
   const harTomListe =
     aktivPlan === null && tidligerePlaner.length === 0 && utkast === null;
 
@@ -32,9 +29,14 @@ export default async function NyPlanButtonHvisTomListe({
     return null;
   }
 
-  if (isTiltakspakkevurderingFeatureToggleEnabled()) {
-    await loggTiltakspakkevurderingIObservasjonsmodus(organization.orgNumber);
-  }
+  const visUnntaksvalg =
+    isTiltakspakkevurderingFeatureToggleEnabled() &&
+    (await erOrgINavTiltaksgruppe(organization.orgNumber));
 
-  return <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />;
+  return (
+    <>
+      <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      {visUnntaksvalg && <MeldUnntakSection />}
+    </>
+  );
 }

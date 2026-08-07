@@ -1,6 +1,7 @@
 import type { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
+import { mockUnntaksvurderingerData } from "./mockUnntaksvurderingerData";
 
 /**
  * Test-specific variants of oversikt data for different scenarios
@@ -14,6 +15,8 @@ export const mockOversiktDataNoEditAccess: OppfolgingsplanerOversiktForAG = {
     utkast: null,
     aktivPlan: mockAktivPlanData,
     tidligerePlaner: mockTidligerePlanerData,
+    unntaksvurderinger: [],
+    gjeldendeStatus: "AKTIV_PLAN",
   },
 };
 
@@ -27,6 +30,8 @@ export const mockOversiktDataOnlyDraft: OppfolgingsplanerOversiktForAG = {
     },
     aktivPlan: null,
     tidligerePlaner: [],
+    unntaksvurderinger: [],
+    gjeldendeStatus: "UTKAST",
   },
 };
 
@@ -37,6 +42,8 @@ export const mockOversiktDataOnlyActivePlan: OppfolgingsplanerOversiktForAG = {
     utkast: null,
     aktivPlan: mockAktivPlanData,
     tidligerePlaner: [],
+    unntaksvurderinger: [],
+    gjeldendeStatus: "AKTIV_PLAN",
   },
 };
 
@@ -48,6 +55,8 @@ export const mockOversiktDataOnlyPreviousPlans: OppfolgingsplanerOversiktForAG =
       utkast: null,
       aktivPlan: null,
       tidligerePlaner: mockTidligerePlanerData,
+      unntaksvurderinger: [],
+      gjeldendeStatus: "INGEN",
     },
   };
 
@@ -59,6 +68,8 @@ export const mockOversiktDataEmptyWithAccess: OppfolgingsplanerOversiktForAG = {
     utkast: null,
     aktivPlan: null,
     tidligerePlaner: [],
+    unntaksvurderinger: [],
+    gjeldendeStatus: "INGEN",
   },
 };
 
@@ -70,6 +81,8 @@ export const mockOversiktDataEmptyNoAccess: OppfolgingsplanerOversiktForAG = {
     utkast: null,
     aktivPlan: null,
     tidligerePlaner: [],
+    unntaksvurderinger: [],
+    gjeldendeStatus: "INGEN",
   },
 };
 
@@ -81,6 +94,8 @@ export const mockOversiktDataAktivOgTidligere: OppfolgingsplanerOversiktForAG =
       utkast: null,
       aktivPlan: mockAktivPlanData,
       tidligerePlaner: mockTidligerePlanerData,
+      unntaksvurderinger: [],
+      gjeldendeStatus: "AKTIV_PLAN",
     },
   };
 
@@ -94,5 +109,35 @@ export const mockOversiktDataOnlyDraftWithoutExpiry: OppfolgingsplanerOversiktFo
       },
       aktivPlan: null,
       tidligerePlaner: [],
+      unntaksvurderinger: [],
+      gjeldendeStatus: "UTKAST",
+    },
+  };
+
+// Unntak meldt («plan ikke aktuell nå»), ingen planer eller utkast.
+// Hovedvalget og unntaksvalget skal fortsatt vises i denne tilstanden.
+export const mockOversiktDataMedUnntak: OppfolgingsplanerOversiktForAG = {
+  ...mockCommonAGResponseFields,
+  oversikt: {
+    utkast: null,
+    aktivPlan: null,
+    tidligerePlaner: [],
+    unntaksvurderinger: mockUnntaksvurderingerData,
+    gjeldendeStatus: "IKKE_AKTUELT",
+  },
+};
+
+// Unntak + tidligere planer: historikken sidestiller begge kronologisk.
+// (Kan ikke oppstå med dagens backend-partisjonering uten aktiv plan,
+// men verner sorteringen den dagen partisjoneringen endrer seg.)
+export const mockOversiktDataUnntakOgTidligerePlaner: OppfolgingsplanerOversiktForAG =
+  {
+    ...mockCommonAGResponseFields,
+    oversikt: {
+      utkast: null,
+      aktivPlan: null,
+      tidligerePlaner: mockTidligerePlanerData,
+      unntaksvurderinger: mockUnntaksvurderingerData,
+      gjeldendeStatus: "IKKE_AKTUELT",
     },
   };
