@@ -43,9 +43,10 @@ interface Props {
  * for virksomheter i tiltaksgruppen — se NyPlanButtonHvisTomListe.
  *
  * Følger Figma-skissen «Behov for oppfølgingsplan vs. unntak», med
- * korrigeringene fra #891: sendeknappen er aldri disabled (validering ved
- * klikk med fokus til ErrorSummary), og knapp/kvittering sier kun «Nav» —
- * ikke «og den ansatte» — til sykmeldt-visningen (#888) finnes.
+ * korrigeringen fra #891 om at sendeknappen aldri er disabled (validering
+ * ved klikk med fokus til ErrorSummary). Tekstene lover sykmeldt-visningen
+ * (#888) — trygt fordi hele flaten er gated bak big bang-toggelen og alt
+ * AID-innhold lanseres samlet.
  */
 export default function MeldUnntakSection({ ansattNavn }: Props) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
@@ -84,7 +85,9 @@ export default function MeldUnntakSection({ ansattNavn }: Props) {
     return (
       <LocalAlert status="success" className="mb-8">
         <LocalAlertHeader>
-          <LocalAlertTitle as="h3">Meldingen er sendt til Nav</LocalAlertTitle>
+          <LocalAlertTitle as="h3">
+            Meldingen er sendt til Nav og den ansatte
+          </LocalAlertTitle>
           <LocalAlertCloseButton onClick={lukkKvitteringOgNullstill} />
         </LocalAlertHeader>
         <LocalAlertContent>
@@ -145,7 +148,7 @@ export default function MeldUnntakSection({ ansattNavn }: Props) {
           {visValideringsfeil && (
             <ErrorSummary
               ref={errorSummaryRef}
-              heading="Du må rette dette før du kan sende til Nav:"
+              heading="Du må rette dette før du kan sende:"
             >
               <ErrorSummary.Item href={`#${BEKREFTELSE_CHECKBOX_ID}`}>
                 Du må bekrefte at en oppfølgingsplan ikke er nødvendig nå
@@ -173,7 +176,7 @@ export default function MeldUnntakSection({ ansattNavn }: Props) {
             loading={isPending}
             className="w-fit"
           >
-            Send til Nav
+            Send til Nav og den ansatte
           </Button>
         </VStack>
       </form>

@@ -68,14 +68,18 @@ describe("MeldUnntakSection", () => {
 
     await expandUnntaksvalget();
 
-    expect(screen.getByRole("button", { name: /Send til Nav/i })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    ).toBeEnabled();
   });
 
   test("viser feilmelding med fokus og kaller ikke backend når bekreftelsen mangler", async () => {
     renderMeldUnntak();
 
     const user = await expandUnntaksvalget();
-    await user.click(screen.getByRole("button", { name: /Send til Nav/i }));
+    await user.click(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    );
 
     expect(
       screen.getByText(/Du må rette dette før du kan sende/i),
@@ -89,33 +93,31 @@ describe("MeldUnntakSection", () => {
     expect(mockMeldUnntak).not.toHaveBeenCalled();
   });
 
-  test("kaller server action og viser kvittering uten å love visning hos den ansatte", async () => {
+  test("kaller server action og viser kvittering med skissens tekst", async () => {
     mockMeldUnntak.mockResolvedValue({ error: null });
     renderMeldUnntak();
 
     const user = await expandUnntaksvalget();
     await user.click(screen.getByRole("checkbox", { name: /bekrefter/i }));
-    await user.click(screen.getByRole("button", { name: /Send til Nav/i }));
+    await user.click(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    );
 
     expect(mockMeldUnntak).toHaveBeenCalledWith("test-leder-id");
 
+    // Hele flaten er gated bak big bang-toggelen, så teksten kan love
+    // sykmeldt-visningen (#888) — alt lanseres samlet.
     expect(
-      await screen.findByText(/Meldingen er sendt til Nav/i),
+      await screen.findByText(/Meldingen er sendt til Nav og den ansatte/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
         /Nav har registrert at det ikke er aktuelt med en oppfølgingsplan for Kreativ Hatt nå/i,
       ),
     ).toBeInTheDocument();
-    // Sykmeldt-visningen (#888) finnes ikke ennå — kvitteringen skal ikke
-    // love at meldingen er sendt til den ansatte.
-    expect(screen.queryByText(/den ansatte nå/i)).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/sendt til Nav og den ansatte/i),
-    ).not.toBeInTheDocument();
     // Skjemaet er erstattet av kvitteringen.
     expect(
-      screen.queryByRole("button", { name: /Send til Nav$/i }),
+      screen.queryByRole("button", { name: /Send til Nav og den ansatte/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -125,13 +127,15 @@ describe("MeldUnntakSection", () => {
 
     const user = await expandUnntaksvalget();
     await user.click(screen.getByRole("checkbox", { name: /bekrefter/i }));
-    await user.click(screen.getByRole("button", { name: /Send til Nav/i }));
-    await screen.findByText(/Meldingen er sendt til Nav/i);
+    await user.click(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    );
+    await screen.findByText(/Meldingen er sendt til Nav og den ansatte/i);
 
     await user.click(screen.getByRole("button", { name: /lukk/i }));
 
     expect(
-      screen.queryByText(/Meldingen er sendt til Nav/i),
+      screen.queryByText(/Meldingen er sendt til Nav og den ansatte/i),
     ).not.toBeInTheDocument();
     // Arbeidsgiver kan melde på nytt — valget består etter meldt unntak.
     expect(
@@ -149,19 +153,25 @@ describe("MeldUnntakSection", () => {
 
     const user = await expandUnntaksvalget();
     await user.click(screen.getByRole("checkbox", { name: /bekrefter/i }));
-    await user.click(screen.getByRole("button", { name: /Send til Nav/i }));
+    await user.click(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    );
 
     expect(
       await screen.findByText(/Vi fikk ikke kontakt med tjenesten/i),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Send til Nav/i })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    ).toBeEnabled();
   });
 
   test("fjerner valideringsfeilen når bekreftelsen hukes av", async () => {
     renderMeldUnntak();
 
     const user = await expandUnntaksvalget();
-    await user.click(screen.getByRole("button", { name: /Send til Nav/i }));
+    await user.click(
+      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
+    );
     await user.click(screen.getByRole("checkbox", { name: /bekrefter/i }));
 
     expect(
