@@ -350,7 +350,7 @@ describe("PlanListeForArbeidsgiver", () => {
   });
 
   describe("unntaksvurderinger i historikken", () => {
-    test("viser meldte unntak med dato og hvem som meldte, under nøytral overskrift", async () => {
+    test("viser meldte unntak med dato og hvem som meldte, under samme overskrift som i prod", async () => {
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataMedUnntak,
@@ -359,13 +359,8 @@ describe("PlanListeForArbeidsgiver", () => {
       await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
       expect(
-        screen.getByRole("heading", { name: /Historikk/i }),
+        screen.getByRole("heading", { name: /Tidligere oppfølgingsplaner/i }),
       ).toBeInTheDocument();
-      // Overskriften «Tidligere oppfølgingsplaner» er faktuelt feil når
-      // seksjonen (også) inneholder unntak.
-      expect(
-        screen.queryByRole("heading", { name: /Tidligere oppfølgingsplaner/i }),
-      ).not.toBeInTheDocument();
 
       const unntakEntries = screen.getAllByText(
         /Ikke aktuelt med oppfølgingsplan nå/i,

@@ -72,15 +72,8 @@ export default async function PlanListeForArbeidsgiver({
   } = oversiktResult.data;
 
   const historikk = tilHistorikkInnslag(tidligerePlaner, unntaksvurderinger);
-  const harUnntak = unntaksvurderinger.length > 0;
 
   const linkCardTitle = orgName || "Oppfølgingsplan";
-
-  // «Tidligere oppfølgingsplaner» er faktuelt feil når seksjonen (også)
-  // inneholder unntak — da brukes en nøytral overskrift.
-  const historikkHeading = harUnntak
-    ? "Historikk"
-    : "Tidligere oppfølgingsplaner";
 
   return (
     <section className="mb-12">
@@ -107,7 +100,7 @@ export default async function PlanListeForArbeidsgiver({
         </PlanListeDel>
       )}
       {historikk.length > 0 && (
-        <PlanListeDel heading={historikkHeading}>
+        <PlanListeDel heading="Tidligere oppfølgingsplaner">
           <VStack gap="space-16">
             {historikk.map((innslag) =>
               innslag.type === "plan" ? (
