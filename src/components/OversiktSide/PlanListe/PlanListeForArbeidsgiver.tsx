@@ -81,8 +81,7 @@ export default async function PlanListeForArbeidsgiver({
       {aktivPlan && (
         <InlineMessage status="info" className="mt-4">
           Aktive og tidligere oppfølgingsplaner blir utilgjengelige når den
-          ansatte ikke har hatt sykmelding hos dere på 6 måneder. Åpne planen og
-          velg «Vis PDF» for å lagre en kopi.
+          ansatte ikke har hatt sykmelding hos dere på 6 måneder.
         </InlineMessage>
       )}
     </section>

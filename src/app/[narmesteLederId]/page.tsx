@@ -1,11 +1,4 @@
-import { PlantIcon } from "@navikt/aksel-icons";
 import { BodyLong, Heading } from "@navikt/ds-react";
-import {
-  InfoCard,
-  InfoCardContent,
-  InfoCardHeader,
-  InfoCardTitle,
-} from "@navikt/ds-react/InfoCard";
 import { Suspense } from "react";
 import TextContentBox from "@/components/layout/TextContentBox";
 import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
@@ -24,16 +17,6 @@ export default async function OversiktPageForAG({
       <Heading level="2" size="xlarge" spacing>
         Oppfølgingsplaner
       </Heading>
-
-      <InfoCard data-color="info" className={"mb-8"}>
-        <InfoCardHeader icon={<PlantIcon aria-hidden />}>
-          <InfoCardTitle as="h3">Ny oppfølgingsplan!</InfoCardTitle>
-        </InfoCardHeader>
-        <InfoCardContent>
-          Vi har laget en ny versjon av oppfølgingsplan-tjenesten. Håper du
-          liker den!
-        </InfoCardContent>
-      </InfoCard>
 
       <TextContentBox>
         <BodyLong size="large" spacing>
