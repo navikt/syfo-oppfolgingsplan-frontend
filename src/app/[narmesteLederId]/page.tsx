@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import TextContentBox from "@/components/layout/TextContentBox";
 import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
-import GjeldendeUnntakInfoCard from "@/components/OversiktSide/MeldUnntak/GjeldendeUnntakInfoCard";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
@@ -30,7 +29,6 @@ export default async function OversiktPageForAG({
       <Suspense fallback={<PlanListeSkeleton />}>
         <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
         <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
-        <GjeldendeUnntakInfoCard narmesteLederId={narmesteLederId} />
         <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>
 

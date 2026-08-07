@@ -8,11 +8,14 @@ import { TrackedButton } from "@/ui/TrackedButton";
 
 export function LagNyOppfolgingsplanButton({
   narmesteLederId,
+  className = "mb-12",
 }: {
   narmesteLederId: string;
+  /** Bunnmarg — strammere når unntaksvalget vises rett under (jf. Figma). */
+  className?: string;
 }) {
   return (
-    <Box className="mb-12">
+    <Box className={className}>
       <TrackedButton
         variant="primary"
         as={NextLink}

@@ -36,7 +36,10 @@ export default async function NyPlanButtonHvisTomListe({
 
   return (
     <>
-      <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      <LagNyOppfolgingsplanButton
+        narmesteLederId={narmesteLederId}
+        className={visUnntaksvalg ? "mb-8" : "mb-12"}
+      />
       {visUnntaksvalg && <MeldUnntakSection ansattNavn={employee.name} />}
     </>
   );
