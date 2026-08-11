@@ -1,4 +1,4 @@
-import { BodyShort, Heading, Tag } from "@navikt/ds-react";
+import { BodyShort, Box, Heading, HStack, Tag, VStack } from "@navikt/ds-react";
 import type { UnntaksvurderingMetadata } from "@/schema/unntaksvurderingSchemas";
 import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 
@@ -15,24 +15,35 @@ export default function UnntakHistorikkEntry({ unntak }: Props) {
   const { meldtTidspunkt, meldtAv } = unntak;
 
   return (
-    <div className="rounded-xl bg-ax-bg-neutral-soft p-5">
-      <Heading level="4" size="xsmall" spacing>
-        Ikke aktuelt med oppfølgingsplan nå
-      </Heading>
+    <Box
+      as="article"
+      background="neutral-soft"
+      borderRadius="12"
+      padding="space-20"
+    >
+      <VStack gap="space-12">
+        <VStack gap="space-4">
+          <Heading level="4" size="xsmall">
+            Ikke aktuelt med oppfølgingsplan nå
+          </Heading>
 
-      <BodyShort size="small" className="mb-1">
-        Registrert {getFormattedDateString(meldtTidspunkt)}
-      </BodyShort>
+          <BodyShort size="small">
+            Registrert {getFormattedDateString(meldtTidspunkt)}
+          </BodyShort>
 
-      {meldtAv.navn && (
-        <BodyShort size="small" className="mb-1">
-          Av {meldtAv.navn} ({meldtAv.rolle.toLowerCase()})
-        </BodyShort>
-      )}
+          {meldtAv.navn && (
+            <BodyShort size="small">
+              Av {meldtAv.navn} ({meldtAv.rolle.toLowerCase()})
+            </BodyShort>
+          )}
+        </VStack>
 
-      <Tag variant="neutral-moderate" size="small" className="mt-2">
-        Ikke aktuelt
-      </Tag>
-    </div>
+        <HStack>
+          <Tag variant="moderate" data-color="neutral" size="small">
+            Ikke aktuelt
+          </Tag>
+        </HStack>
+      </VStack>
+    </Box>
   );
 }

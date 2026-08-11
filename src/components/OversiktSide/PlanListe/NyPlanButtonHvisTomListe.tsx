@@ -1,3 +1,4 @@
+import { Box, VStack } from "@navikt/ds-react";
 import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
 import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
@@ -34,13 +35,18 @@ export default async function NyPlanButtonHvisTomListe({
     isTiltakspakkevurderingFeatureToggleEnabled() &&
     (await erOrgINavTiltaksgruppe(organization.orgNumber));
 
+  if (!visUnntaksvalg) {
+    return (
+      <Box marginBlock="space-0 space-48">
+        <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      </Box>
+    );
+  }
+
   return (
-    <>
-      <LagNyOppfolgingsplanButton
-        narmesteLederId={narmesteLederId}
-        className={visUnntaksvalg ? "mb-8" : "mb-12"}
-      />
-      {visUnntaksvalg && <MeldUnntakSection ansattNavn={employee.name} />}
-    </>
+    <VStack gap="space-32" marginBlock="space-0 space-32">
+      <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      <MeldUnntakSection ansattNavn={employee.name} />
+    </VStack>
   );
 }

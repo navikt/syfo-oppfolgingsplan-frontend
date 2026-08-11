@@ -26,11 +26,7 @@ function renderMeldUnntak() {
 
 async function expandUnntaksvalget() {
   const user = userEvent.setup();
-  await user.click(
-    screen.getByRole("button", {
-      name: /Det finnes noen unntak fra å lage oppfølgingsplan/i,
-    }),
-  );
+  await user.click(screen.getByRole("button", { name: /Vis mer/i }));
   return user;
 }
 
@@ -45,6 +41,12 @@ describe("MeldUnntakSection", () => {
 
   test("viser eksempler på unntak, bekreftelse med den ansattes navn og lovhjemmel", async () => {
     renderMeldUnntak();
+
+    expect(
+      screen.getByRole("region", {
+        name: /Unntak fra oppfølgingsplan for Kreativ Hatt/i,
+      }),
+    ).toBeInTheDocument();
 
     await expandUnntaksvalget();
 
@@ -68,9 +70,12 @@ describe("MeldUnntakSection", () => {
 
     await expandUnntaksvalget();
 
-    expect(
-      screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
-    ).toBeEnabled();
+    const sendButton = screen.getByRole("button", {
+      name: /Send til Nav og den ansatte/i,
+    });
+
+    expect(sendButton).toBeEnabled();
+    expect(sendButton).toHaveAttribute("data-color", "neutral");
   });
 
   test("viser feilmelding med fokus og kaller ikke backend når bekreftelsen mangler", async () => {
@@ -139,9 +144,12 @@ describe("MeldUnntakSection", () => {
     ).not.toBeInTheDocument();
     // Arbeidsgiver kan melde på nytt — valget består etter meldt unntak.
     expect(
-      screen.getByRole("button", {
+      screen.getByRole("heading", {
         name: /Det finnes noen unntak fra å lage oppfølgingsplan/i,
       }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Vis mer/i }),
     ).toBeInTheDocument();
   });
 
@@ -160,6 +168,7 @@ describe("MeldUnntakSection", () => {
     expect(
       await screen.findByText(/Vi fikk ikke kontakt med tjenesten/i),
     ).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Send til Nav og den ansatte/i }),
     ).toBeEnabled();

@@ -47,7 +47,7 @@ describe("meldUnntaksvurderingServerAction", () => {
       expect.objectContaining({
         method: "POST",
         endpoint:
-          "http://backend/api/v1/arbeidsgiver/nl-123/oppfolgingsplaner/unntaksvurderinger",
+          "http://backend/api/v1/arbeidsgiver/nl-123/unntaksvurderinger",
       }),
     );
     expect(refreshMock).toHaveBeenCalled();

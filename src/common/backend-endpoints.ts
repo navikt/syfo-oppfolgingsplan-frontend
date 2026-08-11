@@ -22,7 +22,7 @@ export const getEndpointOppfolgingsplanerForAG = (narmesteLederId: string) =>
   `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner`;
 
 export const getEndpointUnntaksvurderingerForAG = (narmesteLederId: string) =>
-  `${getAGEndpointPrefix(narmesteLederId)}/oppfolgingsplaner/unntaksvurderinger`;
+  `${getAGEndpointPrefix(narmesteLederId)}/unntaksvurderinger`;
 
 export const getEndpointDelMedLegeForAG = (
   narmesteLederId: string,

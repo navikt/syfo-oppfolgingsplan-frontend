@@ -366,6 +366,7 @@ describe("PlanListeForArbeidsgiver", () => {
         /Ikke aktuelt med oppfølgingsplan nå/i,
       );
       expect(unntakEntries).toHaveLength(2);
+      expect(screen.getAllByRole("article")).toHaveLength(2);
       expect(
         screen.getByText(/Registrert 10\. februar( \d{4})?/),
       ).toBeInTheDocument();

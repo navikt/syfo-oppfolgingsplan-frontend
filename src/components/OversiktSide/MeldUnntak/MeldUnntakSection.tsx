@@ -5,12 +5,18 @@ import {
   Button,
   Checkbox,
   ErrorSummary,
+  HStack,
   LocalAlert,
-  ReadMore,
   VStack,
 } from "@navikt/ds-react";
 // Subkomponenter importeres flatt fra subpath — compound-varianten
-// (List.Item, LocalAlert.Header) brekker under Next sin optimizePackageImports.
+// brekker under Next sin optimizePackageImports.
+import {
+  ExpansionCard,
+  ExpansionCardContent,
+  ExpansionCardHeader,
+  ExpansionCardTitle,
+} from "@navikt/ds-react/ExpansionCard";
 import { List, ListItem } from "@navikt/ds-react/List";
 import {
   LocalAlertCloseButton,
@@ -83,7 +89,7 @@ export default function MeldUnntakSection({ ansattNavn }: Props) {
 
   if (erSendt) {
     return (
-      <LocalAlert status="success" className="mb-8">
+      <LocalAlert status="success">
         <LocalAlertHeader>
           <LocalAlertTitle as="h3">
             Meldingen er sendt til Nav og den ansatte
@@ -126,60 +132,70 @@ export default function MeldUnntakSection({ ansattNavn }: Props) {
   }
 
   return (
-    <ReadMore
-      header="Det finnes noen unntak fra å lage oppfølgingsplan"
-      className="mb-8"
+    <ExpansionCard
+      aria-label={`Unntak fra oppfølgingsplan for ${ansattNavn}`}
+      data-color="neutral"
+      size="small"
     >
-      <form onSubmit={handleSubmit} noValidate>
-        <VStack gap="space-16">
-          <div>
-            <BodyLong>Disse kan for eksempel være:</BodyLong>
+      <ExpansionCardHeader>
+        <ExpansionCardTitle as="h3">
+          Det finnes noen unntak fra å lage oppfølgingsplan
+        </ExpansionCardTitle>
+      </ExpansionCardHeader>
+      <ExpansionCardContent>
+        <form onSubmit={handleSubmit} noValidate>
+          <VStack gap="space-16">
+            <VStack gap="space-8">
+              <BodyLong>Disse kan for eksempel være:</BodyLong>
 
-            <List>
-              <ListItem>Den ansatte er for syk til å lage plan</ListItem>
-              <ListItem>Den ansatte er snart tilbake i full jobb</ListItem>
-              <ListItem>Arbeidsforholdet skal snart avsluttes</ListItem>
-              <ListItem>
-                Det er ikke mulig å få kontakt med den ansatte
-              </ListItem>
-            </List>
-          </div>
+              <List>
+                <ListItem>Den ansatte er for syk til å lage plan</ListItem>
+                <ListItem>Den ansatte er snart tilbake i full jobb</ListItem>
+                <ListItem>Arbeidsforholdet skal snart avsluttes</ListItem>
+                <ListItem>
+                  Det er ikke mulig å få kontakt med den ansatte
+                </ListItem>
+              </List>
+            </VStack>
 
-          {visValideringsfeil && (
-            <ErrorSummary
-              ref={errorSummaryRef}
-              heading="Du må rette dette før du kan sende:"
+            {visValideringsfeil && (
+              <ErrorSummary
+                ref={errorSummaryRef}
+                heading="Du må rette dette før du kan sende:"
+              >
+                <ErrorSummary.Item href={`#${BEKREFTELSE_CHECKBOX_ID}`}>
+                  Du må bekrefte at en oppfølgingsplan ikke er nødvendig nå
+                </ErrorSummary.Item>
+              </ErrorSummary>
+            )}
+
+            <Checkbox
+              id={BEKREFTELSE_CHECKBOX_ID}
+              checked={erBekreftet}
+              onChange={handleBekreftelseChange}
+              error={visValideringsfeil}
+              description="Unntakene følger av arbeidsmiljøloven § 4-6: Planen kan utelates «med mindre det er åpenbart unødvendig»."
             >
-              <ErrorSummary.Item href={`#${BEKREFTELSE_CHECKBOX_ID}`}>
-                Du må bekrefte at en oppfølgingsplan ikke er nødvendig nå
-              </ErrorSummary.Item>
-            </ErrorSummary>
-          )}
+              Jeg bekrefter at en oppfølgingsplan ikke er nødvendig for{" "}
+              {ansattNavn} slik situasjonen er nå.
+            </Checkbox>
 
-          <Checkbox
-            id={BEKREFTELSE_CHECKBOX_ID}
-            checked={erBekreftet}
-            onChange={handleBekreftelseChange}
-            error={visValideringsfeil}
-            description="Unntakene følger av arbeidsmiljøloven § 4-6: Planen kan utelates «med mindre det er åpenbart unødvendig»."
-          >
-            Jeg bekrefter at en oppfølgingsplan ikke er nødvendig for{" "}
-            {ansattNavn} slik situasjonen er nå.
-          </Checkbox>
+            <FetchErrorAlert error={error} />
 
-          <FetchErrorAlert error={error} />
-
-          <Button
-            type="submit"
-            variant="primary-neutral"
-            size="small"
-            loading={isPending}
-            className="w-fit"
-          >
-            Send til Nav og den ansatte
-          </Button>
-        </VStack>
-      </form>
-    </ReadMore>
+            <HStack>
+              <Button
+                type="submit"
+                variant="primary"
+                data-color="neutral"
+                size="small"
+                loading={isPending}
+              >
+                Send til Nav og den ansatte
+              </Button>
+            </HStack>
+          </VStack>
+        </form>
+      </ExpansionCardContent>
+    </ExpansionCard>
   );
 }
