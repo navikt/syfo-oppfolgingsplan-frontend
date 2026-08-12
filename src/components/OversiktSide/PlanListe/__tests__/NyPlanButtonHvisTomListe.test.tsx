@@ -232,7 +232,6 @@ describe("NyPlanButtonHvisTomListe", () => {
       await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
 
       expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
-      // Hovedvalget er fortsatt tydelig til stede — unntaket erstatter det ikke.
       expect(
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();

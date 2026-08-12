@@ -114,8 +114,6 @@ export const mockOversiktDataOnlyDraftWithoutExpiry: OppfolgingsplanerOversiktFo
     },
   };
 
-// Unntak meldt («plan ikke aktuell nå»), ingen planer eller utkast.
-// Hovedvalget og unntaksvalget skal fortsatt vises i denne tilstanden.
 export const mockOversiktDataMedUnntak: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
   oversikt: {
@@ -127,17 +125,14 @@ export const mockOversiktDataMedUnntak: OppfolgingsplanerOversiktForAG = {
   },
 };
 
-// Unntak + tidligere planer: historikken sidestiller begge kronologisk.
-// (Kan ikke oppstå med dagens backend-partisjonering uten aktiv plan,
-// men verner sorteringen den dagen partisjoneringen endrer seg.)
-export const mockOversiktDataUnntakOgTidligerePlaner: OppfolgingsplanerOversiktForAG =
+export const mockOversiktDataMedPlanerOgUnntak: OppfolgingsplanerOversiktForAG =
   {
     ...mockCommonAGResponseFields,
     oversikt: {
       utkast: null,
-      aktivPlan: null,
+      aktivPlan: mockAktivPlanData,
       tidligerePlaner: mockTidligerePlanerData,
       unntaksvurderinger: mockUnntaksvurderingerData,
-      gjeldendeStatus: "IKKE_AKTUELT",
+      gjeldendeStatus: "AKTIV_PLAN",
     },
   };

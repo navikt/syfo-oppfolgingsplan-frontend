@@ -25,11 +25,6 @@ type HistorikkInnslag =
   | { type: "plan"; tidspunkt: string; plan: TidligerePlan }
   | { type: "unntak"; tidspunkt: string; unntak: UnntaksvurderingMetadata };
 
-/**
- * Sidestiller tidligere planer og meldte unntaksvurderinger kronologisk,
- * nyeste først. Rent presentasjonsvalg — listene holdes atskilt i kontrakten,
- * og unntak skal aldri påvirke gatingen av «Lag ny plan».
- */
 function tilHistorikkInnslag(
   tidligerePlaner: TidligerePlan[],
   unntaksvurderinger: UnntaksvurderingMetadata[],

@@ -22,8 +22,6 @@ export default async function NyPlanButtonHvisTomListe({
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
 
-  // Gates kun på plan-listene — meldte unntaksvurderinger skal IKKE inn her.
-  // Både hovedvalget og unntaksvalget skal bestå etter et meldt unntak (#891).
   const harTomListe =
     aktivPlan === null && tidligerePlaner.length === 0 && utkast === null;
 

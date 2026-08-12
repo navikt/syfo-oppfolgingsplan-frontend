@@ -6,11 +6,6 @@ interface Props {
   unntak: UnntaksvurderingMetadata;
 }
 
-/**
- * Historikk-innslag for en meldt unntaksvurdering, etter Figma-skissen
- * «Unntak vist i historikk». Ikke klikkbar — et unntak har ingen detaljside,
- * kun hvem og når.
- */
 export default function UnntakHistorikkEntry({ unntak }: Props) {
   const { meldtTidspunkt, meldtAv } = unntak;
 

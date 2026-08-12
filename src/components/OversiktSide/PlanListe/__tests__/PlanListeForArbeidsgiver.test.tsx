@@ -5,13 +5,13 @@ import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiv
 import { mockOversiktDataMedPlanerForAG } from "@/server/fetchData/mockData/mockOversiktData";
 import {
   mockOversiktDataEmptyWithAccess,
+  mockOversiktDataMedPlanerOgUnntak,
   mockOversiktDataMedUnntak,
   mockOversiktDataNoEditAccess,
   mockOversiktDataOnlyActivePlan,
   mockOversiktDataOnlyDraft,
   mockOversiktDataOnlyDraftWithoutExpiry,
   mockOversiktDataOnlyPreviousPlans,
-  mockOversiktDataUnntakOgTidligerePlaner,
 } from "@/server/fetchData/mockData/mockOversiktDataVariants";
 import { renderAsync } from "@/test/test-utils";
 
@@ -373,7 +373,6 @@ describe("PlanListeForArbeidsgiver", () => {
       expect(
         screen.getByText(/Av Maren Hegna \(arbeidsgiver\)/i),
       ).toBeInTheDocument();
-      // Grå status-tag på hvert innslag (eksakt tekstmatch treffer kun taggene).
       expect(screen.getAllByText("Ikke aktuelt")).toHaveLength(2);
     });
 
@@ -385,7 +384,6 @@ describe("PlanListeForArbeidsgiver", () => {
 
       await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
-      // Det eldste mock-unntaket mangler navn — raden vises uten «Av …»-linje.
       expect(
         screen.getByText(/Registrert 2\. september 2025/),
       ).toBeInTheDocument();
@@ -395,14 +393,11 @@ describe("PlanListeForArbeidsgiver", () => {
     test("sidestiller unntak og tidligere planer kronologisk, nyeste først", async () => {
       mockFetch.mockResolvedValue({
         error: null,
-        data: mockOversiktDataUnntakOgTidligerePlaner,
+        data: mockOversiktDataMedPlanerOgUnntak,
       });
 
       await renderAsync(PlanListeForArbeidsgiver({ narmesteLederId: "12345" }));
 
-      // Forventet rekkefølge på tidsstempler:
-      // unntak 2026-02-10 > plan 2025-05-14 > plan 2025-03-05 > unntak 2025-09-02
-      // → sortert: 2026-02-10 (unntak), 2025-09-02 (unntak), 2025-05-14 (plan), 2025-03-05 (plan)
       const datoer = [
         screen.getByText(/Registrert 10\. februar( \d{4})?/),
         screen.getByText(/Registrert 2\. september 2025/),

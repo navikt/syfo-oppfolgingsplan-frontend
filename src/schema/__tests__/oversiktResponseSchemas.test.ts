@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { OppfolgingsplanerOversiktResponseSchemaForAG } from "../oversiktResponseSchemas";
 
-const gyldigOversiktUtenUnntak = {
+const gyldigOversikt = {
   userHasEditAccess: true,
   organization: { orgNumber: "123456789", orgName: "Holmen skole" },
   employee: { fnr: "17097534212", name: "Kreativ Hatt" },
@@ -9,6 +9,8 @@ const gyldigOversiktUtenUnntak = {
     utkast: null,
     aktivPlan: null,
     tidligerePlaner: [],
+    unntaksvurderinger: [],
+    gjeldendeStatus: "INGEN",
   },
 };
 
@@ -22,9 +24,9 @@ const unntaksvurderingFraBackend = {
 describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", () => {
   test("parser respons med unntaksvurderinger og gjeldendeStatus fra backend-kontrakten", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
-      ...gyldigOversiktUtenUnntak,
+      ...gyldigOversikt,
       oversikt: {
-        ...gyldigOversiktUtenUnntak.oversikt,
+        ...gyldigOversikt.oversikt,
         unntaksvurderinger: [unntaksvurderingFraBackend],
         gjeldendeStatus: "IKKE_AKTUELT",
       },
@@ -39,9 +41,9 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
 
   test("parser respons der meldtAv.navn er null (PDL-oppslag feilet i backend)", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
-      ...gyldigOversiktUtenUnntak,
+      ...gyldigOversikt,
       oversikt: {
-        ...gyldigOversiktUtenUnntak.oversikt,
+        ...gyldigOversikt.oversikt,
         unntaksvurderinger: [
           {
             ...unntaksvurderingFraBackend,
@@ -58,22 +60,46 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
     ).toBeNull();
   });
 
-  test("defaulter til tom liste og udefinert status når backend ikke sender feltene ennå", () => {
-    // Rollout-sikkerhet: frontend kan deployes før backend-PR #400.
-    const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse(
-      gyldigOversiktUtenUnntak,
-    );
+  test.each([
+    "unntaksvurderinger",
+    "gjeldendeStatus",
+  ])("avviser respons uten påkrevd felt %s", (felt) => {
+    const oversikt: Record<string, unknown> = {
+      ...gyldigOversikt.oversikt,
+    };
+    delete oversikt[felt];
 
-    expect(result.success).toBe(true);
-    expect(result.data?.oversikt.unntaksvurderinger).toEqual([]);
-    expect(result.data?.oversikt.gjeldendeStatus).toBeUndefined();
+    const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
+      ...gyldigOversikt,
+      oversikt,
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  test("avviser ukjent rolle", () => {
+    const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
+      ...gyldigOversikt,
+      oversikt: {
+        ...gyldigOversikt.oversikt,
+        unntaksvurderinger: [
+          {
+            ...unntaksvurderingFraBackend,
+            meldtAv: { navn: "Maren Hegna", rolle: "NAV" },
+          },
+        ],
+        gjeldendeStatus: "IKKE_AKTUELT",
+      },
+    });
+
+    expect(result.success).toBe(false);
   });
 
   test("avviser unntaksvurdering uten meldtTidspunkt", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
-      ...gyldigOversiktUtenUnntak,
+      ...gyldigOversikt,
       oversikt: {
-        ...gyldigOversiktUtenUnntak.oversikt,
+        ...gyldigOversikt.oversikt,
         unntaksvurderinger: [
           { ...unntaksvurderingFraBackend, meldtTidspunkt: undefined },
         ],
