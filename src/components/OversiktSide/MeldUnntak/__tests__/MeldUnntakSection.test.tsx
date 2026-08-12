@@ -140,7 +140,7 @@ describe("MeldUnntakSection", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: /Det finnes noen unntak fra å lage oppfølgingsplan/i,
+        name: /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,
       }),
     ).toBeInTheDocument();
     expect(

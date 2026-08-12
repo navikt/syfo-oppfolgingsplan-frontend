@@ -236,7 +236,9 @@ describe("NyPlanButtonHvisTomListe", () => {
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Det finnes noen unntak fra å lage oppfølgingsplan/i),
+        screen.getByText(
+          /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,
+        ),
       ).toBeInTheDocument();
     });
 
@@ -256,7 +258,7 @@ describe("NyPlanButtonHvisTomListe", () => {
       ).toBeInTheDocument();
       expect(
         screen.queryByText(
-          /Det finnes noen unntak fra å lage oppfølgingsplan/i,
+          /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,
         ),
       ).not.toBeInTheDocument();
     });
@@ -272,7 +274,7 @@ describe("NyPlanButtonHvisTomListe", () => {
 
       expect(
         screen.queryByText(
-          /Det finnes noen unntak fra å lage oppfølgingsplan/i,
+          /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,
         ),
       ).not.toBeInTheDocument();
     });

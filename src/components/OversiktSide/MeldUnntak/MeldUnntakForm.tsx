@@ -68,7 +68,7 @@ export default function MeldUnntakForm({ ansattNavn, onSuccess }: Props) {
     >
       <ExpansionCardHeader>
         <ExpansionCardTitle as="h3" size="small">
-          Det finnes noen unntak fra å lage oppfølgingsplan
+          Det finnes enkelte unntak fra å lage oppfølgingsplan
         </ExpansionCardTitle>
       </ExpansionCardHeader>
       <ExpansionCardContent>
