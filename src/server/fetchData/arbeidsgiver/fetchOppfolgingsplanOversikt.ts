@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getEndpointOversiktForAG } from "@/common/backend-endpoints";
 import {
   DEMO_SCENARIO_COOKIE,
@@ -41,26 +42,34 @@ export function getMockDataForScenario(scenario: DemoScenario) {
   }
 }
 
-export async function fetchOppfolgingsplanOversiktForAG(
-  narmesteLederId: string,
-): Promise<FetchGetResult<OppfolgingsplanerOversiktForAG>> {
-  if (isLocalOrDemo) {
-    const { cookies } = await import("next/headers");
-    const scenario = parseDemoScenario(
-      (await cookies()).get(DEMO_SCENARIO_COOKIE)?.value,
-    );
-    await simulateBackendDelay();
+/**
+ * Cached with React cache() so all server components that need the oversikt in
+ * the same render pass share one backend call. Next.js' own fetch memoization
+ * does not dedupe these requests: the cache key includes all request headers,
+ * and getBackendRequestHeaders() sets a fresh nanoid() in Nav-Call-Id per call.
+ */
+export const fetchOppfolgingsplanOversiktForAG = cache(
+  async (
+    narmesteLederId: string,
+  ): Promise<FetchGetResult<OppfolgingsplanerOversiktForAG>> => {
+    if (isLocalOrDemo) {
+      const { cookies } = await import("next/headers");
+      const scenario = parseDemoScenario(
+        (await cookies()).get(DEMO_SCENARIO_COOKIE)?.value,
+      );
+      await simulateBackendDelay();
 
-    return {
-      error: null,
-      data: getMockDataForScenario(scenario),
-    };
-  }
+      return {
+        error: null,
+        data: getMockDataForScenario(scenario),
+      };
+    }
 
-  return await tokenXFetchGetWithResult({
-    targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-    endpoint: getEndpointOversiktForAG(narmesteLederId),
-    responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,
-    redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
-  });
-}
+    return await tokenXFetchGetWithResult({
+      targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
+      endpoint: getEndpointOversiktForAG(narmesteLederId),
+      responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,
+      redirectAfterLoginUrl: getRedirectAfterLoginUrlForAG(narmesteLederId),
+    });
+  },
+);
