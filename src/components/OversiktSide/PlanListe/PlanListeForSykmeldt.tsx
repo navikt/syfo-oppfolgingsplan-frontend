@@ -58,12 +58,12 @@ async function filtrerUnntaksvurderingerForTiltaksgruppe(
 }
 
 function finnGjeldendeUnntaksvurderinger(
-  aktiveOppfolgingsplaner: AktivPlan[],
+  ferdigstilteOppfolgingsplaner: Array<AktivPlan | TidligerePlan>,
   unntaksvurderinger: UnntaksvurderingMetadata[],
 ): UnntaksvurderingMetadata[] {
   const nyestePlanTidspunktPerOrganisasjon = new Map<string, number>();
 
-  for (const plan of aktiveOppfolgingsplaner) {
+  for (const plan of ferdigstilteOppfolgingsplaner) {
     const organisasjonsnummer = plan.organization.orgNumber;
     const tidspunkt = Date.parse(plan.ferdigstiltTidspunkt);
     const eksisterendeTidspunkt =
@@ -136,7 +136,7 @@ export default async function PlanListeForSykmeldt() {
   const synligeUnntaksvurderinger =
     await filtrerUnntaksvurderingerForTiltaksgruppe(unntaksvurderinger);
   const gjeldendeUnntaksvurderinger = finnGjeldendeUnntaksvurderinger(
-    aktiveOppfolgingsplaner,
+    [...aktiveOppfolgingsplaner, ...tidligerePlaner],
     synligeUnntaksvurderinger,
   );
   const historikk = tilHistorikkInnslag(

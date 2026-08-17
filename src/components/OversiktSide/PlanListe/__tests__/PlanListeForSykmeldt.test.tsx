@@ -220,6 +220,37 @@ describe("PlanListeForSykmeldt", () => {
     ).toBeInTheDocument();
   });
 
+  test("does not restore an old unntak as current when a newer finalized plan is in history", async () => {
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    const unntak =
+      mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[0];
+    const nyereTidligerePlan = {
+      ...mockOversiktDataOnlyActiveForSM.aktiveOppfolgingsplaner[0],
+      ferdigstiltTidspunkt: "2026-03-01T10:00:00Z",
+      organization: unntak.organization,
+    };
+    mockFetch.mockResolvedValue({
+      aktiveOppfolgingsplaner: [],
+      tidligerePlaner: [nyereTidligerePlan],
+      unntaksvurderinger: [unntak],
+    });
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(
+      screen.queryByRole("heading", {
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
+        level: 4,
+      }),
+    ).toBeInTheDocument();
+  });
+
   test("checks Flaggskipet once per organization while retaining every history entry", async () => {
     envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
     mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
