@@ -37,7 +37,10 @@ export type OppfolgingsplanerOversiktForAG = z.infer<
 export const OppfolgingsplanerOversiktResponseSchemaForSM = z.object({
   aktiveOppfolgingsplaner: z.array(oppfolgingsplanMetadataSchema),
   tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
-  unntaksvurderinger: z.array(unntaksvurderingMetadataSchema),
+  unntaksvurderinger: z.array(unntaksvurderingMetadataSchema).default([]),
+  gjeldendeUnntaksvurderinger: z
+    .array(unntaksvurderingMetadataSchema)
+    .default([]),
 });
 
 export type OppfolgingsplanerOversiktForSM = z.infer<

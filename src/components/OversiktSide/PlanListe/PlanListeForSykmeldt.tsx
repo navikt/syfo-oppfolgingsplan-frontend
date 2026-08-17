@@ -15,22 +15,20 @@ import PlanListeDel from "./PlanListeDel";
 import UnntakHistorikkEntry from "./UnntakHistorikkEntry";
 import { UnntaksvurderingInfoCard } from "./UnntaksvurderingInfoCard";
 
-type AktivPlan =
-  OppfolgingsplanerOversiktForSM["aktiveOppfolgingsplaner"][number];
 type TidligerePlan = OppfolgingsplanerOversiktForSM["tidligerePlaner"][number];
 
 type HistorikkInnslag =
   | { type: "plan"; tidspunkt: string; plan: TidligerePlan }
   | { type: "unntak"; tidspunkt: string; unntak: UnntaksvurderingMetadata };
 
-async function filtrerUnntaksvurderingerForTiltaksgruppe(
+async function finnOrganisasjonerITiltaksgruppe(
   unntaksvurderinger: UnntaksvurderingMetadata[],
-): Promise<UnntaksvurderingMetadata[]> {
+): Promise<Set<string>> {
   if (
     !isTiltakspakkevurderingFeatureToggleEnabled() ||
     unntaksvurderinger.length === 0
   ) {
-    return [];
+    return new Set();
   }
 
   const organisasjonsnumre = [
@@ -46,69 +44,11 @@ async function filtrerUnntaksvurderingerForTiltaksgruppe(
       erITiltaksgruppe: await erOrgINavTiltaksgruppe(organisasjonsnummer),
     })),
   );
-  const organisasjonerITiltaksgruppe = new Set(
+  return new Set(
     tiltaksgruppevurderinger
       .filter(({ erITiltaksgruppe }) => erITiltaksgruppe)
       .map(({ organisasjonsnummer }) => organisasjonsnummer),
   );
-
-  return unntaksvurderinger.filter((unntaksvurdering) =>
-    organisasjonerITiltaksgruppe.has(unntaksvurdering.organization.orgNumber),
-  );
-}
-
-function finnGjeldendeUnntaksvurderinger(
-  ferdigstilteOppfolgingsplaner: Array<AktivPlan | TidligerePlan>,
-  unntaksvurderinger: UnntaksvurderingMetadata[],
-): UnntaksvurderingMetadata[] {
-  const nyestePlanTidspunktPerOrganisasjon = new Map<string, number>();
-
-  for (const plan of ferdigstilteOppfolgingsplaner) {
-    const organisasjonsnummer = plan.organization.orgNumber;
-    const tidspunkt = Date.parse(plan.ferdigstiltTidspunkt);
-    const eksisterendeTidspunkt =
-      nyestePlanTidspunktPerOrganisasjon.get(organisasjonsnummer);
-
-    if (
-      eksisterendeTidspunkt === undefined ||
-      tidspunkt > eksisterendeTidspunkt
-    ) {
-      nyestePlanTidspunktPerOrganisasjon.set(organisasjonsnummer, tidspunkt);
-    }
-  }
-
-  const nyesteUnntakPerOrganisasjon = new Map<
-    string,
-    UnntaksvurderingMetadata
-  >();
-
-  for (const unntaksvurdering of unntaksvurderinger) {
-    const organisasjonsnummer = unntaksvurdering.organization.orgNumber;
-    const eksisterende = nyesteUnntakPerOrganisasjon.get(organisasjonsnummer);
-
-    if (
-      !eksisterende ||
-      Date.parse(unntaksvurdering.meldtTidspunkt) >
-        Date.parse(eksisterende.meldtTidspunkt)
-    ) {
-      nyesteUnntakPerOrganisasjon.set(organisasjonsnummer, unntaksvurdering);
-    }
-  }
-
-  return [...nyesteUnntakPerOrganisasjon.values()]
-    .filter((unntaksvurdering) => {
-      const nyestePlanTidspunkt = nyestePlanTidspunktPerOrganisasjon.get(
-        unntaksvurdering.organization.orgNumber,
-      );
-
-      return (
-        nyestePlanTidspunkt === undefined ||
-        Date.parse(unntaksvurdering.meldtTidspunkt) > nyestePlanTidspunkt
-      );
-    })
-    .sort(
-      (a, b) => Date.parse(b.meldtTidspunkt) - Date.parse(a.meldtTidspunkt),
-    );
 }
 
 function tilHistorikkInnslag(
@@ -130,14 +70,24 @@ function tilHistorikkInnslag(
 }
 
 export default async function PlanListeForSykmeldt() {
-  const { aktiveOppfolgingsplaner, tidligerePlaner, unntaksvurderinger } =
-    await fetchOppfolgingsplanOversiktForSM();
+  const {
+    aktiveOppfolgingsplaner,
+    tidligerePlaner,
+    unntaksvurderinger,
+    gjeldendeUnntaksvurderinger,
+  } = await fetchOppfolgingsplanOversiktForSM();
 
-  const synligeUnntaksvurderinger =
-    await filtrerUnntaksvurderingerForTiltaksgruppe(unntaksvurderinger);
-  const gjeldendeUnntaksvurderinger = finnGjeldendeUnntaksvurderinger(
-    [...aktiveOppfolgingsplaner, ...tidligerePlaner],
-    synligeUnntaksvurderinger,
+  const organisasjonerITiltaksgruppe = await finnOrganisasjonerITiltaksgruppe([
+    ...unntaksvurderinger,
+    ...gjeldendeUnntaksvurderinger,
+  ]);
+  const synligeUnntaksvurderinger = unntaksvurderinger.filter(
+    (unntaksvurdering) =>
+      organisasjonerITiltaksgruppe.has(unntaksvurdering.organization.orgNumber),
+  );
+  const synligeGjeldendeUnntaksvurderinger = gjeldendeUnntaksvurderinger.filter(
+    (unntaksvurdering) =>
+      organisasjonerITiltaksgruppe.has(unntaksvurdering.organization.orgNumber),
   );
   const historikk = tilHistorikkInnslag(
     tidligerePlaner,
@@ -145,7 +95,8 @@ export default async function PlanListeForSykmeldt() {
   );
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
-  const harGjeldendeUnntaksvurderinger = gjeldendeUnntaksvurderinger.length > 0;
+  const harGjeldendeUnntaksvurderinger =
+    synligeGjeldendeUnntaksvurderinger.length > 0;
 
   return (
     <section className="mb-8">
@@ -159,7 +110,7 @@ export default async function PlanListeForSykmeldt() {
           gap="space-16"
           className="mb-8"
         >
-          {gjeldendeUnntaksvurderinger.map((unntaksvurdering) => (
+          {synligeGjeldendeUnntaksvurderinger.map((unntaksvurdering) => (
             <UnntaksvurderingInfoCard
               key={unntaksvurdering.id}
               unntaksvurdering={unntaksvurdering}

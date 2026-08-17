@@ -139,14 +139,18 @@ describe("PlanListeForSykmeldt", () => {
   test("shows current messages and history for eligible unntaksvurderinger", async () => {
     envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
     mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    const unntakMedVirksomhetsnavn =
+      mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[0];
+    const unntakUtenVirksomhetsnavn = {
+      ...mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[1],
+      organization: { orgNumber: "987654321", orgName: null },
+    };
     mockFetch.mockResolvedValue({
       ...mockOversiktDataMedUnntaksvurderingerForSM,
-      unntaksvurderinger: [
-        mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[0],
-        {
-          ...mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[1],
-          organization: { orgNumber: "987654321", orgName: null },
-        },
+      unntaksvurderinger: [unntakMedVirksomhetsnavn, unntakUtenVirksomhetsnavn],
+      gjeldendeUnntaksvurderinger: [
+        unntakMedVirksomhetsnavn,
+        unntakUtenVirksomhetsnavn,
       ],
     });
 
@@ -186,7 +190,7 @@ describe("PlanListeForSykmeldt", () => {
     ).toBeInTheDocument();
   });
 
-  test("keeps an unntak in history but hides the current message when a newer finalized plan exists", async () => {
+  test("keeps an unntak in history when backend says it is no longer current", async () => {
     envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
     mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
     const unntak =
@@ -200,6 +204,7 @@ describe("PlanListeForSykmeldt", () => {
       aktiveOppfolgingsplaner: [newerPlan],
       tidligerePlaner: [],
       unntaksvurderinger: [unntak],
+      gjeldendeUnntaksvurderinger: [],
     });
 
     await renderAsync(PlanListeForSykmeldt());
@@ -220,7 +225,7 @@ describe("PlanListeForSykmeldt", () => {
     ).toBeInTheDocument();
   });
 
-  test("does not restore an old unntak as current when a newer finalized plan is in history", async () => {
+  test("does not restore an old unntak when backend returns an expired plan only in history", async () => {
     envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
     mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
     const unntak =
@@ -234,6 +239,7 @@ describe("PlanListeForSykmeldt", () => {
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [nyereTidligerePlan],
       unntaksvurderinger: [unntak],
+      gjeldendeUnntaksvurderinger: [],
     });
 
     await renderAsync(PlanListeForSykmeldt());
@@ -265,6 +271,7 @@ describe("PlanListeForSykmeldt", () => {
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
       unntaksvurderinger: [olderUnntak, newestUnntak],
+      gjeldendeUnntaksvurderinger: [newestUnntak],
     });
 
     await renderAsync(PlanListeForSykmeldt());

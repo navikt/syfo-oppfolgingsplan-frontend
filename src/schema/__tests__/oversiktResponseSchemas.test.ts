@@ -120,20 +120,26 @@ describe("OppfolgingsplanerOversiktResponseSchemaForSM – unntaksvurderinger", 
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
       unntaksvurderinger: [unntaksvurderingFraBackend],
+      gjeldendeUnntaksvurderinger: [unntaksvurderingFraBackend],
     });
 
     expect(result.success).toBe(true);
     expect(result.data?.unntaksvurderinger).toEqual([
       unntaksvurderingFraBackend,
     ]);
+    expect(result.data?.gjeldendeUnntaksvurderinger).toEqual([
+      unntaksvurderingFraBackend,
+    ]);
   });
 
-  test("avviser respons uten den påkrevde unntaksvurderinger-listen", () => {
+  test("bruker tomme lister når gammel backend mangler unntaksfeltene", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
     });
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
+    expect(result.data?.unntaksvurderinger).toEqual([]);
+    expect(result.data?.gjeldendeUnntaksvurderinger).toEqual([]);
   });
 });
