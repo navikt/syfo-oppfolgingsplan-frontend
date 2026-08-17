@@ -1,5 +1,5 @@
 import { InformationSquareIcon } from "@navikt/aksel-icons";
-import { BodyLong, Link } from "@navikt/ds-react";
+import { BodyLong, Link, VStack } from "@navikt/ds-react";
 import {
   InfoCard,
   InfoCardContent,
@@ -19,19 +19,27 @@ export function UnntaksvurderingInfoCard({ unntaksvurdering }: Props) {
 
   return (
     <article>
-      <InfoCard data-color="neutral">
+      <InfoCard data-color="danger">
         <InfoCardHeader icon={<InformationSquareIcon aria-hidden />}>
           <InfoCardTitle as="h3">
-            Oppfølgingsplan er foreløpig ikke aktuell
+            Nav har fått melding om at det ikke er behov for oppfølgingsplan
           </InfoCardTitle>
         </InfoCardHeader>
         <InfoCardContent>
-          <BodyLong>
-            Lederen din {organizationReference} har vurdert at en
-            oppfølgingsplan ikke er nødvendig nå. Ta{" "}
-            <Link href="https://www.nav.no/kontaktoss">kontakt med Nav</Link>{" "}
-            hvis du har spørsmål.
-          </BodyLong>
+          <VStack gap="space-16">
+            <BodyLong>
+              Lederen din {organizationReference} har meldt fra om at det ikke
+              er behov for å lage en plan på nåværende tidspunkt i sykefraværet.
+              Dersom det ikke stemmer, anbefaler vi at du tar kontakt med
+              lederen din.
+            </BodyLong>
+            <BodyLong>
+              Er det vanskelig å snakke med lederen din, kan du ta kontakt med
+              Nav ved å{" "}
+              <Link href="https://www.nav.no/kontaktoss">skrive til oss</Link>{" "}
+              eller på telefon 55 55 33 33.
+            </BodyLong>
+          </VStack>
         </InfoCardContent>
       </InfoCard>
     </article>

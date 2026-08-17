@@ -123,7 +123,7 @@ describe("PlanListeForSykmeldt", () => {
     await renderAsync(PlanListeForSykmeldt());
 
     const previousPlansHeading = screen.getByRole("heading", {
-      name: /Tidligere oppfølgingsplaner/i,
+      name: /Historikk/i,
     });
     const infoMessage = screen.getByText(
       /oppfølgingsplaner blir utilgjengelige/,
@@ -136,7 +136,7 @@ describe("PlanListeForSykmeldt", () => {
     ).toBeTruthy();
   });
 
-  test("shows eligible unntaksvurderinger with organization and contact guidance", async () => {
+  test("shows current messages and history for eligible unntaksvurderinger", async () => {
     envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
     mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
     mockFetch.mockResolvedValue({
@@ -154,27 +154,104 @@ describe("PlanListeForSykmeldt", () => {
 
     expect(
       screen.getAllByRole("heading", {
-        name: "Oppfølgingsplan er foreløpig ikke aktuell",
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
         level: 3,
       }),
     ).toHaveLength(2);
     expect(
       screen.getByText(
-        /Lederen din i Holmen skole har vurdert at en oppfølgingsplan ikke er nødvendig nå/,
+        /Lederen din i Holmen skole har meldt fra om at det ikke er behov for å lage en plan/,
       ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Lederen din hos arbeidsgiveren med org.nr. 987654321 har vurdert at en oppfølgingsplan ikke er nødvendig nå/,
+        /Lederen din hos arbeidsgiveren med org.nr. 987654321 har meldt fra om at det ikke er behov for å lage en plan/,
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("link", { name: "kontakt med Nav" }),
+      screen.getAllByRole("link", { name: "skrive til oss" }),
     ).toHaveLength(2);
-    const cards = screen.getAllByRole("article");
-    expect(cards).toHaveLength(2);
-    expect(cards[0]).toHaveTextContent("Holmen skole");
-    expect(cards[1]).toHaveTextContent("987654321");
+    expect(
+      screen.getByRole("heading", { name: "Historikk", level: 3 }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
+        level: 4,
+      }),
+    ).toHaveLength(2);
+    expect(screen.getByText("Virksomhet: Holmen skole")).toBeInTheDocument();
+    expect(
+      screen.getByText("Virksomhet: Org.nr. 987654321"),
+    ).toBeInTheDocument();
+  });
+
+  test("keeps an unntak in history but hides the current message when a newer finalized plan exists", async () => {
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    const unntak =
+      mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[0];
+    const newerPlan = {
+      ...mockOversiktDataOnlyActiveForSM.aktiveOppfolgingsplaner[0],
+      ferdigstiltTidspunkt: "2026-03-01T10:00:00Z",
+      organization: unntak.organization,
+    };
+    mockFetch.mockResolvedValue({
+      aktiveOppfolgingsplaner: [newerPlan],
+      tidligerePlaner: [],
+      unntaksvurderinger: [unntak],
+    });
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(
+      screen.queryByRole("heading", {
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Historikk", level: 3 }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
+        level: 4,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  test("checks Flaggskipet once per organization while retaining every history entry", async () => {
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    const newestUnntak =
+      mockOversiktDataMedUnntaksvurderingerForSM.unntaksvurderinger[0];
+    const olderUnntak = {
+      ...newestUnntak,
+      id: "323e4567-e89b-12d3-a456-426614174099",
+      meldtTidspunkt: "2025-12-01T09:12:00Z",
+    };
+    mockFetch.mockResolvedValue({
+      aktiveOppfolgingsplaner: [],
+      tidligerePlaner: [],
+      unntaksvurderinger: [olderUnntak, newestUnntak],
+    });
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledOnce();
+    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith(
+      newestUnntak.organization.orgNumber,
+    );
+    expect(
+      screen.getAllByRole("heading", {
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
+      }),
+    ).toHaveLength(1);
+    expect(
+      screen.getAllByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
+      }),
+    ).toHaveLength(2);
   });
 
   test("does not show unntaksvurderinger when the release toggle is disabled", async () => {
@@ -184,7 +261,12 @@ describe("PlanListeForSykmeldt", () => {
 
     expect(
       screen.queryByRole("heading", {
-        name: "Oppfølgingsplan er foreløpig ikke aktuell",
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
       }),
     ).not.toBeInTheDocument();
     expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
@@ -198,7 +280,12 @@ describe("PlanListeForSykmeldt", () => {
 
     expect(
       screen.queryByRole("heading", {
-        name: "Oppfølgingsplan er foreløpig ikke aktuell",
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
       }),
     ).not.toBeInTheDocument();
   });
@@ -212,7 +299,7 @@ describe("PlanListeForSykmeldt", () => {
 
     expect(
       screen.getAllByRole("heading", {
-        name: "Oppfølgingsplan er foreløpig ikke aktuell",
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
         level: 3,
       }),
     ).toHaveLength(2);

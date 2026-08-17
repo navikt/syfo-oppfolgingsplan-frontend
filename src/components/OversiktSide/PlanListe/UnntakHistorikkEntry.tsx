@@ -4,10 +4,16 @@ import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 
 interface Props {
   unntak: UnntaksvurderingMetadata;
+  visOrganisasjon?: boolean;
 }
 
-export default function UnntakHistorikkEntry({ unntak }: Props) {
-  const { meldtTidspunkt, meldtAv } = unntak;
+export default function UnntakHistorikkEntry({
+  unntak,
+  visOrganisasjon = false,
+}: Props) {
+  const { meldtTidspunkt, meldtAv, organization } = unntak;
+  const organisasjon =
+    organization.orgName ?? `Org.nr. ${organization.orgNumber}`;
 
   return (
     <Box
@@ -25,6 +31,10 @@ export default function UnntakHistorikkEntry({ unntak }: Props) {
           <BodyShort size="small">
             Registrert {getFormattedDateString(meldtTidspunkt)}
           </BodyShort>
+
+          {visOrganisasjon && (
+            <BodyShort size="small">Virksomhet: {organisasjon}</BodyShort>
+          )}
 
           {meldtAv.navn && (
             <BodyShort size="small">
