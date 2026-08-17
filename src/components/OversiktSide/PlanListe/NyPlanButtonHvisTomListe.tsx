@@ -1,13 +1,9 @@
+import { Box, VStack } from "@navikt/ds-react";
 import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
 import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
+import MeldUnntakSection from "../MeldUnntak/MeldUnntakSection";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
-
-async function loggTiltakspakkevurderingIObservasjonsmodus(orgnummer: string) {
-  // Frem til UI-et i #891 faktisk bruker returverdien, kalles predikatet kun
-  // for den strukturerte loggingen i erOrgINavTiltaksgruppe.
-  await erOrgINavTiltaksgruppe(orgnummer);
-}
 
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
@@ -22,6 +18,7 @@ export default async function NyPlanButtonHvisTomListe({
   const {
     userHasEditAccess,
     organization,
+    employee,
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
 
@@ -32,9 +29,22 @@ export default async function NyPlanButtonHvisTomListe({
     return null;
   }
 
-  if (isTiltakspakkevurderingFeatureToggleEnabled()) {
-    await loggTiltakspakkevurderingIObservasjonsmodus(organization.orgNumber);
+  const visUnntaksvalg =
+    isTiltakspakkevurderingFeatureToggleEnabled() &&
+    (await erOrgINavTiltaksgruppe(organization.orgNumber));
+
+  if (!visUnntaksvalg) {
+    return (
+      <Box marginBlock="space-0 space-48">
+        <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      </Box>
+    );
   }
 
-  return <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />;
+  return (
+    <VStack gap="space-32" marginBlock="space-0 space-32">
+      <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
+      <MeldUnntakSection ansattNavn={employee.name} />
+    </VStack>
+  );
 }

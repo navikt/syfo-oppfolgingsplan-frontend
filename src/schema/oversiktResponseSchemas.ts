@@ -2,6 +2,10 @@ import { z } from "zod";
 import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
 import { organizationDetailsSchema } from "./organizationDetailsSchema";
+import {
+  gjeldendeStatusSchema,
+  unntaksvurderingMetadataSchema,
+} from "./unntaksvurderingSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
 
 /**
@@ -21,6 +25,8 @@ export const OppfolgingsplanerOversiktResponseSchemaForAG = z.object({
     utkast: utkastMetadataSchema.nullable(),
     aktivPlan: oppfolgingsplanMetadataSchema.nullable(),
     tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
+    unntaksvurderinger: z.array(unntaksvurderingMetadataSchema),
+    gjeldendeStatus: gjeldendeStatusSchema,
   }),
 });
 

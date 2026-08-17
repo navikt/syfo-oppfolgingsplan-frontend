@@ -22,6 +22,7 @@ import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 export function getMockDataForScenarioSM(scenario: DemoScenario) {
   switch (scenario) {
     case "tom":
+    case "unntak-meldt":
       return mockOversiktDataTomForSM;
     case "aktiv-og-tidligere":
     case "aktiv-utkast-og-tidligere":

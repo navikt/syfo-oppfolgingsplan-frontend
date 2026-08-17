@@ -1,4 +1,4 @@
-import { Alert } from "@navikt/ds-react";
+import { LocalAlert, LocalAlertContent } from "@navikt/ds-react/LocalAlert";
 import type { FetchResultError } from "@/server/tokenXFetch/FetchResult";
 import { getFetchResultErrorMessage } from "@/ui-helpers/error-messages";
 
@@ -25,8 +25,10 @@ export function FetchErrorAlert({ error, fallbackMessage, className }: Props) {
   if (!error) return null;
 
   return (
-    <Alert variant="error" className={className}>
-      {getFetchResultErrorMessage(error, fallbackMessage)}
-    </Alert>
+    <LocalAlert status="error" size="small" className={className} as="div">
+      <LocalAlertContent>
+        {getFetchResultErrorMessage(error, fallbackMessage)}
+      </LocalAlertContent>
+    </LocalAlert>
   );
 }

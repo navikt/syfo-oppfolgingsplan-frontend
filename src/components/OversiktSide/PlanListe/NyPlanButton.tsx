@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@navikt/ds-react";
+import { HStack } from "@navikt/ds-react";
 import NextLink from "next/link";
 import { knappKlikket } from "@/common/analytics/events-and-properties/knappKlikket-properties";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
@@ -12,7 +12,7 @@ export function LagNyOppfolgingsplanButton({
   narmesteLederId: string;
 }) {
   return (
-    <Box className="mb-12">
+    <HStack>
       <TrackedButton
         variant="primary"
         as={NextLink}
@@ -21,6 +21,6 @@ export function LagNyOppfolgingsplanButton({
       >
         Lag en ny oppfølgingsplan
       </TrackedButton>
-    </Box>
+    </HStack>
   );
 }

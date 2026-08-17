@@ -4,6 +4,7 @@ const VALID_SCENARIOS = [
   "tom",
   "aktiv-og-tidligere",
   "aktiv-utkast-og-tidligere",
+  "unntak-meldt",
 ] as const;
 
 export type DemoScenario = (typeof VALID_SCENARIOS)[number];
@@ -34,6 +35,7 @@ export const AG_SCENARIO_OPTIONS: DemoScenarioOption[] = [
     value: "aktiv-utkast-og-tidligere",
     label: "Aktiv plan, utkast + tidligere planer",
   },
+  { value: "unntak-meldt", label: "Unntak meldt (plan ikke aktuell nå)" },
 ];
 
 export const SM_SCENARIO_OPTIONS: DemoScenarioOption[] = [
