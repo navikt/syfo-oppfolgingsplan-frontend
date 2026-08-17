@@ -20,8 +20,9 @@ function TiltaksgruppeInformasjon() {
         heading="Samarbeid med den ansatte"
       >
         <BodyLong>
-          Det beste er at du og den ansatte lager oppfølgingsplanen sammen. Du
-          har ansvaret for å lage planen, og den ansatte har ansvar for å bidra.
+          Det beste er at du og den ansatte lager en oppfølgingsplan sammen. Du
+          har ansvaret samtidig som den ansatte også har et eget ansvar til å
+          bidra.
         </BodyLong>
       </InformasjonListItem>
 
@@ -30,9 +31,9 @@ function TiltaksgruppeInformasjon() {
         heading="Bli enige om hvordan dere skal ha kontakt underveis"
       >
         <BodyLong>
-          Dere trenger ikke finne den perfekte løsningen med en gang. Snakk
-          sammen om hva som fungerer, og avtal hvordan dere skal holde
-          kontakten. Jevn kontakt kan gjøre det lettere å komme tilbake i jobb.
+          Dere trenger ikke finne den perfekte løsningen med en gang. Ha dialog
+          om hva som fungerer. Jevn kontakt har vist seg å bidra til at det blir
+          lettere å komme tilbake i jobb.
         </BodyLong>
       </InformasjonListItem>
 
@@ -41,9 +42,9 @@ function TiltaksgruppeInformasjon() {
         heading="Del planen med fastlegen og Nav"
       >
         <BodyLong>
-          Del planen med fastlegen innen fire uker. Da får fastlegen et bedre
-          grunnlag for å vurdere riktig gradert sykmelding. Du kan dele planen
-          med Nav når som helst i sykefraværet.
+          Del planen med fastlegen innen 4 uker. Du kan sende den til Nav når
+          som helst i forløpet. Hensikten er å gi et bilde av arbeidssituasjonen
+          til den som er sykmeldt.
         </BodyLong>
       </InformasjonListItem>
 
@@ -52,8 +53,8 @@ function TiltaksgruppeInformasjon() {
         heading="Oppdater planen underveis"
       >
         <BodyLong>
-          Situasjonen til den ansatte kan endre seg. Oppdater planen når det
-          skjer endringer i sykefraværet eller tilretteleggingen.
+          Situasjonen til den som er sykmeldt kan endre seg og det kan planen
+          også. Husk å oppdatere planen når det skjer endringer i sykefraværet.
         </BodyLong>
       </InformasjonListItem>
     </section>
