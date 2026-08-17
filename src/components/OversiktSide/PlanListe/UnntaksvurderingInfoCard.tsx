@@ -13,9 +13,9 @@ interface Props {
 }
 
 export function UnntaksvurderingInfoCard({ unntaksvurdering }: Props) {
-  const organization =
-    unntaksvurdering.organization.orgName ??
-    unntaksvurdering.organization.orgNumber;
+  const organizationReference = unntaksvurdering.organization.orgName
+    ? `i ${unntaksvurdering.organization.orgName}`
+    : `hos arbeidsgiveren med org.nr. ${unntaksvurdering.organization.orgNumber}`;
 
   return (
     <article>
@@ -27,8 +27,8 @@ export function UnntaksvurderingInfoCard({ unntaksvurdering }: Props) {
         </InfoCardHeader>
         <InfoCardContent>
           <BodyLong>
-            Lederen din i {organization} har vurdert at en oppfølgingsplan ikke
-            er nødvendig nå. Ta{" "}
+            Lederen din {organizationReference} har vurdert at en
+            oppfølgingsplan ikke er nødvendig nå. Ta{" "}
             <Link href="https://www.nav.no/kontaktoss">kontakt med Nav</Link>{" "}
             hvis du har spørsmål.
           </BodyLong>

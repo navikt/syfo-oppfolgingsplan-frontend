@@ -165,7 +165,7 @@ describe("PlanListeForSykmeldt", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Lederen din i 987654321 har vurdert at en oppfølgingsplan ikke er nødvendig nå/,
+        /Lederen din hos arbeidsgiveren med org.nr. 987654321 har vurdert at en oppfølgingsplan ikke er nødvendig nå/,
       ),
     ).toBeInTheDocument();
     expect(
