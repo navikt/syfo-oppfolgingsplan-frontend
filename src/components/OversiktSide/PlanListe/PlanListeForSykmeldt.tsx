@@ -4,21 +4,55 @@ import {
   getSMTidligerePlanHref,
 } from "@/common/route-hrefs";
 import { IngenAktivPlanAlert } from "@/components/OversiktSide/IngenAktivPlanAlert";
+import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import PlanListeDel from "./PlanListeDel";
+import { UnntaksvurderingInfoCard } from "./UnntaksvurderingInfoCard";
 
 export default async function PlanListeForSykmeldt() {
-  const { aktiveOppfolgingsplaner, tidligerePlaner } =
+  const { aktiveOppfolgingsplaner, tidligerePlaner, unntaksvurderinger } =
     await fetchOppfolgingsplanOversiktForSM();
+
+  const synligeUnntaksvurderinger = (
+    await Promise.all(
+      unntaksvurderinger.map(async (unntaksvurdering) => {
+        const visUnntaksvurdering =
+          isTiltakspakkevurderingFeatureToggleEnabled() &&
+          (await erOrgINavTiltaksgruppe(
+            unntaksvurdering.organization.orgNumber,
+          ));
+
+        return visUnntaksvurdering ? unntaksvurdering : null;
+      }),
+    )
+  ).filter((unntaksvurdering) => unntaksvurdering !== null);
 
   const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
   const harTidligerePlaner = tidligerePlaner.length > 0;
+  const harSynligeUnntaksvurderinger = synligeUnntaksvurderinger.length > 0;
 
   return (
     <section className="mb-8">
-      {!harAktivePlaner && <IngenAktivPlanAlert />}
+      {!harAktivePlaner && !harSynligeUnntaksvurderinger && (
+        <IngenAktivPlanAlert />
+      )}
+      {harSynligeUnntaksvurderinger && (
+        <VStack
+          as="section"
+          aria-label="Vurderinger av oppfølgingsplan"
+          gap="space-16"
+        >
+          {synligeUnntaksvurderinger.map((unntaksvurdering) => (
+            <UnntaksvurderingInfoCard
+              key={unntaksvurdering.id}
+              unntaksvurdering={unntaksvurdering}
+            />
+          ))}
+        </VStack>
+      )}
       {harAktivePlaner && (
         <PlanListeDel>
           <VStack gap="space-16">

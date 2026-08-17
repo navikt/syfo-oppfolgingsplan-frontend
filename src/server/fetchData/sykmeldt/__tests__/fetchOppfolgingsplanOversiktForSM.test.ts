@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import type { DemoScenario } from "@/common/demoScenario";
 import {
   mockOversiktDataMedPlanerForSM,
+  mockOversiktDataMedUnntaksvurderingerForSM,
   mockOversiktDataTomForSM,
 } from "@/server/fetchData/mockData/mockOversiktData";
 import { getMockDataForScenarioSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
@@ -21,6 +22,13 @@ describe("getMockDataForScenarioSM", () => {
     expect(result).toEqual(mockOversiktDataMedPlanerForSM);
     expect(result.aktiveOppfolgingsplaner.length).toBeGreaterThan(0);
     expect(result.tidligerePlaner.length).toBeGreaterThan(0);
+  });
+
+  test("returns unntaksvurderinger for the 'unntak-meldt' scenario", () => {
+    const result = getMockDataForScenarioSM("unntak-meldt");
+
+    expect(result).toEqual(mockOversiktDataMedUnntaksvurderingerForSM);
+    expect(result.unntaksvurderinger.length).toBeGreaterThan(0);
   });
 
   test("returns same data for 'aktiv-utkast-og-tidligere' as for 'aktiv-og-tidligere'", () => {

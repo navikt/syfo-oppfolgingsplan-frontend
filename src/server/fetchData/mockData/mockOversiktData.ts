@@ -4,6 +4,7 @@ import type {
 } from "@/schema/oversiktResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
+import { mockUnntaksvurderingerData } from "./mockUnntaksvurderingerData";
 
 export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
@@ -33,14 +34,24 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
 export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [mockAktivPlanData],
   tidligerePlaner: mockTidligerePlanerData,
+  unntaksvurderinger: [],
 };
 
 export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [],
   tidligerePlaner: [],
+  unntaksvurderinger: [],
 };
+
+export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversiktForSM =
+  {
+    aktiveOppfolgingsplaner: [],
+    tidligerePlaner: [],
+    unntaksvurderinger: mockUnntaksvurderingerData,
+  };
 
 export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [mockAktivPlanData],
   tidligerePlaner: [],
+  unntaksvurderinger: [],
 };

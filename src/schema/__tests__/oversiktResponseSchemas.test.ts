@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { OppfolgingsplanerOversiktResponseSchemaForAG } from "../oversiktResponseSchemas";
+import {
+  OppfolgingsplanerOversiktResponseSchemaForAG,
+  OppfolgingsplanerOversiktResponseSchemaForSM,
+} from "../oversiktResponseSchemas";
 
 const gyldigOversikt = {
   userHasEditAccess: true,
@@ -105,6 +108,30 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
         ],
         gjeldendeStatus: "IKKE_AKTUELT",
       },
+    });
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("OppfolgingsplanerOversiktResponseSchemaForSM – unntaksvurderinger", () => {
+  test("parser en separat unntaksvurderinger-liste fra backend-kontrakten", () => {
+    const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
+      aktiveOppfolgingsplaner: [],
+      tidligerePlaner: [],
+      unntaksvurderinger: [unntaksvurderingFraBackend],
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data?.unntaksvurderinger).toEqual([
+      unntaksvurderingFraBackend,
+    ]);
+  });
+
+  test("avviser respons uten den påkrevde unntaksvurderinger-listen", () => {
+    const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
+      aktiveOppfolgingsplaner: [],
+      tidligerePlaner: [],
     });
 
     expect(result.success).toBe(false);
