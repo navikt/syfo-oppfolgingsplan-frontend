@@ -8,7 +8,65 @@ import {
 } from "@/common/publicAssets";
 import InformasjonListItem from "./InformasjonListItem";
 
-export default function OversiktSideInformasjon() {
+interface Props {
+  erITiltaksgruppe?: boolean;
+}
+
+function TiltaksgruppeInformasjon() {
+  return (
+    <section aria-label="Slik bruker dere oppfølgingsplanen">
+      <InformasjonListItem
+        illustrationSrc={CHAT_BUBBLE_SVG}
+        heading="Samarbeid med den ansatte"
+      >
+        <BodyLong>
+          Det beste er at du og den ansatte lager oppfølgingsplanen sammen. Du
+          har ansvaret for å lage planen, og den ansatte har ansvar for å bidra.
+        </BodyLong>
+      </InformasjonListItem>
+
+      <InformasjonListItem
+        illustrationSrc={PENCIL_SVG}
+        heading="Bli enige om hvordan dere skal ha kontakt underveis"
+      >
+        <BodyLong>
+          Dere trenger ikke finne den perfekte løsningen med en gang. Snakk
+          sammen om hva som fungerer, og avtal hvordan dere skal holde
+          kontakten. Jevn kontakt kan gjøre det lettere å komme tilbake i jobb.
+        </BodyLong>
+      </InformasjonListItem>
+
+      <InformasjonListItem
+        illustrationSrc={LETTER_OPENED_SVG}
+        heading="Del planen med fastlegen og Nav"
+      >
+        <BodyLong>
+          Del planen med fastlegen innen fire uker. Da får fastlegen et bedre
+          grunnlag for å vurdere riktig gradert sykmelding. Du kan dele planen
+          med Nav når som helst i sykefraværet.
+        </BodyLong>
+      </InformasjonListItem>
+
+      <InformasjonListItem
+        illustrationSrc={STEPPER_SVG}
+        heading="Oppdater planen underveis"
+      >
+        <BodyLong>
+          Situasjonen til den ansatte kan endre seg. Oppdater planen når det
+          skjer endringer i sykefraværet eller tilretteleggingen.
+        </BodyLong>
+      </InformasjonListItem>
+    </section>
+  );
+}
+
+export default function OversiktSideInformasjon({
+  erITiltaksgruppe = false,
+}: Props) {
+  if (erITiltaksgruppe) {
+    return <TiltaksgruppeInformasjon />;
+  }
+
   return (
     <section>
       <Heading level="3" size="medium" className="mb-8">

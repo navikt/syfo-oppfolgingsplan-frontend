@@ -1,14 +1,14 @@
 import { Box, VStack } from "@navikt/ds-react";
-import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import MeldUnntakSection from "../MeldUnntak/MeldUnntakSection";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
+  erITiltaksgruppe = false,
 }: {
   narmesteLederId: string;
+  erITiltaksgruppe?: boolean;
 }) {
   const oversiktResult =
     await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
@@ -17,7 +17,6 @@ export default async function NyPlanButtonHvisTomListe({
 
   const {
     userHasEditAccess,
-    organization,
     employee,
     oversikt: { aktivPlan, tidligerePlaner, utkast },
   } = oversiktResult.data;
@@ -29,11 +28,7 @@ export default async function NyPlanButtonHvisTomListe({
     return null;
   }
 
-  const visUnntaksvalg =
-    isTiltakspakkevurderingFeatureToggleEnabled() &&
-    (await erOrgINavTiltaksgruppe(organization.orgNumber));
-
-  if (!visUnntaksvalg) {
+  if (!erITiltaksgruppe) {
     return (
       <Box marginBlock="space-0 space-48">
         <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />

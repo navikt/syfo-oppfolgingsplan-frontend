@@ -1,16 +1,19 @@
-import { BodyLong, Heading } from "@navikt/ds-react";
+import { Heading } from "@navikt/ds-react";
 import { Suspense } from "react";
-import TextContentBox from "@/components/layout/TextContentBox";
 import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
 import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
+import OversiktSideIntroduksjon from "@/components/OversiktSide/InformasjonSection/OversiktSideIntroduksjon";
 import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
 import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
+import { erNarmesteLederINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe";
 
 export default async function OversiktPageForAG({
   params,
 }: PageProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
+  const erITiltaksgruppe =
+    await erNarmesteLederINavTiltaksgruppe(narmesteLederId);
 
   return (
     <>
@@ -18,21 +21,20 @@ export default async function OversiktPageForAG({
         Oppfølgingsplaner
       </Heading>
 
-      <TextContentBox>
-        <BodyLong size="large" spacing>
-          Oppfølgingsplanen er et verktøy som brukes i sykefraværsoppfølgingen.
-          Du og den sykmeldte ansatte skal samarbeide om å finne løsninger slik
-          at den ansatte kan komme tilbake i arbeid.
-        </BodyLong>
-      </TextContentBox>
+      <OversiktSideIntroduksjon erITiltaksgruppe={erITiltaksgruppe} />
+
+      {erITiltaksgruppe && <OversiktSideInformasjon erITiltaksgruppe={true} />}
 
       <Suspense fallback={<PlanListeSkeleton />}>
         <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
-        <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
+        <NyPlanButtonHvisTomListe
+          narmesteLederId={narmesteLederId}
+          erITiltaksgruppe={erITiltaksgruppe}
+        />
         <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>
 
-      <OversiktSideInformasjon />
+      {!erITiltaksgruppe && <OversiktSideInformasjon />}
     </>
   );
 }

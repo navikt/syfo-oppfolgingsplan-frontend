@@ -1,0 +1,85 @@
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { mockOversiktDataEmptyWithAccess } from "@/server/fetchData/mockData/mockOversiktDataVariants";
+import { erNarmesteLederINavTiltaksgruppe } from "../erNarmesteLederINavTiltaksgruppe";
+import { erOrgINavTiltaksgruppe } from "../erOrgINavTiltaksgruppe";
+import { fetchOppfolgingsplanOversiktForAG } from "../fetchOppfolgingsplanOversikt";
+
+const envMock = vi.hoisted(() => ({
+  tiltakspakkevurderingFeatureToggleEnabled: false,
+}));
+
+vi.mock("@/env-variables/envHelpers", async () => {
+  const actual = await vi.importActual<
+    typeof import("@/env-variables/envHelpers")
+  >("@/env-variables/envHelpers");
+
+  return {
+    ...actual,
+    isTiltakspakkevurderingFeatureToggleEnabled: () =>
+      envMock.tiltakspakkevurderingFeatureToggleEnabled,
+  };
+});
+
+vi.mock("../erOrgINavTiltaksgruppe", () => ({
+  erOrgINavTiltaksgruppe: vi.fn(),
+}));
+
+vi.mock("../fetchOppfolgingsplanOversikt", () => ({
+  fetchOppfolgingsplanOversiktForAG: vi.fn(),
+}));
+
+const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
+const mockFetchOppfolgingsplanOversiktForAG = vi.mocked(
+  fetchOppfolgingsplanOversiktForAG,
+);
+
+describe("erNarmesteLederINavTiltaksgruppe", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
+  });
+
+  test("returnerer false uten å hente data når feature toggle er av", async () => {
+    await expect(
+      erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
+    ).resolves.toBe(false);
+
+    expect(mockFetchOppfolgingsplanOversiktForAG).not.toHaveBeenCalled();
+    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+  });
+
+  test("returnerer false når oversikten ikke kan hentes", async () => {
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+    mockFetchOppfolgingsplanOversiktForAG.mockResolvedValue({
+      error: {
+        type: "FETCH_NETWORK_ERROR",
+        message: "Network error",
+      },
+      data: null,
+    });
+
+    await expect(
+      erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
+    ).resolves.toBe(false);
+
+    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+  });
+
+  test("bruker organisasjonsnummeret fra oversikten i Flaggskipet-vurderingen", async () => {
+    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
+    mockFetchOppfolgingsplanOversiktForAG.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataEmptyWithAccess,
+    });
+    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+
+    await expect(
+      erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
+    ).resolves.toBe(true);
+
+    expect(mockFetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith(
+      "narmeste-leder-id",
+    );
+    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
+  });
+});
