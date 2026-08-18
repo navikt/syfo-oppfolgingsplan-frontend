@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
+import { sykmeldtVirksomhetsoversiktSchema } from "./oppfolgingsplanhendelseSchemas";
 import { organizationDetailsSchema } from "./organizationDetailsSchema";
 import {
   gjeldendeStatusSchema,
-  sykmeldtUnntaksvurderingSchema,
   unntaksvurderingMetadataSchema,
 } from "./unntaksvurderingSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
@@ -36,9 +36,7 @@ export type OppfolgingsplanerOversiktForAG = z.infer<
 >;
 
 export const OppfolgingsplanerOversiktResponseSchemaForSM = z.object({
-  aktiveOppfolgingsplaner: z.array(oppfolgingsplanMetadataSchema),
-  tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
-  unntaksvurderinger: z.array(sykmeldtUnntaksvurderingSchema).default([]),
+  virksomheter: z.array(sykmeldtVirksomhetsoversiktSchema),
 });
 
 export type OppfolgingsplanerOversiktForSM = z.infer<

@@ -55,7 +55,7 @@ describe("fetchTiltakspakkeVurdering", () => {
       isLocalOrDemo: false,
     });
 
-    const result = await fetchTiltakspakkeVurdering("123456789");
+    const result = await fetchTiltakspakkeVurdering(["123456789"]);
 
     expect(result).toEqual({
       error: null,
@@ -93,7 +93,7 @@ describe("fetchTiltakspakkeVurdering", () => {
       isLocalOrDemo: false,
     });
 
-    const result = await fetchTiltakspakkeVurdering("123456789");
+    const result = await fetchTiltakspakkeVurdering(["123456789"]);
 
     expect(result).toEqual({
       error: {
@@ -114,7 +114,7 @@ describe("fetchTiltakspakkeVurdering", () => {
       isLocalOrDemo: false,
     });
 
-    const result = await fetchTiltakspakkeVurdering("abc");
+    const result = await fetchTiltakspakkeVurdering(["abc"]);
 
     expect(tokenXFetchUpdateWithResponseMock).toHaveBeenCalledOnce();
     expect(tokenXFetchUpdateWithResponseMock).toHaveBeenCalledWith(
@@ -137,7 +137,7 @@ describe("fetchTiltakspakkeVurdering", () => {
       isLocalOrDemo: true,
     });
 
-    const result = await fetchTiltakspakkeVurdering("123456789");
+    const result = await fetchTiltakspakkeVurdering(["123456789"]);
 
     expect(tokenXFetchUpdateWithResponseMock).not.toHaveBeenCalled();
     expect(result).toEqual({

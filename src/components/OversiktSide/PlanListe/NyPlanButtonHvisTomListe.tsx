@@ -1,7 +1,7 @@
 import { Box, VStack } from "@navikt/ds-react";
 import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe";
 import MeldUnntakSection from "../MeldUnntak/MeldUnntakSection";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 

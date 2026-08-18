@@ -12,23 +12,30 @@ describe("getMockDataForScenarioSM", () => {
     const result = getMockDataForScenarioSM("tom");
 
     expect(result).toEqual(mockOversiktDataTomForSM);
-    expect(result.aktiveOppfolgingsplaner).toEqual([]);
-    expect(result.tidligerePlaner).toEqual([]);
+    expect(result.virksomheter).toEqual([]);
   });
 
   test("returns plans for 'aktiv-og-tidligere'", () => {
     const result = getMockDataForScenarioSM("aktiv-og-tidligere");
 
     expect(result).toEqual(mockOversiktDataMedPlanerForSM);
-    expect(result.aktiveOppfolgingsplaner.length).toBeGreaterThan(0);
-    expect(result.tidligerePlaner.length).toBeGreaterThan(0);
+    expect(result.virksomheter.length).toBeGreaterThan(0);
+    expect(
+      result.virksomheter[0]?.oppfolgingsplanhendelser.length,
+    ).toBeGreaterThan(1);
   });
 
-  test("returns unntaksvurderinger for the 'unntak-meldt' scenario", () => {
+  test("returns plan events for the 'unntak-meldt' scenario", () => {
     const result = getMockDataForScenarioSM("unntak-meldt");
 
     expect(result).toEqual(mockOversiktDataMedUnntaksvurderingerForSM);
-    expect(result.unntaksvurderinger.length).toBeGreaterThan(0);
+    expect(
+      result.virksomheter.some(({ oppfolgingsplanhendelser }) =>
+        oppfolgingsplanhendelser.some(
+          (hendelse) => hendelse.type === "PLAN_IKKE_NODVENDIG",
+        ),
+      ),
+    ).toBe(true);
   });
 
   test("returns same data for 'aktiv-utkast-og-tidligere' as for 'aktiv-og-tidligere'", () => {

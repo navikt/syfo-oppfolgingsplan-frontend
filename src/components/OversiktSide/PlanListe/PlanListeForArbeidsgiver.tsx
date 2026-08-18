@@ -7,12 +7,12 @@ import type { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSc
 import type { UnntaksvurderingMetadata } from "@/schema/unntaksvurderingSchemas";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { FetchErrorAlert } from "@/ui/FetchErrorAlert";
+import PlanIkkeNodvendigInnslag from "./PlanIkkeNodvendigInnslag";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import UtkastLinkPanel from "./PlanLinkCard/UtkastLinkCard";
 import PlanListeDel from "./PlanListeDel";
 import { SlettUtkastButtonAndModal } from "./SlettUtkast/SlettUtkastButtonAndModal";
-import UnntakHistorikkEntry from "./UnntakHistorikkEntry";
 
 interface Props {
   narmesteLederId: string;
@@ -109,7 +109,7 @@ export default async function PlanListeForArbeidsgiver({
                   )}
                 />
               ) : (
-                <UnntakHistorikkEntry
+                <PlanIkkeNodvendigInnslag
                   key={innslag.unntak.id}
                   unntak={innslag.unntak}
                 />

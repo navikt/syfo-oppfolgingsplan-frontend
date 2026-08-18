@@ -1,17 +1,14 @@
-import type {
-  SykmeldtUnntaksvurdering,
-  UnntaksvurderingMetadata,
-} from "@/schema/unntaksvurderingSchemas";
+import type { UnntaksvurderingMetadata } from "@/schema/unntaksvurderingSchemas";
 import { mockOrganization } from "./mockEmployeeDetails";
 
-const mockUnntaksvurdering: UnntaksvurderingMetadata = {
+export const mockUnntaksvurdering: UnntaksvurderingMetadata = {
   id: "323e4567-e89b-12d3-a456-426614174010",
   meldtTidspunkt: "2026-02-10T09:12:00Z",
   meldtAv: { navn: "Maren Hegna", rolle: "ARBEIDSGIVER" },
   organization: mockOrganization,
 };
 
-const eldreMockUnntaksvurdering: UnntaksvurderingMetadata = {
+export const eldreMockUnntaksvurdering: UnntaksvurderingMetadata = {
   id: "323e4567-e89b-12d3-a456-426614174011",
   meldtTidspunkt: "2025-09-02T12:00:00Z",
   meldtAv: { navn: null, rolle: "ARBEIDSGIVER" },
@@ -21,13 +18,4 @@ const eldreMockUnntaksvurdering: UnntaksvurderingMetadata = {
 export const mockUnntaksvurderingerDataForAG: UnntaksvurderingMetadata[] = [
   mockUnntaksvurdering,
   eldreMockUnntaksvurdering,
-];
-
-export const mockUnntaksvurderingerDataForSM: SykmeldtUnntaksvurdering[] = [
-  { ...mockUnntaksvurdering, gjeldende: true },
-  {
-    ...eldreMockUnntaksvurdering,
-    organization: { orgNumber: "987654321", orgName: null },
-    gjeldende: true,
-  },
 ];

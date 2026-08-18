@@ -114,37 +114,68 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
   });
 });
 
-describe("OppfolgingsplanerOversiktResponseSchemaForSM – unntaksvurderinger", () => {
-  test("parser unntaksvurderinger med gjeldende-flagg fra backend-kontrakten", () => {
+describe("OppfolgingsplanerOversiktResponseSchemaForSM – oppfolgingsplanhendelser", () => {
+  test("parser en virksomhet med diskriminert hendelsesunion", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
-      aktiveOppfolgingsplaner: [],
-      tidligerePlaner: [],
-      unntaksvurderinger: [{ ...unntaksvurderingFraBackend, gjeldende: true }],
+      virksomheter: [
+        {
+          organization: unntaksvurderingFraBackend.organization,
+          oppfolgingsplanhendelser: [
+            {
+              type: "PLAN_IKKE_NODVENDIG",
+              id: unntaksvurderingFraBackend.id,
+              meldtTidspunkt: unntaksvurderingFraBackend.meldtTidspunkt,
+              meldtAv: unntaksvurderingFraBackend.meldtAv,
+            },
+            {
+              type: "FERDIGSTILT_PLAN",
+              id: "223e4567-e89b-12d3-a456-426614174002",
+              ferdigstiltTidspunkt: "2026-02-01T09:12:00Z",
+              evalueringsDato: "2026-03-01",
+              deltMedLegeTidspunkt: null,
+              deltMedVeilederTidspunkt: null,
+              stillingstittel: null,
+              stillingsprosent: null,
+            },
+          ],
+        },
+      ],
     });
 
     expect(result.success).toBe(true);
-    expect(result.data?.unntaksvurderinger).toEqual([
-      { ...unntaksvurderingFraBackend, gjeldende: true },
-    ]);
+    expect(
+      result.data?.virksomheter[0]?.oppfolgingsplanhendelser.map(
+        (hendelse) => hendelse.type,
+      ),
+    ).toEqual(["PLAN_IKKE_NODVENDIG", "FERDIGSTILT_PLAN"]);
   });
 
-  test("avviser unntaksvurderinger uten gjeldende-flagg", () => {
+  test("avviser hendelse uten diskriminator", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
-      aktiveOppfolgingsplaner: [],
-      tidligerePlaner: [],
-      unntaksvurderinger: [unntaksvurderingFraBackend],
+      virksomheter: [
+        {
+          organization: unntaksvurderingFraBackend.organization,
+          oppfolgingsplanhendelser: [
+            {
+              id: unntaksvurderingFraBackend.id,
+              meldtTidspunkt: unntaksvurderingFraBackend.meldtTidspunkt,
+              meldtAv: unntaksvurderingFraBackend.meldtAv,
+            },
+          ],
+        },
+      ],
     });
 
     expect(result.success).toBe(false);
   });
 
-  test("bruker tom liste når gammel backend mangler unntaksfeltet", () => {
+  test("avviser den gamle parallelle listekontrakten", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
+      unntaksvurderinger: [],
     });
 
-    expect(result.success).toBe(true);
-    expect(result.data?.unntaksvurderinger).toEqual([]);
+    expect(result.success).toBe(false);
   });
 });

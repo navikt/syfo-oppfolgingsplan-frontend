@@ -1,6 +1,5 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { mockOversiktDataMedPlanerForAG } from "@/server/fetchData/mockData/mockOversiktData";
 import {
@@ -10,6 +9,7 @@ import {
   mockOversiktDataOnlyDraft,
   mockOversiktDataOnlyPreviousPlans,
 } from "@/server/fetchData/mockData/mockOversiktDataVariants";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe";
 import { renderAsync } from "@/test/test-utils";
 import NyPlanButtonHvisTomListe from "../NyPlanButtonHvisTomListe";
 
@@ -25,7 +25,7 @@ vi.mock("next/navigation", async () => {
   return mockNextNavigation();
 });
 
-vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
+vi.mock("@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe", () => ({
   erOrgINavTiltaksgruppe: vi.fn(),
 }));
 

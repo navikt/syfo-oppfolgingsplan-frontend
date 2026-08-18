@@ -7,7 +7,7 @@ interface Props {
   visOrganisasjon?: boolean;
 }
 
-export default function UnntakHistorikkEntry({
+export default function PlanIkkeNodvendigInnslag({
   unntak,
   visOrganisasjon = false,
 }: Props) {
