@@ -115,24 +115,30 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
 });
 
 describe("OppfolgingsplanerOversiktResponseSchemaForSM – unntaksvurderinger", () => {
-  test("parser en separat unntaksvurderinger-liste fra backend-kontrakten", () => {
+  test("parser unntaksvurderinger med gjeldende-flagg fra backend-kontrakten", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
-      unntaksvurderinger: [unntaksvurderingFraBackend],
-      gjeldendeUnntaksvurderinger: [unntaksvurderingFraBackend],
+      unntaksvurderinger: [{ ...unntaksvurderingFraBackend, gjeldende: true }],
     });
 
     expect(result.success).toBe(true);
     expect(result.data?.unntaksvurderinger).toEqual([
-      unntaksvurderingFraBackend,
-    ]);
-    expect(result.data?.gjeldendeUnntaksvurderinger).toEqual([
-      unntaksvurderingFraBackend,
+      { ...unntaksvurderingFraBackend, gjeldende: true },
     ]);
   });
 
-  test("bruker tomme lister når gammel backend mangler unntaksfeltene", () => {
+  test("avviser unntaksvurderinger uten gjeldende-flagg", () => {
+    const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
+      aktiveOppfolgingsplaner: [],
+      tidligerePlaner: [],
+      unntaksvurderinger: [unntaksvurderingFraBackend],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  test("bruker tom liste når gammel backend mangler unntaksfeltet", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
@@ -140,6 +146,5 @@ describe("OppfolgingsplanerOversiktResponseSchemaForSM – unntaksvurderinger", 
 
     expect(result.success).toBe(true);
     expect(result.data?.unntaksvurderinger).toEqual([]);
-    expect(result.data?.gjeldendeUnntaksvurderinger).toEqual([]);
   });
 });

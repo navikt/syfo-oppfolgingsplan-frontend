@@ -148,10 +148,6 @@ describe("PlanListeForSykmeldt", () => {
     mockFetch.mockResolvedValue({
       ...mockOversiktDataMedUnntaksvurderingerForSM,
       unntaksvurderinger: [unntakMedVirksomhetsnavn, unntakUtenVirksomhetsnavn],
-      gjeldendeUnntaksvurderinger: [
-        unntakMedVirksomhetsnavn,
-        unntakUtenVirksomhetsnavn,
-      ],
     });
 
     await renderAsync(PlanListeForSykmeldt());
@@ -203,8 +199,7 @@ describe("PlanListeForSykmeldt", () => {
     mockFetch.mockResolvedValue({
       aktiveOppfolgingsplaner: [newerPlan],
       tidligerePlaner: [],
-      unntaksvurderinger: [unntak],
-      gjeldendeUnntaksvurderinger: [],
+      unntaksvurderinger: [{ ...unntak, gjeldende: false }],
     });
 
     await renderAsync(PlanListeForSykmeldt());
@@ -238,8 +233,7 @@ describe("PlanListeForSykmeldt", () => {
     mockFetch.mockResolvedValue({
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [nyereTidligerePlan],
-      unntaksvurderinger: [unntak],
-      gjeldendeUnntaksvurderinger: [],
+      unntaksvurderinger: [{ ...unntak, gjeldende: false }],
     });
 
     await renderAsync(PlanListeForSykmeldt());
@@ -266,12 +260,12 @@ describe("PlanListeForSykmeldt", () => {
       ...newestUnntak,
       id: "323e4567-e89b-12d3-a456-426614174099",
       meldtTidspunkt: "2025-12-01T09:12:00Z",
+      gjeldende: false,
     };
     mockFetch.mockResolvedValue({
       aktiveOppfolgingsplaner: [],
       tidligerePlaner: [],
       unntaksvurderinger: [olderUnntak, newestUnntak],
-      gjeldendeUnntaksvurderinger: [newestUnntak],
     });
 
     await renderAsync(PlanListeForSykmeldt());

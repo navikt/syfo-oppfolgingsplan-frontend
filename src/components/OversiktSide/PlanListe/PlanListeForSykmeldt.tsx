@@ -6,7 +6,10 @@ import {
 import { IngenAktivPlanAlert } from "@/components/OversiktSide/IngenAktivPlanAlert";
 import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
 import type { OppfolgingsplanerOversiktForSM } from "@/schema/oversiktResponseSchemas";
-import type { UnntaksvurderingMetadata } from "@/schema/unntaksvurderingSchemas";
+import type {
+  SykmeldtUnntaksvurdering,
+  UnntaksvurderingMetadata,
+} from "@/schema/unntaksvurderingSchemas";
 import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
@@ -19,7 +22,7 @@ type TidligerePlan = OppfolgingsplanerOversiktForSM["tidligerePlaner"][number];
 
 type HistorikkInnslag =
   | { type: "plan"; tidspunkt: string; plan: TidligerePlan }
-  | { type: "unntak"; tidspunkt: string; unntak: UnntaksvurderingMetadata };
+  | { type: "unntak"; tidspunkt: string; unntak: SykmeldtUnntaksvurdering };
 
 async function finnOrganisasjonerITiltaksgruppe(
   unntaksvurderinger: UnntaksvurderingMetadata[],
@@ -53,7 +56,7 @@ async function finnOrganisasjonerITiltaksgruppe(
 
 function tilHistorikkInnslag(
   tidligerePlaner: TidligerePlan[],
-  unntaksvurderinger: UnntaksvurderingMetadata[],
+  unntaksvurderinger: SykmeldtUnntaksvurdering[],
 ): HistorikkInnslag[] {
   return [
     ...tidligerePlaner.map((plan) => ({
@@ -70,24 +73,17 @@ function tilHistorikkInnslag(
 }
 
 export default async function PlanListeForSykmeldt() {
-  const {
-    aktiveOppfolgingsplaner,
-    tidligerePlaner,
-    unntaksvurderinger,
-    gjeldendeUnntaksvurderinger,
-  } = await fetchOppfolgingsplanOversiktForSM();
+  const { aktiveOppfolgingsplaner, tidligerePlaner, unntaksvurderinger } =
+    await fetchOppfolgingsplanOversiktForSM();
 
-  const organisasjonerITiltaksgruppe = await finnOrganisasjonerITiltaksgruppe([
-    ...unntaksvurderinger,
-    ...gjeldendeUnntaksvurderinger,
-  ]);
+  const organisasjonerITiltaksgruppe =
+    await finnOrganisasjonerITiltaksgruppe(unntaksvurderinger);
   const synligeUnntaksvurderinger = unntaksvurderinger.filter(
     (unntaksvurdering) =>
       organisasjonerITiltaksgruppe.has(unntaksvurdering.organization.orgNumber),
   );
-  const synligeGjeldendeUnntaksvurderinger = gjeldendeUnntaksvurderinger.filter(
-    (unntaksvurdering) =>
-      organisasjonerITiltaksgruppe.has(unntaksvurdering.organization.orgNumber),
+  const synligeGjeldendeUnntaksvurderinger = synligeUnntaksvurderinger.filter(
+    (unntaksvurdering) => unntaksvurdering.gjeldende,
   );
   const historikk = tilHistorikkInnslag(
     tidligerePlaner,

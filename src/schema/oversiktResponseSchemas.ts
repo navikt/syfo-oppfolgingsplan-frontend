@@ -4,6 +4,7 @@ import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
 import { organizationDetailsSchema } from "./organizationDetailsSchema";
 import {
   gjeldendeStatusSchema,
+  sykmeldtUnntaksvurderingSchema,
   unntaksvurderingMetadataSchema,
 } from "./unntaksvurderingSchemas";
 import { utkastMetadataSchema } from "./utkastMetadataSchema";
@@ -37,10 +38,7 @@ export type OppfolgingsplanerOversiktForAG = z.infer<
 export const OppfolgingsplanerOversiktResponseSchemaForSM = z.object({
   aktiveOppfolgingsplaner: z.array(oppfolgingsplanMetadataSchema),
   tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
-  unntaksvurderinger: z.array(unntaksvurderingMetadataSchema).default([]),
-  gjeldendeUnntaksvurderinger: z
-    .array(unntaksvurderingMetadataSchema)
-    .default([]),
+  unntaksvurderinger: z.array(sykmeldtUnntaksvurderingSchema).default([]),
 });
 
 export type OppfolgingsplanerOversiktForSM = z.infer<

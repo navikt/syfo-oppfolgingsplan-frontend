@@ -35,14 +35,12 @@ export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [mockAktivPlanData],
   tidligerePlaner: mockTidligerePlanerData,
   unntaksvurderinger: [],
-  gjeldendeUnntaksvurderinger: [],
 };
 
 export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [],
   tidligerePlaner: [],
   unntaksvurderinger: [],
-  gjeldendeUnntaksvurderinger: [],
 };
 
 export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversiktForSM =
@@ -50,12 +48,10 @@ export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversi
     aktiveOppfolgingsplaner: [],
     tidligerePlaner: [],
     unntaksvurderinger: mockUnntaksvurderingerDataForSM,
-    gjeldendeUnntaksvurderinger: mockUnntaksvurderingerDataForSM,
   };
 
 export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
   aktiveOppfolgingsplaner: [mockAktivPlanData],
   tidligerePlaner: [],
   unntaksvurderinger: [],
-  gjeldendeUnntaksvurderinger: [],
 };

@@ -1,4 +1,7 @@
-import type { UnntaksvurderingMetadata } from "@/schema/unntaksvurderingSchemas";
+import type {
+  SykmeldtUnntaksvurdering,
+  UnntaksvurderingMetadata,
+} from "@/schema/unntaksvurderingSchemas";
 import { mockOrganization } from "./mockEmployeeDetails";
 
 const mockUnntaksvurdering: UnntaksvurderingMetadata = {
@@ -20,10 +23,11 @@ export const mockUnntaksvurderingerDataForAG: UnntaksvurderingMetadata[] = [
   eldreMockUnntaksvurdering,
 ];
 
-export const mockUnntaksvurderingerDataForSM: UnntaksvurderingMetadata[] = [
-  mockUnntaksvurdering,
+export const mockUnntaksvurderingerDataForSM: SykmeldtUnntaksvurdering[] = [
+  { ...mockUnntaksvurdering, gjeldende: true },
   {
     ...eldreMockUnntaksvurdering,
     organization: { orgNumber: "987654321", orgName: null },
+    gjeldende: true,
   },
 ];
