@@ -17,12 +17,41 @@ import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime.ts";
 
 interface Props {
   planId: string;
+  /**
+   * Styres av det eksisterende flaggskip-oppsettet. Når arbeidsgiveren er med i
+   * Nav-tiltaksgruppen, vises tekstene fra tiltakspakken. Alle andre beholder
+   * dagens tekster.
+   */
+  erITiltaksgruppe?: boolean;
 }
+
+const TEKSTER = {
+  standard: {
+    overskrift: "Hvem vil du sende planen til",
+    beskrivelse:
+      "Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært helt eller delvis borte fra jobben i 4 uker. I tillegg kan du sende planen til Nav når du selv ønsker, når Nav ber om den, eller senest én uke før et dialogmøte med Nav.",
+    knapp: "Send planen",
+    fastlegeHjelpetekst: undefined,
+    veilederHjelpetekst: undefined,
+  },
+  tiltaksgruppe: {
+    overskrift: "Del oppfølgingsplanen med fastlege og Nav",
+    beskrivelse:
+      "Det er et krav om å dele oppfølgingsplanen med fastlegen innen de første 4 ukene av sykefraværsperioden. I tillegg kan du dele den med Nav når du selv ønsker eller senest én uke før dialogmøte med Nav (Nav kan også be om å få den tilsendt).",
+    knapp: "Del planen",
+    fastlegeHjelpetekst:
+      "Hensikten er at fastlegen har innsikt i arbeidssituasjonen før neste konsultasjon med den som er sykmeldt.",
+    veilederHjelpetekst:
+      "Hensikten er at Nav har riktig informasjon for å bidra på best mulig måte i sykefraværet.",
+  },
+} as const;
 
 interface RecipientSectionProps {
   id: string;
   name: string;
   label: string;
+  /** Hjelpetekst under avhukingsboksen. Aksel kobler den til checkboxen med aria-describedby. */
+  hjelpetekst?: string;
   sentTimestamp: string | null;
   error: FetchResultError | null;
   errorMessage: string;
@@ -48,13 +77,14 @@ function RecipientCheckbox({
   id,
   name,
   label,
+  hjelpetekst,
   error,
   errorMessage,
   checkboxRef,
 }: RecipientSectionProps) {
   return (
     <div>
-      <Checkbox id={id} ref={checkboxRef} name={name}>
+      <Checkbox id={id} ref={checkboxRef} name={name} description={hjelpetekst}>
         {label}
       </Checkbox>
       {error && (
@@ -68,7 +98,10 @@ function RecipientCheckbox({
   );
 }
 
-function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
+function DelAktivPlanMedLegeEllerNav({
+  planId,
+  erITiltaksgruppe = false,
+}: Props) {
   const {
     deltMedLegeTidspunkt,
     deltMedVeilederTidspunkt,
@@ -88,6 +121,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
   const sentToFastlege = Boolean(deltMedLegeTidspunkt);
   const sentToVeileder = Boolean(deltMedVeilederTidspunkt);
   const hasUnsentRecipients = !sentToFastlege || !sentToVeileder;
+  const tekster = erITiltaksgruppe ? TEKSTER.tiltaksgruppe : TEKSTER.standard;
 
   const handleSubmit = (formData: FormData) => {
     const sendToFastlege = formData.get("sendToFastlege") === "on";
@@ -121,14 +155,9 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
       borderWidth="1"
     >
       <Heading level="2" size="medium" spacing>
-        Hvem vil du sende planen til
+        {tekster.overskrift}
       </Heading>
-      <BodyLong>
-        Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært
-        helt eller delvis borte fra jobben i 4 uker. I tillegg kan du sende
-        planen til Nav når du selv ønsker, når Nav ber om den, eller senest én
-        uke før et dialogmøte med Nav.
-      </BodyLong>
+      <BodyLong>{tekster.beskrivelse}</BodyLong>
 
       <form action={handleSubmit}>
         {sentToFastlege ? (
@@ -139,6 +168,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
             id="fastlege-checkbox"
             name="sendToFastlege"
             label="Fastlegen til den ansatte"
+            hjelpetekst={tekster.fastlegeHjelpetekst}
             sentTimestamp={deltMedLegeTidspunkt}
             error={errorDelMedLege}
             errorMessage="Kunne ikke sende planen til fastlege. Prøv igjen."
@@ -157,6 +187,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
             id="veileder-checkbox"
             name="sendToVeileder"
             label="Nav-veilederen"
+            hjelpetekst={tekster.veilederHjelpetekst}
             sentTimestamp={deltMedVeilederTidspunkt}
             error={errorDelMedVeileder}
             errorMessage="Kunne ikke sende planen til Nav-veileder. Prøv igjen."
@@ -178,7 +209,7 @@ function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
 
         {hasUnsentRecipients && (
           <Button type="submit" loading={isSending} className="mt-4">
-            Send planen
+            {tekster.knapp}
           </Button>
         )}
       </form>
