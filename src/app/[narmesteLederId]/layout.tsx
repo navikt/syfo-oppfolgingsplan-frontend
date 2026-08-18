@@ -23,10 +23,11 @@ export default async function RootLayoutForAG({
 }: LayoutProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
 
-  // This fetch is also done in server components for the oversikt page, so when
-  // visiting the oversikt page first, all these fetch calls made from different
-  // server components (this component included) will be deduplicated by
-  // Next.js.
+  // This fetch is also done in server components for the oversikt page. The
+  // function is wrapped in React cache(), so all calls made from different
+  // server components (this component included) during the same render pass
+  // share one backend request. (Next.js' own fetch memoization does not apply
+  // here, since every request gets a unique Nav-Call-Id header.)
   const oversiktResult =
     await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
 
