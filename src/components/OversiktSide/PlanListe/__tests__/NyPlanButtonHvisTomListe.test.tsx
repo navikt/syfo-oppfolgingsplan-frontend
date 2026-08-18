@@ -42,7 +42,10 @@ describe("NyPlanButtonHvisTomListe", () => {
     });
 
     await renderAsync(
-      NyPlanButtonHvisTomListe({ narmesteLederId: "test-123" }),
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "test-123",
+        erITiltaksgruppe: false,
+      }),
     );
 
     expect(mockFetch).toHaveBeenCalledWith("test-123");
@@ -54,7 +57,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataEmptyWithAccess,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -67,7 +75,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataOnlyActivePlan,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -80,7 +93,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataOnlyDraft,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -93,7 +111,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataOnlyPreviousPlans,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -106,7 +129,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataEmptyNoAccess,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -119,7 +147,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataMedPlanerForAG,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -135,7 +168,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: null,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -172,7 +210,12 @@ describe("NyPlanButtonHvisTomListe", () => {
         data: mockOversiktDataEmptyWithAccess,
       });
 
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+      await renderAsync(
+        NyPlanButtonHvisTomListe({
+          narmesteLederId: "12345",
+          erITiltaksgruppe: false,
+        }),
+      );
 
       expect(
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),

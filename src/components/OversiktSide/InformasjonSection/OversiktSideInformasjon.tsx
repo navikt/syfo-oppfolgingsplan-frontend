@@ -8,11 +8,7 @@ import {
 } from "@/common/publicAssets";
 import InformasjonListItem from "./InformasjonListItem";
 
-interface Props {
-  erITiltaksgruppe?: boolean;
-}
-
-function TiltaksgruppeInformasjon() {
+export function TiltaksgruppeInformasjon() {
   return (
     <section aria-label="Slik bruker dere oppfølgingsplanen">
       <InformasjonListItem
@@ -61,13 +57,7 @@ function TiltaksgruppeInformasjon() {
   );
 }
 
-export default function OversiktSideInformasjon({
-  erITiltaksgruppe = false,
-}: Props) {
-  if (erITiltaksgruppe) {
-    return <TiltaksgruppeInformasjon />;
-  }
-
+export default function OversiktSideInformasjon() {
   return (
     <section>
       <Heading level="3" size="medium" className="mb-8">

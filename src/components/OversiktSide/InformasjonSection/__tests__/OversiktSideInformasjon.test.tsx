@@ -1,7 +1,9 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test } from "vitest";
 import { render } from "@/test/test-utils";
-import OversiktSideInformasjon from "../OversiktSideInformasjon";
+import OversiktSideInformasjon, {
+  TiltaksgruppeInformasjon,
+} from "../OversiktSideInformasjon";
 import OversiktSideIntroduksjon from "../OversiktSideIntroduksjon";
 
 describe("OversiktSideInformasjon", () => {
@@ -13,7 +15,7 @@ describe("OversiktSideInformasjon", () => {
     render(
       <>
         <OversiktSideIntroduksjon erITiltaksgruppe={true} />
-        <OversiktSideInformasjon erITiltaksgruppe={true} />
+        <TiltaksgruppeInformasjon />
       </>,
     );
 

@@ -5,10 +5,10 @@ import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
   narmesteLederId,
-  erITiltaksgruppe = false,
+  erITiltaksgruppe,
 }: {
   narmesteLederId: string;
-  erITiltaksgruppe?: boolean;
+  erITiltaksgruppe: boolean;
 }) {
   const oversiktResult =
     await fetchOppfolgingsplanOversiktForAG(narmesteLederId);
