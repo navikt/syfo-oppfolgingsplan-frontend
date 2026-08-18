@@ -39,13 +39,21 @@ describe("erNarmesteLederINavTiltaksgruppe", () => {
     envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
   });
 
-  test("returnerer false uten å hente data når feature toggle er av", async () => {
+  test("gjør Flaggskipet-vurderingen, men returnerer false når feature toggle er av", async () => {
+    mockFetchOppfolgingsplanOversiktForAG.mockResolvedValue({
+      error: null,
+      data: mockOversiktDataEmptyWithAccess,
+    });
+    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+
     await expect(
       erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
     ).resolves.toBe(false);
 
-    expect(mockFetchOppfolgingsplanOversiktForAG).not.toHaveBeenCalled();
-    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    expect(mockFetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith(
+      "narmeste-leder-id",
+    );
+    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
   });
 
   test("returnerer false når oversikten ikke kan hentes", async () => {
