@@ -1,10 +1,6 @@
-import { BodyLong, Heading } from "@navikt/ds-react";
+import { Heading } from "@navikt/ds-react";
 import { Suspense } from "react";
-import TextContentBox from "@/components/layout/TextContentBox";
-import { AnsattIkkeSykmeldtAlert } from "@/components/OversiktSide/AnsattIkkeSykmeldtAlert.tsx";
-import OversiktSideInformasjon from "@/components/OversiktSide/InformasjonSection/OversiktSideInformasjon";
-import NyPlanButtonHvisTomListe from "@/components/OversiktSide/PlanListe/NyPlanButtonHvisTomListe";
-import PlanListeForArbeidsgiver from "@/components/OversiktSide/PlanListe/PlanListeForArbeidsgiver";
+import OversiktInnholdForArbeidsgiver from "@/components/OversiktSide/OversiktInnholdForArbeidsgiver";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton";
 
 export default async function OversiktPageForAG({
@@ -18,21 +14,9 @@ export default async function OversiktPageForAG({
         Oppfølgingsplaner
       </Heading>
 
-      <TextContentBox>
-        <BodyLong size="large" spacing>
-          Oppfølgingsplanen er et verktøy som brukes i sykefraværsoppfølgingen.
-          Du og den sykmeldte ansatte skal samarbeide om å finne løsninger slik
-          at den ansatte kan komme tilbake i arbeid.
-        </BodyLong>
-      </TextContentBox>
-
       <Suspense fallback={<PlanListeSkeleton />}>
-        <AnsattIkkeSykmeldtAlert narmesteLederId={narmesteLederId} />
-        <NyPlanButtonHvisTomListe narmesteLederId={narmesteLederId} />
-        <PlanListeForArbeidsgiver narmesteLederId={narmesteLederId} />
+        <OversiktInnholdForArbeidsgiver narmesteLederId={narmesteLederId} />
       </Suspense>
-
-      <OversiktSideInformasjon />
     </>
   );
 }
