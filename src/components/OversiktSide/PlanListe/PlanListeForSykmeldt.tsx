@@ -12,7 +12,7 @@ import PlanListeDel from "./PlanListeDel";
 import { UnntaksvurderingInfoCard } from "./UnntaksvurderingInfoCard";
 
 export default async function PlanListeForSykmeldt() {
-  const { gjeldendeHendelser, tidligereHendelser, harOppfolgingsplaner } =
+  const { gjeldendeHendelser, tidligereHendelser, harFerdigstiltePlaner } =
     await hentSykmeldtPlanoversikt();
 
   return (
@@ -61,7 +61,7 @@ export default async function PlanListeForSykmeldt() {
           </VStack>
         </PlanListeDel>
       )}
-      {harOppfolgingsplaner && (
+      {harFerdigstiltePlaner && (
         <InlineMessage status="info" className="mt-4">
           Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke
           har hatt sykmelding hos arbeidsgiveren på 6 måneder. Åpne planen og

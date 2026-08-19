@@ -50,6 +50,11 @@ export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
   virksomheter: [],
 };
 
+const eldreMockUnntaksvurderingUtenOrganisasjonsnavn = {
+  ...eldreMockUnntaksvurdering,
+  organization: { orgNumber: "987654321", orgName: null },
+};
+
 export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversiktForSM =
   {
     virksomheter: [
@@ -60,9 +65,12 @@ export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversi
         ],
       },
       {
-        organization: { orgNumber: "987654321", orgName: null },
+        organization:
+          eldreMockUnntaksvurderingUtenOrganisasjonsnavn.organization,
         oppfolgingsplanhendelser: [
-          tilPlanIkkeNodvendigHendelse(eldreMockUnntaksvurdering),
+          tilPlanIkkeNodvendigHendelse(
+            eldreMockUnntaksvurderingUtenOrganisasjonsnavn,
+          ),
         ],
       },
     ],

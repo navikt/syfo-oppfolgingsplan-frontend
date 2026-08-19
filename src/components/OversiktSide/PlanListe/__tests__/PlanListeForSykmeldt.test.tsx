@@ -123,6 +123,52 @@ describe("PlanListeForSykmeldt", () => {
     ).not.toBeInTheDocument();
   });
 
+  test("viser gjeldende vurdering og tidligere plan fra samme virksomhet", async () => {
+    const virksomhetMedUnntak =
+      mockOversiktDataMedUnntaksvurderingerForSM.virksomheter[0];
+    const virksomhetMedPlan = mockOversiktDataMedPlanerForSM.virksomheter[0];
+    const gjeldendeUnntak = virksomhetMedUnntak?.oppfolgingsplanhendelser[0];
+    const tidligerePlan = virksomhetMedPlan?.oppfolgingsplanhendelser[0];
+
+    if (!virksomhetMedUnntak || !gjeldendeUnntak || !tidligerePlan) {
+      throw new Error("Forventet mockdata for unntak og tidligere plan");
+    }
+
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(
+        {
+          virksomheter: [
+            {
+              organization: virksomhetMedUnntak.organization,
+              oppfolgingsplanhendelser: [gjeldendeUnntak, tidligerePlan],
+            },
+          ],
+        },
+        new Set([virksomhetMedUnntak.organization.orgNumber]),
+      ),
+    );
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(
+      screen.getByRole("heading", {
+        name: "Nav har fått melding om at det ikke er behov for oppfølgingsplan",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Tidligere oppfølgingsplaner" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Ikke aktuelt med oppfølgingsplan nå",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Holmen skole" })).toHaveAttribute(
+      "href",
+      `/sykmeldt/tidligere-planer/${tidligerePlan.id}`,
+    );
+  });
+
   test("viser bare virksomheter i tiltaksgruppen", async () => {
     mockHentSykmeldtPlanoversikt.mockResolvedValue(
       lagSykmeldtPlanoversikt(

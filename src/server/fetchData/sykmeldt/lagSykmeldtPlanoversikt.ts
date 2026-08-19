@@ -10,7 +10,7 @@ export interface OppfolgingsplanHendelseForVirksomhet {
 export interface SykmeldtPlanoversikt {
   gjeldendeHendelser: OppfolgingsplanHendelseForVirksomhet[];
   tidligereHendelser: OppfolgingsplanHendelseForVirksomhet[];
-  harOppfolgingsplaner: boolean;
+  harFerdigstiltePlaner: boolean;
 }
 
 export function lagSykmeldtPlanoversikt(
@@ -40,10 +40,13 @@ export function lagSykmeldtPlanoversikt(
   const tidligereHendelser = virksomheter
     .flatMap(({ organization, oppfolgingsplanhendelser }) =>
       oppfolgingsplanhendelser
-        .filter(
-          (hendelse, index) =>
-            index > 0 || hendelse.type === "PLAN_IKKE_NODVENDIG",
-        )
+        .filter((hendelse, index) => {
+          const erGjeldende = index === 0;
+          const vurderingVisesSomInnslag =
+            hendelse.type === "PLAN_IKKE_NODVENDIG";
+
+          return !erGjeldende || vurderingVisesSomInnslag;
+        })
         .map((hendelse) => ({ organization, hendelse })),
     )
     .sort(
@@ -55,7 +58,7 @@ export function lagSykmeldtPlanoversikt(
   return {
     gjeldendeHendelser,
     tidligereHendelser,
-    harOppfolgingsplaner: virksomheter.some(({ oppfolgingsplanhendelser }) =>
+    harFerdigstiltePlaner: virksomheter.some(({ oppfolgingsplanhendelser }) =>
       oppfolgingsplanhendelser.some(
         (hendelse) => hendelse.type === "FERDIGSTILT_PLAN",
       ),
