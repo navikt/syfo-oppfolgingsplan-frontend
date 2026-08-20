@@ -22,7 +22,7 @@ export const oppfolgingsplanhendelseSchema = z.discriminatedUnion("type", [
 ]);
 
 export const sykmeldtVirksomhetsoversiktSchema = z.object({
-  organization: organizationDetailsSchema,
+  virksomhet: organizationDetailsSchema,
   oppfolgingsplanhendelser: z.array(oppfolgingsplanhendelseSchema),
 });
 

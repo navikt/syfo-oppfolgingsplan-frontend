@@ -139,12 +139,12 @@ describe("PlanListeForSykmeldt", () => {
         {
           virksomheter: [
             {
-              organization: virksomhetMedUnntak.organization,
+              virksomhet: virksomhetMedUnntak.virksomhet,
               oppfolgingsplanhendelser: [gjeldendeUnntak, tidligerePlan],
             },
           ],
         },
-        new Set([virksomhetMedUnntak.organization.orgNumber]),
+        new Set([virksomhetMedUnntak.virksomhet.orgNumber]),
       ),
     );
 

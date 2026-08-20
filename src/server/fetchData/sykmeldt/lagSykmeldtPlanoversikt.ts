@@ -18,12 +18,12 @@ export function lagSykmeldtPlanoversikt(
   organisasjonerITiltaksgruppe: ReadonlySet<string>,
 ): SykmeldtPlanoversikt {
   const virksomheter = oversikt.virksomheter
-    .map(({ organization, oppfolgingsplanhendelser }) => ({
-      organization,
+    .map(({ virksomhet, oppfolgingsplanhendelser }) => ({
+      organization: virksomhet,
       oppfolgingsplanhendelser: oppfolgingsplanhendelser.filter(
         (hendelse) =>
           hendelse.type === "FERDIGSTILT_PLAN" ||
-          organisasjonerITiltaksgruppe.has(organization.orgNumber),
+          organisasjonerITiltaksgruppe.has(virksomhet.orgNumber),
       ),
     }))
     .filter(

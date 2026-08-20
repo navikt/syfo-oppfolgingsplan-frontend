@@ -119,7 +119,7 @@ describe("OppfolgingsplanerOversiktResponseSchemaForSM – oppfolgingsplanhendel
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
       virksomheter: [
         {
-          organization: unntaksvurderingFraBackend.organization,
+          virksomhet: unntaksvurderingFraBackend.organization,
           oppfolgingsplanhendelser: [
             {
               type: "PLAN_IKKE_NODVENDIG",
@@ -154,7 +154,7 @@ describe("OppfolgingsplanerOversiktResponseSchemaForSM – oppfolgingsplanhendel
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
       virksomheter: [
         {
-          organization: unntaksvurderingFraBackend.organization,
+          virksomhet: unntaksvurderingFraBackend.organization,
           oppfolgingsplanhendelser: [
             {
               id: unntaksvurderingFraBackend.id,

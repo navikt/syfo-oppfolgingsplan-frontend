@@ -23,7 +23,9 @@ const unntak = {
 function oversiktMed(
   ...oppfolgingsplanhendelser: OppfolgingsplanerOversiktForSM["virksomheter"][number]["oppfolgingsplanhendelser"]
 ): OppfolgingsplanerOversiktForSM {
-  return { virksomheter: [{ organization, oppfolgingsplanhendelser }] };
+  return {
+    virksomheter: [{ virksomhet: organization, oppfolgingsplanhendelser }],
+  };
 }
 
 describe("lagSykmeldtPlanoversikt", () => {

@@ -12,7 +12,7 @@ export async function hentSykmeldtPlanoversikt() {
         (hendelse) => hendelse.type === "PLAN_IKKE_NODVENDIG",
       ),
     )
-    .map(({ organization }) => organization.orgNumber);
+    .map(({ virksomhet }) => virksomhet.orgNumber);
 
   const organisasjonerITiltaksgruppe =
     isTiltakspakkevurderingFeatureToggleEnabled()

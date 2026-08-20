@@ -37,7 +37,7 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
 export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
   virksomheter: [
     {
-      organization: mockAktivPlanData.organization,
+      virksomhet: mockAktivPlanData.organization,
       oppfolgingsplanhendelser: [
         tilPlanHendelse(mockAktivPlanData),
         ...mockTidligerePlanerData.map(tilPlanHendelse),
@@ -59,14 +59,13 @@ export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversi
   {
     virksomheter: [
       {
-        organization: mockUnntaksvurdering.organization,
+        virksomhet: mockUnntaksvurdering.organization,
         oppfolgingsplanhendelser: [
           tilPlanIkkeNodvendigHendelse(mockUnntaksvurdering),
         ],
       },
       {
-        organization:
-          eldreMockUnntaksvurderingUtenOrganisasjonsnavn.organization,
+        virksomhet: eldreMockUnntaksvurderingUtenOrganisasjonsnavn.organization,
         oppfolgingsplanhendelser: [
           tilPlanIkkeNodvendigHendelse(
             eldreMockUnntaksvurderingUtenOrganisasjonsnavn,
@@ -79,7 +78,7 @@ export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversi
 export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
   virksomheter: [
     {
-      organization: mockAktivPlanData.organization,
+      virksomhet: mockAktivPlanData.organization,
       oppfolgingsplanhendelser: [tilPlanHendelse(mockAktivPlanData)],
     },
   ],
