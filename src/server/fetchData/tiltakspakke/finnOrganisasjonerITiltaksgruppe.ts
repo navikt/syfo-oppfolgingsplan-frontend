@@ -5,43 +5,49 @@ import { fetchTiltakspakkeVurdering } from "./fetchTiltakspakkeVurdering";
 
 const FLAGGSKIPET_VURDERING_EVENT_TYPE = "flaggskipet_vurdering";
 
-export async function erOrgINavTiltaksgruppe(
-  orgnummer: string,
-): Promise<boolean> {
-  const result = await fetchTiltakspakkeVurdering(orgnummer);
+export async function finnOrganisasjonerITiltaksgruppe(
+  orgnumre: Iterable<string>,
+): Promise<ReadonlySet<string>> {
+  const unikeOrgnumre = [...new Set(orgnumre)];
+  if (unikeOrgnumre.length === 0) return new Set();
 
+  const result = await fetchTiltakspakkeVurdering(unikeOrgnumre);
   if (result.error) {
     logger.info(
       {
         event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
         tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
-        erITiltaksgruppe: false,
+        antallVirksomheter: unikeOrgnumre.length,
         errorType: result.error.type,
       },
       FLAGGSKIPET_VURDERING_EVENT_TYPE,
     );
-
-    return false;
+    return new Set();
   }
 
+  const etterspurteOrgnumre = new Set(unikeOrgnumre);
   const tiltakspakke = result.data.find(
     (vurdering) => vurdering.tiltakspakkeId === OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
   );
-  const virksomhet = tiltakspakke?.virksomheter.find(
-    (it) => it.orgnummer === orgnummer,
+  const organisasjonerITiltaksgruppe = new Set(
+    tiltakspakke?.virksomheter
+      .filter(
+        (virksomhet) =>
+          etterspurteOrgnumre.has(virksomhet.orgnummer) &&
+          virksomhet.deltakelse === "TILTAKSGRUPPE",
+      )
+      .map((virksomhet) => virksomhet.orgnummer) ?? [],
   );
-
-  const erITiltaksgruppe = virksomhet?.deltakelse === "TILTAKSGRUPPE";
 
   logger.info(
     {
       event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
       tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
-      deltakelse: virksomhet?.deltakelse ?? "MANGLER",
-      erITiltaksgruppe,
+      antallVirksomheter: unikeOrgnumre.length,
+      antallITiltaksgruppe: organisasjonerITiltaksgruppe.size,
     },
     FLAGGSKIPET_VURDERING_EVENT_TYPE,
   );
 
-  return erITiltaksgruppe;
+  return organisasjonerITiltaksgruppe;
 }

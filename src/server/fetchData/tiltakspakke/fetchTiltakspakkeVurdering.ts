@@ -14,23 +14,17 @@ import { tokenXFetchUpdateWithResponse } from "@/server/tokenXFetch/tokenXFetchU
 const FLAGGSKIPET_FETCH_TIMEOUT_MS = 5000;
 
 export async function fetchTiltakspakkeVurdering(
-  orgnummer: string,
+  orgnumre: readonly string[],
 ): Promise<FetchGetResult<FlaggskipetVurderingResponse>> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
-
-    return {
-      error: null,
-      data: mockFlaggskipetVurderingTiltaksgruppe,
-    };
+    return { error: null, data: mockFlaggskipetVurderingTiltaksgruppe };
   }
 
   return await tokenXFetchUpdateWithResponse({
     targetApi: TokenXTargetApi.FLAGGSKIPET,
     endpoint: getEndpointFlaggskipetVurdering(),
-    requestBody: {
-      orgnumre: [orgnummer],
-    },
+    requestBody: { orgnumre },
     responseDataSchema: flaggskipetVurderingResponseSchema,
     signal: AbortSignal.timeout(FLAGGSKIPET_FETCH_TIMEOUT_MS),
   });

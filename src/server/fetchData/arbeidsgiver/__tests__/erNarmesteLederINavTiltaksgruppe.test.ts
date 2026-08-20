@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { mockOversiktDataEmptyWithAccess } from "@/server/fetchData/mockData/mockOversiktDataVariants";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe";
 import { erNarmesteLederINavTiltaksgruppe } from "../erNarmesteLederINavTiltaksgruppe";
-import { erOrgINavTiltaksgruppe } from "../erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "../fetchOppfolgingsplanOversikt";
 
 const envMock = vi.hoisted(() => ({
@@ -20,7 +20,7 @@ vi.mock("@/env-variables/envHelpers", async () => {
   };
 });
 
-vi.mock("../erOrgINavTiltaksgruppe", () => ({
+vi.mock("@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe", () => ({
   erOrgINavTiltaksgruppe: vi.fn(),
 }));
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { commonResponseFieldsSchema } from "./commonResponseFieldsSchemas";
 import { ferdigstiltPlanMetadataSchema } from "./ferdigstiltPlanMetadataSchema";
+import { sykmeldtVirksomhetsoversiktSchema } from "./oppfolgingsplanhendelseSchemas";
 import { organizationDetailsSchema } from "./organizationDetailsSchema";
 import {
   gjeldendeStatusSchema,
@@ -35,8 +36,7 @@ export type OppfolgingsplanerOversiktForAG = z.infer<
 >;
 
 export const OppfolgingsplanerOversiktResponseSchemaForSM = z.object({
-  aktiveOppfolgingsplaner: z.array(oppfolgingsplanMetadataSchema),
-  tidligerePlaner: z.array(oppfolgingsplanMetadataSchema),
+  virksomheter: z.array(sykmeldtVirksomhetsoversiktSchema),
 });
 
 export type OppfolgingsplanerOversiktForSM = z.infer<

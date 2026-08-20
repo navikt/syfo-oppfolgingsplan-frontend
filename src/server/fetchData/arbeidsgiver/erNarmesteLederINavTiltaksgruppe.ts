@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
-import { erOrgINavTiltaksgruppe } from "./erOrgINavTiltaksgruppe";
+import { erOrgINavTiltaksgruppe } from "@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "./fetchOppfolgingsplanOversikt";
 
 /**

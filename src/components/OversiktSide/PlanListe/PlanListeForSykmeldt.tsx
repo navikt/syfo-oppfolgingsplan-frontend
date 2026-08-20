@@ -4,56 +4,64 @@ import {
   getSMTidligerePlanHref,
 } from "@/common/route-hrefs";
 import { IngenAktivPlanAlert } from "@/components/OversiktSide/IngenAktivPlanAlert";
-import { fetchOppfolgingsplanOversiktForSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
+import { hentSykmeldtPlanoversikt } from "@/server/fetchData/sykmeldt/hentSykmeldtPlanoversikt";
+import PlanIkkeNodvendigInnslag from "./PlanIkkeNodvendigInnslag";
 import AktivPlanLinkCard from "./PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "./PlanLinkCard/TidligerePlanLinkCard";
 import PlanListeDel from "./PlanListeDel";
+import { UnntaksvurderingInfoCard } from "./UnntaksvurderingInfoCard";
 
 export default async function PlanListeForSykmeldt() {
-  const { aktiveOppfolgingsplaner, tidligerePlaner } =
-    await fetchOppfolgingsplanOversiktForSM();
-
-  const harAktivePlaner = aktiveOppfolgingsplaner.length > 0;
-  const harTidligerePlaner = tidligerePlaner.length > 0;
+  const { gjeldendeHendelser, tidligereHendelser, harFerdigstiltePlaner } =
+    await hentSykmeldtPlanoversikt();
 
   return (
     <section className="mb-8">
-      {!harAktivePlaner && <IngenAktivPlanAlert />}
-      {harAktivePlaner && (
+      {gjeldendeHendelser.length === 0 && <IngenAktivPlanAlert />}
+      {gjeldendeHendelser.length > 0 && (
         <PlanListeDel>
           <VStack gap="space-16">
-            {aktiveOppfolgingsplaner.map((plan) => (
-              <AktivPlanLinkCard
-                key={plan.id}
-                aktivPlan={plan}
-                linkCardTitle={
-                  plan.organization.orgName ?? plan.organization.orgNumber
-                }
-                href={getSMAktivPlanHref(plan.id)}
-              />
-            ))}
+            {gjeldendeHendelser.map(({ organization, hendelse }) =>
+              hendelse.type === "FERDIGSTILT_PLAN" ? (
+                <AktivPlanLinkCard
+                  key={hendelse.id}
+                  aktivPlan={hendelse}
+                  linkCardTitle={organization.orgName ?? organization.orgNumber}
+                  href={getSMAktivPlanHref(hendelse.id)}
+                />
+              ) : (
+                <UnntaksvurderingInfoCard
+                  key={hendelse.id}
+                  unntaksvurdering={{ ...hendelse, organization }}
+                />
+              ),
+            )}
           </VStack>
         </PlanListeDel>
       )}
-      {harTidligerePlaner && (
+      {tidligereHendelser.length > 0 && (
         <PlanListeDel heading="Tidligere oppfølgingsplaner">
           <VStack gap="space-16">
-            {tidligerePlaner.map((plan) => (
-              <TidligerePlanLinkCard
-                key={plan.id}
-                tidligerePlan={plan}
-                linkCardTitle={
-                  plan.organization.orgName ?? plan.organization.orgNumber
-                }
-                href={getSMTidligerePlanHref(plan.id)}
-              />
-            ))}
+            {tidligereHendelser.map(({ organization, hendelse }) =>
+              hendelse.type === "FERDIGSTILT_PLAN" ? (
+                <TidligerePlanLinkCard
+                  key={hendelse.id}
+                  tidligerePlan={hendelse}
+                  linkCardTitle={organization.orgName ?? organization.orgNumber}
+                  href={getSMTidligerePlanHref(hendelse.id)}
+                />
+              ) : (
+                <PlanIkkeNodvendigInnslag
+                  key={hendelse.id}
+                  unntak={{ ...hendelse, organization }}
+                  visOrganisasjon
+                />
+              ),
+            )}
           </VStack>
         </PlanListeDel>
       )}
-      {/* Backend derives aktiveOppfolgingsplaner and tidligerePlaner from the same sorted plan lists per employer.
-        If tidligerePlaner exists, an active/newest plan also exists. */}
-      {harAktivePlaner && (
+      {harFerdigstiltePlaner && (
         <InlineMessage status="info" className="mt-4">
           Aktive og tidligere oppfølgingsplaner blir utilgjengelige når du ikke
           har hatt sykmelding hos arbeidsgiveren på 6 måneder. Åpne planen og
