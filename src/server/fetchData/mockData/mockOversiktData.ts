@@ -4,6 +4,10 @@ import type {
 } from "@/schema/oversiktResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
+import {
+  eldreMockUnntaksvurdering,
+  mockUnntaksvurdering,
+} from "./mockUnntaksvurderingerData";
 
 export const mockOversiktDataMedPlanerForAG: OppfolgingsplanerOversiktForAG = {
   ...mockCommonAGResponseFields,
@@ -31,16 +35,65 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
 };
 
 export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
-  aktiveOppfolgingsplaner: [mockAktivPlanData],
-  tidligerePlaner: mockTidligerePlanerData,
+  virksomheter: [
+    {
+      virksomhet: mockAktivPlanData.organization,
+      oppfolgingsplanhendelser: [
+        tilPlanHendelse(mockAktivPlanData),
+        ...mockTidligerePlanerData.map(tilPlanHendelse),
+      ],
+    },
+  ],
 };
 
 export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
-  aktiveOppfolgingsplaner: [],
-  tidligerePlaner: [],
+  virksomheter: [],
 };
 
-export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
-  aktiveOppfolgingsplaner: [mockAktivPlanData],
-  tidligerePlaner: [],
+const eldreMockUnntaksvurderingUtenOrganisasjonsnavn = {
+  ...eldreMockUnntaksvurdering,
+  organization: { orgNumber: "987654321", orgName: null },
 };
+
+export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversiktForSM =
+  {
+    virksomheter: [
+      {
+        virksomhet: mockUnntaksvurdering.organization,
+        oppfolgingsplanhendelser: [
+          tilPlanIkkeNodvendigHendelse(mockUnntaksvurdering),
+        ],
+      },
+      {
+        virksomhet: eldreMockUnntaksvurderingUtenOrganisasjonsnavn.organization,
+        oppfolgingsplanhendelser: [
+          tilPlanIkkeNodvendigHendelse(
+            eldreMockUnntaksvurderingUtenOrganisasjonsnavn,
+          ),
+        ],
+      },
+    ],
+  };
+
+export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
+  virksomheter: [
+    {
+      virksomhet: mockAktivPlanData.organization,
+      oppfolgingsplanhendelser: [tilPlanHendelse(mockAktivPlanData)],
+    },
+  ],
+};
+
+function tilPlanHendelse(
+  plan: typeof mockAktivPlanData,
+): OppfolgingsplanerOversiktForSM["virksomheter"][number]["oppfolgingsplanhendelser"][number] {
+  const { organization: _organization, ...planData } = plan;
+  return { type: "FERDIGSTILT_PLAN", ...planData };
+}
+
+function tilPlanIkkeNodvendigHendelse(
+  vurdering: typeof mockUnntaksvurdering,
+): OppfolgingsplanerOversiktForSM["virksomheter"][number]["oppfolgingsplanhendelser"][number] {
+  const { organization: _organization, ...vurderingData } = vurdering;
+  return { type: "PLAN_IKKE_NODVENDIG", ...vurderingData };
+}

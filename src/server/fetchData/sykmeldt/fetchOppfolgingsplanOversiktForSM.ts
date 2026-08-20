@@ -14,6 +14,7 @@ import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchGet } from "@/server/tokenXFetch/tokenXFetchGet";
 import {
   mockOversiktDataMedPlanerForSM,
+  mockOversiktDataMedUnntaksvurderingerForSM,
   mockOversiktDataTomForSM,
 } from "../mockData/mockOversiktData";
 import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
@@ -22,8 +23,9 @@ import { simulateBackendDelay } from "../mockData/simulateBackendDelay";
 export function getMockDataForScenarioSM(scenario: DemoScenario) {
   switch (scenario) {
     case "tom":
-    case "unntak-meldt":
       return mockOversiktDataTomForSM;
+    case "unntak-meldt":
+      return mockOversiktDataMedUnntaksvurderingerForSM;
     case "aktiv-og-tidligere":
     case "aktiv-utkast-og-tidligere":
       return mockOversiktDataMedPlanerForSM;

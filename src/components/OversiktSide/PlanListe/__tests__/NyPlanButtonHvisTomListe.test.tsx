@@ -1,6 +1,5 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { mockOversiktDataMedPlanerForAG } from "@/server/fetchData/mockData/mockOversiktData";
 import {
@@ -13,10 +12,6 @@ import {
 import { renderAsync } from "@/test/test-utils";
 import NyPlanButtonHvisTomListe from "../NyPlanButtonHvisTomListe";
 
-const envMock = vi.hoisted(() => ({
-  tiltakspakkevurderingFeatureToggleEnabled: false,
-}));
-
 vi.mock("next/navigation", async () => {
   const { mockNextNavigation } = await import(
     "@/test/mocks/nextNavigationMock"
@@ -25,30 +20,15 @@ vi.mock("next/navigation", async () => {
   return mockNextNavigation();
 });
 
-vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
-  erOrgINavTiltaksgruppe: vi.fn(),
+vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
+  logAnalyticsEvent: vi.fn(),
 }));
 
-vi.mock("@/env-variables/envHelpers", async () => {
-  const actual = await vi.importActual<
-    typeof import("@/env-variables/envHelpers")
-  >("@/env-variables/envHelpers");
-
-  return {
-    ...actual,
-    isTiltakspakkevurderingFeatureToggleEnabled: () =>
-      envMock.tiltakspakkevurderingFeatureToggleEnabled,
-  };
-});
-
 const mockFetch = vi.mocked(fetchOppfolgingsplanOversiktForAG);
-const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
 
 describe("NyPlanButtonHvisTomListe", () => {
   beforeEach(() => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
     vi.clearAllMocks();
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
   });
 
   afterEach(() => {
@@ -62,7 +42,10 @@ describe("NyPlanButtonHvisTomListe", () => {
     });
 
     await renderAsync(
-      NyPlanButtonHvisTomListe({ narmesteLederId: "test-123" }),
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "test-123",
+        erITiltaksgruppe: false,
+      }),
     );
 
     expect(mockFetch).toHaveBeenCalledWith("test-123");
@@ -74,7 +57,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataEmptyWithAccess,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -87,7 +75,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataOnlyActivePlan,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -100,7 +93,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataOnlyDraft,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -113,7 +111,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataOnlyPreviousPlans,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -126,7 +129,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataEmptyNoAccess,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -139,7 +147,12 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: mockOversiktDataMedPlanerForAG,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
@@ -155,83 +168,32 @@ describe("NyPlanButtonHvisTomListe", () => {
       data: null,
     });
 
-    await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+    await renderAsync(
+      NyPlanButtonHvisTomListe({
+        narmesteLederId: "12345",
+        erITiltaksgruppe: false,
+      }),
+    );
 
     expect(
       screen.queryByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
     ).not.toBeInTheDocument();
   });
 
-  describe("Flaggskipet-gating", () => {
-    test("kaller ikke Flaggskipet når listen ikke er tom (aktiv plan)", async () => {
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataOnlyActivePlan,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
-      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-    });
-
-    test("kaller ikke Flaggskipet når listen ikke er tom (utkast)", async () => {
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataOnlyDraft,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
-      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-    });
-
-    test("kaller ikke Flaggskipet når listen ikke er tom (tidligere planer)", async () => {
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataOnlyPreviousPlans,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
-      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-    });
-
-    test("kaller ikke Flaggskipet når bruker mangler edit access", async () => {
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataEmptyNoAccess,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
-      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-    });
-
-    test("kaller ikke Flaggskipet når toggelen er av selv om listen er tom og bruker har edit access", async () => {
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataEmptyWithAccess,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
-      expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-      expect(
-        screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
-      ).toBeInTheDocument();
-    });
-
+  describe("tiltaksgruppeinnhold", () => {
     test("viser unntaksvalget sammen med hovedvalget når org er i tiltaksgruppen", async () => {
-      envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-      mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataEmptyWithAccess,
       });
 
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+      await renderAsync(
+        NyPlanButtonHvisTomListe({
+          narmesteLederId: "12345",
+          erITiltaksgruppe: true,
+        }),
+      );
 
-      expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
       expect(
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
@@ -243,35 +205,21 @@ describe("NyPlanButtonHvisTomListe", () => {
     });
 
     test("viser ikke unntaksvalget når org ikke er i tiltaksgruppen", async () => {
-      envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-      mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataEmptyWithAccess,
       });
 
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
+      await renderAsync(
+        NyPlanButtonHvisTomListe({
+          narmesteLederId: "12345",
+          erITiltaksgruppe: false,
+        }),
+      );
 
-      expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
       expect(
         screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
       ).toBeInTheDocument();
-      expect(
-        screen.queryByText(
-          /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,
-        ),
-      ).not.toBeInTheDocument();
-    });
-
-    test("viser ikke unntaksvalget når toggelen er av", async () => {
-      envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataEmptyWithAccess,
-      });
-
-      await renderAsync(NyPlanButtonHvisTomListe({ narmesteLederId: "12345" }));
-
       expect(
         screen.queryByText(
           /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,

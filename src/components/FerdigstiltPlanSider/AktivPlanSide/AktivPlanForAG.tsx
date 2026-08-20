@@ -1,7 +1,6 @@
 import { VStack } from "@navikt/ds-react";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
-import { isTiltakspakkevurderingFeatureToggleEnabled } from "@/env-variables/envHelpers";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
+import { erNarmesteLederINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
@@ -54,8 +53,7 @@ export default async function AktivPlanForAG({
 
   const erITiltaksgruppe =
     kanViseDelingsboks &&
-    isTiltakspakkevurderingFeatureToggleEnabled() &&
-    (await erOrgINavTiltaksgruppe(organization.orgNumber));
+    (await erNarmesteLederINavTiltaksgruppe(narmesteLederId));
 
   return (
     <section>

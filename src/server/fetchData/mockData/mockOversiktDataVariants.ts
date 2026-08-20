@@ -1,7 +1,7 @@
 import type { OppfolgingsplanerOversiktForAG } from "@/schema/oversiktResponseSchemas";
 import { mockCommonAGResponseFields } from "./mockEmployeeDetails";
 import { mockAktivPlanData, mockTidligerePlanerData } from "./mockPlanerData";
-import { mockUnntaksvurderingerData } from "./mockUnntaksvurderingerData";
+import { mockUnntaksvurderingerDataForAG } from "./mockUnntaksvurderingerData";
 
 /**
  * Test-specific variants of oversikt data for different scenarios
@@ -120,7 +120,7 @@ export const mockOversiktDataMedUnntak: OppfolgingsplanerOversiktForAG = {
     utkast: null,
     aktivPlan: null,
     tidligerePlaner: [],
-    unntaksvurderinger: mockUnntaksvurderingerData,
+    unntaksvurderinger: mockUnntaksvurderingerDataForAG,
     gjeldendeStatus: "IKKE_AKTUELT",
   },
 };
@@ -132,7 +132,7 @@ export const mockOversiktDataMedPlanerOgUnntak: OppfolgingsplanerOversiktForAG =
       utkast: null,
       aktivPlan: mockAktivPlanData,
       tidligerePlaner: mockTidligerePlanerData,
-      unntaksvurderinger: mockUnntaksvurderingerData,
+      unntaksvurderinger: mockUnntaksvurderingerDataForAG,
       gjeldendeStatus: "AKTIV_PLAN",
     },
   };

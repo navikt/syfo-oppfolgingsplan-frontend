@@ -1,10 +1,9 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe";
+import { erNarmesteLederINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
-import { mockOrganization } from "@/server/fetchData/mockData/mockEmployeeDetails";
 import { getMockFerdigstiltPlanData } from "@/server/fetchData/mockData/mockHelpers";
 import { mockAktivPlanData } from "@/server/fetchData/mockData/mockPlanerData";
 import { mockUtkastResponse } from "@/server/fetchData/mockData/mockUtkastData";
@@ -17,10 +16,6 @@ const STANDARD_OVERSKRIFT = "Hvem vil du sende planen til";
 const STANDARD_KNAPP = "Send planen";
 const TILTAKSGRUPPE_OVERSKRIFT = "Del oppfølgingsplanen med fastlege og Nav";
 const TILTAKSGRUPPE_KNAPP = "Del planen";
-
-const envMock = vi.hoisted(() => ({
-  tiltakspakkevurderingFeatureToggleEnabled: false,
-}));
 
 vi.mock("next/navigation", async () => {
   const { mockNextNavigation } = await import(
@@ -38,25 +33,18 @@ vi.mock("@/server/fetchData/arbeidsgiver/fetchUtkastPlan", () => ({
   fetchUtkastDataForAG: vi.fn(),
 }));
 
-vi.mock("@/server/fetchData/arbeidsgiver/erOrgINavTiltaksgruppe", () => ({
-  erOrgINavTiltaksgruppe: vi.fn(),
-}));
-
-vi.mock("@/env-variables/envHelpers", async () => {
-  const actual = await vi.importActual<
-    typeof import("@/env-variables/envHelpers")
-  >("@/env-variables/envHelpers");
-
-  return {
-    ...actual,
-    isTiltakspakkevurderingFeatureToggleEnabled: () =>
-      envMock.tiltakspakkevurderingFeatureToggleEnabled,
-  };
-});
+vi.mock(
+  "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe",
+  () => ({
+    erNarmesteLederINavTiltaksgruppe: vi.fn(),
+  }),
+);
 
 const mockFetchAktivPlan = vi.mocked(fetchAktivPlanForAG);
 const mockFetchUtkast = vi.mocked(fetchUtkastDataForAG);
-const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
+const mockErNarmesteLederINavTiltaksgruppe = vi.mocked(
+  erNarmesteLederINavTiltaksgruppe,
+);
 
 function lagPlanResponse({
   userHasEditAccess = true,
@@ -92,38 +80,22 @@ function renderAktivPlan() {
 describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
     mockFetchAktivPlan.mockResolvedValue(lagPlanResponse());
     mockFetchUtkast.mockResolvedValue(mockUtkastResponse);
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
+    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(false);
   });
 
   afterEach(() => {
     cleanup();
   });
 
-  test("viser dagens tekster og slår ikke opp tiltaksgruppen når feature toggle er av", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
+  test("viser dagens tekster når nærmeste leder ikke er i tiltaksgruppen", async () => {
+    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(false);
 
     await renderAktivPlan();
 
-    expect(
-      screen.getByRole("heading", { name: STANDARD_OVERSKRIFT, level: 2 }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: STANDARD_KNAPP }),
-    ).toBeInTheDocument();
-    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
-  });
-
-  test("viser dagens tekster når organisasjonen er i kontrollgruppen", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(false);
-
-    await renderAktivPlan();
-
-    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith(
-      mockOrganization.orgNumber,
+    expect(mockErNarmesteLederINavTiltaksgruppe).toHaveBeenCalledWith(
+      MOCK_LEDER_ID,
     );
     expect(
       screen.getByRole("heading", { name: STANDARD_OVERSKRIFT, level: 2 }),
@@ -139,14 +111,13 @@ describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("viser tekstene fra tiltakspakken når organisasjonen er i tiltaksgruppen", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+  test("viser tekstene fra tiltakspakken når nærmeste leder er i tiltaksgruppen", async () => {
+    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
 
     await renderAktivPlan();
 
-    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith(
-      mockOrganization.orgNumber,
+    expect(mockErNarmesteLederINavTiltaksgruppe).toHaveBeenCalledWith(
+      MOCK_LEDER_ID,
     );
     expect(
       screen.getByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT, level: 2 }),
@@ -163,15 +134,14 @@ describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
   });
 
   test("slår ikke opp tiltaksgruppen når brukeren mangler redigeringstilgang", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
     mockFetchAktivPlan.mockResolvedValue(
       lagPlanResponse({ userHasEditAccess: false }),
     );
 
     await renderAktivPlan();
 
-    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    expect(mockErNarmesteLederINavTiltaksgruppe).not.toHaveBeenCalled();
     expect(
       screen.queryByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT }),
     ).not.toBeInTheDocument();
@@ -181,8 +151,7 @@ describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
   });
 
   test("slår ikke opp tiltaksgruppen når planen allerede er delt med begge mottakerne", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
     mockFetchAktivPlan.mockResolvedValue(
       lagPlanResponse({
         deltMedLegeTidspunkt: "2026-01-15T10:00:00Z",
@@ -192,7 +161,7 @@ describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
 
     await renderAktivPlan();
 
-    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    expect(mockErNarmesteLederINavTiltaksgruppe).not.toHaveBeenCalled();
     expect(
       screen.queryByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT }),
     ).not.toBeInTheDocument();
@@ -202,16 +171,15 @@ describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
   });
 
   test("slår opp tiltaksgruppen når bare én mottaker har fått planen", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
+    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
     mockFetchAktivPlan.mockResolvedValue(
       lagPlanResponse({ deltMedLegeTidspunkt: "2026-01-15T10:00:00Z" }),
     );
 
     await renderAktivPlan();
 
-    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith(
-      mockOrganization.orgNumber,
+    expect(mockErNarmesteLederINavTiltaksgruppe).toHaveBeenCalledWith(
+      MOCK_LEDER_ID,
     );
     expect(
       screen.getByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT, level: 2 }),

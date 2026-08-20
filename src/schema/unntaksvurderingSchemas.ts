@@ -1,13 +1,15 @@
 import { z } from "zod";
 import { organizationDetailsSchema } from "./organizationDetailsSchema";
 
+export const meldtAvSchema = z.object({
+  navn: z.string().nullable(),
+  rolle: z.literal("ARBEIDSGIVER"),
+});
+
 export const unntaksvurderingMetadataSchema = z.object({
   id: z.string(),
   meldtTidspunkt: z.iso.datetime(),
-  meldtAv: z.object({
-    navn: z.string().nullable(),
-    rolle: z.literal("ARBEIDSGIVER"),
-  }),
+  meldtAv: meldtAvSchema,
   organization: organizationDetailsSchema,
 });
 
