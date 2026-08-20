@@ -1,5 +1,6 @@
 import { VStack } from "@navikt/ds-react";
 import { ScrollToTopHelper } from "@/components/FerdigstiltPlanSider/AktivPlanSide/ScrollToTopHelper";
+import { erNarmesteLederINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { FormSummaryFromSnapshot } from "@/utils/FormSnapshot/FormSummaryFromSnapshot";
@@ -44,6 +45,16 @@ export default async function AktivPlanForAG({
   const hasUtkast = utkast !== null;
   const orgName = organization.orgName ?? organization.orgNumber;
 
+  // Delingsboksen skjuler seg selv når begge mottakerne har fått planen. Vi
+  // slår derfor bare opp tiltaksgruppen når boksen faktisk kan vises, slik at
+  // resten av siden ikke venter på Flaggskipet i unødvendige tilfeller.
+  const kanViseDelingsboks =
+    userHasEditAccess && (!deltMedLegeTidspunkt || !deltMedVeilederTidspunkt);
+
+  const erITiltaksgruppe =
+    kanViseDelingsboks &&
+    (await erNarmesteLederINavTiltaksgruppe(narmesteLederId));
+
   return (
     <section>
       {nyligOpprettet && <ScrollToTopHelper />}
@@ -56,7 +67,10 @@ export default async function AktivPlanForAG({
 
           {userHasEditAccess && (
             <>
-              <DelAktivPlanMedLegeEllerNav planId={planId} />
+              <DelAktivPlanMedLegeEllerNav
+                planId={planId}
+                erITiltaksgruppe={erITiltaksgruppe}
+              />
 
               <AktivPlanButtons planId={planId} hasUtkast={hasUtkast} />
             </>
