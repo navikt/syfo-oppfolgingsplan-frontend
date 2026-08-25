@@ -42,11 +42,35 @@ describe("PlanListeForSykmeldt", () => {
     await renderAsync(PlanListeForSykmeldt());
 
     expect(
-      screen.getByRole("heading", { name: "Du har ikke en oppfølgingsplan" }),
+      screen.getByRole("heading", {
+        name: /Du har ikke en oppfølgingsplan/,
+      }),
     ).toBeInTheDocument();
     expect(
       screen.queryByText(/oppfølgingsplaner blir utilgjengelige/),
     ).not.toBeInTheDocument();
+  });
+
+  test("viser veiledning når tiltaksgruppen ikke har en aktiv plan", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(mockOversiktDataTomForSM, new Set(["123456789"])),
+    );
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(
+      screen.getByRole("heading", {
+        name: /Du har ikke en aktiv oppfølgingsplan/,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Dette kan du bidra med" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
+      }),
+    ).toBeInTheDocument();
   });
 
   test("viser nyeste plan som aktiv og resten under vedtatt heading", async () => {
@@ -86,6 +110,48 @@ describe("PlanListeForSykmeldt", () => {
     ).toBeInTheDocument();
   });
 
+  test("viser veiledning og samtaleguide for sykmeldte i tiltaksgruppen", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(
+        mockOversiktDataMedPlanerForSM,
+        new Set(["123456789"]),
+      ),
+    );
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(screen.getByText("medvirkningsplikt").tagName).toBe("STRONG");
+    expect(
+      screen.getByRole("heading", { name: "Dette kan du bidra med" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Ha kontakt med og delta i møter med lederen din."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
+      }),
+    ).toHaveAttribute("href", expect.stringContaining("Samtaleguide"));
+  });
+
+  test("beholder eksisterende innhold utenfor tiltaksgruppen", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(mockOversiktDataMedPlanerForSM, new Set()),
+    );
+
+    await renderAsync(PlanListeForSykmeldt());
+
+    expect(
+      screen.getByText(/Lederen din er lovpålagt å lage oppfølgingsplanen/),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Dette kan du bidra med" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Forbered deg til samtalen" }),
+    ).not.toBeInTheDocument();
+  });
+
   test("viser gjeldende vurdering både som status og registrert innslag", async () => {
     mockHentSykmeldtPlanoversikt.mockResolvedValue(
       lagSykmeldtPlanoversikt(
@@ -121,6 +187,11 @@ describe("PlanListeForSykmeldt", () => {
     expect(
       screen.queryByRole("heading", { name: "Du har ikke en oppfølgingsplan" }),
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Lag et forberedelsesskjema til samtalen",
+      }),
+    ).toBeInTheDocument();
   });
 
   test("viser gjeldende vurdering og tidligere plan fra samme virksomhet", async () => {

@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { mockOversiktDataMedUnntaksvurderingerForSM } from "@/server/fetchData/mockData/mockOversiktData";
+import {
+  mockOversiktDataMedPlanerForSM,
+  mockOversiktDataMedUnntaksvurderingerForSM,
+} from "@/server/fetchData/mockData/mockOversiktData";
 import { finnOrganisasjonerITiltaksgruppe } from "@/server/fetchData/tiltakspakke/finnOrganisasjonerITiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForSM } from "../fetchOppfolgingsplanOversiktForSM";
 import { hentSykmeldtPlanoversikt } from "../hentSykmeldtPlanoversikt";
@@ -49,6 +52,18 @@ describe("hentSykmeldtPlanoversikt", () => {
       "987654321",
     ]);
     expect(resultat.gjeldendeHendelser).toHaveLength(2);
+    expect(resultat.erITiltaksgruppe).toBe(true);
+  });
+
+  test("slår opp tiltaksgruppe også når virksomheten har en aktiv plan", async () => {
+    envMock.enabled = true;
+    fetchMock.mockResolvedValue(mockOversiktDataMedPlanerForSM);
+    finnTiltaksgruppeMock.mockResolvedValue(new Set(["123456789"]));
+
+    const resultat = await hentSykmeldtPlanoversikt();
+
+    expect(finnTiltaksgruppeMock).toHaveBeenCalledWith(["123456789"]);
+    expect(resultat.erITiltaksgruppe).toBe(true);
   });
 
   test("hopper over Flaggskipet og skjuler tiltaket når toggelen er av", async () => {
@@ -56,5 +71,6 @@ describe("hentSykmeldtPlanoversikt", () => {
 
     expect(finnTiltaksgruppeMock).not.toHaveBeenCalled();
     expect(resultat.gjeldendeHendelser).toEqual([]);
+    expect(resultat.erITiltaksgruppe).toBe(false);
   });
 });

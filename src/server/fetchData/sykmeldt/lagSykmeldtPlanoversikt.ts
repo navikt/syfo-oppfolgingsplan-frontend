@@ -11,6 +11,7 @@ export interface SykmeldtPlanoversikt {
   gjeldendeHendelser: OppfolgingsplanHendelseForVirksomhet[];
   tidligereHendelser: OppfolgingsplanHendelseForVirksomhet[];
   harFerdigstiltePlaner: boolean;
+  erITiltaksgruppe: boolean;
 }
 
 export function lagSykmeldtPlanoversikt(
@@ -63,6 +64,7 @@ export function lagSykmeldtPlanoversikt(
         (hendelse) => hendelse.type === "FERDIGSTILT_PLAN",
       ),
     ),
+    erITiltaksgruppe: organisasjonerITiltaksgruppe.size > 0,
   };
 }
 
