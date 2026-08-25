@@ -28,11 +28,21 @@ pnpm run lint      # Lint
 ## Conventions
 - English code and comments — Norwegian for user-facing text and domain terms (e.g. dialogmote, sykmelding, oppfolgingsplan)
 - **Documentation lookup strategy** (prioritert rekkefølge):
-  1. **Repo first**: Sjekk eksisterende kode og custom instructions (`.github/instructions/`)
+  1. **Repo first**: Sjekk eksisterende kode og denne filen
   2. **NAV-docs ved behov**: Slå opp aksel.nav.no (UI-komponenter, design tokens) og doc.nais.io (plattform, deploy, observability) når du lager eller endrer noe i disse domenene
   3. **Ekstern docs ved usikkerhet**: Bruk web search for eksterne biblioteker kun når du er usikker på API-korrekthet — ikke rutinemessig
 - Check existing code patterns in the repository before writing new code
-- Follow the ✅ Always / ⚠️ Ask First / 🚫 Never boundaries in agent and instruction files
+- Follow the ✅ Always / ⚠️ Ask First / 🚫 Never boundaries in this file
+
+## Mandatory Guardrails
+
+- **Frontend**: Use strict TypeScript and Aksel components. Preserve responsive behavior and explicitly handle loading, error, and empty states.
+- **Accessibility**: Use semantic elements, meaningful labels, visible focus, and complete keyboard navigation. Errors must be understandable and announced to assistive technology.
+- **Security**: Never commit secrets or log tokens, fødselsnummer, names, or other PII. Validate input at system boundaries, use parameterized database queries, and keep NAIS `accessPolicy` explicit.
+- **Docker**: Use multi-stage builds with Chainguard or Distroless runtime images, run as a non-root user, and never copy credentials or local environment files into images.
+- **GitHub Actions**: Grant the minimum required permissions, pin third-party actions to full commit SHAs, and never expose secrets to untrusted pull-request code.
+- **Norwegian user text**: Use clear, direct Norwegian without internal jargon. Labels, help text, errors, and confirmations must tell the user what happened and what to do next.
+- Use the corresponding `grillmester-*` plugin skill for deeper guidance when it is available.
 
 ## Documentation and Working Notes
 
@@ -43,21 +53,6 @@ pnpm run lint      # Lint
 | **Permanent docs** | `docs/` | Finalized documentation (ADRs, API docs) | Yes | Yes |
 
 **Defaults**: Planning/research/drafts → `.local-notes/`. Finalized docs → `docs/`. Task tracking → session state.
-
-## Keeping Copilot Config in Sync
-
-When making changes that affect patterns described in `.github/` config files (instructions, prompts, skills), **suggest** updating — but do not update automatically.
-
-Examples: upgrading frameworks, changing test patterns, adding auth mechanisms, changing DB access patterns, adding Kafka topics, modifying build tooling.
-
-**Check the file header first** to determine where changes belong:
-
-- **Managed files** (header: `<!-- Managed by esyfo-cli …-->`) — Do NOT edit locally. Changes will be overwritten by the next sync.
-  Format: *"This change affects patterns in `.github/instructions/<file>`, which is managed by esyfo-cli. The source should be updated in the esyfo-cli repo under `copilot-config/`."*
-
-- **Locally owned files** (no managed header) — Suggest updating the file directly in this repo.
-  Format: *"This change affects patterns in `.github/instructions/<file>` — want me to update it?"*
-
 
 ## Tech Stack
 - **Language**: TypeScript
