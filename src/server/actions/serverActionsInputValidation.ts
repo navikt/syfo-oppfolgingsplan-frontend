@@ -9,4 +9,5 @@ export const ferdigstillPlanActionPayloadSchema = z.object({
   formValues: oppfolgingsplanFormUtfylltSchema,
   evalueringsDatoIsoString: z.iso.date(),
   includeIkkeMedvirketBegrunnelseFieldInFormSnapshot: z.boolean(),
+  evalueringPaaminnelse: z.boolean(),
 });

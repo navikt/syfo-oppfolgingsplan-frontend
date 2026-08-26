@@ -7,6 +7,7 @@ import { getAGOversiktHref } from "@/common/route-hrefs";
 import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
   type OppfolgingsplanFormUnderArbeid,
+  oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema,
   oppfolgingsplanFormUtfylltSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
@@ -26,9 +27,11 @@ const defaultMeta: FormMeta = {
 export default function useOppfolgingsplanForm({
   initialLagretUtkast,
   initialSistLagretTidspunkt,
+  erITiltaksgruppe,
 }: {
   initialLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
   initialSistLagretTidspunkt: string | null;
+  erITiltaksgruppe: boolean;
 }) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
@@ -52,7 +55,9 @@ export default function useOppfolgingsplanForm({
     defaultValues: initialFormValues,
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: oppfolgingsplanFormUtfylltSchema,
+      onDynamic: erITiltaksgruppe
+        ? oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema
+        : oppfolgingsplanFormUtfylltSchema,
     },
     listeners: {
       onChange: ({ formApi }) =>
@@ -80,6 +85,7 @@ export default function useOppfolgingsplanForm({
           evalueringsDatoIsoString: value.evalueringsDato!,
           includeIkkeMedvirketBegrunnelseFieldInFormSnapshot:
             value.harDenAnsatteMedvirket === "nei",
+          evalueringPaaminnelse: value.evalueringPaaminnelse === "true",
         });
       }
     },

@@ -7,6 +7,7 @@ function makeSnapshot(selectedOptionId: string | null): FormSnapshot {
     formIdentifier: "oppfolgingsplan",
     formSemanticVersion: "1.0.0",
     formSnapshotVersion: "1.0.0",
+    evalueringPaaminnelse: false,
     sections: [
       {
         sectionId: "section-1",
@@ -48,6 +49,7 @@ describe("hasMedvirket", () => {
       formIdentifier: "oppfolgingsplan",
       formSemanticVersion: "1.0.0",
       formSnapshotVersion: "1.0.0",
+      evalueringPaaminnelse: false,
       sections: [
         {
           sectionId: "section-1",

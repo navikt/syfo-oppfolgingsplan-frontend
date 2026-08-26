@@ -58,13 +58,18 @@ export async function ferdigstillPlanServerAction(
     formValues,
     evalueringsDatoIsoString,
     includeIkkeMedvirketBegrunnelseFieldInFormSnapshot,
+    evalueringPaaminnelse,
   } = validatedPayload;
 
   // Create form snapshot
   const formShape = getOppfolgingsplanFormShape(
     includeIkkeMedvirketBegrunnelseFieldInFormSnapshot,
   );
-  const formSnapshot = createFormSnapshot(formShape, formValues);
+  const formSnapshot = createFormSnapshot(
+    formShape,
+    formValues,
+    evalueringPaaminnelse,
+  );
 
   const fetchResult = await tokenXFetchUpdate({
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,

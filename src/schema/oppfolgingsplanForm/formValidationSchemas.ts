@@ -12,6 +12,9 @@ export type OppfolgingsplanFormUnderArbeid = z.infer<
 export type OppfolgingsplanFormUtfyllt = z.infer<
   typeof oppfolgingsplanFormUtfylltSchema
 >;
+export type OppfolgingsplanFormUtfylltMedEvalueringPaaminnelse = z.infer<
+  typeof oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema
+>;
 
 /**
  * Zod-schema for validering av form ved lagring av utkast.
@@ -28,6 +31,7 @@ export const oppfolgingsplanFormUnderArbeidSchema = z
     annenTilrettelegging: nonRequiredMaxLengthTextFieldSchema,
     hvordanFolgeOpp: nonRequiredMaxLengthTextFieldSchema,
     evalueringsDato: z.iso.date().nullable(),
+    evalueringPaaminnelse: z.enum(["true", "false"]).nullable(),
     harDenAnsatteMedvirket: z.enum(["ja", "nei"]).nullable(),
     denAnsatteHarIkkeMedvirketBegrunnelse: nonRequiredMaxLengthTextFieldSchema,
   })
@@ -71,6 +75,13 @@ export const oppfolgingsplanFormUtfylltSchema =
       },
     },
   );
+
+export const oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema =
+  oppfolgingsplanFormUtfylltSchema.extend({
+    evalueringPaaminnelse: z.enum(["true", "false"], {
+      error: "Du må svare ja eller nei på om du ønsker en påminnelse på e-post",
+    }),
+  });
 
 function checkAnsattIkkeMedvirketBegrunnelseIfMedvirketNei(
   harDenAnsatteMedvirket: string,

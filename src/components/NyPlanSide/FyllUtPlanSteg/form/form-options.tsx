@@ -10,6 +10,7 @@ export const oppfolgingsplanFormDefaultValues: OppfolgingsplanFormUnderArbeid =
     annenTilrettelegging: "",
     hvordanFolgeOpp: "",
     evalueringsDato: null,
+    evalueringPaaminnelse: null,
     harDenAnsatteMedvirket: null,
     denAnsatteHarIkkeMedvirketBegrunnelse: "",
   };

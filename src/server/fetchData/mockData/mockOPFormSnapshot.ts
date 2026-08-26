@@ -4,6 +4,7 @@ export const mockPlanFormSnapshot: FormSnapshot = {
   formIdentifier: "oppfolgingsplan-navno",
   formSemanticVersion: "1.0.0",
   formSnapshotVersion: "2.0.0",
+  evalueringPaaminnelse: true,
   sections: [
     {
       sectionId: "arbeidsoppgaver",

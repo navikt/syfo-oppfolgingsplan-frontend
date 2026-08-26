@@ -1,4 +1,4 @@
-import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 
 export const formLabels = {
   typiskArbeidshverdag: {
@@ -43,12 +43,16 @@ export const formLabels = {
       "Du kan for eksempel opplyse om at den ansatte er for syk, eller at den ansatte er utilgjengelig.",
   },
   evalueringsDato: {
-    label: "Når skal dere evaluere planen og eventuelt justere den?",
+    label: "Velg dato for evaluering av planen",
     description:
-      "Den ansatte har rett til å være med og påvirke hvordan arbeidsgiver kan tilrettelegge jobben ved sykefravær. Arbeidsmiljøloven sier at både du og den ansatte skal bidra til å finne løsninger, og at oppfølgingsplanen skal utarbeides i samarbeid. Arbeidstakeren skal gi relevante opplysninger om arbeidsevne, så langt det er mulig.",
+      "Vi anbefaler at dere går gjennom planen og vurderer å oppdatere den innen fire uker. Dette gir nok tid til å erfare hva som fungerer og hva som kanskje må endres. Skal planen ha verdi må den bli brukt.",
+  },
+  evalueringPaaminnelse: {
+    label:
+      "Ønsker du at vi sender deg en påminnelse på e-post om neste møte for å evaluere planen?",
   },
 } satisfies Record<
-  keyof OppfolgingsplanFormUtfyllt,
+  keyof OppfolgingsplanFormUnderArbeid,
   { label: string; description?: string }
 >;
 

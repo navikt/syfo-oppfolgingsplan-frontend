@@ -18,10 +18,15 @@ export enum VeiviserSteg {
 
 interface Props {
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
+  erITiltaksgruppePromise: Promise<boolean>;
 }
 
-export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
+export default function LagPlanVeiviser({
+  lagretUtkastPromise,
+  erITiltaksgruppePromise,
+}: Props) {
   const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
+  const erITiltaksgruppe = use(erITiltaksgruppePromise);
 
   const initialLagretUtkast = utkast?.content || null;
   const initialSistLagretTidspunkt = utkast?.sistLagretTidspunkt || null;
@@ -42,6 +47,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
   } = useOppfolgingsplanForm({
     initialLagretUtkast,
     initialSistLagretTidspunkt,
+    erITiltaksgruppe,
   });
 
   function handleFortsettTilOppsummering() {
@@ -72,6 +78,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           onGoToOppsummeringClick={handleFortsettTilOppsummering}
           isFormReadOnly={!userHasEditAccess}
           lagreUtkastError={lagreUtkastError}
+          erITiltaksgruppe={erITiltaksgruppe}
         />
       </Activity>
 
@@ -84,6 +91,7 @@ export default function LagPlanVeiviser({ lagretUtkastPromise }: Props) {
           onGoBack={goBackToFyllUtPlanSteg}
           onFerdigstillPlanClick={handleFerdigstillPlan}
           ferdigstillPlanError={ferdigstillPlanError}
+          erITiltaksgruppe={erITiltaksgruppe}
         />
       </Activity>
     </section>

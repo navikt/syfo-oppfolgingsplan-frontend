@@ -7,6 +7,7 @@ import {
   FormSummaryLabel,
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
+import { formLabels } from "@/components/NyPlanSide/form-labels";
 import {
   getFormattedDateAndTimeString,
   getFormattedDateString,
@@ -29,7 +30,7 @@ export function FormSummaryFromSnapshot({ formSnapshot }: Props) {
       <FormSummaryAnswers>
         {section.fields.map((field) => (
           <FormSummaryAnswer key={field.fieldId}>
-            <FormSummaryLabel>{field.label}</FormSummaryLabel>
+            <FormSummaryLabel>{getFieldSummaryLabel(field)}</FormSummaryLabel>
             <FormSummaryValue>
               {getFieldSummaryTextValue(field)}
             </FormSummaryValue>
@@ -38,6 +39,14 @@ export function FormSummaryFromSnapshot({ formSnapshot }: Props) {
       </FormSummaryAnswers>
     </FormSummary>
   ));
+}
+
+function getFieldSummaryLabel(field: FormSnapshotField) {
+  if (field.fieldId === "evalueringsDato") {
+    return formLabels.evalueringsDato.label;
+  }
+
+  return field.label;
 }
 
 function getFieldSummaryTextValue(field: FormSnapshotField) {

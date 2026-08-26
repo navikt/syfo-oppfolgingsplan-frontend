@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import type {
   OppfolgingsplanFormUnderArbeid,
-  OppfolgingsplanFormUtfyllt,
+  OppfolgingsplanFormUtfylltMedEvalueringPaaminnelse,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import {
   convertPlanContentToCurrentSchema,
@@ -18,9 +18,10 @@ test("Returns the same object when plan content matches current plan schema with
     annenTilrettelegging: "Annen tilrettelegging",
     hvordanFolgeOpp: "Slik følger vi opp",
     evalueringsDato: "2025-01-01",
+    evalueringPaaminnelse: "true",
     harDenAnsatteMedvirket: "ja",
     denAnsatteHarIkkeMedvirketBegrunnelse: "Begrunnelse",
-  } satisfies OppfolgingsplanFormUtfyllt;
+  } satisfies OppfolgingsplanFormUtfylltMedEvalueringPaaminnelse;
 
   const result = convertPlanContentToCurrentSchema(fullPlanContent);
 
