@@ -11,13 +11,17 @@ export interface SykmeldtPlanoversikt {
   gjeldendeHendelser: OppfolgingsplanHendelseForVirksomhet[];
   tidligereHendelser: OppfolgingsplanHendelseForVirksomhet[];
   harFerdigstiltePlaner: boolean;
-  erITiltaksgruppe: boolean;
+  harMinstEnVirksomhetITiltaksgruppe: boolean;
 }
 
 export function lagSykmeldtPlanoversikt(
   oversikt: OppfolgingsplanerOversiktForSM,
   organisasjonerITiltaksgruppe: ReadonlySet<string>,
 ): SykmeldtPlanoversikt {
+  const harMinstEnVirksomhetITiltaksgruppe = oversikt.virksomheter.some(
+    ({ virksomhet }) => organisasjonerITiltaksgruppe.has(virksomhet.orgNumber),
+  );
+
   const virksomheter = oversikt.virksomheter
     .map(({ virksomhet, oppfolgingsplanhendelser }) => ({
       organization: virksomhet,
@@ -64,7 +68,7 @@ export function lagSykmeldtPlanoversikt(
         (hendelse) => hendelse.type === "FERDIGSTILT_PLAN",
       ),
     ),
-    erITiltaksgruppe: organisasjonerITiltaksgruppe.size > 0,
+    harMinstEnVirksomhetITiltaksgruppe,
   };
 }
 

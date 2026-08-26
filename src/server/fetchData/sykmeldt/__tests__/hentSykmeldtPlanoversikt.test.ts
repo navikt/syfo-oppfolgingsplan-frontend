@@ -52,7 +52,7 @@ describe("hentSykmeldtPlanoversikt", () => {
       "987654321",
     ]);
     expect(resultat.gjeldendeHendelser).toHaveLength(2);
-    expect(resultat.erITiltaksgruppe).toBe(true);
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
   });
 
   test("slår opp tiltaksgruppe også når virksomheten har en aktiv plan", async () => {
@@ -63,7 +63,7 @@ describe("hentSykmeldtPlanoversikt", () => {
     const resultat = await hentSykmeldtPlanoversikt();
 
     expect(finnTiltaksgruppeMock).toHaveBeenCalledWith(["123456789"]);
-    expect(resultat.erITiltaksgruppe).toBe(true);
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
   });
 
   test("hopper over Flaggskipet og skjuler tiltaket når toggelen er av", async () => {
@@ -71,6 +71,6 @@ describe("hentSykmeldtPlanoversikt", () => {
 
     expect(finnTiltaksgruppeMock).not.toHaveBeenCalled();
     expect(resultat.gjeldendeHendelser).toEqual([]);
-    expect(resultat.erITiltaksgruppe).toBe(false);
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(false);
   });
 });

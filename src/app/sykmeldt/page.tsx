@@ -1,7 +1,7 @@
 import { Heading } from "@navikt/ds-react";
 import { Suspense } from "react";
-import PlanListeForSykmeldt from "@/components/OversiktSide/PlanListe/PlanListeForSykmeldt.tsx";
 import PlanListeSkeleton from "@/components/OversiktSide/PlanListe/PlanListeSkeleton.tsx";
+import OversiktInnholdForSykmeldt from "@/components/OversiktSide/Sykmeldt/OversiktInnholdForSykmeldt";
 
 export default async function OversiktPageForSM(_: PageProps<"/sykmeldt">) {
   return (
@@ -11,7 +11,7 @@ export default async function OversiktPageForSM(_: PageProps<"/sykmeldt">) {
       </Heading>
 
       <Suspense fallback={<PlanListeSkeleton />}>
-        <PlanListeForSykmeldt />
+        <OversiktInnholdForSykmeldt />
       </Suspense>
     </>
   );

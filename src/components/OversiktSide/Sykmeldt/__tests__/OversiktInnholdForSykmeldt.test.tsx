@@ -1,6 +1,6 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import PlanListeForSykmeldt from "@/components/OversiktSide/PlanListe/PlanListeForSykmeldt";
+import OversiktInnholdForSykmeldt from "@/components/OversiktSide/Sykmeldt/OversiktInnholdForSykmeldt";
 import {
   mockOversiktDataMedPlanerForSM,
   mockOversiktDataMedUnntaksvurderingerForSM,
@@ -25,7 +25,7 @@ vi.mock("next/navigation", async () => {
 const mockHentSykmeldtPlanoversikt = vi.mocked(hentSykmeldtPlanoversikt);
 const alleOrganisasjonerITiltaksgruppe = new Set(["123456789", "987654321"]);
 
-describe("PlanListeForSykmeldt", () => {
+describe("OversiktInnholdForSykmeldt", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -39,7 +39,7 @@ describe("PlanListeForSykmeldt", () => {
       lagSykmeldtPlanoversikt(mockOversiktDataTomForSM, new Set()),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getByRole("heading", {
@@ -56,7 +56,7 @@ describe("PlanListeForSykmeldt", () => {
       lagSykmeldtPlanoversikt(mockOversiktDataTomForSM, new Set(["123456789"])),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getByRole("heading", {
@@ -78,7 +78,7 @@ describe("PlanListeForSykmeldt", () => {
       lagSykmeldtPlanoversikt(mockOversiktDataMedPlanerForSM, new Set()),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     const heading = screen.getByRole("heading", {
       name: "Tidligere oppfølgingsplaner",
@@ -101,7 +101,7 @@ describe("PlanListeForSykmeldt", () => {
       lagSykmeldtPlanoversikt(mockOversiktDataOnlyActiveForSM, new Set()),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getByText(
@@ -118,7 +118,7 @@ describe("PlanListeForSykmeldt", () => {
       ),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(screen.getByText("medvirkningsplikt").tagName).toBe("STRONG");
     expect(
@@ -139,7 +139,7 @@ describe("PlanListeForSykmeldt", () => {
       lagSykmeldtPlanoversikt(mockOversiktDataMedPlanerForSM, new Set()),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getByText(/Lederen din er lovpålagt å lage oppfølgingsplanen/),
@@ -160,7 +160,7 @@ describe("PlanListeForSykmeldt", () => {
       ),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getAllByRole("heading", {
@@ -219,7 +219,7 @@ describe("PlanListeForSykmeldt", () => {
       ),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getByRole("heading", {
@@ -240,7 +240,40 @@ describe("PlanListeForSykmeldt", () => {
     );
   });
 
-  test("viser bare virksomheter i tiltaksgruppen", async () => {
+  test("prioriterer unntaksforberedelse når én virksomhet har plan og en annen har unntak", async () => {
+    const virksomhetMedAktivPlan =
+      mockOversiktDataOnlyActiveForSM.virksomheter[0];
+    const virksomhetMedUnntak =
+      mockOversiktDataMedUnntaksvurderingerForSM.virksomheter[1];
+
+    if (!virksomhetMedAktivPlan || !virksomhetMedUnntak) {
+      throw new Error("Forventet mockdata for aktiv plan og unntak");
+    }
+
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(
+        {
+          virksomheter: [virksomhetMedAktivPlan, virksomhetMedUnntak],
+        },
+        alleOrganisasjonerITiltaksgruppe,
+      ),
+    );
+
+    await renderAsync(OversiktInnholdForSykmeldt());
+
+    expect(
+      screen.getByRole("link", {
+        name: "Lag et forberedelsesskjema til samtalen",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", {
+        name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("viser tiltaksinnhold og bare unntak fra tiltaksvirksomheter i blandet tilfelle", async () => {
     mockHentSykmeldtPlanoversikt.mockResolvedValue(
       lagSykmeldtPlanoversikt(
         mockOversiktDataMedUnntaksvurderingerForSM,
@@ -248,7 +281,7 @@ describe("PlanListeForSykmeldt", () => {
       ),
     );
 
-    await renderAsync(PlanListeForSykmeldt());
+    await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
       screen.getAllByRole("heading", {
@@ -258,5 +291,8 @@ describe("PlanListeForSykmeldt", () => {
     expect(
       screen.queryByText("Virksomhet: Org.nr. 987654321"),
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Dette kan du bidra med" }),
+    ).toBeInTheDocument();
   });
 });

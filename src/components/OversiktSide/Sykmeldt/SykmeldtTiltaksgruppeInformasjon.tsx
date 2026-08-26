@@ -15,8 +15,35 @@ import {
 } from "@navikt/ds-react/LinkCard";
 import { List, ListItem } from "@navikt/ds-react/List";
 
-const FORBEREDELSESSKJEMA_URL =
+const SAMTALEGUIDE_URL =
   "https://idebanken-xp7prod.enonic.cloud/headless/idebanken/master/_/attachment/inline/7f189117-0243-43b4-9c56-52f39f575c36:9eafeb718fbe6f2bc74cb45f1858b3411394d802/Samtaleguide%20med%20sp%C3%B8rsm%C3%A5l%20-%20dobbeltsidig%20A4.pdf";
+
+export type ForberedelseTilSamtaleVariant = "standard" | "gjeldende-unntak";
+
+const forberedelseInnhold = {
+  standard: {
+    title: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
+    description:
+      "Idebanken har gode råd og verktøy som kan hjelpe deg å vite hva du vil si når du og lederen din lager oppfølgingsplan sammen. Målet er å finne ut hva som kan gjøre det lettere for deg å komme tilbake i jobb.",
+    visIkon: false,
+    tagColor: "meta-purple" as const,
+  },
+  "gjeldende-unntak": {
+    title: "Lag et forberedelsesskjema til samtalen",
+    description:
+      "Et forberedelsesskjema hjelper deg å tenke gjennom hva du vil si til lederen din. Idebanken har gode råd og verktøy for å forberede deg til samtalen om sykefravær.",
+    visIkon: true,
+    tagColor: "neutral" as const,
+  },
+} satisfies Record<
+  ForberedelseTilSamtaleVariant,
+  {
+    title: string;
+    description: string;
+    visIkon: boolean;
+    tagColor: "meta-purple" | "neutral";
+  }
+>;
 
 export function DetteKanDuBidraMed() {
   return (
@@ -51,16 +78,13 @@ export function DetteKanDuBidraMed() {
   );
 }
 
-interface ForberedelseProps {
-  harGjeldendeUnntak: boolean;
-}
-
 export function ForberedelseTilSamtale({
-  harGjeldendeUnntak,
-}: ForberedelseProps) {
-  const title = harGjeldendeUnntak
-    ? "Lag et forberedelsesskjema til samtalen"
-    : "Få hjelp med forberedelsene til møtet om oppfølgingsplan";
+  variant,
+}: {
+  variant: ForberedelseTilSamtaleVariant;
+}) {
+  const { title, description, visIkon, tagColor } =
+    forberedelseInnhold[variant];
 
   return (
     <section aria-labelledby="forberedelse-til-samtale" className="mb-8">
@@ -68,29 +92,21 @@ export function ForberedelseTilSamtale({
         Forbered deg til samtalen
       </Heading>
       <LinkCard as="article">
-        {harGjeldendeUnntak && (
+        {visIkon && (
           <LinkCardIcon>
             <ClipboardCheckmarkFillIcon aria-hidden />
           </LinkCardIcon>
         )}
         <LinkCardTitle as="h4">
           <LinkCardAnchor asChild>
-            <a href={FORBEREDELSESSKJEMA_URL}>{title}</a>
+            <a href={SAMTALEGUIDE_URL}>{title}</a>
           </LinkCardAnchor>
         </LinkCardTitle>
         <LinkCardDescription>
-          <BodyLong>
-            {harGjeldendeUnntak
-              ? "Et forberedelsesskjema hjelper deg å tenke gjennom hva du vil si til lederen din. Idebanken har gode råd og verktøy for å forberede deg til samtalen om sykefravær."
-              : "Idebanken har gode råd og verktøy som kan hjelpe deg å vite hva du vil si når du og lederen din lager oppfølgingsplan sammen. Målet er å finne ut hva som kan gjøre det lettere for deg å komme tilbake i jobb."}
-          </BodyLong>
+          <BodyLong>{description}</BodyLong>
         </LinkCardDescription>
         <LinkCardFooter>
-          <Tag
-            data-color={harGjeldendeUnntak ? "neutral" : "meta-purple"}
-            variant="moderate"
-            size="small"
-          >
+          <Tag data-color={tagColor} variant="moderate" size="small">
             idebanken.org
           </Tag>
         </LinkCardFooter>
