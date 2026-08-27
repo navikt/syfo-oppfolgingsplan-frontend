@@ -120,7 +120,11 @@ describe("OversiktInnholdForSykmeldt", () => {
 
     await renderAsync(OversiktInnholdForSykmeldt());
 
-    expect(screen.getByText("medvirkningsplikt").tagName).toBe("STRONG");
+    const medvirkningsplikt = screen.getByText("medvirkningsplikt");
+    expect(medvirkningsplikt.tagName).toBe("STRONG");
+    expect(medvirkningsplikt.closest("p")).toHaveTextContent(
+      "På denne siden finner du oppfølgingsplanene du og lederen din lager sammen. Som sykmeldt har du det som kalles medvirkningsplikt. Det innebærer at du tar ansvar for å komme frem til løsninger som kan gjøre det lettere å komme tilbake i jobb. Lederen din er den som har hovedansvaret, men du har et ansvar for å bidra.",
+    );
     expect(
       screen.getByRole("heading", { name: "Dette kan du bidra med" }),
     ).toBeInTheDocument();
