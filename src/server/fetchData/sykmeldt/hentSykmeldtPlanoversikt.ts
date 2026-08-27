@@ -6,17 +6,13 @@ import { lagSykmeldtPlanoversikt } from "./lagSykmeldtPlanoversikt";
 
 export async function hentSykmeldtPlanoversikt() {
   const oversikt = await fetchOppfolgingsplanOversiktForSM();
-  const organisasjonsnumreMedUnntak = oversikt.virksomheter
-    .filter(({ oppfolgingsplanhendelser }) =>
-      oppfolgingsplanhendelser.some(
-        (hendelse) => hendelse.type === "PLAN_IKKE_NODVENDIG",
-      ),
-    )
-    .map(({ virksomhet }) => virksomhet.orgNumber);
+  const organisasjonsnumre = oversikt.virksomheter.map(
+    ({ virksomhet }) => virksomhet.orgNumber,
+  );
 
   const organisasjonerITiltaksgruppe =
     isTiltakspakkevurderingFeatureToggleEnabled()
-      ? await finnOrganisasjonerITiltaksgruppe(organisasjonsnumreMedUnntak)
+      ? await finnOrganisasjonerITiltaksgruppe(organisasjonsnumre)
       : new Set<string>();
 
   return lagSykmeldtPlanoversikt(oversikt, organisasjonerITiltaksgruppe);

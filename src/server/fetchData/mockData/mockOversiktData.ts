@@ -47,7 +47,12 @@ export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
 };
 
 export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
-  virksomheter: [],
+  virksomheter: [
+    {
+      virksomhet: mockAktivPlanData.organization,
+      oppfolgingsplanhendelser: [],
+    },
+  ],
 };
 
 const eldreMockUnntaksvurderingUtenOrganisasjonsnavn = {

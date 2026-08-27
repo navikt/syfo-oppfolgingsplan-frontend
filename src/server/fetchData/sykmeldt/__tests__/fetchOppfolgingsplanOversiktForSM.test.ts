@@ -12,7 +12,8 @@ describe("getMockDataForScenarioSM", () => {
     const result = getMockDataForScenarioSM("tom");
 
     expect(result).toEqual(mockOversiktDataTomForSM);
-    expect(result.virksomheter).toEqual([]);
+    expect(result.virksomheter).toHaveLength(1);
+    expect(result.virksomheter[0]?.oppfolgingsplanhendelser).toEqual([]);
   });
 
   test("returns plans for 'aktiv-og-tidligere'", () => {

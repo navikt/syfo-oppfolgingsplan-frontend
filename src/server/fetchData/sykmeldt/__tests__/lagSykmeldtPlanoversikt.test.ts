@@ -29,6 +29,40 @@ function oversiktMed(
 }
 
 describe("lagSykmeldtPlanoversikt", () => {
+  test("velger tiltaksinnhold når minst én relevant virksomhet er i tiltaksgruppen", () => {
+    const annenOrganization = {
+      orgNumber: "987654321",
+      orgName: "Bjørk skole",
+    };
+    const resultat = lagSykmeldtPlanoversikt(
+      {
+        virksomheter: [
+          {
+            virksomhet: organization,
+            oppfolgingsplanhendelser: [plan],
+          },
+          {
+            virksomhet: annenOrganization,
+            oppfolgingsplanhendelser: [{ ...plan, id: "annen-plan" }],
+          },
+        ],
+      },
+      new Set([organization.orgNumber]),
+    );
+
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
+    expect(resultat.gjeldendeHendelser).toHaveLength(2);
+  });
+
+  test("ignorerer tiltaksgruppe-orgnumre som ikke finnes i oversikten", () => {
+    const resultat = lagSykmeldtPlanoversikt(
+      oversiktMed(plan),
+      new Set(["987654321"]),
+    );
+
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(false);
+  });
+
   test("bruker første synlige hendelse som gjeldende uten egen statusutledning", () => {
     const resultat = lagSykmeldtPlanoversikt(
       oversiktMed(plan, unntak),
