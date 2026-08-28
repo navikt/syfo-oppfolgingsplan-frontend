@@ -33,7 +33,6 @@ graph LR
     AG[Arbeidsgiver] --> ID
     ID --> FE[syfo-oppfolgingsplan-frontend]
     FE -- TokenX --> BE[syfo-oppfolgingsplan-backend]
-    FE -- TokenX --> LUMI[lumi-api]
     FE --> DEK[nav-dekoratoren]
 ```
 
@@ -42,10 +41,6 @@ graph LR
 ### [syfo-oppfolgingsplan-backend](https://github.com/navikt/syfo-oppfolgingsplan-backend)
 
 Oppfølgingsplanens hoveddatakilde. Håndterer planer, utkast, ferdigstilling og deling.
-
-### [lumi-api](https://github.com/navikt/lumi-api)
-
-Brukerundersøkelser og tilbakemeldinger.
 
 ### [nav-dekoratoren](https://github.com/navikt/nav-dekoratoren)
 
