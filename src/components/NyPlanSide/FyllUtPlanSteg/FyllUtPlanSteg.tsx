@@ -17,6 +17,7 @@ interface Props {
   onGoToOppsummeringClick: () => void;
   isFormReadOnly: boolean;
   lagreUtkastError: FetchResultError | null;
+  erITiltaksgruppe: boolean;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -33,6 +34,7 @@ const FyllUtPlanSteg = withForm({
     onGoToOppsummeringClick,
     isFormReadOnly,
     lagreUtkastError,
+    erITiltaksgruppe,
   }) => {
     return (
       <section>
@@ -40,6 +42,7 @@ const FyllUtPlanSteg = withForm({
           form={form}
           isChangeDisabled={isPendingProceedToOppsummering}
           isReadOnly={isFormReadOnly}
+          erITiltaksgruppe={erITiltaksgruppe}
         />
 
         <FormErrorSummary form={form} errorSummaryRef={errorSummaryRef} />

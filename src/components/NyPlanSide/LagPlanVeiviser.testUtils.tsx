@@ -51,14 +51,19 @@ export function createMockLagretUtkastResponse(
 
 export async function renderLagPlanVeiviserComponent(
   mockData: ConvertedLagretUtkastResponse,
+  erITiltaksgruppe = false,
 ) {
   const lagretUtkastPromise = Promise.resolve(mockData);
+  const erITiltaksgruppePromise = Promise.resolve(erITiltaksgruppe);
 
   let renderResult: ReturnType<typeof render> | null = null;
 
   await act(async () => {
     renderResult = render(
-      <LagPlanVeiviser lagretUtkastPromise={lagretUtkastPromise} />,
+      <LagPlanVeiviser
+        lagretUtkastPromise={lagretUtkastPromise}
+        erITiltaksgruppePromise={erITiltaksgruppePromise}
+      />,
     );
   });
 

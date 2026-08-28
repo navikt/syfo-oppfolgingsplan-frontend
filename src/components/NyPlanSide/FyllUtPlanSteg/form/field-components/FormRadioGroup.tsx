@@ -12,6 +12,7 @@ interface Props {
   options: {
     value: string;
     label: string;
+    description?: string;
   }[];
   isChangeDisabled?: boolean;
   isReadOnly?: boolean;
@@ -63,7 +64,11 @@ export default function FormRadioGroup({
       aria-required={isRequired}
     >
       {options.map((option) => (
-        <Radio key={option.value} value={option.value}>
+        <Radio
+          key={option.value}
+          value={option.value}
+          description={option.description}
+        >
           {option.label}
         </Radio>
       ))}

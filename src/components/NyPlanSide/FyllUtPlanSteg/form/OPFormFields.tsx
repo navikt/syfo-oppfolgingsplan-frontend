@@ -25,12 +25,13 @@ interface Props {
    */
   isChangeDisabled: boolean;
   isReadOnly: boolean;
+  erITiltaksgruppe: boolean;
 }
 
 const OPFormFields = withForm({
   defaultValues: oppfolgingsplanFormDefaultValues,
   props: {} as Props,
-  render: ({ form, isChangeDisabled, isReadOnly }) => (
+  render: ({ form, isChangeDisabled, isReadOnly, erITiltaksgruppe }) => (
     <>
       <BodyLong spacing>Alle felt må fylles ut.</BodyLong>
 
@@ -158,7 +159,7 @@ const OPFormFields = withForm({
         {(field) => (
           <field.FormDatePicker
             label={formLabels.evalueringsDato.label}
-            description={readMoreOmAEvaluerePlanen}
+            description={formLabels.evalueringsDato.description}
             fromDate={getTomorrowDayDate()}
             toDate={getOneYearFromNowDayDate()}
             isRequired
@@ -168,6 +169,32 @@ const OPFormFields = withForm({
           />
         )}
       </form.AppField>
+
+      {erITiltaksgruppe && (
+        <form.AppField name="evalueringPaaminnelse">
+          {(field) => (
+            <field.FormRadioGroup
+              label={formLabels.evalueringPaaminnelse.label}
+              options={[
+                {
+                  value: "true",
+                  label: "Ja",
+                  description:
+                    "Vi sender en epost tre dager i forkant av valgt dato",
+                },
+                {
+                  value: "false",
+                  label: "Nei",
+                },
+              ]}
+              isRequired
+              isChangeDisabled={isChangeDisabled}
+              isReadOnly={isReadOnly}
+              className="mb-8"
+            />
+          )}
+        </form.AppField>
+      )}
 
       <form.AppField name="harDenAnsatteMedvirket">
         {(field) => (
@@ -222,18 +249,6 @@ const readMoreOmTilrettelegging = (
       være på jobb. Dette inkluderer tiltak som endringer i arbeidstid,
       arbeidsoppgaver, fysisk miljø eller utstyr. Tiltakene kan være
       midlertidige eller permanente ut fra behovet.
-    </BodyLong>
-  </ReadMore>
-);
-
-const readMoreOmAEvaluerePlanen = (
-  <ReadMore header="Hvorfor spør vi om dette?">
-    <BodyLong className="mb-2">
-      Etter at dere har prøvd ut tilrettelegging i en avtalt tidsperiode bør
-      dere følge opp hvordan dette har fungert. Fungerer tilpasningene som
-      ønsket? Vi anbefaler at dere går gjennom planen og vurderer å oppdatere
-      den innen <strong>fire uker</strong>. Dette gir nok tid til å erfare hva
-      som fungerer – og hva som kanskje må endres.
     </BodyLong>
   </ReadMore>
 );

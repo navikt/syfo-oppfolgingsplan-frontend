@@ -4,12 +4,19 @@ import { getFormattedDateString } from "@/ui-helpers/dateAndTime";
 import { formHeadings, formLabels } from "../form-labels";
 
 interface Props {
-  formValues: OppfolgingsplanFormUtfyllt;
+  formValues: OppfolgingsplanFormUtfyllt & {
+    evalueringPaaminnelse?: "true" | "false" | null;
+  };
   onEditPlan: () => void;
   className?: string;
+  erITiltaksgruppe: boolean;
 }
 
-export default function PlanFormSummary({ formValues, className }: Props) {
+export default function PlanFormSummary({
+  formValues,
+  className,
+  erITiltaksgruppe,
+}: Props) {
   const evalueringsDatoFormatted = formValues.evalueringsDato ? (
     getFormattedDateString(formValues.evalueringsDato)
   ) : (
@@ -103,6 +110,17 @@ export default function PlanFormSummary({ formValues, className }: Props) {
             </FormSummary.Label>
             <FormSummary.Value>{evalueringsDatoFormatted}</FormSummary.Value>
           </FormSummary.Answer>
+
+          {erITiltaksgruppe && (
+            <FormSummary.Answer>
+              <FormSummary.Label>
+                {formLabels.evalueringPaaminnelse.label}
+              </FormSummary.Label>
+              <FormSummary.Value>
+                {formValues.evalueringPaaminnelse === "true" ? "Ja" : "Nei"}
+              </FormSummary.Value>
+            </FormSummary.Answer>
+          )}
 
           <FormSummary.Answer>
             <FormSummary.Label>
