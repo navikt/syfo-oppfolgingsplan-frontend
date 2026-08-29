@@ -8,6 +8,7 @@ import "@/app/globals.css";
 import { AG_SCENARIO_OPTIONS } from "@/common/demoScenario";
 import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { BrowserApmMetaTags } from "@/instrumentation/BrowserApmMetaTags";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
 import { fetchDecoratorForAG } from "@/ui/layout/fetchDecoratorHelpers";
@@ -39,6 +40,7 @@ export default async function RootLayoutForAG({
     <html lang="no">
       <head>
         <title>Oppfolgingsplan</title>
+        <BrowserApmMetaTags />
         <Decorator.HeadAssets />
       </head>
 

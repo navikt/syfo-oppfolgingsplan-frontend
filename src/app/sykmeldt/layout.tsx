@@ -7,6 +7,7 @@ import "@/app/globals.css";
 import { SM_SCENARIO_OPTIONS } from "@/common/demoScenario";
 import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import { BrowserApmMetaTags } from "@/instrumentation/BrowserApmMetaTags";
 import { Instrumentation } from "@/instrumentation/Instrumentation";
 import { fetchDecoratorForSM } from "@/ui/layout/fetchDecoratorHelpers";
 import { MainContent } from "@/ui/layout/MainContent";
@@ -29,6 +30,7 @@ export default async function RootLayoutForSM({
   return (
     <html lang="no">
       <head>
+        <BrowserApmMetaTags />
         <Decorator.HeadAssets />
         <Preload />
       </head>
