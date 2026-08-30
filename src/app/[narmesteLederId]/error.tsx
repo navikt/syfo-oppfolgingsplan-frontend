@@ -1,7 +1,7 @@
 "use client";
 
+import { captureException } from "@nais/apm";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
-import { logger } from "@navikt/next-logger";
 import Image from "next/image";
 import { useEffect } from "react";
 import { ERROR_PAGE_DAD_SVG } from "@/common/publicAssets";
@@ -16,7 +16,7 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   useEffect(() => {
-    logger.error(error);
+    captureException(error);
   }, [error]);
 
   const errorText = "Beklager! Det har oppstått en uventet feil";

@@ -10,9 +10,7 @@ export const publicEnvSchema = z.object({
     z.literal("dev"),
     z.literal("prod"),
   ]),
-  NEXT_PUBLIC_VERSION: z.string().min(1),
   NEXT_PUBLIC_ASSET_PREFIX: z.string().optional(),
-  NEXT_PUBLIC_TELEMETRY_URL: z.string().optional(),
   NEXT_PUBLIC_BASE_PATH: z.string(),
   NEXT_PUBLIC_DINE_SYKMELDTE_URL: z.string(),
   NEXT_PUBLIC_DITT_SYKEFRAVAER_URL: z.string(),
@@ -25,9 +23,7 @@ export const publicEnvSchema = z.object({
  */
 export const rawPublicEnv = {
   NEXT_PUBLIC_RUNTIME_ENVIRONMENT: process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT,
-  NEXT_PUBLIC_VERSION: process.env.NEXT_PUBLIC_VERSION,
   NEXT_PUBLIC_ASSET_PREFIX: process.env.NEXT_PUBLIC_ASSET_PREFIX,
-  NEXT_PUBLIC_TELEMETRY_URL: process.env.NEXT_PUBLIC_TELEMETRY_URL,
   NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH,
   NEXT_PUBLIC_DINE_SYKMELDTE_URL: process.env.NEXT_PUBLIC_DINE_SYKMELDTE_URL,
   NEXT_PUBLIC_DITT_SYKEFRAVAER_URL:
