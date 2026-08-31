@@ -63,6 +63,9 @@ export const RuntimeErrorOperation = {
 export type RuntimeErrorOperation =
   (typeof RuntimeErrorOperation)[keyof typeof RuntimeErrorOperation];
 
+/** HTTP method is diagnostic metadata and must remain a bounded value. */
+export type RuntimeErrorHttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+
 export const runtimeErrorOperationByEvent = {
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_AKTIV_PLAN_FETCH_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_ARBEIDSGIVER_AKTIV_PLAN_FETCH,

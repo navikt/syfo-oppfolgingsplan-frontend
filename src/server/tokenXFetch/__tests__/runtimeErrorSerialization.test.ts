@@ -206,16 +206,18 @@ describe("serialized runtime error contract", () => {
       type: "INTERNAL_SERVER_ERROR",
       message: "Sensitive backend detail for 12345678901",
     });
-    expect(onlySerializedLog()).toMatchObject({
+    const parsedLog = onlySerializedLog();
+    expect(parsedLog).toMatchObject({
       level: "error",
       event_type: eventType,
       operation: getRuntimeErrorOperation(eventType),
       error_code: "INTERNAL_SERVER_ERROR",
-      status: 500,
+      upstream_status: 500,
       method: "POST",
       trace_id: traceId,
       message: "TokenX fetch returned a non-OK response",
     });
+    expect(parsedLog).not.toHaveProperty("status");
     expect(serializedLogLines[0]).not.toContain("12345678901");
     expect(serializedLogLines[0]).not.toContain("Sensitive backend detail");
   });
@@ -242,7 +244,7 @@ describe("serialized runtime error contract", () => {
       event_type: eventType,
       operation: getRuntimeErrorOperation(eventType),
       error_code: "FETCH_UNKNOWN_ERROR_RESPONSE",
-      status: 502,
+      upstream_status: 502,
       method: "POST",
       trace_id: traceId,
       message:
@@ -276,7 +278,7 @@ describe("serialized runtime error contract", () => {
       event_type: eventType,
       operation: getRuntimeErrorOperation(eventType),
       error_code: "LEGE_NOT_FOUND",
-      status: 404,
+      upstream_status: 404,
       method: "POST",
       trace_id: traceId,
       message: "TokenX fetch returned a non-OK response",
@@ -309,7 +311,7 @@ describe("serialized runtime error contract", () => {
       event_type: eventType,
       operation: getRuntimeErrorOperation(eventType),
       error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
-      status: 200,
+      upstream_status: 200,
       method: "GET",
       trace_id: traceId,
       message: "TokenX fetch returned an invalid success response body",
