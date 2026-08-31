@@ -56,7 +56,7 @@ describe("finnOrganisasjonerITiltaksgruppe", () => {
     expect(fetchTiltakspakkeVurderingMock).not.toHaveBeenCalled();
   });
 
-  test("fails closed and logs a typed event on Flaggskipet error", async () => {
+  test("records the fail-closed business outcome at info level", async () => {
     fetchTiltakspakkeVurderingMock.mockResolvedValue({
       error: { type: "FETCH_NETWORK_ERROR" },
       data: null,

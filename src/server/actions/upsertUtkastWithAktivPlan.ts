@@ -1,8 +1,8 @@
 "use server";
 
-import { logger } from "@navikt/next-logger";
 import { redirect } from "next/navigation";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import type { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
 import { convertPlanContentToCurrentSchema } from "@/utils/convertPlanContentToCurrentSchema";
@@ -15,6 +15,7 @@ import type {
 } from "../tokenXFetch/FetchResult";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
 import { lagreUtkastServerAction } from "./lagreUtkast";
+import { logServerActionInputValidationError } from "./logServerActionInputValidationError";
 import { isNonEmptyString } from "./serverActionsInputValidation";
 
 /**
@@ -35,9 +36,10 @@ export async function upsertUtkastWithAktivPlanServerAction(
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
   if (!isNarmesteLederIdValid) {
-    logger.error(
-      `overskrivUtkastMedPlanInnholdServerAction invalid narmesteLederId: ${narmesteLederId}`,
-    );
+    logServerActionInputValidationError({
+      eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_FRA_AKTIV_PLAN_FAILED,
+      validationTarget: "narmeste_leder_id",
+    });
 
     return {
       error: {
