@@ -7,7 +7,6 @@ import { logWarningMessageAndThrowAuthError } from "./handleAuthError";
 export enum TokenXTargetApi {
   SYFO_OPPFOLGINGSPLAN_BACKEND = "SYFO_OPPFOLGINGSPLAN_BACKEND",
   FLAGGSKIPET = "FLAGGSKIPET",
-  LUMI_API = "LUMI_API",
 }
 
 /**
@@ -41,8 +40,6 @@ function getClientIdForTokenXTargetApi(targetApi: TokenXTargetApi): string {
     return getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID;
   } else if (targetApi === TokenXTargetApi.FLAGGSKIPET) {
     return getServerEnv().FLAGGSKIPET_CLIENT_ID;
-  } else if (targetApi === TokenXTargetApi.LUMI_API) {
-    return getServerEnv().LUMI_API_CLIENT_ID;
   } else {
     return "" as never;
   }

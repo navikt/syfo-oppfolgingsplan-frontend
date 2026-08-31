@@ -24,7 +24,6 @@ vi.mock("@/server/auth/tokenXExchange", () => ({
   TokenXTargetApi: {
     SYFO_OPPFOLGINGSPLAN_BACKEND: "SYFO_OPPFOLGINGSPLAN_BACKEND",
     FLAGGSKIPET: "FLAGGSKIPET",
-    LUMI_API: "LUMI_API",
   },
   exchangeIdPortenTokenForTokenXOboToken:
     exchangeIdPortenTokenForTokenXOboTokenMock,

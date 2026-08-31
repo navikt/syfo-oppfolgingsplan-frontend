@@ -6,8 +6,6 @@ import {
 import AktivPlanForAG from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForAG";
 import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton";
 import Breadcrumbs from "@/ui/Breadcrumbs";
-import { Lumi } from "@/ui/Lumi/Lumi";
-import { lumiSurveyAG } from "@/ui/Lumi/lumiSurveyAG";
 
 export default async function AktivPlanPageForAG({
   params,
@@ -28,11 +26,6 @@ export default async function AktivPlanPageForAG({
         <AktivPlanForAG
           narmesteLederId={narmesteLederId}
           nyligOpprettet={nyligOpprettetParam === "true"}
-        />
-
-        <Lumi
-          feedbackId="Ny oppfølgingsplan - arbeidsgiver"
-          survey={lumiSurveyAG}
         />
       </Suspense>
     </>
