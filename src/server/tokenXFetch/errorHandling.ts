@@ -1,4 +1,5 @@
 import { logger } from "@navikt/next-logger";
+import type { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import type { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 import { type FetchResultError, fetchResultErrorSchema } from "./FetchResult";
@@ -9,19 +10,23 @@ const EXPECTED_ERROR_TYPES: ReadonlySet<CombinedErrorType> = new Set([
 
 export function getAndLogFetchNetworkError({
   error,
-  endpoint,
+  eventType,
   method,
 }: {
   error: unknown;
-  endpoint: string;
+  eventType: RuntimeErrorEvent;
   method: string;
 }): FetchResultError {
-  const { errorName, message } = tryToExtractNameAndMessageFromError(error);
   const errorType = FrontendErrorType.FETCH_NETWORK_ERROR;
 
   logger.error(
-    { type: errorType, method, endpoint },
-    `Unexpected network error on fetch to ${method} ${endpoint}: errorName=${errorName} message=${message}`,
+    {
+      event_type: eventType,
+      error_code: errorType,
+      exception_type: getSafeExceptionType(error),
+      method,
+    },
+    "TokenX fetch failed before receiving a response",
   );
 
   return {
@@ -30,20 +35,25 @@ export function getAndLogFetchNetworkError({
 }
 
 export async function getAndLogErrorResultFromNonOkResponse({
+  eventType,
   response,
-  endpoint,
   method,
 }: {
+  eventType: RuntimeErrorEvent;
   response: Response;
-  endpoint: string;
   method: string;
 }): Promise<FetchResultError> {
   try {
     const errorResponseJson = await response.clone().json();
     const parsedErrorResponse = fetchResultErrorSchema.parse(errorResponseJson);
 
-    const logMessage = `Got structured error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): type=${parsedErrorResponse.type}${parsedErrorResponse.message ? ` message=${parsedErrorResponse.message}` : ""}`;
-    const logMetadata = { ...parsedErrorResponse, method, endpoint };
+    const logMessage = "TokenX fetch returned a non-OK response";
+    const logMetadata = {
+      event_type: eventType,
+      error_code: parsedErrorResponse.type,
+      status: response.status,
+      method,
+    };
 
     if (EXPECTED_ERROR_TYPES.has(parsedErrorResponse.type)) {
       logger.info(logMetadata, logMessage);
@@ -53,19 +63,16 @@ export async function getAndLogErrorResultFromNonOkResponse({
 
     return parsedErrorResponse;
   } catch {
-    let bodySnippet: string | undefined;
-    try {
-      const text = await response.clone().text();
-      bodySnippet = text.slice(0, 200);
-    } catch {
-      /* ignore response.text() error */
-    }
-
     const errorType = FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE;
 
     logger.error(
-      { type: errorType, method, endpoint },
-      `Got unknown error response from fetch to ${method} ${endpoint} (status=${response.status} ${response.statusText}): ${bodySnippet ? ` body=${bodySnippet}` : ""}`,
+      {
+        event_type: eventType,
+        error_code: errorType,
+        status: response.status,
+        method,
+      },
+      "TokenX fetch returned a non-OK response with an invalid error body",
     );
 
     return {
@@ -74,16 +81,25 @@ export async function getAndLogErrorResultFromNonOkResponse({
   }
 }
 
-export function tryToExtractNameAndMessageFromError(err: unknown) {
-  const { name: errorName, message } =
-    err instanceof Error
-      ? err
-      : {
-          name: "Unknown",
-          message: "Unknown",
-        };
-  return {
-    errorName,
-    message,
-  };
+function getSafeExceptionType(error: unknown): string {
+  if (!(error instanceof Error)) return "UnknownError";
+
+  try {
+    switch (error.name) {
+      case "AbortError":
+      case "DOMException":
+        return "DOMException";
+      case "TypeError":
+      case "RangeError":
+      case "ReferenceError":
+      case "SyntaxError":
+      case "URIError":
+      case "EvalError":
+        return error.name;
+      default:
+        return "Error";
+    }
+  } catch {
+    return "Error";
+  }
 }

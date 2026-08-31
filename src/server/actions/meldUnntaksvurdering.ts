@@ -2,6 +2,7 @@
 
 import { refresh } from "next/cache";
 import { getEndpointUnntaksvurderingerForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -19,6 +20,8 @@ export async function meldUnntaksvurderingServerAction(
   }
 
   const result = await tokenXFetchUpdate({
+    eventType:
+      RuntimeErrorEvent.OPPFOLGINGSPLAN_EXCEPTION_ASSESSMENT_SUBMIT_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "POST",
     endpoint: getEndpointUnntaksvurderingerForAG(narmesteLederId),

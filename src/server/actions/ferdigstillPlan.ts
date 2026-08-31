@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import type z from "zod";
 import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
 import { getOppfolgingsplanFormShape } from "@/utils/getOppfolgingsplanFormShape";
@@ -72,6 +73,7 @@ export async function ferdigstillPlanServerAction(
   );
 
   const fetchResult = await tokenXFetchUpdate({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FINALIZE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerForAG(narmesteLederId),
     requestBody: {

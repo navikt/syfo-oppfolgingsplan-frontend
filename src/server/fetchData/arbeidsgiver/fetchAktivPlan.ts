@@ -1,4 +1,5 @@
 import { getEndpointAktivPlanForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   type FerdigstiltPlanResponse,
@@ -20,6 +21,7 @@ export async function fetchAktivPlanForAG(
   }
 
   return await tokenXFetchGet({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYER_ACTIVE_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointAktivPlanForAG(narmesteLederId),
     responseDataSchema: ferdigstiltPlanResponseSchema,

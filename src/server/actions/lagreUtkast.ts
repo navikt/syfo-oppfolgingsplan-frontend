@@ -3,6 +3,7 @@
 import { logger } from "@navikt/next-logger";
 import z from "zod";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   type OppfolgingsplanFormUnderArbeid,
@@ -73,6 +74,7 @@ export async function lagreUtkastServerAction(
   };
 
   return await tokenXFetchUpdateWithResponse({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DRAFT_SAVE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
     method: "PUT",

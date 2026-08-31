@@ -1,6 +1,7 @@
 import { logger } from "@navikt/next-logger";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetchUpdate";
 
@@ -34,7 +35,9 @@ const responseDataSchema = z.object({
 });
 
 const endpoint = "http://flaggskipet/api/v1/tiltakspakker/vurdering";
+const eventType = RuntimeErrorEvent.TILTAKSPAKKE_ASSESSMENT_FETCH_FAILED;
 const loggerErrorMock = vi.mocked(logger.error);
+const loggerInfoMock = vi.mocked(logger.info);
 
 function jsonResponse(body: unknown, init?: ResponseInit) {
   return new Response(JSON.stringify(body), {
@@ -67,6 +70,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       requestBody: { orgnumre: ["123456789"] },
@@ -108,6 +112,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
       endpoint: "http://backend/api/v1/example",
       responseDataSchema,
@@ -132,6 +137,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
@@ -146,30 +152,85 @@ describe("tokenXFetchUpdateWithResponse", () => {
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
-        type: "INTERNAL_SERVER_ERROR",
-        message: "Noe gikk galt",
+        event_type: eventType,
+        error_code: "INTERNAL_SERVER_ERROR",
+        status: 500,
         method: "POST",
-        endpoint,
       },
-      expect.stringContaining(`fetch to POST ${endpoint}`),
+      "TokenX fetch returned a non-OK response",
+    );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    expect(JSON.stringify(loggerErrorMock.mock.calls[0])).not.toContain(
+      endpoint,
+    );
+    expect(JSON.stringify(loggerErrorMock.mock.calls[0])).not.toContain(
+      "Noe gikk galt",
     );
   });
 
-  test("returns unknown error result with body snippet for unstructured non-ok responses", async () => {
+  test("keeps expected structured errors at info level with the same safe contract", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn<typeof fetch>().mockResolvedValue(
-        new Response("ukjent feilbody fra flaggskipet", {
-          status: 500,
-          statusText: "Internal Server Error",
-          headers: {
-            "Content-Type": "text/plain",
+        jsonResponse(
+          {
+            type: "LEGE_NOT_FOUND",
+            message: "Sensitive backend detail for 12345678901",
           },
-        }),
+          { status: 404, statusText: "Not Found" },
+        ),
       ),
     );
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
+      targetApi: TokenXTargetApi.FLAGGSKIPET,
+      endpoint,
+      responseDataSchema,
+    });
+
+    expect(result.error).toEqual({
+      type: "LEGE_NOT_FOUND",
+      message: "Sensitive backend detail for 12345678901",
+    });
+    expect(loggerErrorMock).not.toHaveBeenCalled();
+    expect(loggerInfoMock).toHaveBeenCalledWith(
+      {
+        event_type: eventType,
+        error_code: "LEGE_NOT_FOUND",
+        status: 404,
+        method: "POST",
+      },
+      "TokenX fetch returned a non-OK response",
+    );
+    expect(loggerInfoMock).toHaveBeenCalledOnce();
+    expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
+      "12345678901",
+    );
+    expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
+      endpoint,
+    );
+  });
+
+  test("returns unknown error result without logging an unstructured response body", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockResolvedValue(
+        new Response(
+          "ukjent feilbody med fnr=12345678901 og https://example.test/person/42",
+          {
+            status: 500,
+            statusText: "Internal Server Error",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+          },
+        ),
+      ),
+    );
+
+    const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
@@ -183,21 +244,34 @@ describe("tokenXFetchUpdateWithResponse", () => {
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
-        type: "FETCH_UNKOWN_ERROR_RESPONSE",
+        event_type: eventType,
+        error_code: "FETCH_UNKOWN_ERROR_RESPONSE",
+        status: 500,
         method: "POST",
-        endpoint,
       },
-      expect.stringContaining("body=ukjent feilbody fra flaggskipet"),
+      "TokenX fetch returned a non-OK response with an invalid error body",
     );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    const serializedLogCall = JSON.stringify(loggerErrorMock.mock.calls[0]);
+    expect(serializedLogCall).not.toContain("12345678901");
+    expect(serializedLogCall).not.toContain("example.test");
+    expect(serializedLogCall).not.toContain(endpoint);
   });
 
   test("returns network error result when fetch throws", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn<typeof fetch>().mockRejectedValue(new Error("Network down")),
+      vi
+        .fn<typeof fetch>()
+        .mockRejectedValue(
+          new Error(
+            "Network down for https://example.test/person/42?fnr=12345678901",
+          ),
+        ),
     );
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
@@ -211,14 +285,18 @@ describe("tokenXFetchUpdateWithResponse", () => {
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
-        type: "FETCH_NETWORK_ERROR",
+        event_type: eventType,
+        error_code: "FETCH_NETWORK_ERROR",
+        exception_type: "Error",
         method: "POST",
-        endpoint,
       },
-      expect.stringContaining(
-        `Unexpected network error on fetch to POST ${endpoint}: errorName=Error message=Network down`,
-      ),
+      "TokenX fetch failed before receiving a response",
     );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    const serializedLogCall = JSON.stringify(loggerErrorMock.mock.calls[0]);
+    expect(serializedLogCall).not.toContain("12345678901");
+    expect(serializedLogCall).not.toContain("example.test");
+    expect(serializedLogCall).not.toContain(endpoint);
   });
 
   test("returns network error result when fetch is aborted through the provided signal", async () => {
@@ -230,6 +308,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
@@ -244,12 +323,14 @@ describe("tokenXFetchUpdateWithResponse", () => {
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
-        type: "FETCH_NETWORK_ERROR",
+        event_type: eventType,
+        error_code: "FETCH_NETWORK_ERROR",
+        exception_type: "DOMException",
         method: "POST",
-        endpoint,
       },
-      expect.stringContaining("errorName=AbortError"),
+      "TokenX fetch failed before receiving a response",
     );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
   });
 
   test("returns invalid response error when ok response body does not match schema", async () => {
@@ -259,6 +340,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
@@ -271,11 +353,18 @@ describe("tokenXFetchUpdateWithResponse", () => {
       data: null,
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Got invalid response data from POST ${endpoint}: name=`,
-      ),
+      {
+        event_type: eventType,
+        error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
+        status: 200,
+        method: "POST",
+      },
+      "TokenX fetch returned an invalid success response body",
     );
-    expect(loggerErrorMock.mock.calls[0]?.[0]).toContain("message=");
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    expect(JSON.stringify(loggerErrorMock.mock.calls[0])).not.toContain(
+      endpoint,
+    );
   });
 
   test("returns invalid response error when ok response contains invalid JSON", async () => {
@@ -292,6 +381,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
 
     const result = await tokenXFetchUpdateWithResponse({
+      eventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
@@ -304,10 +394,17 @@ describe("tokenXFetchUpdateWithResponse", () => {
       data: null,
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Got invalid response data from POST ${endpoint}: name=`,
-      ),
+      {
+        event_type: eventType,
+        error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
+        status: 200,
+        method: "POST",
+      },
+      "TokenX fetch returned an invalid success response body",
     );
-    expect(loggerErrorMock.mock.calls[0]?.[0]).toContain("message=");
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    const serializedLogCall = JSON.stringify(loggerErrorMock.mock.calls[0]);
+    expect(serializedLogCall).not.toContain("ikke json");
+    expect(serializedLogCall).not.toContain(endpoint);
   });
 });

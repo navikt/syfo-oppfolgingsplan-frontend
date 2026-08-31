@@ -2,6 +2,7 @@
 
 import z from "zod";
 import { getEndpointDelMedVeilederForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
@@ -32,6 +33,7 @@ export async function delPlanMedVeilederServerAction(
   }
 
   const { data, error } = await tokenXFetchUpdateWithResponse({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SHARE_WITH_COUNSELLOR_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedVeilederForAG(narmesteLederId, planId),
     responseDataSchema: delPlanMedVeilederResponseSchema,

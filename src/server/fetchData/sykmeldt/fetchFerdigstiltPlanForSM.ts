@@ -1,3 +1,4 @@
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
 import {
@@ -19,6 +20,7 @@ export async function fetchFerdigstiltPlanForSM(
   }
 
   return await tokenXFetchGet({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYEE_FINISHED_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt/oppfolgingsplaner/${planId}`,
     responseDataSchema: ferdigstiltPlanResponseSchema,

@@ -1,18 +1,19 @@
 import { logger } from "@navikt/next-logger";
 import type z from "zod";
-import { tryToExtractNameAndMessageFromError } from "./errorHandling";
+import type { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
+import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 
 /**
  * Returns validation result, and logs error if validation fails.
  */
 export async function validateResponseBody<S extends z.ZodType>({
+  eventType,
   response,
   responseDataSchema,
-  endpoint,
   method,
 }: {
+  eventType: RuntimeErrorEvent;
   response: Response;
-  endpoint: string;
   method: string;
   responseDataSchema: S;
 }): Promise<
@@ -32,11 +33,16 @@ export async function validateResponseBody<S extends z.ZodType>({
       success: true,
       validatedData,
     };
-  } catch (err) {
+  } catch {
     // Response data is invalid
-    const { errorName, message } = tryToExtractNameAndMessageFromError(err);
     logger.error(
-      `Got invalid response data from ${method} ${endpoint}: name=${errorName} message=${message}`,
+      {
+        event_type: eventType,
+        error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
+        status: response.status,
+        method,
+      },
+      "TokenX fetch returned an invalid success response body",
     );
 
     return {

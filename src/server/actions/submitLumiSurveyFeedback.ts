@@ -3,6 +3,7 @@
 import type { LumiSurveyTransportPayload } from "@navikt/lumi-survey";
 import { z } from "zod";
 import { getLumiSurveyFeedbackEndpoint } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { lumiSurveyTransportSchema } from "@/schema/lumiSurveyTransportPayloadSchema";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
@@ -24,6 +25,7 @@ export async function submitLumiSurveyFeedback(
   }
 
   const result = await tokenXFetchUpdateWithResponse({
+    eventType: RuntimeErrorEvent.LUMI_SURVEY_FEEDBACK_SUBMIT_FAILED,
     targetApi: TokenXTargetApi.LUMI_API,
     endpoint: getLumiSurveyFeedbackEndpoint(),
     requestBody: validatedPayload,

@@ -4,6 +4,7 @@ import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { getAGOpprettNyPlanHref } from "@/common/route-hrefs";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
@@ -21,6 +22,7 @@ export async function slettUtkastServerAction(
   }
 
   const result = await tokenXFetchUpdate({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DRAFT_DELETE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "DELETE",
     endpoint: getEndpointUtkastForAG(narmesteLederId),
@@ -45,6 +47,7 @@ export async function slettUtkastAndRedirectToNyPlanServerAction(
   }
 
   const result = await tokenXFetchUpdate({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DRAFT_DELETE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "DELETE",
     endpoint: getEndpointUtkastForAG(narmesteLederId),

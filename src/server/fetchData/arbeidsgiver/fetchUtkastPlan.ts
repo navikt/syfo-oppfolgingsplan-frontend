@@ -1,4 +1,5 @@
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   type ConvertedLagretUtkastResponse,
@@ -20,6 +21,7 @@ export async function fetchUtkastDataForAG(
   }
 
   const lagretUtkastResponse = await tokenXFetchGet({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYER_DRAFT_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
     responseDataSchema: rawUtkastResponseForAGSchema,
