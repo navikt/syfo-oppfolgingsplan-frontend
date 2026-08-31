@@ -3,6 +3,7 @@ import {
   getRuntimeErrorOperation,
   RuntimeErrorEvent,
   type RuntimeErrorEvent as RuntimeErrorEventType,
+  type RuntimeErrorHttpMethod,
 } from "@/common/runtimeErrorEvent";
 import type { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
@@ -29,7 +30,7 @@ export function getAndLogFetchNetworkError({
 }: {
   error: unknown;
   eventType: RuntimeErrorEventType;
-  method: string;
+  method: RuntimeErrorHttpMethod;
 }): FetchResultError {
   const errorType = FrontendErrorType.FETCH_NETWORK_ERROR;
 
@@ -56,7 +57,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
 }: {
   eventType: RuntimeErrorEventType;
   response: Response;
-  method: string;
+  method: RuntimeErrorHttpMethod;
 }): Promise<FetchResultError> {
   try {
     const errorResponseJson = await response.clone().json();
@@ -67,7 +68,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
       event_type: eventType,
       operation: getRuntimeErrorOperation(eventType),
       error_code: parsedErrorResponse.type,
-      status: response.status,
+      upstream_status: response.status,
       method,
     };
 
@@ -88,7 +89,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
         event_type: eventType,
         operation: getRuntimeErrorOperation(eventType),
         error_code: errorType,
-        status: response.status,
+        upstream_status: response.status,
         method,
       },
       "TokenX fetch returned a non-OK response with an invalid error body",

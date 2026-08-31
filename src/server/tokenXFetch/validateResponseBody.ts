@@ -3,6 +3,7 @@ import type z from "zod";
 import {
   getRuntimeErrorOperation,
   type RuntimeErrorEvent,
+  type RuntimeErrorHttpMethod,
 } from "@/common/runtimeErrorEvent";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 
@@ -17,7 +18,7 @@ export async function validateResponseBody<S extends z.ZodType>({
 }: {
   eventType: RuntimeErrorEvent;
   response: Response;
-  method: string;
+  method: RuntimeErrorHttpMethod;
   responseDataSchema: S;
 }): Promise<
   | {
@@ -43,7 +44,7 @@ export async function validateResponseBody<S extends z.ZodType>({
         event_type: eventType,
         operation: getRuntimeErrorOperation(eventType),
         error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
-        status: response.status,
+        upstream_status: response.status,
         method,
       },
       "TokenX fetch returned an invalid success response body",
