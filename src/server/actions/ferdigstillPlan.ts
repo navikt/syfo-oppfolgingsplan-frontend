@@ -73,7 +73,7 @@ export async function ferdigstillPlanServerAction(
   );
 
   const fetchResult = await tokenXFetchUpdate({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FINALIZE_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerForAG(narmesteLederId),
     requestBody: {

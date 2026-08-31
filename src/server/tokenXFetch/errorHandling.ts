@@ -1,12 +1,26 @@
 import { logger } from "@navikt/next-logger";
-import type { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
+import {
+  getRuntimeErrorOperation,
+  RuntimeErrorEvent,
+  type RuntimeErrorEvent as RuntimeErrorEventType,
+} from "@/common/runtimeErrorEvent";
 import type { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 import { type FetchResultError, fetchResultErrorSchema } from "./FetchResult";
 
-const EXPECTED_ERROR_TYPES: ReadonlySet<CombinedErrorType> = new Set([
-  "LEGE_NOT_FOUND",
-]);
+/**
+ * Expected domain outcomes are scoped to the operation where they are normal.
+ * A matching HTTP/error code from another operation remains an operational
+ * error instead of being silently downgraded globally.
+ */
+const EXPECTED_ERROR_TYPES_BY_EVENT: Partial<
+  Record<RuntimeErrorEventType, ReadonlySet<CombinedErrorType>>
+> = {
+  [RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED]:
+    new Set<CombinedErrorType>(["SYKMELDT_NOT_FOUND"]),
+  [RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED]:
+    new Set<CombinedErrorType>(["LEGE_NOT_FOUND"]),
+};
 
 export function getAndLogFetchNetworkError({
   error,
@@ -14,7 +28,7 @@ export function getAndLogFetchNetworkError({
   method,
 }: {
   error: unknown;
-  eventType: RuntimeErrorEvent;
+  eventType: RuntimeErrorEventType;
   method: string;
 }): FetchResultError {
   const errorType = FrontendErrorType.FETCH_NETWORK_ERROR;
@@ -22,6 +36,7 @@ export function getAndLogFetchNetworkError({
   logger.error(
     {
       event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
       error_code: errorType,
       exception_type: getSafeExceptionType(error),
       method,
@@ -39,7 +54,7 @@ export async function getAndLogErrorResultFromNonOkResponse({
   response,
   method,
 }: {
-  eventType: RuntimeErrorEvent;
+  eventType: RuntimeErrorEventType;
   response: Response;
   method: string;
 }): Promise<FetchResultError> {
@@ -50,12 +65,15 @@ export async function getAndLogErrorResultFromNonOkResponse({
     const logMessage = "TokenX fetch returned a non-OK response";
     const logMetadata = {
       event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
       error_code: parsedErrorResponse.type,
       status: response.status,
       method,
     };
 
-    if (EXPECTED_ERROR_TYPES.has(parsedErrorResponse.type)) {
+    if (
+      EXPECTED_ERROR_TYPES_BY_EVENT[eventType]?.has(parsedErrorResponse.type)
+    ) {
       logger.info(logMetadata, logMessage);
     } else {
       logger.error(logMetadata, logMessage);
@@ -63,11 +81,12 @@ export async function getAndLogErrorResultFromNonOkResponse({
 
     return parsedErrorResponse;
   } catch {
-    const errorType = FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE;
+    const errorType = FrontendErrorType.FETCH_UNKNOWN_ERROR_RESPONSE;
 
     logger.error(
       {
         event_type: eventType,
+        operation: getRuntimeErrorOperation(eventType),
         error_code: errorType,
         status: response.status,
         method,

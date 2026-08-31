@@ -22,7 +22,7 @@ export async function slettUtkastServerAction(
   }
 
   const result = await tokenXFetchUpdate({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DRAFT_DELETE_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_DELETE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "DELETE",
     endpoint: getEndpointUtkastForAG(narmesteLederId),
@@ -47,7 +47,7 @@ export async function slettUtkastAndRedirectToNyPlanServerAction(
   }
 
   const result = await tokenXFetchUpdate({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DRAFT_DELETE_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_DELETE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "DELETE",
     endpoint: getEndpointUtkastForAG(narmesteLederId),

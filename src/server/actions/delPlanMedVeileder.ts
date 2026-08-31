@@ -33,7 +33,7 @@ export async function delPlanMedVeilederServerAction(
   }
 
   const { data, error } = await tokenXFetchUpdateWithResponse({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SHARE_WITH_COUNSELLOR_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_NAV_VEILEDER_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedVeilederForAG(narmesteLederId, planId),
     responseDataSchema: delPlanMedVeilederResponseSchema,

@@ -1,6 +1,9 @@
 import { logger } from "@navikt/next-logger";
 import type z from "zod";
-import type { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
+import {
+  getRuntimeErrorOperation,
+  type RuntimeErrorEvent,
+} from "@/common/runtimeErrorEvent";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 
 /**
@@ -38,6 +41,7 @@ export async function validateResponseBody<S extends z.ZodType>({
     logger.error(
       {
         event_type: eventType,
+        operation: getRuntimeErrorOperation(eventType),
         error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
         status: response.status,
         method,

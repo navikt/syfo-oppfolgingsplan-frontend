@@ -74,7 +74,7 @@ export async function lagreUtkastServerAction(
   };
 
   return await tokenXFetchUpdateWithResponse({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DRAFT_SAVE_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
     method: "PUT",

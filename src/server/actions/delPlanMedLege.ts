@@ -33,7 +33,7 @@ export async function delPlanMedLegeServerAction(
   }
 
   const { data, error } = await tokenXFetchUpdateWithResponse({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SHARE_WITH_DOCTOR_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
     responseDataSchema: delPlanMedLegeResponseSchema,

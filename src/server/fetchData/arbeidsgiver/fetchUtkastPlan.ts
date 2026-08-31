@@ -21,7 +21,8 @@ export async function fetchUtkastDataForAG(
   }
 
   const lagretUtkastResponse = await tokenXFetchGet({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYER_DRAFT_FETCH_FAILED,
+    eventType:
+      RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_UTKAST_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
     responseDataSchema: rawUtkastResponseForAGSchema,
