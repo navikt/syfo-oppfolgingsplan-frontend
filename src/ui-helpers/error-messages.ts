@@ -37,6 +37,8 @@ const standardErrorMessages: Record<CombinedErrorType, string | null> = {
   // Frontend errors
   OK_RESPONSE_BUT_RESPONSE_BODY_INVALID: null,
   SERVER_ACTION_INPUT_VALIDATION_ERROR: null,
+  FETCH_UNKNOWN_ERROR_RESPONSE: null,
+  // Legacy payload compatibility. New producers use FETCH_UNKNOWN_ERROR_RESPONSE.
   FETCH_UNKOWN_ERROR_RESPONSE: null,
   FETCH_NETWORK_ERROR:
     "Vi fikk ikke kontakt med tjenesten. Sjekk nettverket ditt og prøv igjen.",

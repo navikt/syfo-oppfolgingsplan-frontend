@@ -21,7 +21,8 @@ export async function fetchTidligerePlanForAG(
   }
 
   return await tokenXFetchGet({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYER_PREVIOUS_FETCH_FAILED,
+    eventType:
+      RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_TIDLIGERE_PLAN_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointFerdigstiltPlanForAG(narmesteLederId, planId),
     responseDataSchema: ferdigstiltPlanResponseSchema,

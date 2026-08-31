@@ -68,7 +68,7 @@ export const fetchOppfolgingsplanOversiktForAG = cache(
 
     return await tokenXFetchGetWithResult({
       eventType:
-        RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYER_OVERVIEW_FETCH_FAILED,
+        RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
       targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
       endpoint: getEndpointOversiktForAG(narmesteLederId),
       responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,

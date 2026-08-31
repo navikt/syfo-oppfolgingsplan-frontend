@@ -67,7 +67,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     const request = tokenXFetchUpdateWithResponseMock.mock.calls[0]?.[0];
 
     expect(request).toMatchObject({
-      eventType: RuntimeErrorEvent.TILTAKSPAKKE_ASSESSMENT_FETCH_FAILED,
+      eventType: RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED,
       targetApi: "FLAGGSKIPET",
       endpoint,
       requestBody: {

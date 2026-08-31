@@ -1,7 +1,10 @@
 import { logger } from "@navikt/next-logger";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
-import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
+import {
+  getRuntimeErrorOperation,
+  RuntimeErrorEvent,
+} from "@/common/runtimeErrorEvent";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetchUpdate";
 
@@ -34,7 +37,8 @@ const responseDataSchema = z.object({
 });
 
 const endpoint = "http://flaggskipet/api/v1/tiltakspakker/vurdering";
-const eventType = RuntimeErrorEvent.TILTAKSPAKKE_ASSESSMENT_FETCH_FAILED;
+const eventType = RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED;
+const operation = getRuntimeErrorOperation(eventType);
 const loggerErrorMock = vi.mocked(logger.error);
 const loggerInfoMock = vi.mocked(logger.info);
 
@@ -152,6 +156,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
         event_type: eventType,
+        operation,
         error_code: "INTERNAL_SERVER_ERROR",
         status: 500,
         method: "POST",
@@ -167,13 +172,26 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
   });
 
-  test("keeps expected structured errors at info level with the same safe contract", async () => {
+  test.each([
+    {
+      expectedEventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED,
+      expectedErrorCode: "LEGE_NOT_FOUND" as const,
+    },
+    {
+      expectedEventType:
+        RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
+      expectedErrorCode: "SYKMELDT_NOT_FOUND" as const,
+    },
+  ])("keeps expected $expectedErrorCode for its domain operation at info level", async ({
+    expectedEventType,
+    expectedErrorCode,
+  }) => {
     vi.stubGlobal(
       "fetch",
       vi.fn<typeof fetch>().mockResolvedValue(
         jsonResponse(
           {
-            type: "LEGE_NOT_FOUND",
+            type: expectedErrorCode,
             message: "Sensitive backend detail for 12345678901",
           },
           { status: 404, statusText: "Not Found" },
@@ -182,21 +200,22 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
 
     const result = await tokenXFetchUpdateWithResponse({
-      eventType,
+      eventType: expectedEventType,
       targetApi: TokenXTargetApi.FLAGGSKIPET,
       endpoint,
       responseDataSchema,
     });
 
     expect(result.error).toEqual({
-      type: "LEGE_NOT_FOUND",
+      type: expectedErrorCode,
       message: "Sensitive backend detail for 12345678901",
     });
     expect(loggerErrorMock).not.toHaveBeenCalled();
     expect(loggerInfoMock).toHaveBeenCalledWith(
       {
-        event_type: eventType,
-        error_code: "LEGE_NOT_FOUND",
+        event_type: expectedEventType,
+        operation: getRuntimeErrorOperation(expectedEventType),
+        error_code: expectedErrorCode,
         status: 404,
         method: "POST",
       },
@@ -208,6 +227,40 @@ describe("tokenXFetchUpdateWithResponse", () => {
     );
     expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
       endpoint,
+    );
+  });
+
+  test("does not downgrade a domain error code for an unrelated operation", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockResolvedValue(
+        jsonResponse(
+          {
+            type: "LEGE_NOT_FOUND",
+            message: "Unexpected for this operation",
+          },
+          { status: 404, statusText: "Not Found" },
+        ),
+      ),
+    );
+
+    await tokenXFetchUpdateWithResponse({
+      eventType,
+      targetApi: TokenXTargetApi.FLAGGSKIPET,
+      endpoint,
+      responseDataSchema,
+    });
+
+    expect(loggerInfoMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        event_type: eventType,
+        operation,
+        error_code: "LEGE_NOT_FOUND",
+        status: 404,
+        method: "POST",
+      },
+      "TokenX fetch returned a non-OK response",
     );
   });
 
@@ -237,14 +290,15 @@ describe("tokenXFetchUpdateWithResponse", () => {
 
     expect(result).toEqual({
       error: {
-        type: "FETCH_UNKOWN_ERROR_RESPONSE",
+        type: "FETCH_UNKNOWN_ERROR_RESPONSE",
       },
       data: null,
     });
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
         event_type: eventType,
-        error_code: "FETCH_UNKOWN_ERROR_RESPONSE",
+        operation,
+        error_code: "FETCH_UNKNOWN_ERROR_RESPONSE",
         status: 500,
         method: "POST",
       },
@@ -285,6 +339,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
         event_type: eventType,
+        operation,
         error_code: "FETCH_NETWORK_ERROR",
         exception_type: "Error",
         method: "POST",
@@ -323,6 +378,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
         event_type: eventType,
+        operation,
         error_code: "FETCH_NETWORK_ERROR",
         exception_type: "DOMException",
         method: "POST",
@@ -354,6 +410,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
         event_type: eventType,
+        operation,
         error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
         status: 200,
         method: "POST",
@@ -395,6 +452,7 @@ describe("tokenXFetchUpdateWithResponse", () => {
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
         event_type: eventType,
+        operation,
         error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
         status: 200,
         method: "POST",

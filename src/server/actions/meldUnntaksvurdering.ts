@@ -20,8 +20,7 @@ export async function meldUnntaksvurderingServerAction(
   }
 
   const result = await tokenXFetchUpdate({
-    eventType:
-      RuntimeErrorEvent.OPPFOLGINGSPLAN_EXCEPTION_ASSESSMENT_SUBMIT_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UNNTAKSVURDERING_SUBMIT_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     method: "POST",
     endpoint: getEndpointUnntaksvurderingerForAG(narmesteLederId),

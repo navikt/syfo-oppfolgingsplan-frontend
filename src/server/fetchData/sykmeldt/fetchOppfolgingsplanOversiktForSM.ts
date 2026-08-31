@@ -48,7 +48,7 @@ export async function fetchOppfolgingsplanOversiktForSM(): Promise<Oppfolgingspl
   }
 
   return await tokenXFetchGet({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYEE_OVERVIEW_FETCH_FAILED,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_OVERSIKT_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt/oppfolgingsplaner/oversikt`,
     responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForSM,

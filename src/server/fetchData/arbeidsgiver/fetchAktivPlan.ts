@@ -21,7 +21,8 @@ export async function fetchAktivPlanForAG(
   }
 
   return await tokenXFetchGet({
-    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYER_ACTIVE_FETCH_FAILED,
+    eventType:
+      RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_AKTIV_PLAN_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointAktivPlanForAG(narmesteLederId),
     responseDataSchema: ferdigstiltPlanResponseSchema,

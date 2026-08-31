@@ -23,7 +23,7 @@ export async function fetchTiltakspakkeVurdering(
   }
 
   return await tokenXFetchUpdateWithResponse({
-    eventType: RuntimeErrorEvent.TILTAKSPAKKE_ASSESSMENT_FETCH_FAILED,
+    eventType: RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED,
     targetApi: TokenXTargetApi.FLAGGSKIPET,
     endpoint: getEndpointFlaggskipetVurdering(),
     requestBody: { orgnumre },
