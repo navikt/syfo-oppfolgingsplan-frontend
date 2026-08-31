@@ -4,6 +4,7 @@ import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import { Theme } from "@navikt/ds-react";
 import { Suspense } from "react";
 import "@/app/globals.css";
+import { NaisMetaTags } from "@nais/apm/react";
 import { AG_SCENARIO_OPTIONS } from "@/common/demoScenario";
 import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
@@ -38,6 +39,7 @@ export default async function RootLayoutForAG({
     <html lang="no">
       <head>
         <title>Oppfolgingsplan</title>
+        <NaisMetaTags />
         <Decorator.HeadAssets />
       </head>
 

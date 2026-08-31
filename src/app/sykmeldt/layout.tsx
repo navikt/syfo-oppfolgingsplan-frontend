@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { type ReactNode, Suspense } from "react";
 import "@/app/globals.css";
+import { NaisMetaTags } from "@nais/apm/react";
 import { SM_SCENARIO_OPTIONS } from "@/common/demoScenario";
 import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
@@ -28,6 +29,7 @@ export default async function RootLayoutForSM({
   return (
     <html lang="no">
       <head>
+        <NaisMetaTags />
         <Decorator.HeadAssets />
         <Preload />
       </head>

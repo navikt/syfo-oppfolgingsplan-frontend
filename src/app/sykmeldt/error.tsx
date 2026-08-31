@@ -1,11 +1,10 @@
 "use client";
 
+import { captureException } from "@nais/apm";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
-import { logger } from "@navikt/next-logger";
 import Image from "next/image";
 import { useEffect } from "react";
 import { ERROR_PAGE_DAD_SVG } from "@/common/publicAssets";
-import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 
 // TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.
 
@@ -17,16 +16,7 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   useEffect(() => {
-    // This is a browser UI-recovery signal. The originating server operation,
-    // when known, is logged separately with its own semantic event type.
-    logger.error(
-      {
-        event_type:
-          RuntimeErrorEvent.OPPFOLGINGSPLAN_EMPLOYEE_ERROR_BOUNDARY_RENDERED,
-        exception_type: error instanceof Error ? "Error" : "UnknownError",
-      },
-      "Oppfolgingsplan employee error boundary rendered",
-    );
+    captureException(error);
   }, [error]);
 
   const errorText = "Beklager! Det har oppstått en uventet feil";
