@@ -1,6 +1,10 @@
 name: Upload rarely changed public files to NAV CDN
 on:
   push:
+    branches-ignore:
+      - 'gh-readonly-queue/**'
+    tags:
+      - '**'
     paths:
       - public/**
 
