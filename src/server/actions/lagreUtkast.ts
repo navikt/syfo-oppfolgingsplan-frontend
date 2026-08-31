@@ -1,6 +1,5 @@
 "use server";
 
-import { logger } from "@navikt/next-logger";
 import z from "zod";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
@@ -15,6 +14,7 @@ import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay
 import type { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
+import { logServerActionInputValidationError } from "./logServerActionInputValidationError";
 import { isNonEmptyString } from "./serverActionsInputValidation";
 
 const lagreUtkastResponseSchema = z.object({
@@ -42,24 +42,19 @@ export async function lagreUtkastServerAction(
 
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
-  const {
-    success: isFormValuesValid,
-    data: validatedFormValues,
-    error: inputValidationError,
-  } = oppfolgingsplanFormUnderArbeidSchema.safeParse(formValues);
+  const { success: isFormValuesValid, data: validatedFormValues } =
+    oppfolgingsplanFormUnderArbeidSchema.safeParse(formValues);
 
   if (!(isNarmesteLederIdValid && isFormValuesValid)) {
-    if (!isNarmesteLederIdValid) {
-      logger.error(
-        `lagreUtkastServerAction invalid narmesteLederId: ${narmesteLederId}`,
-      );
-    }
-
-    if (!isFormValuesValid) {
-      logger.warn(
-        `lagreUtkastServerAction formValues validation error: ${inputValidationError.message}`,
-      );
-    }
+    logServerActionInputValidationError({
+      eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED,
+      validationTarget:
+        !isNarmesteLederIdValid && !isFormValuesValid
+          ? "narmeste_leder_id_and_payload"
+          : !isNarmesteLederIdValid
+            ? "narmeste_leder_id"
+            : "payload",
+    });
 
     return {
       error: {

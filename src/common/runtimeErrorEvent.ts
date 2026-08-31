@@ -25,6 +25,8 @@ export const RuntimeErrorEvent = {
   OPPFOLGINGSPLAN_UNNTAKSVURDERING_SUBMIT_FAILED:
     "oppfolgingsplan_unntaksvurdering_submit_failed",
   OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED: "oppfolgingsplan_utkast_save_failed",
+  OPPFOLGINGSPLAN_UTKAST_FRA_AKTIV_PLAN_FAILED:
+    "oppfolgingsplan_utkast_fra_aktiv_plan_failed",
   OPPFOLGINGSPLAN_UTKAST_DELETE_FAILED: "oppfolgingsplan_utkast_delete_failed",
   TILTAKSPAKKEVURDERING_FETCH_FAILED: "tiltakspakkevurdering_fetch_failed",
 } as const;
@@ -52,6 +54,8 @@ export const RuntimeErrorOperation = {
   OPPFOLGINGSPLAN_UNNTAKSVURDERING_SUBMIT:
     "oppfolgingsplan_unntaksvurdering_submit",
   OPPFOLGINGSPLAN_UTKAST_SAVE: "oppfolgingsplan_utkast_save",
+  OPPFOLGINGSPLAN_UTKAST_FRA_AKTIV_PLAN:
+    "oppfolgingsplan_utkast_fra_aktiv_plan",
   OPPFOLGINGSPLAN_UTKAST_DELETE: "oppfolgingsplan_utkast_delete",
   TILTAKSPAKKEVURDERING_FETCH: "tiltakspakkevurdering_fetch",
 } as const;
@@ -82,6 +86,8 @@ export const runtimeErrorOperationByEvent = {
     RuntimeErrorOperation.OPPFOLGINGSPLAN_UNNTAKSVURDERING_SUBMIT,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_UTKAST_SAVE,
+  [RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_FRA_AKTIV_PLAN_FAILED]:
+    RuntimeErrorOperation.OPPFOLGINGSPLAN_UTKAST_FRA_AKTIV_PLAN,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_DELETE_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_UTKAST_DELETE,
   [RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED]:

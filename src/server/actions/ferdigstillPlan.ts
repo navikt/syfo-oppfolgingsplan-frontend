@@ -1,6 +1,5 @@
 "use server";
 
-import { logger } from "@navikt/next-logger";
 import { redirect } from "next/navigation";
 import type z from "zod";
 import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
@@ -14,6 +13,7 @@ import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay
 import type { FetchUpdateResult } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
+import { logServerActionInputValidationError } from "./logServerActionInputValidationError";
 import {
   ferdigstillPlanActionPayloadSchema,
   isNonEmptyString,
@@ -31,28 +31,24 @@ export async function ferdigstillPlanServerAction(
 
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
-  const {
-    success: isPayloadValid,
-    data: validatedPayload,
-    error: inputValidationError,
-  } = ferdigstillPlanActionPayloadSchema.safeParse(payload);
+  const { success: isPayloadValid, data: validatedPayload } =
+    ferdigstillPlanActionPayloadSchema.safeParse(payload);
 
   if (!(isNarmesteLederIdValid && isPayloadValid)) {
-    if (!isNarmesteLederIdValid) {
-      logger.error(
-        `ferdigstillPlanServerAction invalid narmesteLederId: ${narmesteLederId}`,
-      );
-    }
-    if (!isPayloadValid) {
-      logger.error(
-        `ferdigstillPlanServerAction payload validation error: ${inputValidationError.message}`,
-      );
-      return {
-        error: {
-          type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
-        },
-      };
-    }
+    logServerActionInputValidationError({
+      eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
+      validationTarget:
+        !isNarmesteLederIdValid && !isPayloadValid
+          ? "narmeste_leder_id_and_payload"
+          : !isNarmesteLederIdValid
+            ? "narmeste_leder_id"
+            : "payload",
+    });
+    return {
+      error: {
+        type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
+      },
+    };
   }
 
   const {
