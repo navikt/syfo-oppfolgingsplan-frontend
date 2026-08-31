@@ -90,7 +90,7 @@ describe("browser-observability", () => {
     });
   });
 
-  it("bevarer OTLP-strukturen og scrubber dype trace-attributter", () => {
+  it("bevarer OTLP-strukturen og fjerner URL-detaljer fra dype trace-attributter", () => {
     const item = {
       type: "trace",
       payload: {
@@ -104,7 +104,7 @@ describe("browser-observability", () => {
                       {
                         key: "url.full",
                         value: {
-                          stringValue: `https://www.nav.no/api/${leaderId}?fnr=01010112345`,
+                          stringValue: `https://www.nav.no/api/${leaderId}?opaque=syntetisk-query-canary#fragment-canary`,
                         },
                       },
                     ],
@@ -130,8 +130,7 @@ describe("browser-observability", () => {
                       {
                         key: "url.full",
                         value: {
-                          stringValue:
-                            "https://www.nav.no/api/[uuid]?fnr=[fnr]",
+                          stringValue: "https://www.nav.no/api/[uuid]",
                         },
                       },
                     ],
@@ -141,6 +140,25 @@ describe("browser-observability", () => {
             ],
           },
         ],
+      },
+    });
+  });
+
+  it("fjerner query og fragment fra URL-er i tekst og relative URL-felter", () => {
+    const item = {
+      type: "exception",
+      payload: {
+        message:
+          "Kall mot https://www.nav.no/api/plan?opaque=hemmelig#respons feilet",
+        requestUrl: `/api/${planId}?opaque=hemmelig#respons`,
+      },
+      meta: {},
+    } as Parameters<typeof sanitizeBrowserTelemetry>[0];
+
+    expect(sanitizeBrowserTelemetry(item)).toMatchObject({
+      payload: {
+        message: "Kall mot https://www.nav.no/api/plan feilet",
+        requestUrl: "/api/[uuid]",
       },
     });
   });

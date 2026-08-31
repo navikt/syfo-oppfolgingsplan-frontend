@@ -7,6 +7,8 @@ const BASE_PATH = publicEnv.NEXT_PUBLIC_BASE_PATH.replace(/\/$/, "");
 const UNKNOWN_PAGE_ID = `${BASE_PATH}/{unknown}`;
 const UUID =
   /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
+const ABSOLUTE_HTTP_URL = /https?:\/\/[^\s"'<>()[\]]+/gi;
+const RELATIVE_URL = /^(?:\/|\.\.?\/)[^\s"'<>]*$/;
 const UUID_PATH_SEGMENT =
   "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 const MAX_SCRUB_DEPTH = 32;
@@ -52,13 +54,32 @@ export function normalizeBrowserPath(value: string): string {
   );
 }
 
+const withoutQueryAndFragment = (url: string): string => {
+  const queryIndex = url.indexOf("?");
+  const fragmentIndex = url.indexOf("#");
+  const indexes = [queryIndex, fragmentIndex].filter((index) => index >= 0);
+  return indexes.length > 0 ? url.slice(0, Math.min(...indexes)) : url;
+};
+
+const scrubTelemetryString = (value: string): string => {
+  const withoutAbsoluteUrlDetails = value.replace(
+    ABSOLUTE_HTTP_URL,
+    withoutQueryAndFragment,
+  );
+  const withoutUrlDetails = RELATIVE_URL.test(withoutAbsoluteUrlDetails)
+    ? withoutQueryAndFragment(withoutAbsoluteUrlDetails)
+    : withoutAbsoluteUrlDetails;
+
+  return scrubString(withoutUrlDetails).replace(UUID, "[uuid]");
+};
+
 const scrubUuidValues = (
   value: unknown,
   depth = 0,
   seen = new WeakSet<object>(),
 ): unknown | typeof UNSAFE_PAYLOAD => {
   if (typeof value === "string") {
-    return scrubString(value).replace(UUID, "[uuid]");
+    return scrubTelemetryString(value);
   }
   if (value === null || typeof value !== "object") return value;
   if (depth >= MAX_SCRUB_DEPTH || seen.has(value)) return UNSAFE_PAYLOAD;
