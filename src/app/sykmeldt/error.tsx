@@ -1,24 +1,17 @@
 "use client";
 
-import { captureException } from "@nais/apm";
 import { BodyLong, Button, Heading } from "@navikt/ds-react";
 import Image from "next/image";
-import { useEffect } from "react";
 import { ERROR_PAGE_DAD_SVG } from "@/common/publicAssets";
 
 // TODO: Forbedre design / styling, gjøre design responsivt, rydde i tailwind-css.
 
 export default function ErrorPage({
-  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    captureException(error);
-  }, [error]);
-
   const errorText = "Beklager! Det har oppstått en uventet feil";
 
   return (

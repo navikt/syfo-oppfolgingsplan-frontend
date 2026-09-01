@@ -144,12 +144,11 @@ describe("browser-observability", () => {
     });
   });
 
-  it("fjerner query og fragment fra URL-er i tekst og relative URL-felter", () => {
+  it("fjerner query og fragment fra relative URL-er i fritekst", () => {
     const item = {
       type: "exception",
       payload: {
-        message:
-          "Kall mot https://www.nav.no/api/plan?opaque=hemmelig#respons feilet",
+        message: `Kall mot /api/${planId}?opaque=hemmelig#respons feilet`,
         requestUrl: `/api/${planId}?opaque=hemmelig#respons`,
       },
       meta: {},
@@ -157,8 +156,26 @@ describe("browser-observability", () => {
 
     expect(sanitizeBrowserTelemetry(item)).toMatchObject({
       payload: {
-        message: "Kall mot https://www.nav.no/api/plan feilet",
+        message: "Kall mot /api/[uuid] feilet",
         requestUrl: "/api/[uuid]",
+      },
+    });
+  });
+
+  it("fjerner credentials, query og fragment fra absolutte URL-er", () => {
+    const item = {
+      type: "exception",
+      payload: {
+        message: `Kall mot https://bruker:passord@www.nav.no/api/${planId}?opaque=hemmelig#respons feilet`,
+        requestUrl: `https://bruker:passord@www.nav.no/api/${planId}?opaque=hemmelig#respons`,
+      },
+      meta: {},
+    } as Parameters<typeof sanitizeBrowserTelemetry>[0];
+
+    expect(sanitizeBrowserTelemetry(item)).toMatchObject({
+      payload: {
+        message: "Kall mot https://www.nav.no/api/[uuid] feilet",
+        requestUrl: "https://www.nav.no/api/[uuid]",
       },
     });
   });

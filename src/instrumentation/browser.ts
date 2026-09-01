@@ -8,7 +8,8 @@ const UNKNOWN_PAGE_ID = `${BASE_PATH}/{unknown}`;
 const UUID =
   /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 const ABSOLUTE_HTTP_URL = /https?:\/\/[^\s"'<>()[\]]+/gi;
-const RELATIVE_URL = /^(?:\/|\.\.?\/)[^\s"'<>]*$/;
+const RELATIVE_URL_IN_TEXT =
+  /(^|[^\w/])((?:\/(?!\/)|\.{1,2}\/)[^\s"'<>()[\]]*)/g;
 const UUID_PATH_SEGMENT =
   "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 const MAX_SCRUB_DEPTH = 32;
@@ -61,14 +62,27 @@ const withoutQueryAndFragment = (url: string): string => {
   return indexes.length > 0 ? url.slice(0, Math.min(...indexes)) : url;
 };
 
+const sanitizeAbsoluteUrl = (url: string): string => {
+  const withoutDetails = withoutQueryAndFragment(url);
+
+  try {
+    const parsed = new URL(withoutDetails);
+    return `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
+  } catch {
+    return withoutDetails.replace(/^(https?:\/\/)[^/]*@/i, "$1");
+  }
+};
+
 const scrubTelemetryString = (value: string): string => {
   const withoutAbsoluteUrlDetails = value.replace(
     ABSOLUTE_HTTP_URL,
-    withoutQueryAndFragment,
+    sanitizeAbsoluteUrl,
   );
-  const withoutUrlDetails = RELATIVE_URL.test(withoutAbsoluteUrlDetails)
-    ? withoutQueryAndFragment(withoutAbsoluteUrlDetails)
-    : withoutAbsoluteUrlDetails;
+  const withoutUrlDetails = withoutAbsoluteUrlDetails.replace(
+    RELATIVE_URL_IN_TEXT,
+    (_match, prefix: string, url: string) =>
+      `${prefix}${withoutQueryAndFragment(url)}`,
+  );
 
   return scrubString(withoutUrlDetails).replace(UUID, "[uuid]");
 };
