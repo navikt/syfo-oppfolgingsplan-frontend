@@ -1,12 +1,17 @@
 import { logger } from "@navikt/next-logger";
 import {
   getRuntimeErrorOperation,
+  RuntimeAuthenticationErrorCode,
   RuntimeErrorEvent,
   type RuntimeErrorEvent as RuntimeErrorEventType,
   type RuntimeErrorHttpMethod,
 } from "@/common/runtimeErrorEvent";
 import type { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
+import {
+  isIdPortenTokenValidationError,
+  isTokenXExchangeError,
+} from "../auth/authError";
 import { type FetchResultError, fetchResultErrorSchema } from "./FetchResult";
 
 /**
@@ -14,14 +19,58 @@ import { type FetchResultError, fetchResultErrorSchema } from "./FetchResult";
  * A matching HTTP/error code from another operation remains an operational
  * error instead of being silently downgraded globally.
  */
-const EXPECTED_ERROR_TYPES_BY_EVENT: Partial<
-  Record<RuntimeErrorEventType, ReadonlySet<CombinedErrorType>>
-> = {
-  [RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED]:
-    new Set<CombinedErrorType>(["SYKMELDT_NOT_FOUND"]),
-  [RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED]:
-    new Set<CombinedErrorType>(["LEGE_NOT_FOUND"]),
+type ExpectedDomainOutcome = {
+  eventType: RuntimeErrorEventType;
+  errorType: CombinedErrorType;
+  status: number;
 };
+
+const EXPECTED_DOMAIN_OUTCOMES = [
+  {
+    eventType:
+      RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
+    errorType: "SYKMELDT_NOT_FOUND",
+    status: 404,
+  },
+  {
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED,
+    errorType: "LEGE_NOT_FOUND",
+    status: 404,
+  },
+] as const satisfies readonly ExpectedDomainOutcome[];
+
+export function getAndLogAuthenticationErrorResult({
+  error,
+  eventType,
+  method,
+}: {
+  error: unknown;
+  eventType: RuntimeErrorEventType;
+  method: RuntimeErrorHttpMethod;
+}): FetchResultError | null {
+  let errorCode: RuntimeAuthenticationErrorCode;
+  if (isIdPortenTokenValidationError(error)) {
+    errorCode = RuntimeAuthenticationErrorCode.TOKEN_VALIDATION_FAILED;
+  } else if (isTokenXExchangeError(error)) {
+    errorCode = RuntimeAuthenticationErrorCode.TOKEN_EXCHANGE_FAILED;
+  } else {
+    return null;
+  }
+
+  logger.error(
+    {
+      event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
+      error_code: errorCode,
+      method,
+    },
+    "TokenX authentication failed",
+  );
+
+  return {
+    type: FrontendErrorType.AUTHENTICATION_ERROR,
+  };
+}
 
 export function getAndLogFetchNetworkError({
   error,
@@ -73,7 +122,11 @@ export async function getAndLogErrorResultFromNonOkResponse({
     };
 
     if (
-      EXPECTED_ERROR_TYPES_BY_EVENT[eventType]?.has(parsedErrorResponse.type)
+      isExpectedDomainOutcome(
+        eventType,
+        parsedErrorResponse.type,
+        response.status,
+      )
     ) {
       logger.info(logMetadata, logMessage);
     } else {
@@ -99,6 +152,19 @@ export async function getAndLogErrorResultFromNonOkResponse({
       type: errorType,
     };
   }
+}
+
+function isExpectedDomainOutcome(
+  eventType: RuntimeErrorEventType,
+  errorType: CombinedErrorType,
+  status: number,
+): boolean {
+  return EXPECTED_DOMAIN_OUTCOMES.some(
+    (outcome) =>
+      outcome.eventType === eventType &&
+      outcome.errorType === errorType &&
+      outcome.status === status,
+  );
 }
 
 function getSafeExceptionType(error: unknown): string {

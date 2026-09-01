@@ -3,8 +3,13 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import {
   getRuntimeErrorOperation,
+  RuntimeAuthenticationErrorCode,
   RuntimeErrorEvent,
 } from "@/common/runtimeErrorEvent";
+import {
+  IdPortenTokenValidationError,
+  TokenXExchangeError,
+} from "@/server/auth/authError";
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetchUpdate";
 
@@ -262,6 +267,154 @@ describe("tokenXFetchUpdateWithResponse", () => {
       },
       "TokenX fetch returned a non-OK response",
     );
+  });
+
+  test.each([
+    {
+      expectedEventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED,
+      expectedErrorCode: "LEGE_NOT_FOUND" as const,
+      status: 400,
+    },
+    {
+      expectedEventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED,
+      expectedErrorCode: "LEGE_NOT_FOUND" as const,
+      status: 503,
+    },
+    {
+      expectedEventType:
+        RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
+      expectedErrorCode: "SYKMELDT_NOT_FOUND" as const,
+      status: 400,
+    },
+    {
+      expectedEventType:
+        RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
+      expectedErrorCode: "SYKMELDT_NOT_FOUND" as const,
+      status: 503,
+    },
+  ])("keeps $expectedErrorCode at error level for unexpected status $status", async ({
+    expectedEventType,
+    expectedErrorCode,
+    status,
+  }) => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockResolvedValue(
+        jsonResponse(
+          {
+            type: expectedErrorCode,
+            message: "Sensitive backend detail for 12345678901",
+          },
+          { status },
+        ),
+      ),
+    );
+
+    await tokenXFetchUpdateWithResponse({
+      eventType: expectedEventType,
+      targetApi: TokenXTargetApi.FLAGGSKIPET,
+      endpoint,
+      responseDataSchema,
+    });
+
+    expect(loggerInfoMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        event_type: expectedEventType,
+        operation: getRuntimeErrorOperation(expectedEventType),
+        error_code: expectedErrorCode,
+        upstream_status: status,
+        method: "POST",
+      },
+      "TokenX fetch returned a non-OK response",
+    );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+  });
+
+  test("owns a typed token-validation failure exactly once", async () => {
+    const privateDetail = "private-auth-detail-fnr-12345678901";
+    const validationError = new IdPortenTokenValidationError();
+    validationError.cause = new Error(privateDetail);
+    validateAndGetIdPortenTokenMock.mockRejectedValue(validationError);
+    const fetchMock = vi.fn<typeof fetch>();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await tokenXFetchUpdateWithResponse({
+      eventType,
+      targetApi: TokenXTargetApi.FLAGGSKIPET,
+      endpoint,
+      responseDataSchema,
+    });
+
+    expect(result).toEqual({
+      error: { type: "AUTHENTICATION_ERROR" },
+      data: null,
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        event_type: eventType,
+        operation,
+        error_code: RuntimeAuthenticationErrorCode.TOKEN_VALIDATION_FAILED,
+        method: "POST",
+      },
+      "TokenX authentication failed",
+    );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    expect(JSON.stringify(loggerErrorMock.mock.calls)).not.toContain(
+      privateDetail,
+    );
+  });
+
+  test("owns a typed TokenX exchange failure exactly once", async () => {
+    const privateDetail = "private-exchange-detail-fnr-12345678901";
+    const exchangeError = new TokenXExchangeError();
+    exchangeError.cause = new Error(privateDetail);
+    exchangeIdPortenTokenForTokenXOboTokenMock.mockRejectedValue(exchangeError);
+    const fetchMock = vi.fn<typeof fetch>();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await tokenXFetchUpdateWithResponse({
+      eventType,
+      targetApi: TokenXTargetApi.FLAGGSKIPET,
+      endpoint,
+      responseDataSchema,
+    });
+
+    expect(result).toEqual({
+      error: { type: "AUTHENTICATION_ERROR" },
+      data: null,
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        event_type: eventType,
+        operation,
+        error_code: RuntimeAuthenticationErrorCode.TOKEN_EXCHANGE_FAILED,
+        method: "POST",
+      },
+      "TokenX authentication failed",
+    );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    expect(JSON.stringify(loggerErrorMock.mock.calls)).not.toContain(
+      privateDetail,
+    );
+  });
+
+  test("rethrows unclassified authentication setup failures without logging", async () => {
+    const unexpectedError = new Error("unexpected setup failure");
+    validateAndGetIdPortenTokenMock.mockRejectedValue(unexpectedError);
+
+    await expect(
+      tokenXFetchUpdateWithResponse({
+        eventType,
+        targetApi: TokenXTargetApi.FLAGGSKIPET,
+        endpoint,
+        responseDataSchema,
+      }),
+    ).rejects.toBe(unexpectedError);
+
+    expect(loggerErrorMock).not.toHaveBeenCalled();
   });
 
   test("returns unknown error result without logging an unstructured response body", async () => {

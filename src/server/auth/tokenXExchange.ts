@@ -2,7 +2,7 @@ import "server-only";
 import { requestOboToken } from "@navikt/oasis";
 import { cache } from "react";
 import { getServerEnv } from "@/env-variables/serverEnv";
-import { logWarningMessageAndThrowAuthError } from "./handleAuthError";
+import { TokenXExchangeError } from "./authError";
 
 export enum TokenXTargetApi {
   SYFO_OPPFOLGINGSPLAN_BACKEND = "SYFO_OPPFOLGINGSPLAN_BACKEND",
@@ -20,15 +20,22 @@ export enum TokenXTargetApi {
  * Throws an error if token exchange is unsuccessful.
  * */
 export const exchangeIdPortenTokenForTokenXOboToken = cache(
-  async (idPortenToken: string, targetApi: TokenXTargetApi) => {
-    const tokenXGrant = await requestOboToken(
-      idPortenToken,
-      getClientIdForTokenXTargetApi(targetApi),
-    );
+  async (
+    idPortenToken: string,
+    targetApi: TokenXTargetApi,
+  ): Promise<string> => {
+    let tokenXGrant: Awaited<ReturnType<typeof requestOboToken>>;
+    try {
+      tokenXGrant = await requestOboToken(
+        idPortenToken,
+        getClientIdForTokenXTargetApi(targetApi),
+      );
+    } catch {
+      throw new TokenXExchangeError();
+    }
 
     if (!tokenXGrant.ok) {
-      const errorMessage = `Failed to exchange idporten token: ${tokenXGrant.error}`;
-      logWarningMessageAndThrowAuthError(errorMessage);
+      throw new TokenXExchangeError();
     }
 
     return tokenXGrant.token;

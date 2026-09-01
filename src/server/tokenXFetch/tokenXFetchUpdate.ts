@@ -8,11 +8,11 @@ import {
   type TokenXTargetApi,
 } from "../auth/tokenXExchange";
 import {
+  getAndLogAuthenticationErrorResult,
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
 } from "./errorHandling";
 import type {
-  FetchResultError,
   FetchUpdateResult,
   FetchUpdateResultWithResponse,
 } from "./FetchResult";
@@ -49,8 +49,16 @@ export async function tokenXFetchUpdate({
       targetApi,
     );
   } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType,
+      method,
+    });
+    if (!errorResult) {
+      throw error;
+    }
     return {
-      error: error as FetchResultError,
+      error: errorResult,
     };
   }
 
@@ -118,8 +126,16 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
       targetApi,
     );
   } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType,
+      method,
+    });
+    if (!errorResult) {
+      throw error;
+    }
     return {
-      error: error as FetchResultError,
+      error: errorResult,
       data: null,
     };
   }

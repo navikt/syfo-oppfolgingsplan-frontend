@@ -13,10 +13,14 @@ export const RuntimeErrorEvent = {
     "oppfolgingsplan_arbeidsgiver_tidligere_plan_fetch_failed",
   OPPFOLGINGSPLAN_ARBEIDSGIVER_UTKAST_FETCH_FAILED:
     "oppfolgingsplan_arbeidsgiver_utkast_fetch_failed",
+  OPPFOLGINGSPLAN_ARBEIDSGIVER_PDF_FETCH_FAILED:
+    "oppfolgingsplan_arbeidsgiver_pdf_fetch_failed",
   OPPFOLGINGSPLAN_SYKMELDT_FERDIGSTILT_PLAN_FETCH_FAILED:
     "oppfolgingsplan_sykmeldt_ferdigstilt_plan_fetch_failed",
   OPPFOLGINGSPLAN_SYKMELDT_OVERSIKT_FETCH_FAILED:
     "oppfolgingsplan_sykmeldt_oversikt_fetch_failed",
+  OPPFOLGINGSPLAN_SYKMELDT_PDF_FETCH_FAILED:
+    "oppfolgingsplan_sykmeldt_pdf_fetch_failed",
   OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED: "oppfolgingsplan_del_med_lege_failed",
   OPPFOLGINGSPLAN_DEL_MED_NAV_VEILEDER_FAILED:
     "oppfolgingsplan_del_med_nav_veileder_failed",
@@ -34,6 +38,15 @@ export const RuntimeErrorEvent = {
 export type RuntimeErrorEvent =
   (typeof RuntimeErrorEvent)[keyof typeof RuntimeErrorEvent];
 
+/** Authentication outcomes are technical and must remain bounded. */
+export const RuntimeAuthenticationErrorCode = {
+  TOKEN_VALIDATION_FAILED: "TOKEN_VALIDATION_FAILED",
+  TOKEN_EXCHANGE_FAILED: "TOKEN_EXCHANGE_FAILED",
+} as const;
+
+export type RuntimeAuthenticationErrorCode =
+  (typeof RuntimeAuthenticationErrorCode)[keyof typeof RuntimeAuthenticationErrorCode];
+
 /** Stable operation names describe what was attempted, without the outcome. */
 export const RuntimeErrorOperation = {
   OPPFOLGINGSPLAN_ARBEIDSGIVER_AKTIV_PLAN_FETCH:
@@ -44,10 +57,13 @@ export const RuntimeErrorOperation = {
     "oppfolgingsplan_arbeidsgiver_tidligere_plan_fetch",
   OPPFOLGINGSPLAN_ARBEIDSGIVER_UTKAST_FETCH:
     "oppfolgingsplan_arbeidsgiver_utkast_fetch",
+  OPPFOLGINGSPLAN_ARBEIDSGIVER_PDF_FETCH:
+    "oppfolgingsplan_arbeidsgiver_pdf_fetch",
   OPPFOLGINGSPLAN_SYKMELDT_FERDIGSTILT_PLAN_FETCH:
     "oppfolgingsplan_sykmeldt_ferdigstilt_plan_fetch",
   OPPFOLGINGSPLAN_SYKMELDT_OVERSIKT_FETCH:
     "oppfolgingsplan_sykmeldt_oversikt_fetch",
+  OPPFOLGINGSPLAN_SYKMELDT_PDF_FETCH: "oppfolgingsplan_sykmeldt_pdf_fetch",
   OPPFOLGINGSPLAN_DEL_MED_LEGE: "oppfolgingsplan_del_med_lege",
   OPPFOLGINGSPLAN_DEL_MED_NAV_VEILEDER: "oppfolgingsplan_del_med_nav_veileder",
   OPPFOLGINGSPLAN_FERDIGSTILLING: "oppfolgingsplan_ferdigstilling",
@@ -75,10 +91,14 @@ export const runtimeErrorOperationByEvent = {
     RuntimeErrorOperation.OPPFOLGINGSPLAN_ARBEIDSGIVER_TIDLIGERE_PLAN_FETCH,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_UTKAST_FETCH_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_ARBEIDSGIVER_UTKAST_FETCH,
+  [RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_PDF_FETCH_FAILED]:
+    RuntimeErrorOperation.OPPFOLGINGSPLAN_ARBEIDSGIVER_PDF_FETCH,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_FERDIGSTILT_PLAN_FETCH_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_SYKMELDT_FERDIGSTILT_PLAN_FETCH,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_OVERSIKT_FETCH_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_SYKMELDT_OVERSIKT_FETCH,
+  [RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_PDF_FETCH_FAILED]:
+    RuntimeErrorOperation.OPPFOLGINGSPLAN_SYKMELDT_PDF_FETCH,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED]:
     RuntimeErrorOperation.OPPFOLGINGSPLAN_DEL_MED_LEGE,
   [RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_NAV_VEILEDER_FAILED]:

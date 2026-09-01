@@ -18,13 +18,16 @@ import {
 import { z } from "zod";
 import {
   getRuntimeErrorOperation,
+  RuntimeAuthenticationErrorCode,
   RuntimeErrorEvent,
   RuntimeErrorOperation,
   runtimeErrorOperationByEvent,
 } from "@/common/runtimeErrorEvent";
 import { frontendErrorTypeSchema } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "@/server/actions/FrontendErrorTypeEnum";
+import { TokenXExchangeError } from "@/server/auth/authError";
 import {
+  getAndLogAuthenticationErrorResult,
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
 } from "../errorHandling";
@@ -131,6 +134,16 @@ describe("serialized runtime error contract", () => {
     }
   });
 
+  test("keeps authentication error codes closed and low-cardinality", () => {
+    const codes = Object.values(RuntimeAuthenticationErrorCode);
+
+    expect(codes).toEqual(["TOKEN_VALIDATION_FAILED", "TOKEN_EXCHANGE_FAILED"]);
+    expect(new Set(codes).size).toBe(codes.length);
+    for (const code of codes) {
+      expect(code).toMatch(/^[A-Z][A-Z0-9_]*$/);
+    }
+  });
+
   test("produces the corrected unknown-response code while accepting legacy payloads", () => {
     expect(FrontendErrorType.FETCH_UNKNOWN_ERROR_RESPONSE).toBe(
       "FETCH_UNKNOWN_ERROR_RESPONSE",
@@ -180,6 +193,40 @@ describe("serialized runtime error contract", () => {
     expect(serializedLog).not.toContain("12345678901");
     expect(serializedLog).not.toContain("example.test");
     expect(serializedLog).not.toContain("secret-canary");
+  });
+
+  test("serializes one caller-owned auth failure without underlying details", async () => {
+    const traceId = "1734567890abcdef1234567890abcdef";
+    const eventType = RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED;
+    const privateDetail = "private-auth-detail-fnr-12345678901-at-example.test";
+    const exchangeError = new TokenXExchangeError();
+    exchangeError.cause = new Error(privateDetail);
+
+    const result = await withActiveTrace(traceId, () =>
+      getAndLogAuthenticationErrorResult({
+        error: exchangeError,
+        eventType,
+        method: "POST",
+      }),
+    );
+
+    expect(result).toEqual({ type: "AUTHENTICATION_ERROR" });
+    const parsedLog = onlySerializedLog();
+    expect(parsedLog).toMatchObject({
+      level: "error",
+      event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
+      error_code: RuntimeAuthenticationErrorCode.TOKEN_EXCHANGE_FAILED,
+      method: "POST",
+      trace_id: traceId,
+      message: "TokenX authentication failed",
+    });
+    expect(parsedLog).not.toHaveProperty("err");
+    expect(parsedLog).not.toHaveProperty("stack");
+    expect(parsedLog).not.toHaveProperty("cause");
+    expect(serializedLogLines[0]).not.toContain(privateDetail);
+    expect(serializedLogLines[0]).not.toContain("12345678901");
+    expect(serializedLogLines[0]).not.toContain("example.test");
   });
 
   test("serializes an unexpected backend response without its body", async () => {

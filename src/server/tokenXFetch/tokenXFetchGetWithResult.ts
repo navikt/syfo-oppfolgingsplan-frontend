@@ -8,6 +8,7 @@ import {
   type TokenXTargetApi,
 } from "../auth/tokenXExchange";
 import {
+  getAndLogAuthenticationErrorResult,
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
 } from "./errorHandling";
@@ -35,14 +36,27 @@ export async function tokenXFetchGetWithResult<S extends z.ZodType>({
   responseDataSchema: S;
   redirectAfterLoginUrl: string;
 }): Promise<FetchGetResult<z.infer<S>>> {
-  const idPortenToken = await validateAndGetIdPortenTokenOrRedirectToLogin(
-    redirectAfterLoginUrl,
-  );
+  let oboToken: string;
+  try {
+    const idPortenToken = await validateAndGetIdPortenTokenOrRedirectToLogin(
+      redirectAfterLoginUrl,
+    );
 
-  const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
-    idPortenToken,
-    targetApi,
-  );
+    oboToken = await exchangeIdPortenTokenForTokenXOboToken(
+      idPortenToken,
+      targetApi,
+    );
+  } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType,
+      method: "GET",
+    });
+    if (errorResult) {
+      throw errorResult;
+    }
+    throw error;
+  }
 
   let response: Response;
   try {
