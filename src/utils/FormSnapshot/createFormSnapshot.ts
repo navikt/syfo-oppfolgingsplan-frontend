@@ -13,12 +13,10 @@ type FormValues = Record<string, string | string[] | boolean | null>;
 export function createFormSnapshot(
   formShape: FormSnapshotFormShape,
   values: FormValues,
-  evalueringPaaminnelse = false,
 ): FormSnapshot {
   try {
     const formSnapsthot = {
       ...formShape,
-      evalueringPaaminnelse,
       sections: formShape.sections.map((sectionShape) => ({
         ...sectionShape,
         fields: sectionShape.fields.map((fieldShape) => {

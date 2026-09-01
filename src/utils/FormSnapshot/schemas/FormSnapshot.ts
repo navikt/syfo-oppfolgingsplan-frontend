@@ -48,7 +48,6 @@ export const dateTimeFieldSnapshotSchema = z.object({
 
 export const formSnapshotSchema = z.object({
   ...formShapeSchema.shape,
-  evalueringPaaminnelse: z.boolean().default(false),
   sections: z.array(
     z.object({
       ...formSectionShapeSchema.shape,
