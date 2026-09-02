@@ -63,7 +63,7 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
     expect(tokenXFetchUpdateMock).toHaveBeenCalledWith(
       expect.objectContaining({
         requestBody: expect.objectContaining({
-          content: expect.objectContaining({ evalueringPaaminnelse: value }),
+          evalueringPaaminnelse: value,
         }),
       }),
     );

@@ -68,11 +68,7 @@ export async function ferdigstillPlanServerAction(
   const formShape = getOppfolgingsplanFormShape(
     includeIkkeMedvirketBegrunnelseFieldInFormSnapshot,
   );
-  const formSnapshot = createFormSnapshot(
-    formShape,
-    formValues,
-    evalueringPaaminnelse,
-  );
+  const formSnapshot = createFormSnapshot(formShape, formValues);
 
   const fetchResult = await tokenXFetchUpdate({
     eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
@@ -81,6 +77,7 @@ export async function ferdigstillPlanServerAction(
     requestBody: {
       content: formSnapshot,
       evalueringsdato: evalueringsDatoIsoString,
+      evalueringPaaminnelse: evalueringPaaminnelse,
     },
   });
 
