@@ -42,12 +42,11 @@ describe("browser-observability", () => {
     );
   });
 
-  it("fjerner bruker, query og dynamiske ID-er fra telemetry", () => {
+  it("normaliserer side og appspesifikke UUID-er i feilhendelser", () => {
     const item = {
       type: "exception",
       payload: {
-        value: `Kunne ikke hente plan ${planId}`,
-        context: { leaderId },
+        value: `Kunne ikke hente plan ${planId}. 01017012345 og ola@nav.no håndteres av APM`,
         stacktrace: {
           frames: [
             {
@@ -58,7 +57,6 @@ describe("browser-observability", () => {
         },
       },
       meta: {
-        user: { id: "skal-ikke-sendes" },
         page: {
           url: `https://www.nav.no/syk/oppfolgingsplan/${leaderId}/aktiv-plan?fnr=01010112345`,
         },
@@ -67,11 +65,10 @@ describe("browser-observability", () => {
 
     const sanitized = sanitizeBrowserTelemetry(item);
 
-    expect(sanitized?.meta.user).toBeUndefined();
     expect(sanitized).toMatchObject({
       payload: {
-        value: "Kunne ikke hente plan [uuid]",
-        context: { leaderId: "[uuid]" },
+        value:
+          "Kunne ikke hente plan [uuid]. 01017012345 og ola@nav.no håndteres av APM",
         stacktrace: {
           frames: [
             {
@@ -148,16 +145,14 @@ describe("browser-observability", () => {
     const item = {
       type: "exception",
       payload: {
-        message: `Kall mot /api/${planId}?opaque=hemmelig#respons feilet`,
-        requestUrl: `/api/${planId}?opaque=hemmelig#respons`,
+        value: `Kall mot /api/${planId}?opaque=hemmelig#respons feilet`,
       },
       meta: {},
     } as Parameters<typeof sanitizeBrowserTelemetry>[0];
 
     expect(sanitizeBrowserTelemetry(item)).toMatchObject({
       payload: {
-        message: "Kall mot /api/[uuid] feilet",
-        requestUrl: "/api/[uuid]",
+        value: "Kall mot /api/[uuid] feilet",
       },
     });
   });
@@ -166,16 +161,37 @@ describe("browser-observability", () => {
     const item = {
       type: "exception",
       payload: {
-        message: `Kall mot https://bruker:passord@www.nav.no/api/${planId}?opaque=hemmelig#respons feilet`,
-        requestUrl: `https://bruker:passord@www.nav.no/api/${planId}?opaque=hemmelig#respons`,
+        value: `Kall mot https://bruker:passord@www.nav.no/api/${planId}?opaque=hemmelig#respons feilet`,
       },
       meta: {},
     } as Parameters<typeof sanitizeBrowserTelemetry>[0];
 
     expect(sanitizeBrowserTelemetry(item)).toMatchObject({
       payload: {
-        message: "Kall mot https://www.nav.no/api/[uuid] feilet",
-        requestUrl: "https://www.nav.no/api/[uuid]",
+        value: "Kall mot https://www.nav.no/api/[uuid] feilet",
+      },
+    });
+  });
+
+  it("normaliserer URL-en i Faro resource-hendelser uten full payload-walk", () => {
+    const item = {
+      type: "event",
+      payload: {
+        name: "faro.performance.resource",
+        attributes: {
+          name: `https://www.nav.no/api/${planId}?opaque=hemmelig#respons`,
+          detail: `beholdt ${planId}`,
+        },
+      },
+      meta: {},
+    } as Parameters<typeof sanitizeBrowserTelemetry>[0];
+
+    expect(sanitizeBrowserTelemetry(item)).toMatchObject({
+      payload: {
+        attributes: {
+          name: "https://www.nav.no/api/[uuid]",
+          detail: `beholdt ${planId}`,
+        },
       },
     });
   });

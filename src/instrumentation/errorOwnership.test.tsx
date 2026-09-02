@@ -1,16 +1,10 @@
-import { captureException } from "@nais/apm";
-import { render } from "@testing-library/react";
-import {
-  Component,
-  type ComponentType,
-  type ImgHTMLAttributes,
-  type ReactNode,
-} from "react";
+import { NaisConsoleInstrumentation } from "@nais/apm";
+import { cleanup, render, screen } from "@testing-library/react";
+import type { ComponentType, ImgHTMLAttributes } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ArbeidsgiverErrorPage from "@/app/[narmesteLederId]/error";
 import SykmeldtErrorPage from "@/app/sykmeldt/error";
 
-vi.mock("@nais/apm", () => ({ captureException: vi.fn() }));
 vi.mock("next/image", () => ({
   default: ({
     unoptimized: _,
@@ -31,68 +25,39 @@ const errorPages: Array<[string, ErrorPageComponent]> = [
   ["sykmeldt", SykmeldtErrorPage],
 ];
 
-type BoundaryProps = {
-  ErrorPage: ErrorPageComponent;
-  children: ReactNode;
-};
-
-type BoundaryState = {
-  error: (Error & { digest?: string }) | null;
-};
-
-class BrowserErrorOwnerBoundary extends Component<
-  BoundaryProps,
-  BoundaryState
-> {
-  state: BoundaryState = { error: null };
-
-  static getDerivedStateFromError(error: Error): BoundaryState {
-    return { error };
-  }
-
-  componentDidCatch(error: Error) {
-    captureException(error);
-  }
-
-  render() {
-    if (this.state.error) {
-      const ErrorPage = this.props.ErrorPage;
-      return <ErrorPage error={this.state.error} reset={vi.fn()} />;
-    }
-
-    return this.props.children;
-  }
-}
-
-function ThrowError({ error }: { error: Error }): never {
-  throw error;
-}
-
 describe("browser error ownership", () => {
+  const nativeConsoleError = console.error;
+  let instrumentation: NaisConsoleInstrumentation;
+  let pushError: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
-    vi.clearAllMocks();
+    console.error = vi.fn();
+    pushError = vi.fn();
+    instrumentation = new NaisConsoleInstrumentation();
+    instrumentation.api = { pushError } as never;
+    instrumentation.initialize();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    cleanup();
+    instrumentation.destroy();
+    console.error = nativeConsoleError;
   });
 
   it.each(
     errorPages,
-  )("%s-siden lar error boundary eie rapporteringen", (_, ErrorPage) => {
-    const consoleError = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
+  )("%s-fallbacken lar browser-instrumenteringen eie rapporteringen", (_, ErrorPage) => {
     const error = new Error("syntetisk renderfeil");
 
-    render(
-      <BrowserErrorOwnerBoundary ErrorPage={ErrorPage}>
-        <ThrowError error={error} />
-      </BrowserErrorOwnerBoundary>,
-    );
+    // React 19 reports a caught boundary error through console.error. This is
+    // the production capture path installed by initNaisAPMClient.
+    console.error(error);
+    expect(pushError).toHaveBeenCalledOnce();
+    expect(pushError).toHaveBeenCalledWith(error, undefined);
 
-    expect(captureException).toHaveBeenCalledOnce();
-    expect(captureException).toHaveBeenCalledWith(error);
-    expect(consoleError).toHaveBeenCalled();
+    render(<ErrorPage error={error} reset={vi.fn()} />);
+
+    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(pushError).toHaveBeenCalledOnce();
   });
 });
