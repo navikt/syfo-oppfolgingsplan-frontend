@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import AktivPlanForSM from "@/components/FerdigstiltPlanSider/AktivPlanSide/AktivPlanForSM.tsx";
 import FerdigstiltPlanSkeleton from "@/components/FerdigstiltPlanSider/Shared/FerdigstiltPlanSkeleton.tsx";
-import { Lumi } from "@/ui/Lumi/Lumi";
-import { lumiSurveySM } from "@/ui/Lumi/lumiSurveySM";
 
 export default async function AktivPlanPageForSM({
   params,
@@ -12,12 +10,6 @@ export default async function AktivPlanPageForSM({
   return (
     <Suspense fallback={<FerdigstiltPlanSkeleton />}>
       <AktivPlanForSM planId={planId} />
-
-      <Lumi
-        feedbackId="Oppfølgingsplan nytteverdi - sykmeldt"
-        behavior={{ questionLayout: "steps", showProgress: true }}
-        survey={lumiSurveySM}
-      />
     </Suspense>
   );
 }

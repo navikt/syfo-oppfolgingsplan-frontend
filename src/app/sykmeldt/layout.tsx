@@ -2,7 +2,6 @@ import { Theme } from "@navikt/ds-react";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { type ReactNode, Suspense } from "react";
-import "@navikt/lumi-survey/styles.css";
 import "@/app/globals.css";
 import { SM_SCENARIO_OPTIONS } from "@/common/demoScenario";
 import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";

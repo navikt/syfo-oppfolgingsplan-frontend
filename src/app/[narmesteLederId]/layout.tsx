@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
-import "@navikt/lumi-survey/styles.css";
 import { Theme } from "@navikt/ds-react";
 import { Suspense } from "react";
 import "@/app/globals.css";

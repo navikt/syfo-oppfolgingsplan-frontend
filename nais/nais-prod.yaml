@@ -55,10 +55,6 @@ spec:
   ingresses:
     - 'https://www.nav.no/syk/oppfolgingsplan'
   env:
-    - name: LUMI_API_HOST
-      value: "http://lumi-api"
-    - name: LUMI_API_CLIENT_ID
-      value: prod-gcp:team-esyfo:lumi-api
     - name: SYFO_OPPFOLGINGSPLAN_BACKEND_HOST
       value: http://syfo-oppfolgingsplan-backend
     - name: SYFO_OPPFOLGINGSPLAN_BACKEND_CLIENT_ID
@@ -74,6 +70,5 @@ spec:
       rules:
         - application: syfo-oppfolgingsplan-backend
         - application: flaggskipet
-        - application: lumi-api
         - application: nav-dekoratoren
           namespace: personbruker
