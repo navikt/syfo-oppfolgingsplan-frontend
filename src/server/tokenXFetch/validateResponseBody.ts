@@ -6,6 +6,8 @@ import {
   type RuntimeErrorHttpMethod,
 } from "@/common/runtimeErrorEvent";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
+import { getSafeZodIssues } from "../safeZodIssues";
+import { getSafeExceptionType } from "./errorHandling";
 
 /**
  * Returns validation result, and logs error if validation fails.
@@ -30,15 +32,10 @@ export async function validateResponseBody<S extends z.ZodType>({
       validatedData: null;
     }
 > {
+  let responseData: unknown;
   try {
-    const responseData = await response.json();
-    const validatedData = responseDataSchema.parse(responseData);
-    return {
-      success: true,
-      validatedData,
-    };
-  } catch {
-    // Response data is invalid
+    responseData = await response.json();
+  } catch (error) {
     logger.error(
       {
         event_type: eventType,
@@ -46,8 +43,10 @@ export async function validateResponseBody<S extends z.ZodType>({
         error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
         upstream_status: response.status,
         method,
+        validation_stage: "json_parse",
+        exception_type: getSafeExceptionType(error),
       },
-      "TokenX fetch returned an invalid success response body",
+      "TokenX fetch returned invalid JSON in a success response",
     );
 
     return {
@@ -55,4 +54,34 @@ export async function validateResponseBody<S extends z.ZodType>({
       validatedData: null,
     };
   }
+
+  const validationResult = responseDataSchema.safeParse(responseData);
+  if (!validationResult.success) {
+    logger.error(
+      {
+        event_type: eventType,
+        operation: getRuntimeErrorOperation(eventType),
+        error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
+        upstream_status: response.status,
+        method,
+        validation_stage: "schema",
+        validation_issues: getSafeZodIssues(
+          validationResult.error,
+          responseDataSchema,
+        ),
+        validation_issue_count: validationResult.error.issues.length,
+      },
+      "TokenX fetch success response did not match schema",
+    );
+
+    return {
+      success: false,
+      validatedData: null,
+    };
+  }
+
+  return {
+    success: true,
+    validatedData: validationResult.data,
+  };
 }

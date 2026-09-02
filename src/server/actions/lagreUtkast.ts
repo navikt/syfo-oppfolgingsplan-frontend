@@ -42,18 +42,22 @@ export async function lagreUtkastServerAction(
 
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
-  const { success: isFormValuesValid, data: validatedFormValues } =
+  const formValuesValidation =
     oppfolgingsplanFormUnderArbeidSchema.safeParse(formValues);
 
-  if (!(isNarmesteLederIdValid && isFormValuesValid)) {
+  if (!(isNarmesteLederIdValid && formValuesValidation.success)) {
     logServerActionInputValidationError({
       eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED,
       validationTarget:
-        !isNarmesteLederIdValid && !isFormValuesValid
+        !isNarmesteLederIdValid && !formValuesValidation.success
           ? "narmeste_leder_id_and_payload"
           : !isNarmesteLederIdValid
             ? "narmeste_leder_id"
             : "payload",
+      validationError: formValuesValidation.success
+        ? undefined
+        : formValuesValidation.error,
+      validationSchema: oppfolgingsplanFormUnderArbeidSchema,
     });
 
     return {
@@ -63,6 +67,8 @@ export async function lagreUtkastServerAction(
       data: null,
     };
   }
+
+  const validatedFormValues = formValuesValidation.data;
 
   const requestBody: LagreUtkastRequestBody = {
     content: validatedFormValues,

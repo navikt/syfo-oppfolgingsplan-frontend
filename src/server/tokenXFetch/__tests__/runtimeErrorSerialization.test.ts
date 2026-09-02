@@ -30,6 +30,7 @@ import {
   getAndLogAuthenticationErrorResult,
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
+  logPdfResponseBodyReadError,
 } from "../errorHandling";
 import { validateResponseBody } from "../validateResponseBody";
 
@@ -389,10 +390,40 @@ describe("serialized runtime error contract", () => {
       error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
       upstream_status: 200,
       method: "GET",
+      validation_stage: "schema",
+      validation_issues: [{ code: "invalid_type", path: "id" }],
+      validation_issue_count: 1,
       trace_id: traceId,
-      message: "TokenX fetch returned an invalid success response body",
+      message: "TokenX fetch success response did not match schema",
     });
     expect(serializedLogLines[0]).not.toContain("12345678901");
     expect(serializedLogLines[0]).not.toContain("payload-canary");
+  });
+
+  test("serializes an unreadable PDF body without error details", () => {
+    const eventType =
+      RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_PDF_FETCH_FAILED;
+    const privateDetail =
+      "body failed for 12345678901 at https://backend.example.test/pdf";
+
+    logPdfResponseBodyReadError({
+      error: new Error(privateDetail),
+      eventType,
+      upstreamStatus: 200,
+    });
+
+    expect(onlySerializedLog()).toMatchObject({
+      level: "error",
+      event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
+      error_code: "PDF_BODY_READ_FAILED",
+      exception_type: "Error",
+      upstream_status: 200,
+      method: "GET",
+      message: "PDF fetch returned an unreadable success response body",
+    });
+    expect(serializedLogLines[0]).not.toContain(privateDetail);
+    expect(serializedLogLines[0]).not.toContain("12345678901");
+    expect(serializedLogLines[0]).not.toContain("backend.example.test");
   });
 });

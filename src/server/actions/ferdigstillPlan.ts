@@ -31,18 +31,22 @@ export async function ferdigstillPlanServerAction(
 
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
-  const { success: isPayloadValid, data: validatedPayload } =
+  const payloadValidation =
     ferdigstillPlanActionPayloadSchema.safeParse(payload);
 
-  if (!(isNarmesteLederIdValid && isPayloadValid)) {
+  if (!(isNarmesteLederIdValid && payloadValidation.success)) {
     logServerActionInputValidationError({
       eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
       validationTarget:
-        !isNarmesteLederIdValid && !isPayloadValid
+        !isNarmesteLederIdValid && !payloadValidation.success
           ? "narmeste_leder_id_and_payload"
           : !isNarmesteLederIdValid
             ? "narmeste_leder_id"
             : "payload",
+      validationError: payloadValidation.success
+        ? undefined
+        : payloadValidation.error,
+      validationSchema: ferdigstillPlanActionPayloadSchema,
     });
     return {
       error: {
@@ -50,6 +54,8 @@ export async function ferdigstillPlanServerAction(
       },
     };
   }
+
+  const validatedPayload = payloadValidation.data;
 
   const {
     formValues,

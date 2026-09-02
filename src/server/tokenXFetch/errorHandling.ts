@@ -5,6 +5,7 @@ import {
   RuntimeErrorEvent,
   type RuntimeErrorEvent as RuntimeErrorEventType,
   type RuntimeErrorHttpMethod,
+  RuntimePdfErrorCode,
 } from "@/common/runtimeErrorEvent";
 import type { CombinedErrorType } from "@/schema/errorSchemas";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
@@ -104,6 +105,28 @@ export function getAndLogFetchNetworkError({
   };
 }
 
+export function logPdfResponseBodyReadError({
+  error,
+  eventType,
+  upstreamStatus,
+}: {
+  error: unknown;
+  eventType: RuntimeErrorEventType;
+  upstreamStatus: number;
+}): void {
+  logger.error(
+    {
+      event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
+      error_code: RuntimePdfErrorCode.BODY_READ_FAILED,
+      exception_type: getSafeExceptionType(error),
+      upstream_status: upstreamStatus,
+      method: "GET",
+    },
+    "PDF fetch returned an unreadable success response body",
+  );
+}
+
 function isTimeoutError(error: unknown): boolean {
   return getSafeErrorName(error) === "TimeoutError";
 }
@@ -176,7 +199,7 @@ function isExpectedDomainOutcome(
   );
 }
 
-function getSafeExceptionType(error: unknown): string {
+export function getSafeExceptionType(error: unknown): string {
   try {
     const errorName = getSafeErrorName(error);
     if (

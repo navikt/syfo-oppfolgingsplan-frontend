@@ -47,6 +47,10 @@ export const RuntimeAuthenticationErrorCode = {
 export type RuntimeAuthenticationErrorCode =
   (typeof RuntimeAuthenticationErrorCode)[keyof typeof RuntimeAuthenticationErrorCode];
 
+export const RuntimePdfErrorCode = {
+  BODY_READ_FAILED: "PDF_BODY_READ_FAILED",
+} as const;
+
 /** Stable operation names describe what was attempted, without the outcome. */
 export const RuntimeErrorOperation = {
   OPPFOLGINGSPLAN_ARBEIDSGIVER_AKTIV_PLAN_FETCH:

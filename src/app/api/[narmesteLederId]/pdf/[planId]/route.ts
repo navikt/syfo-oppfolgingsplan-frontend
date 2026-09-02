@@ -8,6 +8,7 @@ import {
 } from "@/server/auth/tokenXExchange";
 import { mockPdf } from "@/server/fetchData/mockData/mockPdf.ts";
 import { getAndLogAuthenticationErrorResult } from "@/server/tokenXFetch/errorHandling";
+import { fetchPdfResponse } from "@/server/tokenXFetch/fetchPdfResponse";
 
 export async function GET(
   _: Request,
@@ -39,19 +40,9 @@ export async function GET(
     throw error;
   }
 
-  const res = await fetch(getEndpointPDFForAG(narmesteLederId, planId), {
-    headers: {
-      Authorization: `Bearer ${oboToken}`,
-    },
+  return fetchPdfResponse({
+    endpoint: getEndpointPDFForAG(narmesteLederId, planId),
+    oboToken,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_PDF_FETCH_FAILED,
   });
-
-  const headers = new Headers();
-  headers.append("Content-Type", "application/pdf");
-  headers.append(
-    "Content-Disposition",
-    'inline; filename="oppfolgingsplan.pdf"',
-  );
-
-  const data = await res.blob();
-  return new Response(data, { headers });
 }

@@ -606,8 +606,11 @@ describe("tokenXFetchUpdateWithResponse", () => {
         error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
         upstream_status: 200,
         method: "POST",
+        validation_stage: "schema",
+        validation_issues: [{ code: "invalid_type", path: "id" }],
+        validation_issue_count: 1,
       },
-      "TokenX fetch returned an invalid success response body",
+      "TokenX fetch success response did not match schema",
     );
     expect(loggerErrorMock).toHaveBeenCalledOnce();
     expect(JSON.stringify(loggerErrorMock.mock.calls[0])).not.toContain(
@@ -648,8 +651,10 @@ describe("tokenXFetchUpdateWithResponse", () => {
         error_code: "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
         upstream_status: 200,
         method: "POST",
+        validation_stage: "json_parse",
+        exception_type: "SyntaxError",
       },
-      "TokenX fetch returned an invalid success response body",
+      "TokenX fetch returned invalid JSON in a success response",
     );
     expect(loggerErrorMock).toHaveBeenCalledOnce();
     const serializedLogCall = JSON.stringify(loggerErrorMock.mock.calls[0]);

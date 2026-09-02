@@ -95,7 +95,7 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
     );
   });
 
-  test("logger ikke avvist payload eller Zod-detaljer", async () => {
+  test("logger trygg Zod-diagnostikk uten avvist payload", async () => {
     await ferdigstillPlanServerAction("narmeste-leder-id", {
       formValues,
       evalueringsDatoIsoString: "12345678901-sensitive-canary",
@@ -106,7 +106,13 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
     expect(tokenXFetchUpdateMock).not.toHaveBeenCalled();
     expect(loggerErrorMock).toHaveBeenCalledOnce();
     expect(loggerErrorMock).toHaveBeenCalledWith(
-      expect.objectContaining({ validation_target: "payload" }),
+      expect.objectContaining({
+        validation_target: "payload",
+        validation_issues: expect.arrayContaining([
+          expect.objectContaining({ path: "evalueringsDatoIsoString" }),
+        ]),
+        validation_issue_count: 1,
+      }),
       "Server action input validation failed",
     );
     expect(JSON.stringify(loggerErrorMock.mock.calls[0])).not.toContain(
