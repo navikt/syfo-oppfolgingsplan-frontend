@@ -55,6 +55,50 @@ describe("hentSykmeldtPlanoversikt", () => {
     expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
   });
 
+  test("velger tiltaksinnhold uten planer når en aktiv virksomhet er i tiltaksgruppen", async () => {
+    envMock.enabled = true;
+    fetchMock.mockResolvedValue({
+      virksomheter: [],
+      virksomhetsnumreMedAktivSykmelding: ["111111111"],
+    });
+    finnTiltaksgruppeMock.mockResolvedValue(new Set(["111111111"]));
+
+    const resultat = await hentSykmeldtPlanoversikt();
+
+    expect(finnTiltaksgruppeMock).toHaveBeenCalledWith(["111111111"]);
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
+    expect(resultat.gjeldendeHendelser).toEqual([]);
+  });
+
+  test("velger tiltaksinnhold når bare en annen virksomhet har plan", async () => {
+    envMock.enabled = true;
+    fetchMock.mockResolvedValue({
+      ...mockOversiktDataMedPlanerForSM,
+      virksomhetsnumreMedAktivSykmelding: ["987654321"],
+    });
+    finnTiltaksgruppeMock.mockResolvedValue(new Set(["987654321"]));
+
+    const resultat = await hentSykmeldtPlanoversikt();
+
+    expect(finnTiltaksgruppeMock).toHaveBeenCalledWith(["987654321"]);
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
+    expect(resultat.gjeldendeHendelser).toHaveLength(1);
+  });
+
+  test("velger ikke tiltaksinnhold når ingen aktiv virksomhet er i tiltaksgruppen", async () => {
+    envMock.enabled = true;
+    fetchMock.mockResolvedValue({
+      virksomheter: [],
+      virksomhetsnumreMedAktivSykmelding: ["111111111"],
+    });
+    finnTiltaksgruppeMock.mockResolvedValue(new Set());
+
+    const resultat = await hentSykmeldtPlanoversikt();
+
+    expect(finnTiltaksgruppeMock).toHaveBeenCalledWith(["111111111"]);
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(false);
+  });
+
   test("slår opp tiltaksgruppe også når virksomheten har en aktiv plan", async () => {
     envMock.enabled = true;
     fetchMock.mockResolvedValue(mockOversiktDataMedPlanerForSM);
@@ -67,6 +111,11 @@ describe("hentSykmeldtPlanoversikt", () => {
   });
 
   test("hopper over Flaggskipet og skjuler tiltaket når toggelen er av", async () => {
+    fetchMock.mockResolvedValue({
+      virksomheter: [],
+      virksomhetsnumreMedAktivSykmelding: ["111111111"],
+    });
+
     const resultat = await hentSykmeldtPlanoversikt();
 
     expect(finnTiltaksgruppeMock).not.toHaveBeenCalled();

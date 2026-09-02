@@ -35,6 +35,9 @@ export const mockOversiktDataTom: OppfolgingsplanerOversiktForAG = {
 };
 
 export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
+  virksomhetsnumreMedAktivSykmelding: [
+    mockAktivPlanData.organization.orgNumber,
+  ],
   virksomheter: [
     {
       virksomhet: mockAktivPlanData.organization,
@@ -47,6 +50,9 @@ export const mockOversiktDataMedPlanerForSM: OppfolgingsplanerOversiktForSM = {
 };
 
 export const mockOversiktDataTomForSM: OppfolgingsplanerOversiktForSM = {
+  virksomhetsnumreMedAktivSykmelding: [
+    mockAktivPlanData.organization.orgNumber,
+  ],
   virksomheter: [
     {
       virksomhet: mockAktivPlanData.organization,
@@ -62,6 +68,10 @@ const eldreMockUnntaksvurderingUtenOrganisasjonsnavn = {
 
 export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversiktForSM =
   {
+    virksomhetsnumreMedAktivSykmelding: [
+      mockUnntaksvurdering.organization.orgNumber,
+      eldreMockUnntaksvurderingUtenOrganisasjonsnavn.organization.orgNumber,
+    ],
     virksomheter: [
       {
         virksomhet: mockUnntaksvurdering.organization,
@@ -81,6 +91,9 @@ export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversi
   };
 
 export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
+  virksomhetsnumreMedAktivSykmelding: [
+    mockAktivPlanData.organization.orgNumber,
+  ],
   virksomheter: [
     {
       virksomhet: mockAktivPlanData.organization,
