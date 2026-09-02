@@ -8,6 +8,7 @@ export const frontendErrorTypeSchema = z.enum([
   // Compatibility for responses produced before the spelling was corrected.
   "FETCH_UNKOWN_ERROR_RESPONSE",
   "FETCH_NETWORK_ERROR",
+  "FETCH_TIMEOUT",
 ]);
 
 export const backendErrorTypeSchema = z.enum([

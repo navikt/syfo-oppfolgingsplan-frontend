@@ -42,6 +42,7 @@ const standardErrorMessages: Record<CombinedErrorType, string | null> = {
   FETCH_UNKOWN_ERROR_RESPONSE: null,
   FETCH_NETWORK_ERROR:
     "Vi fikk ikke kontakt med tjenesten. Sjekk nettverket ditt og prøv igjen.",
+  FETCH_TIMEOUT: null,
 };
 
 /**

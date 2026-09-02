@@ -541,6 +541,45 @@ describe("tokenXFetchUpdateWithResponse", () => {
     expect(loggerErrorMock).toHaveBeenCalledOnce();
   });
 
+  test("returns a dedicated timeout result for AbortSignal.timeout", async () => {
+    const signal = AbortSignal.timeout(1);
+    const timeoutReason = await new Promise<unknown>((resolve) => {
+      signal.addEventListener("abort", () => resolve(signal.reason), {
+        once: true,
+      });
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>().mockRejectedValue(timeoutReason),
+    );
+
+    const result = await tokenXFetchUpdateWithResponse({
+      eventType,
+      targetApi: TokenXTargetApi.FLAGGSKIPET,
+      endpoint,
+      responseDataSchema,
+      signal,
+    });
+
+    expect(result).toEqual({
+      error: {
+        type: "FETCH_TIMEOUT",
+      },
+      data: null,
+    });
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        event_type: eventType,
+        operation,
+        error_code: "FETCH_TIMEOUT",
+        exception_type: "DOMException",
+        method: "POST",
+      },
+      "TokenX fetch timed out before receiving a response",
+    );
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+  });
+
   test("returns invalid response error when ok response body does not match schema", async () => {
     vi.stubGlobal(
       "fetch",

@@ -81,7 +81,10 @@ export function getAndLogFetchNetworkError({
   eventType: RuntimeErrorEventType;
   method: RuntimeErrorHttpMethod;
 }): FetchResultError {
-  const errorType = FrontendErrorType.FETCH_NETWORK_ERROR;
+  const isTimeout = isTimeoutError(error);
+  const errorType = isTimeout
+    ? FrontendErrorType.FETCH_TIMEOUT
+    : FrontendErrorType.FETCH_NETWORK_ERROR;
 
   logger.error(
     {
@@ -91,12 +94,18 @@ export function getAndLogFetchNetworkError({
       exception_type: getSafeExceptionType(error),
       method,
     },
-    "TokenX fetch failed before receiving a response",
+    isTimeout
+      ? "TokenX fetch timed out before receiving a response"
+      : "TokenX fetch failed before receiving a response",
   );
 
   return {
     type: errorType,
   };
+}
+
+function isTimeoutError(error: unknown): boolean {
+  return getSafeErrorName(error) === "TimeoutError";
 }
 
 export async function getAndLogErrorResultFromNonOkResponse({
@@ -168,13 +177,18 @@ function isExpectedDomainOutcome(
 }
 
 function getSafeExceptionType(error: unknown): string {
-  if (!(error instanceof Error)) return "UnknownError";
-
   try {
-    switch (error.name) {
-      case "AbortError":
-      case "DOMException":
-        return "DOMException";
+    const errorName = getSafeErrorName(error);
+    if (
+      errorName === "AbortError" ||
+      errorName === "TimeoutError" ||
+      errorName === "DOMException"
+    ) {
+      return "DOMException";
+    }
+    if (!(error instanceof Error)) return "UnknownError";
+
+    switch (errorName) {
       case "TypeError":
       case "RangeError":
       case "ReferenceError":
@@ -187,5 +201,16 @@ function getSafeExceptionType(error: unknown): string {
     }
   } catch {
     return "Error";
+  }
+}
+
+function getSafeErrorName(error: unknown): string | undefined {
+  try {
+    if (typeof error !== "object" || error === null || !("name" in error)) {
+      return undefined;
+    }
+    return typeof error.name === "string" ? error.name : undefined;
+  } catch {
+    return undefined;
   }
 }

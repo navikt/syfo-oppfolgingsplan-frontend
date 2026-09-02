@@ -154,6 +154,9 @@ describe("serialized runtime error contract", () => {
     expect(frontendErrorTypeSchema.parse("FETCH_UNKOWN_ERROR_RESPONSE")).toBe(
       "FETCH_UNKOWN_ERROR_RESPONSE",
     );
+    expect(frontendErrorTypeSchema.parse("FETCH_TIMEOUT")).toBe(
+      "FETCH_TIMEOUT",
+    );
   });
 
   test("emits one Pino JSON network error with operation and active trace", async () => {
@@ -193,6 +196,32 @@ describe("serialized runtime error contract", () => {
     expect(serializedLog).not.toContain("12345678901");
     expect(serializedLog).not.toContain("example.test");
     expect(serializedLog).not.toContain("secret-canary");
+  });
+
+  test("emits a dedicated timeout error without the DOMException message", () => {
+    const eventType = RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED;
+    const result = getAndLogFetchNetworkError({
+      eventType,
+      error: new DOMException(
+        "private timeout detail for 12345678901",
+        "TimeoutError",
+      ),
+      method: "POST",
+    });
+
+    expect(result).toEqual({ type: FrontendErrorType.FETCH_TIMEOUT });
+    const parsedLog = onlySerializedLog();
+    expect(parsedLog).toMatchObject({
+      level: "error",
+      event_type: eventType,
+      operation: getRuntimeErrorOperation(eventType),
+      error_code: "FETCH_TIMEOUT",
+      exception_type: "DOMException",
+      method: "POST",
+      message: "TokenX fetch timed out before receiving a response",
+    });
+    expect(serializedLogLines[0]).not.toContain("private timeout detail");
+    expect(serializedLogLines[0]).not.toContain("12345678901");
   });
 
   test("serializes one caller-owned auth failure without underlying details", async () => {
