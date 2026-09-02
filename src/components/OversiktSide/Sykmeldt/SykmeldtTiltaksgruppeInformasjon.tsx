@@ -1,5 +1,12 @@
 import { ClipboardCheckmarkFillIcon, HandHeartIcon } from "@navikt/aksel-icons";
-import { BodyLong, Heading, Link, LinkCard, Tag } from "@navikt/ds-react";
+import {
+  BodyLong,
+  Heading,
+  Link,
+  LinkCard,
+  Tag,
+  VStack,
+} from "@navikt/ds-react";
 import {
   InfoCard,
   InfoCardContent,
@@ -52,27 +59,36 @@ export function DetteKanDuBidraMed() {
         <InfoCardTitle as="h3">Dette kan du bidra med</InfoCardTitle>
       </InfoCardHeader>
       <InfoCardContent>
-        <List>
-          <ListItem>Ha kontakt med og delta i møter med lederen din.</ListItem>
-          <ListItem>
-            Si om det er enkelte arbeidsoppgaver du klarer å gjennomføre nå.
-          </ListItem>
-          <ListItem>Vær med på å lage og oppdatere oppfølgingsplanen.</ListItem>
-          <ListItem>Foreslå tilrettelegging som kan fungere for deg.</ListItem>
-          <ListItem>
-            Prøv ut tiltakene som du og lederen din kommer frem til, eller som
-            Nav foreslår.
-          </ListItem>
-        </List>
-        <BodyLong className="mb-4">
-          Du trenger ikke forklare hvorfor du er syk. Det holder å si hva som er
-          mulig å få til, slik at lederen din kan legge til rette for deg.
-        </BodyLong>
-        <BodyLong>
-          Er det vanskelig å snakke med lederen din, kan du ta kontakt med Nav
-          ved å <Link href="https://www.nav.no/kontaktoss">skrive til oss</Link>{" "}
-          eller på telefon 55 55 33 33.
-        </BodyLong>
+        <VStack gap="space-16">
+          <List>
+            <ListItem>
+              Ha kontakt med og delta i møter med lederen din.
+            </ListItem>
+            <ListItem>
+              Si om det er enkelte arbeidsoppgaver du klarer å gjennomføre nå.
+            </ListItem>
+            <ListItem>
+              Vær med på å lage og oppdatere oppfølgingsplanen.
+            </ListItem>
+            <ListItem>
+              Foreslå tilrettelegging som kan fungere for deg.
+            </ListItem>
+            <ListItem>
+              Prøv ut tiltakene som du og lederen din kommer frem til, eller som
+              Nav foreslår.
+            </ListItem>
+          </List>
+          <BodyLong>
+            Du trenger ikke forklare hvorfor du er syk. Det holder å si hva som
+            er mulig å få til, slik at lederen din kan legge til rette for deg.
+          </BodyLong>
+          <BodyLong>
+            Er det vanskelig å snakke med lederen din, kan du ta kontakt med Nav
+            ved å{" "}
+            <Link href="https://www.nav.no/kontaktoss">skrive til oss</Link>{" "}
+            eller på telefon 55 55 33 33.
+          </BodyLong>
+        </VStack>
       </InfoCardContent>
     </InfoCard>
   );
