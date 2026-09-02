@@ -7,9 +7,10 @@ export function SykmeldtTiltaksgruppeIntroduksjon() {
       <BodyLong size="large" spacing>
         På denne siden finner du oppfølgingsplanene du og lederen din lager
         sammen. Som sykmeldt har du det som kalles{" "}
-        <strong>medvirkningsplikt</strong>. Det innebærer at du har ansvar for å
+        <strong>medvirkningsplikt</strong>. Det innebærer at du tar ansvar for å
         komme frem til løsninger som kan gjøre det lettere å komme tilbake i
-        jobb. Lederen din har hovedansvaret, men du har ansvar for å bidra.
+        jobb. Lederen din er den som har hovedansvaret, men du har et ansvar for
+        å bidra.
       </BodyLong>
     </TextContentBox>
   );
