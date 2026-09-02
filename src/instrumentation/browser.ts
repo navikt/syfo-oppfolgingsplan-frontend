@@ -1,4 +1,4 @@
-import { type InitOptions, scrubString } from "@nais/apm";
+import type { InitOptions } from "@nais/apm";
 import { initNaisAPMClient } from "@nais/apm/react";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { publicEnv } from "@/env-variables/publicEnv";
@@ -12,8 +12,12 @@ const RELATIVE_URL_IN_TEXT =
   /(^|[^\w/])((?:\/(?!\/)|\.{1,2}\/)[^\s"'<>()[\]]*)/g;
 const UUID_PATH_SEGMENT =
   "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-const MAX_SCRUB_DEPTH = 32;
-const UNSAFE_PAYLOAD = Symbol("unsafe-payload");
+const TRACE_URL_ATTRIBUTES = new Set([
+  "http.target",
+  "http.url",
+  "url.full",
+  "url.path",
+]);
 
 const pageRoute = (pattern: string, pageId: string) =>
   [new RegExp(pattern, "i"), `${BASE_PATH}${pageId}`] as const;
@@ -73,7 +77,7 @@ const sanitizeAbsoluteUrl = (url: string): string => {
   }
 };
 
-const scrubTelemetryString = (value: string): string => {
+const normalizeTelemetryString = (value: string): string => {
   const withoutAbsoluteUrlDetails = value.replace(
     ABSOLUTE_HTTP_URL,
     sanitizeAbsoluteUrl,
@@ -84,40 +88,95 @@ const scrubTelemetryString = (value: string): string => {
       `${prefix}${withoutQueryAndFragment(url)}`,
   );
 
-  return scrubString(withoutUrlDetails).replace(UUID, "[uuid]");
+  return withoutUrlDetails.replace(UUID, "[uuid]");
 };
 
-const scrubUuidValues = (
-  value: unknown,
-  depth = 0,
-  seen = new WeakSet<object>(),
-): unknown | typeof UNSAFE_PAYLOAD => {
-  if (typeof value === "string") {
-    return scrubTelemetryString(value);
-  }
-  if (value === null || typeof value !== "object") return value;
-  if (depth >= MAX_SCRUB_DEPTH || seen.has(value)) return UNSAFE_PAYLOAD;
-  seen.add(value);
+type ExceptionPayload = {
+  value?: string;
+  stacktrace?: {
+    frames?: Array<{ filename?: string } & Record<string, unknown>>;
+  } & Record<string, unknown>;
+} & Record<string, unknown>;
 
-  if (Array.isArray(value)) {
-    const sanitized = [];
-    for (const entry of value) {
-      const sanitizedEntry = scrubUuidValues(entry, depth + 1, seen);
-      if (sanitizedEntry === UNSAFE_PAYLOAD) return UNSAFE_PAYLOAD;
-      sanitized.push(sanitizedEntry);
+const normalizeExceptionPayload = (payload: ExceptionPayload) => ({
+  ...payload,
+  ...(payload.value ? { value: normalizeTelemetryString(payload.value) } : {}),
+  ...(payload.stacktrace?.frames
+    ? {
+        stacktrace: {
+          ...payload.stacktrace,
+          frames: payload.stacktrace.frames.map((frame) => ({
+            ...frame,
+            ...(frame.filename
+              ? { filename: normalizeTelemetryString(frame.filename) }
+              : {}),
+          })),
+        },
+      }
+    : {}),
+});
+
+type TracePayload = {
+  resourceSpans?: Array<{
+    scopeSpans?: Array<{
+      spans?: Array<{
+        attributes?: Array<{
+          key?: string;
+          value?: { stringValue?: string } & Record<string, unknown>;
+        }>;
+      }>;
+    }>;
+  }>;
+} & Record<string, unknown>;
+
+const normalizeTracePayload = (payload: TracePayload): TracePayload => {
+  const normalized = structuredClone(payload);
+  for (const resourceSpan of normalized.resourceSpans ?? []) {
+    for (const scopeSpan of resourceSpan.scopeSpans ?? []) {
+      for (const span of scopeSpan.spans ?? []) {
+        for (const attribute of span.attributes ?? []) {
+          const attributeValue = attribute.value;
+          const stringValue = attributeValue?.stringValue;
+          if (
+            attribute.key &&
+            TRACE_URL_ATTRIBUTES.has(attribute.key) &&
+            stringValue
+          ) {
+            attributeValue.stringValue = normalizeTelemetryString(stringValue);
+          }
+        }
+      }
     }
-    seen.delete(value);
-    return sanitized;
   }
+  return normalized;
+};
 
-  const sanitized: Record<string, unknown> = {};
-  for (const [key, entry] of Object.entries(value)) {
-    const sanitizedEntry = scrubUuidValues(entry, depth + 1, seen);
-    if (sanitizedEntry === UNSAFE_PAYLOAD) return UNSAFE_PAYLOAD;
-    sanitized[key] = sanitizedEntry;
+type EventPayload = {
+  name?: string;
+  attributes?: Record<string, string>;
+} & Record<string, unknown>;
+
+const normalizeEventPayload = (payload: EventPayload): EventPayload =>
+  (payload.name === "faro.performance.navigation" ||
+    payload.name === "faro.performance.resource") &&
+  payload.attributes?.name
+    ? {
+        ...payload,
+        attributes: {
+          ...payload.attributes,
+          name: normalizeTelemetryString(payload.attributes.name),
+        },
+      }
+    : payload;
+
+const normalizePayload = (type: string, payload: unknown): unknown => {
+  if (!payload || typeof payload !== "object") return payload;
+  if (type === "exception") {
+    return normalizeExceptionPayload(payload as ExceptionPayload);
   }
-  seen.delete(value);
-  return sanitized;
+  if (type === "trace") return normalizeTracePayload(payload as TracePayload);
+  if (type === "event") return normalizeEventPayload(payload as EventPayload);
+  return payload;
 };
 
 const sanitizePage = (url: string): { id: string; url: string } => {
@@ -133,16 +192,13 @@ const sanitizePage = (url: string): { id: string; url: string } => {
 type BeforeSend = NonNullable<InitOptions["beforeSend"]>;
 
 export const sanitizeBrowserTelemetry: BeforeSend = (item) => {
-  const { user: _user, ...meta } = item.meta;
-  const page = meta.page;
-  const payload = scrubUuidValues(item.payload);
-  if (payload === UNSAFE_PAYLOAD) return null;
+  const page = item.meta.page;
 
   return {
     ...item,
-    payload,
+    payload: normalizePayload(item.type, item.payload),
     meta: {
-      ...meta,
+      ...item.meta,
       ...(page?.url ? { page: { ...page, ...sanitizePage(page.url) } } : {}),
     },
   } as typeof item;
