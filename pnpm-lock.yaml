@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@grafana/faro-react':
-        specifier: 2.8.2
-        version: 2.8.2(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        specifier: 2.10.0
+        version: 2.10.0(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       '@nais/apm':
         specifier: 0.6.0
-        version: 0.6.0(@grafana/faro-react@2.8.2(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        version: 0.6.0(@grafana/faro-react@2.10.0(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       '@navikt/aksel-icons':
         specifier: ^8.16.1
         version: 8.16.1
@@ -297,11 +297,14 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
+  '@grafana/faro-core@2.10.0':
+    resolution: {integrity: sha512-OoK5Gd/1Uyg8KWQVw6tqPf638C65/G7wfPtzL+f37u4lRxOY/6bzVOnRigFodcEztZ0HaqlldMPhFLD05tSxYA==}
+
   '@grafana/faro-core@2.11.0':
     resolution: {integrity: sha512-vaqko2foixRC9uZyqc4KzCUYqd21t27LhVgQ6hI6cmS3vRSMBoIgEg1FIrOOkT9KNRTpbKASE7iYn3QtHtq7zQ==}
 
-  '@grafana/faro-react@2.8.2':
-    resolution: {integrity: sha512-Cd32yIDTIR+kqAZkP8m4Vpz84+/D77ODMyR9Ame7psCg89NwoA30m+C7lPWzkGdFpKJdX47Sd3JGzii+cVoXwQ==}
+  '@grafana/faro-react@2.10.0':
+    resolution: {integrity: sha512-npz5Dt738ijLJABUTKGqJWiui6znpBQZQ9n1bInG2TPpXow5VEQiQyZqF04WXxk+nHc5gpLvpdr2Voht8X2uOw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -315,11 +318,14 @@ packages:
       react-router-dom:
         optional: true
 
+  '@grafana/faro-web-sdk@2.10.0':
+    resolution: {integrity: sha512-keP7CCuZ/CNA3reTZTr/ImyoLXM2jNiVCIzLZumhJ0mvyW8MC3o0pflRprlngMOxX7BZcSsOfB3/HDSiDO+FPQ==}
+
   '@grafana/faro-web-sdk@2.11.0':
     resolution: {integrity: sha512-oGwdqlFJkIrK6V45wDlPaggNXOJCcXRFobho0PBQvohAB4Y4UTyMH18Sr1Tznp3z6POr/zh7RUtB0L/iN2X+HA==}
 
-  '@grafana/faro-web-tracing@2.11.0':
-    resolution: {integrity: sha512-/n7Bf0rmBENQ3q3Mxe8siFPrfNF1nzlsMDVUUkKsnz9z9cdLD0b0z4jwCJ0OA9xIf1/XsMCBtINMAH4OPTtNlA==}
+  '@grafana/faro-web-tracing@2.10.0':
+    resolution: {integrity: sha512-vyQaJNEwr6VHF9Rr7fDtyL+u50jzo2VYAVAlElNK/GHF4ZH3iORLcLREe3JWKNsCNO3/Wnpyu8TTAZ9+peC5OA==}
 
   '@grafana/faro-web-tracing@2.8.2':
     resolution: {integrity: sha512-3MTOVHaW138Te2k1RTlM8a0WngYHwAJoSMX2EcZNn9elq1/5eNADN+75k89jYcCtcdiQAIq/hmT2WfRtUTD+kQ==}
@@ -2101,6 +2107,9 @@ packages:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
 
+  web-vitals@6.2.0:
+    resolution: {integrity: sha512-i2jhLkq6eB38jgJX5OIjEkyzQKgsG7FR56v7GphJNjzKAySgbRbwAfsFC0dDfHROWmCycf912SJpU2QoYIcMVg==}
+
   web-vitals@6.2.1:
     resolution: {integrity: sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw==}
 
@@ -2273,15 +2282,20 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
+  '@grafana/faro-core@2.10.0':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/otlp-transformer': 0.221.0(@opentelemetry/api@1.9.1)
+
   '@grafana/faro-core@2.11.0':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/otlp-transformer': 0.221.0(@opentelemetry/api@1.9.1)
 
-  '@grafana/faro-react@2.8.2(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
+  '@grafana/faro-react@2.10.0(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@grafana/faro-web-sdk': 2.11.0
-      '@grafana/faro-web-tracing': 2.11.0
+      '@grafana/faro-web-sdk': 2.10.0
+      '@grafana/faro-web-tracing': 2.10.0
       hoist-non-react-statics: 3.3.2
       react: 19.2.8
     optionalDependencies:
@@ -2291,15 +2305,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@grafana/faro-web-sdk@2.10.0':
+    dependencies:
+      '@grafana/faro-core': 2.10.0
+      ua-parser-js: 1.0.41
+      web-vitals: 6.2.0
+
   '@grafana/faro-web-sdk@2.11.0':
     dependencies:
       '@grafana/faro-core': 2.11.0
       ua-parser-js: 1.0.41
       web-vitals: 6.2.1
 
-  '@grafana/faro-web-tracing@2.11.0':
+  '@grafana/faro-web-tracing@2.10.0':
     dependencies:
-      '@grafana/faro-web-sdk': 2.11.0
+      '@grafana/faro-web-sdk': 2.10.0
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 2.10.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-trace-otlp-http': 0.221.0(@opentelemetry/api@1.9.1)
@@ -2315,7 +2335,7 @@ snapshots:
 
   '@grafana/faro-web-tracing@2.8.2':
     dependencies:
-      '@grafana/faro-web-sdk': 2.11.0
+      '@grafana/faro-web-sdk': 2.10.0
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 2.10.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-trace-otlp-http': 0.219.0(@opentelemetry/api@1.9.1)
@@ -2478,9 +2498,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@nais/apm@0.6.0(@grafana/faro-react@2.8.2(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
+  '@nais/apm@0.6.0(@grafana/faro-react@2.10.0(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@grafana/faro-react': 2.8.2(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      '@grafana/faro-react': 2.10.0(react-dom@19.2.8(react@19.2.8))(react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       '@grafana/faro-web-sdk': 2.11.0
       '@grafana/faro-web-tracing': 2.8.2
       '@grafana/rrweb': 2.0.0-grafana.2
@@ -3867,6 +3887,8 @@ snapshots:
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
+
+  web-vitals@6.2.0: {}
 
   web-vitals@6.2.1: {}
 
