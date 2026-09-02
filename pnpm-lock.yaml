@@ -73,8 +73,8 @@ importers:
         specifier: 2.4.16
         version: 2.4.16
       '@next/env':
-        specifier: ^16.3.1
-        version: 16.3.1
+        specifier: ^16.3.3
+        version: 16.3.3
       '@tailwindcss/postcss':
         specifier: ^4.3.3
         version: 4.3.3
@@ -586,9 +586,6 @@ packages:
   '@navikt/texas@4.1.4':
     resolution: {integrity: sha512-WS+agfWCqHyCtIpn/iQHNBRwn1gzCQDe0NY9Tz5ErrBsWHNxtqIV7W2eAmRUa3DLrZGHczoQhup+PYT6UX/SpQ==, tarball: https://npm.pkg.github.com/download/@navikt/texas/4.1.4/1725aca0fa0b803e0048212c3e202d24c10f3c3b}
     engines: {node: ^20.19.0 || >= 22.12.0 || 24.x || 25.x}
-
-  '@next/env@16.3.1':
-    resolution: {integrity: sha512-35G3xwkQUb2oETSDjFXGrVugknoayLFBh7vSE+yAcl9IP2zT9wyGwq7297AYHR11kJld807t5f8AJBs6WBzXsQ==}
 
   '@next/env@16.3.3':
     resolution: {integrity: sha512-U2eYQRwXj+dsqxV79zFqExDdatnNY/ZWc2nsJU1p/OgT7fd3dXwlF6OjYaFQCfMoeTA19PWq+wVmYgimVA+V+g==}
@@ -2550,8 +2547,6 @@ snapshots:
       pino-socket: 7.4.0
 
   '@navikt/texas@4.1.4': {}
-
-  '@next/env@16.3.1': {}
 
   '@next/env@16.3.3': {}
 
