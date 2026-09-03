@@ -24,6 +24,7 @@ function oversiktMed(
   ...oppfolgingsplanhendelser: OppfolgingsplanerOversiktForSM["virksomheter"][number]["oppfolgingsplanhendelser"]
 ): OppfolgingsplanerOversiktForSM {
   return {
+    virksomhetsnumreMedAktivSykmelding: [organization.orgNumber],
     virksomheter: [{ virksomhet: organization, oppfolgingsplanhendelser }],
   };
 }
@@ -36,6 +37,10 @@ describe("lagSykmeldtPlanoversikt", () => {
     };
     const resultat = lagSykmeldtPlanoversikt(
       {
+        virksomhetsnumreMedAktivSykmelding: [
+          organization.orgNumber,
+          annenOrganization.orgNumber,
+        ],
         virksomheter: [
           {
             virksomhet: organization,
@@ -54,7 +59,40 @@ describe("lagSykmeldtPlanoversikt", () => {
     expect(resultat.gjeldendeHendelser).toHaveLength(2);
   });
 
-  test("ignorerer tiltaksgruppe-orgnumre som ikke finnes i oversikten", () => {
+  test("velger tiltaksinnhold når aktiv virksomhet i tiltaksgruppen ikke finnes i planoversikten", () => {
+    const resultat = lagSykmeldtPlanoversikt(
+      {
+        virksomhetsnumreMedAktivSykmelding: ["987654321"],
+        virksomheter: [],
+      },
+      new Set(["987654321"]),
+    );
+
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
+    expect(resultat.gjeldendeHendelser).toEqual([]);
+  });
+
+  test("beholder plan utenfor tiltaksgruppen når en annen aktiv virksomhet er i tiltaksgruppen", () => {
+    const resultat = lagSykmeldtPlanoversikt(
+      {
+        virksomhetsnumreMedAktivSykmelding: ["987654321"],
+        virksomheter: [
+          {
+            virksomhet: organization,
+            oppfolgingsplanhendelser: [plan],
+          },
+        ],
+      },
+      new Set(["987654321"]),
+    );
+
+    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
+    expect(
+      resultat.gjeldendeHendelser.map(({ hendelse }) => hendelse.id),
+    ).toEqual([plan.id]);
+  });
+
+  test("velger ikke tiltaksinnhold når ingen aktiv virksomhet er i tiltaksgruppen", () => {
     const resultat = lagSykmeldtPlanoversikt(
       oversiktMed(plan),
       new Set(["987654321"]),

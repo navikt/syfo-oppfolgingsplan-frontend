@@ -117,6 +117,7 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
 describe("OppfolgingsplanerOversiktResponseSchemaForSM – oppfolgingsplanhendelser", () => {
   test("parser en virksomhet med diskriminert hendelsesunion", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
+      virksomhetsnumreMedAktivSykmelding: ["123456789"],
       virksomheter: [
         {
           virksomhet: unntaksvurderingFraBackend.organization,
@@ -148,10 +149,14 @@ describe("OppfolgingsplanerOversiktResponseSchemaForSM – oppfolgingsplanhendel
         (hendelse) => hendelse.type,
       ),
     ).toEqual(["PLAN_IKKE_NODVENDIG", "FERDIGSTILT_PLAN"]);
+    expect(result.data?.virksomhetsnumreMedAktivSykmelding).toEqual([
+      "123456789",
+    ]);
   });
 
   test("avviser hendelse uten diskriminator", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
+      virksomhetsnumreMedAktivSykmelding: ["123456789"],
       virksomheter: [
         {
           virksomhet: unntaksvurderingFraBackend.organization,
@@ -164,6 +169,14 @@ describe("OppfolgingsplanerOversiktResponseSchemaForSM – oppfolgingsplanhendel
           ],
         },
       ],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  test("krever virksomhetsnumre med aktiv sykmelding", () => {
+    const result = OppfolgingsplanerOversiktResponseSchemaForSM.safeParse({
+      virksomheter: [],
     });
 
     expect(result.success).toBe(false);
