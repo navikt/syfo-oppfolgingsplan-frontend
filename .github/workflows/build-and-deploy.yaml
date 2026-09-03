@@ -1,6 +1,10 @@
 name: Build & Deploy
 on:
   push:
+    branches-ignore:
+      - 'gh-readonly-queue/**'
+    tags:
+      - '**'
   merge_group:
     types: [checks_requested]
   workflow_dispatch:
