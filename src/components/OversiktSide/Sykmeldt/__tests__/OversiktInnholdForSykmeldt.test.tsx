@@ -212,6 +212,9 @@ describe("OversiktInnholdForSykmeldt", () => {
     mockHentSykmeldtPlanoversikt.mockResolvedValue(
       lagSykmeldtPlanoversikt(
         {
+          virksomhetsnumreMedAktivSykmelding: [
+            virksomhetMedUnntak.virksomhet.orgNumber,
+          ],
           virksomheter: [
             {
               virksomhet: virksomhetMedUnntak.virksomhet,
@@ -257,6 +260,10 @@ describe("OversiktInnholdForSykmeldt", () => {
     mockHentSykmeldtPlanoversikt.mockResolvedValue(
       lagSykmeldtPlanoversikt(
         {
+          virksomhetsnumreMedAktivSykmelding: [
+            virksomhetMedAktivPlan.virksomhet.orgNumber,
+            virksomhetMedUnntak.virksomhet.orgNumber,
+          ],
           virksomheter: [virksomhetMedAktivPlan, virksomhetMedUnntak],
         },
         alleOrganisasjonerITiltaksgruppe,

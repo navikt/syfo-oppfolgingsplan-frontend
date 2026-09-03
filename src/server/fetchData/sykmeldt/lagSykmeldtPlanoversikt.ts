@@ -18,9 +18,10 @@ export function lagSykmeldtPlanoversikt(
   oversikt: OppfolgingsplanerOversiktForSM,
   organisasjonerITiltaksgruppe: ReadonlySet<string>,
 ): SykmeldtPlanoversikt {
-  const harMinstEnVirksomhetITiltaksgruppe = oversikt.virksomheter.some(
-    ({ virksomhet }) => organisasjonerITiltaksgruppe.has(virksomhet.orgNumber),
-  );
+  const harMinstEnVirksomhetITiltaksgruppe =
+    oversikt.virksomhetsnumreMedAktivSykmelding.some((orgNumber) =>
+      organisasjonerITiltaksgruppe.has(orgNumber),
+    );
 
   const virksomheter = oversikt.virksomheter
     .map(({ virksomhet, oppfolgingsplanhendelser }) => ({

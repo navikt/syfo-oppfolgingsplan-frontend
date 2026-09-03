@@ -6,13 +6,12 @@ import { lagSykmeldtPlanoversikt } from "./lagSykmeldtPlanoversikt";
 
 export async function hentSykmeldtPlanoversikt() {
   const oversikt = await fetchOppfolgingsplanOversiktForSM();
-  const organisasjonsnumre = oversikt.virksomheter.map(
-    ({ virksomhet }) => virksomhet.orgNumber,
-  );
 
   const organisasjonerITiltaksgruppe =
     isTiltakspakkevurderingFeatureToggleEnabled()
-      ? await finnOrganisasjonerITiltaksgruppe(organisasjonsnumre)
+      ? await finnOrganisasjonerITiltaksgruppe(
+          oversikt.virksomhetsnumreMedAktivSykmelding,
+        )
       : new Set<string>();
 
   return lagSykmeldtPlanoversikt(oversikt, organisasjonerITiltaksgruppe);

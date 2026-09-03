@@ -37,6 +37,7 @@ export type OppfolgingsplanerOversiktForAG = z.infer<
 
 export const OppfolgingsplanerOversiktResponseSchemaForSM = z.object({
   virksomheter: z.array(sykmeldtVirksomhetsoversiktSchema),
+  virksomhetsnumreMedAktivSykmelding: z.array(z.string()),
 });
 
 export type OppfolgingsplanerOversiktForSM = z.infer<
