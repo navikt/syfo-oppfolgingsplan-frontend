@@ -7,7 +7,11 @@ export enum FrontendErrorType {
   /** When validation of input to a server action fails. */
   SERVER_ACTION_INPUT_VALIDATION_ERROR = "SERVER_ACTION_INPUT_VALIDATION_ERROR",
   /** When a fetch call returns a non-ok response with an unrecognized error response body. */
-  FETCH_UNKOWN_ERROR_RESPONSE = "FETCH_UNKOWN_ERROR_RESPONSE",
-  /** When a fetch call throws an error. It could be due to a network error or malformed request. */
+  FETCH_UNKNOWN_ERROR_RESPONSE = "FETCH_UNKNOWN_ERROR_RESPONSE",
+  /** @deprecated Source-compatible alias. Legacy wire values are still accepted by the schema. */
+  FETCH_UNKOWN_ERROR_RESPONSE = "FETCH_UNKNOWN_ERROR_RESPONSE",
+  /** When a fetch call throws before a response for a reason other than its configured timeout. */
   FETCH_NETWORK_ERROR = "FETCH_NETWORK_ERROR",
+  /** When a fetch call is aborted because its configured timeout expires. */
+  FETCH_TIMEOUT = "FETCH_TIMEOUT",
 }

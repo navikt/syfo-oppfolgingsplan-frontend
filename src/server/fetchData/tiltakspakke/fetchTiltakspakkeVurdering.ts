@@ -1,5 +1,6 @@
 import "server-only";
 import { getEndpointFlaggskipetVurdering } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   type FlaggskipetVurderingResponse,
@@ -22,6 +23,7 @@ export async function fetchTiltakspakkeVurdering(
   }
 
   return await tokenXFetchUpdateWithResponse({
+    eventType: RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED,
     targetApi: TokenXTargetApi.FLAGGSKIPET,
     endpoint: getEndpointFlaggskipetVurdering(),
     requestBody: { orgnumre },

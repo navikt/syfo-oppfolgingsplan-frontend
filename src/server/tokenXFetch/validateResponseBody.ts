@@ -1,19 +1,26 @@
 import { logger } from "@navikt/next-logger";
 import type z from "zod";
-import { tryToExtractNameAndMessageFromError } from "./errorHandling";
+import {
+  getRuntimeErrorOperation,
+  type RuntimeErrorEvent,
+  type RuntimeErrorHttpMethod,
+} from "@/common/runtimeErrorEvent";
+import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
+import { getSafeZodIssues } from "../safeZodIssues";
+import { getSafeExceptionType } from "./errorHandling";
 
 /**
  * Returns validation result, and logs error if validation fails.
  */
 export async function validateResponseBody<S extends z.ZodType>({
+  eventType,
   response,
   responseDataSchema,
-  endpoint,
   method,
 }: {
+  eventType: RuntimeErrorEvent;
   response: Response;
-  endpoint: string;
-  method: string;
+  method: RuntimeErrorHttpMethod;
   responseDataSchema: S;
 }): Promise<
   | {
@@ -25,18 +32,21 @@ export async function validateResponseBody<S extends z.ZodType>({
       validatedData: null;
     }
 > {
+  let responseData: unknown;
   try {
-    const responseData = await response.json();
-    const validatedData = responseDataSchema.parse(responseData);
-    return {
-      success: true,
-      validatedData,
-    };
-  } catch (err) {
-    // Response data is invalid
-    const { errorName, message } = tryToExtractNameAndMessageFromError(err);
+    responseData = await response.json();
+  } catch (error) {
     logger.error(
-      `Got invalid response data from ${method} ${endpoint}: name=${errorName} message=${message}`,
+      {
+        event_type: eventType,
+        operation: getRuntimeErrorOperation(eventType),
+        error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
+        upstream_status: response.status,
+        method,
+        validation_stage: "json_parse",
+        exception_type: getSafeExceptionType(error),
+      },
+      "TokenX fetch returned invalid JSON in a success response",
     );
 
     return {
@@ -44,4 +54,34 @@ export async function validateResponseBody<S extends z.ZodType>({
       validatedData: null,
     };
   }
+
+  const validationResult = responseDataSchema.safeParse(responseData);
+  if (!validationResult.success) {
+    logger.error(
+      {
+        event_type: eventType,
+        operation: getRuntimeErrorOperation(eventType),
+        error_code: FrontendErrorType.OK_RESPONSE_BUT_RESPONSE_BODY_INVALID,
+        upstream_status: response.status,
+        method,
+        validation_stage: "schema",
+        validation_issues: getSafeZodIssues(
+          validationResult.error,
+          responseDataSchema,
+        ),
+        validation_issue_count: validationResult.error.issues.length,
+      },
+      "TokenX fetch success response did not match schema",
+    );
+
+    return {
+      success: false,
+      validatedData: null,
+    };
+  }
+
+  return {
+    success: true,
+    validatedData: validationResult.data,
+  };
 }

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { mockFlaggskipetVurderingTiltaksgruppe } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 
 const tokenXFetchUpdateWithResponseMock = vi.hoisted(() => vi.fn());
@@ -66,6 +67,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     const request = tokenXFetchUpdateWithResponseMock.mock.calls[0]?.[0];
 
     expect(request).toMatchObject({
+      eventType: RuntimeErrorEvent.TILTAKSPAKKEVURDERING_FETCH_FAILED,
       targetApi: "FLAGGSKIPET",
       endpoint,
       requestBody: {

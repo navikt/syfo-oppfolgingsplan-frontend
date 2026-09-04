@@ -13,6 +13,8 @@ export async function finnOrganisasjonerITiltaksgruppe(
 
   const result = await fetchTiltakspakkeVurdering(unikeOrgnumre);
   if (result.error) {
+    // TokenX owns the single terminal error log. This separate info event
+    // records the user-visible fail-closed business outcome and aggregate counts.
     logger.info(
       {
         event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,

@@ -1,8 +1,17 @@
+import { logger } from "@navikt/next-logger";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import {
+  getRuntimeErrorOperation,
+  RuntimeErrorEvent,
+} from "@/common/runtimeErrorEvent";
 import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import { ferdigstillPlanServerAction } from "../ferdigstillPlan";
 
 const tokenXFetchUpdateMock = vi.hoisted(() => vi.fn());
+
+vi.mock("@navikt/next-logger", () => ({
+  logger: { error: vi.fn() },
+}));
 
 vi.mock("@/env-variables/envHelpers", () => ({
   isLocalOrDemo: false,
@@ -17,6 +26,8 @@ vi.mock("@/server/tokenXFetch/tokenXFetchUpdate", () => ({
 vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
+
+const loggerErrorMock = vi.mocked(logger.error);
 
 const formValues: OppfolgingsplanFormUtfyllt = {
   typiskArbeidshverdag: "Kontorarbeid med møter",
@@ -33,6 +44,7 @@ const formValues: OppfolgingsplanFormUtfyllt = {
 
 describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     tokenXFetchUpdateMock.mockReset();
     tokenXFetchUpdateMock.mockResolvedValue({ error: null });
   });
@@ -54,6 +66,57 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
           evalueringPaaminnelse: value,
         }),
       }),
+    );
+  });
+
+  test("stopper før backend og logger én bounded feil ved ugyldig leder-ID", async () => {
+    const result = await ferdigstillPlanServerAction("   ", {
+      formValues,
+      evalueringsDatoIsoString: formValues.evalueringsDato,
+      includeIkkeMedvirketBegrunnelseFieldInFormSnapshot: false,
+      evalueringPaaminnelse: true,
+    });
+
+    expect(result).toEqual({
+      error: { type: "SERVER_ACTION_INPUT_VALIDATION_ERROR" },
+    });
+    expect(tokenXFetchUpdateMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      {
+        event_type: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
+        operation: getRuntimeErrorOperation(
+          RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
+        ),
+        error_code: "SERVER_ACTION_INPUT_VALIDATION_ERROR",
+        validation_target: "narmeste_leder_id",
+      },
+      "Server action input validation failed",
+    );
+  });
+
+  test("logger trygg Zod-diagnostikk uten avvist payload", async () => {
+    await ferdigstillPlanServerAction("narmeste-leder-id", {
+      formValues,
+      evalueringsDatoIsoString: "12345678901-sensitive-canary",
+      includeIkkeMedvirketBegrunnelseFieldInFormSnapshot: false,
+      evalueringPaaminnelse: true,
+    });
+
+    expect(tokenXFetchUpdateMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).toHaveBeenCalledOnce();
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        validation_target: "payload",
+        validation_issues: expect.arrayContaining([
+          expect.objectContaining({ path: "evalueringsDatoIsoString" }),
+        ]),
+        validation_issue_count: 1,
+      }),
+      "Server action input validation failed",
+    );
+    expect(JSON.stringify(loggerErrorMock.mock.calls[0])).not.toContain(
+      "12345678901-sensitive-canary",
     );
   });
 });

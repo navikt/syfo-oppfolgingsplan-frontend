@@ -1,3 +1,4 @@
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
 import { validateAndGetIdPortenToken } from "@/server/auth/idPortenToken";
@@ -6,6 +7,8 @@ import {
   TokenXTargetApi,
 } from "@/server/auth/tokenXExchange";
 import { mockPdf } from "@/server/fetchData/mockData/mockPdf";
+import { getAndLogAuthenticationErrorResult } from "@/server/tokenXFetch/errorHandling";
+import { fetchPdfResponse } from "@/server/tokenXFetch/fetchPdfResponse";
 
 export async function GET(
   _: Request,
@@ -17,28 +20,28 @@ export async function GET(
 
   const { planId } = await params;
 
-  const idportenToken = await validateAndGetIdPortenToken();
-  const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
-    idportenToken,
-    TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
-  );
+  let oboToken: string;
+  try {
+    const idportenToken = await validateAndGetIdPortenToken();
+    oboToken = await exchangeIdPortenTokenForTokenXOboToken(
+      idportenToken,
+      TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
+    );
+  } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_PDF_FETCH_FAILED,
+      method: "GET",
+    });
+    if (errorResult) {
+      throw errorResult;
+    }
+    throw error;
+  }
 
-  const res = await fetch(
-    `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt/oppfolgingsplaner/${planId}/pdf`,
-    {
-      headers: {
-        Authorization: `Bearer ${oboToken}`,
-      },
-    },
-  );
-
-  const headers = new Headers();
-  headers.append("Content-Type", "application/pdf");
-  headers.append(
-    "Content-Disposition",
-    'inline; filename="oppfolgingsplan.pdf"',
-  );
-
-  const data = await res.blob();
-  return new Response(data, { headers });
+  return fetchPdfResponse({
+    endpoint: `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt/oppfolgingsplaner/${planId}/pdf`,
+    oboToken,
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_PDF_FETCH_FAILED,
+  });
 }

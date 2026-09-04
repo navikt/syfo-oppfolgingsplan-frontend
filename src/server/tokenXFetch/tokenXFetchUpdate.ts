@@ -1,5 +1,6 @@
 import "server-only";
 import type z from "zod";
+import type { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 import { validateAndGetIdPortenToken } from "../auth/idPortenToken";
 import {
@@ -7,11 +8,11 @@ import {
   type TokenXTargetApi,
 } from "../auth/tokenXExchange";
 import {
+  getAndLogAuthenticationErrorResult,
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
 } from "./errorHandling";
 import type {
-  FetchResultError,
   FetchUpdateResult,
   FetchUpdateResultWithResponse,
 } from "./FetchResult";
@@ -25,12 +26,14 @@ import { validateResponseBody } from "./validateResponseBody";
  * something goes wrong.
  */
 export async function tokenXFetchUpdate({
+  eventType,
   targetApi,
   endpoint,
   requestBody,
   method = "POST",
   signal,
 }: {
+  eventType: RuntimeErrorEvent;
   targetApi: TokenXTargetApi;
   endpoint: string;
   requestBody?: unknown;
@@ -46,8 +49,16 @@ export async function tokenXFetchUpdate({
       targetApi,
     );
   } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType,
+      method,
+    });
+    if (!errorResult) {
+      throw error;
+    }
     return {
-      error: error as FetchResultError,
+      error: errorResult,
     };
   }
 
@@ -60,15 +71,19 @@ export async function tokenXFetchUpdate({
       signal,
     });
   } catch (error) {
-    const errorResult = getAndLogFetchNetworkError({ error, endpoint, method });
+    const errorResult = getAndLogFetchNetworkError({
+      error,
+      eventType,
+      method,
+    });
 
     return { error: errorResult };
   }
 
   if (!response.ok) {
     const errorResult = await getAndLogErrorResultFromNonOkResponse({
+      eventType,
       response,
-      endpoint,
       method,
     });
 
@@ -86,6 +101,7 @@ export async function tokenXFetchUpdate({
  * goes wrong, and otherwise the validated response data.
  */
 export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
+  eventType,
   targetApi,
   endpoint,
   requestBody,
@@ -93,6 +109,7 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
   responseDataSchema,
   signal,
 }: {
+  eventType: RuntimeErrorEvent;
   targetApi: TokenXTargetApi;
   endpoint: string;
   requestBody?: unknown;
@@ -109,8 +126,16 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
       targetApi,
     );
   } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType,
+      method,
+    });
+    if (!errorResult) {
+      throw error;
+    }
     return {
-      error: error as FetchResultError,
+      error: errorResult,
       data: null,
     };
   }
@@ -124,15 +149,19 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
       signal,
     });
   } catch (error) {
-    const errorResult = getAndLogFetchNetworkError({ error, endpoint, method });
+    const errorResult = getAndLogFetchNetworkError({
+      error,
+      eventType,
+      method,
+    });
 
     return { error: errorResult, data: null };
   }
 
   if (!response.ok) {
     const errorResult = await getAndLogErrorResultFromNonOkResponse({
+      eventType,
       response,
-      endpoint,
       method,
     });
 
@@ -140,9 +169,9 @@ export async function tokenXFetchUpdateWithResponse<S extends z.ZodType>({
   } else {
     // Valididate response data
     const { success, validatedData } = await validateResponseBody({
+      eventType,
       response,
       responseDataSchema,
-      endpoint,
       method,
     });
 

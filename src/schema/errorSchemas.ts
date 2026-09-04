@@ -4,8 +4,11 @@ export const frontendErrorTypeSchema = z.enum([
   "AUTHENTICATION_ERROR",
   "OK_RESPONSE_BUT_RESPONSE_BODY_INVALID",
   "SERVER_ACTION_INPUT_VALIDATION_ERROR",
+  "FETCH_UNKNOWN_ERROR_RESPONSE",
+  // Compatibility for responses produced before the spelling was corrected.
   "FETCH_UNKOWN_ERROR_RESPONSE",
   "FETCH_NETWORK_ERROR",
+  "FETCH_TIMEOUT",
 ]);
 
 export const backendErrorTypeSchema = z.enum([

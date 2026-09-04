@@ -2,6 +2,7 @@
 
 import z from "zod";
 import { getEndpointDelMedLegeForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { now } from "@/utils/dateAndTime/dateUtils";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
@@ -32,6 +33,7 @@ export async function delPlanMedLegeServerAction(
   }
 
   const { data, error } = await tokenXFetchUpdateWithResponse({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_DEL_MED_LEGE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointDelMedLegeForAG(narmesteLederId, planId),
     responseDataSchema: delPlanMedLegeResponseSchema,

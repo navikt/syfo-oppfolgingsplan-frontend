@@ -1,5 +1,6 @@
 import "server-only";
 import type z from "zod";
+import type { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { FrontendErrorType } from "../actions/FrontendErrorTypeEnum";
 import { validateAndGetIdPortenTokenOrRedirectToLogin } from "../auth/idPortenToken";
 import {
@@ -7,6 +8,7 @@ import {
   type TokenXTargetApi,
 } from "../auth/tokenXExchange";
 import {
+  getAndLogAuthenticationErrorResult,
   getAndLogErrorResultFromNonOkResponse,
   getAndLogFetchNetworkError,
 } from "./errorHandling";
@@ -20,24 +22,39 @@ import { validateResponseBody } from "./validateResponseBody";
  * something goes wrong. The error is then meant to be catched in an error boundary.
  */
 export async function tokenXFetchGet<S extends z.ZodType>({
+  eventType,
   targetApi,
   endpoint,
   responseDataSchema,
   redirectAfterLoginUrl,
 }: {
+  eventType: RuntimeErrorEvent;
   targetApi: TokenXTargetApi;
   endpoint: string;
   responseDataSchema: S;
   redirectAfterLoginUrl: string;
 }): Promise<z.infer<S>> {
-  const idPortenToken = await validateAndGetIdPortenTokenOrRedirectToLogin(
-    redirectAfterLoginUrl,
-  );
+  let oboToken: string;
+  try {
+    const idPortenToken = await validateAndGetIdPortenTokenOrRedirectToLogin(
+      redirectAfterLoginUrl,
+    );
 
-  const oboToken = await exchangeIdPortenTokenForTokenXOboToken(
-    idPortenToken,
-    targetApi,
-  );
+    oboToken = await exchangeIdPortenTokenForTokenXOboToken(
+      idPortenToken,
+      targetApi,
+    );
+  } catch (error) {
+    const errorResult = getAndLogAuthenticationErrorResult({
+      error,
+      eventType,
+      method: "GET",
+    });
+    if (errorResult) {
+      throw errorResult;
+    }
+    throw error;
+  }
 
   let response: Response;
   try {
@@ -48,7 +65,7 @@ export async function tokenXFetchGet<S extends z.ZodType>({
     // The fetch call threw an error
     const errorResult = getAndLogFetchNetworkError({
       error,
-      endpoint,
+      eventType,
       method: "GET",
     });
 
@@ -57,8 +74,8 @@ export async function tokenXFetchGet<S extends z.ZodType>({
 
   if (!response.ok) {
     const errorResult = await getAndLogErrorResultFromNonOkResponse({
+      eventType,
       response,
-      endpoint,
       method: "GET",
     });
 
@@ -67,9 +84,9 @@ export async function tokenXFetchGet<S extends z.ZodType>({
 
   // Response status is ok, parse response data
   const { success, validatedData } = await validateResponseBody({
+    eventType,
     response,
     responseDataSchema,
-    endpoint,
     method: "GET",
   });
   if (success) {

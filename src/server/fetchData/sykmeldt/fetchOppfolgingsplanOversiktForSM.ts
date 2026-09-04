@@ -3,6 +3,7 @@ import {
   type DemoScenario,
   parseDemoScenario,
 } from "@/common/demoScenario";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { getServerEnv } from "@/env-variables/serverEnv";
 import {
@@ -47,6 +48,7 @@ export async function fetchOppfolgingsplanOversiktForSM(): Promise<Oppfolgingspl
   }
 
   return await tokenXFetchGet({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_SYKMELDT_OVERSIKT_FETCH_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: `${getServerEnv().SYFO_OPPFOLGINGSPLAN_BACKEND_HOST}/api/v1/sykmeldt/oppfolgingsplaner/oversikt`,
     responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForSM,

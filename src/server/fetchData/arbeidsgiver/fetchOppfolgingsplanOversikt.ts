@@ -5,6 +5,7 @@ import {
   type DemoScenario,
   parseDemoScenario,
 } from "@/common/demoScenario";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   type OppfolgingsplanerOversiktForAG,
@@ -66,6 +67,8 @@ export const fetchOppfolgingsplanOversiktForAG = cache(
     }
 
     return await tokenXFetchGetWithResult({
+      eventType:
+        RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
       targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
       endpoint: getEndpointOversiktForAG(narmesteLederId),
       responseDataSchema: OppfolgingsplanerOversiktResponseSchemaForAG,

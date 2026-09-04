@@ -1,8 +1,8 @@
 "use server";
 
-import { logger } from "@navikt/next-logger";
 import z from "zod";
 import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import {
   type OppfolgingsplanFormUnderArbeid,
@@ -14,6 +14,7 @@ import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay
 import type { FetchUpdateResultWithResponse } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdateWithResponse } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
+import { logServerActionInputValidationError } from "./logServerActionInputValidationError";
 import { isNonEmptyString } from "./serverActionsInputValidation";
 
 const lagreUtkastResponseSchema = z.object({
@@ -41,24 +42,23 @@ export async function lagreUtkastServerAction(
 
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
-  const {
-    success: isFormValuesValid,
-    data: validatedFormValues,
-    error: inputValidationError,
-  } = oppfolgingsplanFormUnderArbeidSchema.safeParse(formValues);
+  const formValuesValidation =
+    oppfolgingsplanFormUnderArbeidSchema.safeParse(formValues);
 
-  if (!(isNarmesteLederIdValid && isFormValuesValid)) {
-    if (!isNarmesteLederIdValid) {
-      logger.error(
-        `lagreUtkastServerAction invalid narmesteLederId: ${narmesteLederId}`,
-      );
-    }
-
-    if (!isFormValuesValid) {
-      logger.warn(
-        `lagreUtkastServerAction formValues validation error: ${inputValidationError.message}`,
-      );
-    }
+  if (!(isNarmesteLederIdValid && formValuesValidation.success)) {
+    logServerActionInputValidationError({
+      eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED,
+      validationTarget:
+        !isNarmesteLederIdValid && !formValuesValidation.success
+          ? "narmeste_leder_id_and_payload"
+          : !isNarmesteLederIdValid
+            ? "narmeste_leder_id"
+            : "payload",
+      validationError: formValuesValidation.success
+        ? undefined
+        : formValuesValidation.error,
+      validationSchema: oppfolgingsplanFormUnderArbeidSchema,
+    });
 
     return {
       error: {
@@ -68,11 +68,14 @@ export async function lagreUtkastServerAction(
     };
   }
 
+  const validatedFormValues = formValuesValidation.data;
+
   const requestBody: LagreUtkastRequestBody = {
     content: validatedFormValues,
   };
 
   return await tokenXFetchUpdateWithResponse({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_UTKAST_SAVE_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointUtkastForAG(narmesteLederId),
     method: "PUT",

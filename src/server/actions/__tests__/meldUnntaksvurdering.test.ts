@@ -56,7 +56,7 @@ describe("meldUnntaksvurderingServerAction", () => {
 
   test("returnerer feilen og refresher ikke når backend avviser", async () => {
     const error = {
-      type: FrontendErrorType.FETCH_UNKOWN_ERROR_RESPONSE,
+      type: FrontendErrorType.FETCH_UNKNOWN_ERROR_RESPONSE,
       message: "Conflict",
     };
     tokenXFetchUpdateMock.mockResolvedValue({ error });

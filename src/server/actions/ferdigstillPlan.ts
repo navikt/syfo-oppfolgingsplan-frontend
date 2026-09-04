@@ -1,10 +1,10 @@
 "use server";
 
-import { logger } from "@navikt/next-logger";
 import { redirect } from "next/navigation";
 import type z from "zod";
 import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
+import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
 import { getOppfolgingsplanFormShape } from "@/utils/getOppfolgingsplanFormShape";
@@ -13,6 +13,7 @@ import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay
 import type { FetchUpdateResult } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
+import { logServerActionInputValidationError } from "./logServerActionInputValidationError";
 import {
   ferdigstillPlanActionPayloadSchema,
   isNonEmptyString,
@@ -30,29 +31,31 @@ export async function ferdigstillPlanServerAction(
 
   // Input validation
   const isNarmesteLederIdValid = isNonEmptyString(narmesteLederId);
-  const {
-    success: isPayloadValid,
-    data: validatedPayload,
-    error: inputValidationError,
-  } = ferdigstillPlanActionPayloadSchema.safeParse(payload);
+  const payloadValidation =
+    ferdigstillPlanActionPayloadSchema.safeParse(payload);
 
-  if (!(isNarmesteLederIdValid && isPayloadValid)) {
-    if (!isNarmesteLederIdValid) {
-      logger.error(
-        `ferdigstillPlanServerAction invalid narmesteLederId: ${narmesteLederId}`,
-      );
-    }
-    if (!isPayloadValid) {
-      logger.error(
-        `ferdigstillPlanServerAction payload validation error: ${inputValidationError.message}`,
-      );
-      return {
-        error: {
-          type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
-        },
-      };
-    }
+  if (!(isNarmesteLederIdValid && payloadValidation.success)) {
+    logServerActionInputValidationError({
+      eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
+      validationTarget:
+        !isNarmesteLederIdValid && !payloadValidation.success
+          ? "narmeste_leder_id_and_payload"
+          : !isNarmesteLederIdValid
+            ? "narmeste_leder_id"
+            : "payload",
+      validationError: payloadValidation.success
+        ? undefined
+        : payloadValidation.error,
+      validationSchema: ferdigstillPlanActionPayloadSchema,
+    });
+    return {
+      error: {
+        type: FrontendErrorType.SERVER_ACTION_INPUT_VALIDATION_ERROR,
+      },
+    };
   }
+
+  const validatedPayload = payloadValidation.data;
 
   const {
     formValues,
@@ -68,6 +71,7 @@ export async function ferdigstillPlanServerAction(
   const formSnapshot = createFormSnapshot(formShape, formValues);
 
   const fetchResult = await tokenXFetchUpdate({
+    eventType: RuntimeErrorEvent.OPPFOLGINGSPLAN_FERDIGSTILLING_FAILED,
     targetApi: TokenXTargetApi.SYFO_OPPFOLGINGSPLAN_BACKEND,
     endpoint: getEndpointOppfolgingsplanerForAG(narmesteLederId),
     requestBody: {
