@@ -73,7 +73,10 @@ describe("OversiktInnholdForSykmeldt", () => {
       "data-color",
       "accent",
     );
-    expect(screen.getByText("idebanken.org")).toHaveClass("aksel-tag--outline");
+    expect(screen.getByText("idebanken.org")).toHaveAttribute(
+      "data-color",
+      "meta-purple",
+    );
   });
 
   test("viser nyeste plan som aktiv og resten under vedtatt heading", async () => {
@@ -145,7 +148,10 @@ describe("OversiktInnholdForSykmeldt", () => {
       "data-color",
       "accent",
     );
-    expect(screen.getByText("idebanken.org")).toHaveClass("aksel-tag--outline");
+    expect(screen.getByText("idebanken.org")).toHaveAttribute(
+      "data-color",
+      "meta-purple",
+    );
   });
 
   test("beholder eksisterende innhold utenfor tiltaksgruppen", async () => {
