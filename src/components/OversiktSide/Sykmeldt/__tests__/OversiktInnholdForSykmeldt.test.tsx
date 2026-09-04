@@ -66,11 +66,14 @@ describe("OversiktInnholdForSykmeldt", () => {
     expect(
       screen.getByRole("heading", { name: "Dette kan du bidra med" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", {
-        name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
-      }),
-    ).toBeInTheDocument();
+    const samtaleguideLink = screen.getByRole("link", {
+      name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
+    });
+    expect(samtaleguideLink.closest("[data-color]")).toHaveAttribute(
+      "data-color",
+      "accent",
+    );
+    expect(screen.getByText("idebanken.org")).toHaveClass("aksel-tag--outline");
   });
 
   test("viser nyeste plan som aktiv og resten under vedtatt heading", async () => {
@@ -131,11 +134,18 @@ describe("OversiktInnholdForSykmeldt", () => {
     expect(
       screen.getByText("Ha kontakt med og delta i møter med lederen din."),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", {
-        name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
-      }),
-    ).toHaveAttribute("href", expect.stringContaining("Samtaleguide"));
+    const samtaleguideLink = screen.getByRole("link", {
+      name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
+    });
+    expect(samtaleguideLink).toHaveAttribute(
+      "href",
+      expect.stringContaining("Samtaleguide"),
+    );
+    expect(samtaleguideLink.closest("[data-color]")).toHaveAttribute(
+      "data-color",
+      "accent",
+    );
+    expect(screen.getByText("idebanken.org")).toHaveClass("aksel-tag--outline");
   });
 
   test("beholder eksisterende innhold utenfor tiltaksgruppen", async () => {
@@ -193,7 +203,7 @@ describe("OversiktInnholdForSykmeldt", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", {
-        name: "Lag et forberedelsesskjema til samtalen",
+        name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
       }),
     ).toBeInTheDocument();
   });
@@ -273,15 +283,10 @@ describe("OversiktInnholdForSykmeldt", () => {
     await renderAsync(OversiktInnholdForSykmeldt());
 
     expect(
-      screen.getByRole("link", {
-        name: "Lag et forberedelsesskjema til samtalen",
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("link", {
+      screen.getAllByRole("link", {
         name: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
       }),
-    ).not.toBeInTheDocument();
+    ).toHaveLength(1);
   });
 
   test("viser tiltaksinnhold og bare unntak fra tiltaksvirksomheter i blandet tilfelle", async () => {
