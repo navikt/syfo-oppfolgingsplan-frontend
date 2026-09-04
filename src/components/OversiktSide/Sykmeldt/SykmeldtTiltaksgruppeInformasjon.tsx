@@ -1,4 +1,4 @@
-import { ClipboardCheckmarkFillIcon, HandHeartIcon } from "@navikt/aksel-icons";
+import { HandHeartIcon } from "@navikt/aksel-icons";
 import {
   BodyLong,
   Heading,
@@ -17,7 +17,6 @@ import {
   LinkCardAnchor,
   LinkCardDescription,
   LinkCardFooter,
-  LinkCardIcon,
   LinkCardTitle,
 } from "@navikt/ds-react/LinkCard";
 import { List, ListItem } from "@navikt/ds-react/List";
@@ -32,23 +31,26 @@ const forberedelseInnhold = {
     title: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
     description:
       "Idebanken har gode råd og verktøy som kan hjelpe deg å vite hva du vil si når du og lederen din lager oppfølgingsplan sammen. Målet er å finne ut hva som kan gjøre det lettere for deg å komme tilbake i jobb.",
-    visIkon: false,
+    linkCardColor: "accent" as const,
     tagColor: "meta-purple" as const,
+    tagVariant: "outline" as const,
   },
   "gjeldende-unntak": {
-    title: "Lag et forberedelsesskjema til samtalen",
+    title: "Få hjelp med forberedelsene til møtet om oppfølgingsplan",
     description:
-      "Et forberedelsesskjema hjelper deg å tenke gjennom hva du vil si til lederen din. Idebanken har gode råd og verktøy for å forberede deg til samtalen om sykefravær.",
-    visIkon: true,
-    tagColor: "neutral" as const,
+      "Idebanken har gode råd og verktøy som kan hjelpe deg å vite hva du vil si når du og lederen din lager oppfølgingsplan sammen. Målet er å finne ut hva som kan gjøre det lettere for deg å komme tilbake i jobb.",
+    linkCardColor: "accent" as const,
+    tagColor: "meta-purple" as const,
+    tagVariant: "outline" as const,
   },
 } satisfies Record<
   ForberedelseTilSamtaleVariant,
   {
     title: string;
     description: string;
-    visIkon: boolean;
+    linkCardColor: "accent" | "neutral";
     tagColor: "meta-purple" | "neutral";
+    tagVariant: "outline" | "moderate";
   }
 >;
 
@@ -99,7 +101,7 @@ export function ForberedelseTilSamtale({
 }: {
   variant: ForberedelseTilSamtaleVariant;
 }) {
-  const { title, description, visIkon, tagColor } =
+  const { title, description, linkCardColor, tagColor, tagVariant } =
     forberedelseInnhold[variant];
 
   return (
@@ -107,12 +109,7 @@ export function ForberedelseTilSamtale({
       <Heading id="forberedelse-til-samtale" level="3" size="medium" spacing>
         Forbered deg til samtalen
       </Heading>
-      <LinkCard as="article">
-        {visIkon && (
-          <LinkCardIcon>
-            <ClipboardCheckmarkFillIcon aria-hidden />
-          </LinkCardIcon>
-        )}
+      <LinkCard as="article" data-color={linkCardColor}>
         <LinkCardTitle as="h4">
           <LinkCardAnchor asChild>
             <a href={SAMTALEGUIDE_URL}>{title}</a>
@@ -122,7 +119,7 @@ export function ForberedelseTilSamtale({
           <BodyLong>{description}</BodyLong>
         </LinkCardDescription>
         <LinkCardFooter>
-          <Tag data-color={tagColor} variant="moderate" size="small">
+          <Tag data-color={tagColor} variant={tagVariant} size="small">
             idebanken.org
           </Tag>
         </LinkCardFooter>
