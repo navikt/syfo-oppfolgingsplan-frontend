@@ -51,7 +51,9 @@ describe("MeldUnntakSection", () => {
     await expandUnntaksvalget();
 
     expect(
-      screen.getByText(/Den ansatte er for syk til å lage plan/i),
+      screen.getByText(
+        /Alvorlig sykdom gjør at den ansatte ikke klarer å lage en plan/i,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Det er ikke mulig å få kontakt med den ansatte/i),
@@ -140,7 +142,7 @@ describe("MeldUnntakSection", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: /Det finnes enkelte unntak fra å lage oppfølgingsplan/i,
+        name: /Det finnes noen unntak fra å lage oppfølgingsplan/i,
       }),
     ).toBeInTheDocument();
     expect(

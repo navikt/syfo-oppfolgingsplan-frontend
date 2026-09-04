@@ -68,7 +68,7 @@ export default function MeldUnntakForm({ ansattNavn, onSuccess }: Props) {
     >
       <ExpansionCardHeader>
         <ExpansionCardTitle as="h3" size="small">
-          Det finnes enkelte unntak fra å lage oppfølgingsplan
+          Det finnes noen unntak fra å lage oppfølgingsplan
         </ExpansionCardTitle>
       </ExpansionCardHeader>
       <ExpansionCardContent>
@@ -78,7 +78,9 @@ export default function MeldUnntakForm({ ansattNavn, onSuccess }: Props) {
               <BodyLong>Disse kan for eksempel være:</BodyLong>
 
               <List>
-                <ListItem>Den ansatte er for syk til å lage plan</ListItem>
+                <ListItem>
+                  Alvorlig sykdom gjør at den ansatte ikke klarer å lage en plan
+                </ListItem>
                 <ListItem>Den ansatte er snart tilbake i full jobb</ListItem>
                 <ListItem>Arbeidsforholdet skal snart avsluttes</ListItem>
                 <ListItem>
