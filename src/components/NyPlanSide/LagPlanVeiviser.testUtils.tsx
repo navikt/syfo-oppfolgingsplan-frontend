@@ -54,7 +54,10 @@ export async function renderLagPlanVeiviserComponent(
   erITiltaksgruppe = false,
 ) {
   const lagretUtkastPromise = Promise.resolve(mockData);
-  const erITiltaksgruppePromise = Promise.resolve(erITiltaksgruppe);
+  const tiltakspakkePromise = Promise.resolve({
+    gruppe: erITiltaksgruppe ? ("tiltak" as const) : ("kontroll" as const),
+    erITiltaksgruppe,
+  });
 
   let renderResult: ReturnType<typeof render> | null = null;
 
@@ -62,7 +65,7 @@ export async function renderLagPlanVeiviserComponent(
     renderResult = render(
       <LagPlanVeiviser
         lagretUtkastPromise={lagretUtkastPromise}
-        erITiltaksgruppePromise={erITiltaksgruppePromise}
+        tiltakspakkePromise={tiltakspakkePromise}
       />,
     );
   });

@@ -10,6 +10,7 @@ import {
   oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema,
   oppfolgingsplanFormUtfylltSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
 import { useAppForm } from "./form";
@@ -27,12 +28,13 @@ const defaultMeta: FormMeta = {
 export default function useOppfolgingsplanForm({
   initialLagretUtkast,
   initialSistLagretTidspunkt,
-  erITiltaksgruppe,
+  tiltakspakke,
 }: {
   initialLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
   initialSistLagretTidspunkt: string | null;
-  erITiltaksgruppe: boolean;
+  tiltakspakke: TiltakspakkeContext;
 }) {
+  const { erITiltaksgruppe } = tiltakspakke;
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [veiviserSteg, setVeiviserSteg] = useState(VeiviserSteg.FYLL_UT_PLAN);
@@ -105,7 +107,7 @@ export default function useOppfolgingsplanForm({
     startFerdigstillPlanAction,
     isPendingFerdigstillPlan,
     error: ferdigstillPlanError,
-  } = useFerdigstillOppfolgingsplanAction();
+  } = useFerdigstillOppfolgingsplanAction(tiltakspakke);
 
   function saveIfChangesAndProceedToOppsummering(
     values: OppfolgingsplanFormUnderArbeid,

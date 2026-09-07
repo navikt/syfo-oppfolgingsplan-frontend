@@ -1,4 +1,5 @@
 import { logger } from "@navikt/next-logger";
+import { revalidatePath } from "next/cache";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import {
   getRuntimeErrorOperation,
@@ -26,6 +27,7 @@ vi.mock("@/server/tokenXFetch/tokenXFetchUpdate", () => ({
 vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 const loggerErrorMock = vi.mocked(logger.error);
 
@@ -53,12 +55,17 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
     ["Ja", true],
     ["Nei", false],
   ] as const)("sender valgt %s i FormSnapshot", async (_label, value) => {
-    await ferdigstillPlanServerAction("narmeste-leder-id", {
+    const result = await ferdigstillPlanServerAction("narmeste-leder-id", {
       formValues,
       evalueringsDatoIsoString: formValues.evalueringsDato,
       includeIkkeMedvirketBegrunnelseFieldInFormSnapshot: false,
       evalueringPaaminnelse: value,
     });
+    expect(result).toEqual({ error: null });
+    expect(revalidatePath).toHaveBeenCalledWith(
+      "/narmeste-leder-id/aktiv-plan",
+    );
+    expect(revalidatePath).toHaveBeenCalledWith("/narmeste-leder-id");
 
     expect(tokenXFetchUpdateMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -81,6 +88,7 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
       error: { type: "SERVER_ACTION_INPUT_VALIDATION_ERROR" },
     });
     expect(tokenXFetchUpdateMock).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
     expect(loggerErrorMock).toHaveBeenCalledOnce();
     expect(loggerErrorMock).toHaveBeenCalledWith(
       {
@@ -93,6 +101,20 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
       },
       "Server action input validation failed",
     );
+  });
+
+  test("returns a backend error without signalling success or invalidating pages", async () => {
+    const failure = { error: { type: "FETCH_NETWORK_ERROR" } };
+    tokenXFetchUpdateMock.mockResolvedValue(failure);
+    await expect(
+      ferdigstillPlanServerAction("leader", {
+        formValues,
+        evalueringsDatoIsoString: formValues.evalueringsDato,
+        includeIkkeMedvirketBegrunnelseFieldInFormSnapshot: false,
+        evalueringPaaminnelse: false,
+      }),
+    ).resolves.toEqual(failure);
+    expect(revalidatePath).not.toHaveBeenCalled();
   });
 
   test("logger trygg Zod-diagnostikk uten avvist payload", async () => {

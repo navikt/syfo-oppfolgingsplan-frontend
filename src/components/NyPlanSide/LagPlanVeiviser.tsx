@@ -6,10 +6,12 @@ import {
   fyllUtPlanSkjemaStegFullfortEvent,
 } from "@/common/analytics/events-and-properties/skjema-events";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
+import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import type { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";
+import { usePlanDeliveryTelemetry } from "./usePlanDeliveryTelemetry";
 
 export enum VeiviserSteg {
   FYLL_UT_PLAN = "FYLL_UT_PLAN",
@@ -18,15 +20,17 @@ export enum VeiviserSteg {
 
 interface Props {
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
-  erITiltaksgruppePromise: Promise<boolean>;
+  tiltakspakkePromise: Promise<TiltakspakkeContext>;
 }
 
 export default function LagPlanVeiviser({
   lagretUtkastPromise,
-  erITiltaksgruppePromise,
+  tiltakspakkePromise,
 }: Props) {
   const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
-  const erITiltaksgruppe = use(erITiltaksgruppePromise);
+  const tiltakspakke = use(tiltakspakkePromise);
+  const { erITiltaksgruppe } = tiltakspakke;
+  const telemetryRef = usePlanDeliveryTelemetry(tiltakspakke);
 
   const initialLagretUtkast = utkast?.content || null;
   const initialSistLagretTidspunkt = utkast?.sistLagretTidspunkt || null;
@@ -47,7 +51,7 @@ export default function LagPlanVeiviser({
   } = useOppfolgingsplanForm({
     initialLagretUtkast,
     initialSistLagretTidspunkt,
-    erITiltaksgruppe,
+    tiltakspakke,
   });
 
   function handleFortsettTilOppsummering() {
@@ -61,7 +65,7 @@ export default function LagPlanVeiviser({
   }
 
   return (
-    <section>
+    <section ref={telemetryRef}>
       <Activity
         mode={veiviserSteg === VeiviserSteg.FYLL_UT_PLAN ? "visible" : "hidden"}
       >
