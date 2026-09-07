@@ -17,6 +17,7 @@ describe("AID plan event boundary", () => {
     variant: "aid",
     hendelse: "opprett",
     utfall: "bekreftet",
+    evaluering_paaminnelse: "ja",
   } as const;
 
   test("strips extra fields and reuses APM without cross-visit dedupe", () => {
@@ -50,7 +51,41 @@ describe("AID plan event boundary", () => {
     recordAidPlan({ ...event, hendelse: "vist" });
     // @ts-expect-error Free text is not an outcome.
     recordAidPlan({ ...event, utfall: "sensitive" });
+    // @ts-expect-error Reminder data must be a closed category, not form content.
+    recordAidPlan({ ...event, evaluering_paaminnelse: "sensitive" });
+    const { evaluering_paaminnelse: _reminder, ...withoutReminder } = event;
+    // @ts-expect-error New creation events must include the submitted preference.
+    recordAidPlan(withoutReminder);
     expect(pushEvent).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    "ja",
+    "nei",
+  ] as const)("preserves submitted reminder preference %s", (evaluering_paaminnelse) => {
+    recordAidPlan({ ...event, evaluering_paaminnelse });
+    expect(pushEvent.mock.calls[0][1]).toEqual({
+      ...event,
+      evaluering_paaminnelse,
+      tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
+      flate: "ny_plan",
+      schema_version: "1",
+    });
+  });
+
+  test.each([
+    "beslutning",
+    "vist",
+  ] as const)("does not attach reminder preferences to %s", (hendelse) => {
+    const view = {
+      ...event,
+      hendelse,
+      utfall: "tilgjengelig" as const,
+    };
+    recordAidPlan(view);
+    expect(pushEvent.mock.calls[0][1]).not.toHaveProperty(
+      "evaluering_paaminnelse",
+    );
   });
 
   test("separates assignment from delivered variant", () => {

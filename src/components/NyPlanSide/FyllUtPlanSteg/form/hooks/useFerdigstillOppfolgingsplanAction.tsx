@@ -18,7 +18,9 @@ export type FerdigstillPlanActionPayload = z.infer<
 type Submission = {
   narmesteLederId: string;
   payload: FerdigstillPlanActionPayload;
-  attributes: ReturnType<typeof getAidPlanAttributes>;
+  attributes: ReturnType<typeof getAidPlanAttributes> & {
+    evaluering_paaminnelse: "ja" | "nei";
+  };
 };
 
 type SubmissionResult = FetchUpdateResult & {
@@ -98,10 +100,13 @@ export default function useFerdigstillOppfolgingsplanAction(
     // React action queues allow repeated dispatches. Lock synchronously and
     // keep the lock after success until navigation unmounts the wizard.
     if (activeSubmission.current) return;
-    const submission = {
+    const submission: Submission = {
       narmesteLederId,
       payload,
-      attributes: getAidPlanAttributes(tiltakspakke),
+      attributes: {
+        ...getAidPlanAttributes(tiltakspakke),
+        evaluering_paaminnelse: payload.evalueringPaaminnelse ? "ja" : "nei",
+      },
     };
     activeSubmission.current = submission;
     startTransition(() => {
