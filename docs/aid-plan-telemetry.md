@@ -1,6 +1,6 @@
 # Levering og opprettelse av oppfølgingsplan
 
-Dette er produkttelemetri for arbeidsgivers «Lag oppfølgingsplan»-skjema, ikke effektanalyse eller telling av unike personer. Hendelsene bruker den eksisterende NAIS APM/Faro-instansen og dens metadata og scrubbing. Ingen ekstra Flaggskipet-oppslag eller nye avhengigheter.
+Dette er produkttelemetri for arbeidsgivers «Lag oppfølgingsplan»-skjema, ikke effektanalyse eller telling av unike personer. Hendelsene bruker den eksisterende NAIS APM/Faro-instansen og dens metadata og scrubbing, uten nye avhengigheter. Tildelingsgruppen gjenbruker det eksisterende Flaggskipet-oppslaget per server-render. Vellykket lagring medfører en ekstra oppfriskning av gjeldende side, beskrevet under komposisjon.
 
 ## Kontrakt
 
@@ -19,7 +19,7 @@ Hendelsesnavn: `aid_oppfolgingsplan`. Domene: `aid`. Faste felter: `schema_versi
 - `opprett/bekreftet` krever at serverhandlingen returnerer et vellykket resultat fra opprettelses-API-et. Målingen skjer før navigasjon til aktiv plan, ikke ved å tolke URL-en eller kvitteringsteksten.
 - `opprett/feilet` betyr at klienten fikk en feil eller ikke kunne få bekreftet serverhandlingen. Det beviser ikke at backend aldri lagret planen: forbindelsen kan feile etter lagring.
 
-En synkron sperre hindrer at gjentatte klikk køer flere opprettelser fra samme skjema. Feil åpner for et nytt forsøk; etter bekreftelse beholdes sperren frem til navigasjon. Dette er ikke backend-idempotens på tvers av faner, omlasting eller nettverksfeil.
+En synkron sperre hindrer at gjentatte klikk køer flere opprettelser fra samme aktive skjema. Feil åpner for et nytt forsøk; etter bekreftelse beholdes sperren frem til navigasjon. Dersom brukeren forlater skjemaet, registreres et eventuelt sent resultat fortsatt med opprinnelig tildeling, men det får ikke navigere brukeren tilbake. Dette gjelder også når Next skjuler og senere gjenbruker skjemaet. Dette er ikke backend-idempotens på tvers av faner, omlasting eller nettverksfeil.
 
 ## Avgrensning
 
@@ -38,11 +38,17 @@ En synkron sperre hindrer at gjentatte klikk køer flere opprettelser fra samme 
 
 `usePlanDeliveryTelemetry` eier beslutning og viewport-visning. Opprettelseshooken eier innsending, resultat og navigasjon. Serverhandlingen beholder validering, TokenX og API-kall, returnerer resultatet og invaliderer berørte sider ved suksess. Klienten går deretter til samme aktive plan-side som før.
 
+Resultatet måles når serverhandlingen svarer, mens navigasjonen skjer i en effect etter at React har tatt i bruk resultatet fra `useActionState`. Dette skillet lar en nyere navigasjon fullføre selv om målsiden laster tregt og det gamle skjemaet fortsatt er montert. Effecten kontrollerer også at resultatet tilhører den aktive innsendingen; et gammelt resultat får ikke navigere etter at skjemaet er forlatt eller gjenbrukt.
+
+`revalidatePath` oppfrisker også den gjeldende serversiden som del av svaret fra serverhandlingen. Derfor kan vellykket ferdigstilling starte utkast-, oversikts- og Flaggskipet-oppslag for utfyllingssiden før navigasjonen henter aktiv plan. React-cache deler bare resultater innenfor én server-render, ikke mellom disse to. Dette er en bevisst kostnad ved å få et eksplisitt API-resultat til målingen og samtidig unngå gjenbruk av en gammel aktiv plan eller oversikt. Det er ikke et ekstra opprettelseskall, og beslutning/visning telles ikke på nytt ved en vanlig rerender av samme skjema.
+
+Vi beholder Next sine offentlige API-er for invalidering og klientnavigasjon. Målingen tolker ikke rammeverkets interne redirect-feil, og innfører ikke full sidelasting eller cache-busting-parametere. Lokal/demo hopper over revalideringen og kan derfor ikke alene verifisere denne serverflyten.
+
 ## Kontroll før tallene tas i bruk
 
 1. Human review og dev-utrulling.
-2. Bekreft tildeling og variant ved tiltak, kontroll, utenfor scope, ukjent og avslått funksjonsbryter. Ingen ekstra vurderingskall.
-3. Bekreft én beslutning, faktisk visning og ett forsøk/resultat ved ferdigstilling. Feil må ikke gi bekreftet opprettelse; dobbeltklikk må ikke gi flere kall.
+2. Bekreft tildeling og variant ved tiltak, kontroll, utenfor scope, ukjent og avslått funksjonsbryter. Tildeling og UI skal dele vurderingskallet innenfor samme server-render.
+3. Bekreft én beslutning, faktisk visning og ett forsøk/resultat ved ferdigstilling. Feil må ikke gi bekreftet opprettelse; dobbeltklikk må ikke gi flere opprettelseskall. Naviger bort under lagring og kontroller at et sent svar ikke sender brukeren tilbake. Kontroller ferske data i en tidligere besøkt aktiv plan/oversikt og antall oppslag ved revalideringen.
 4. Verifiser faktiske feltnavn i Grafana før dashboardpaneler aktiveres. Hold denne hendelsen atskilt fra `aid_paaminnelse` og eksisterende usegmenterte backendtellere. Ikke fyll prod med syntetiske produktoperasjoner.
 
 Plattformreferanser: [NAIS frontend-observability](https://doc.nais.io/observability/frontend/) og [Next.js cache-invalidering etter mutasjoner](https://nextjs.org/docs/app/api-reference/functions/revalidatePath).

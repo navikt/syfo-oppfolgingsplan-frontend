@@ -84,6 +84,7 @@ export async function ferdigstillPlanServerAction(
   if (!fetchResult.error) {
     // The client now navigates after receiving confirmation. Invalidate visited
     // pages so its router cannot reuse an overview or active plan from before saving.
+    // This also refreshes the current server page before the client navigates.
     revalidatePath(getAGAktivPlanHref(narmesteLederId));
     revalidatePath(getAGOversiktHref(narmesteLederId));
   }

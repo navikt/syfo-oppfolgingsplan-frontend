@@ -1,5 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
-import { startTransition, useActionState, useRef } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 import type z from "zod";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import {
@@ -21,53 +21,89 @@ type Submission = {
   attributes: ReturnType<typeof getAidPlanAttributes>;
 };
 
+type SubmissionResult = FetchUpdateResult & {
+  completedSubmission: Submission | null;
+};
+
 export default function useFerdigstillOppfolgingsplanAction(
   tiltakspakke: TiltakspakkeContext,
 ) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
   const { push } = useRouter();
-  const submitted = useRef(false);
+  const activeSubmission = useRef<Submission | null>(null);
 
-  const initialFerdigstillState = { error: null };
+  useEffect(() => {
+    return () => {
+      // A save may finish after the user leaves. Keep its telemetry, but do not
+      // let its response navigate a different or newly mounted wizard.
+      if (activeSubmission.current?.narmesteLederId === narmesteLederId) {
+        activeSubmission.current = null;
+      }
+    };
+  }, [narmesteLederId]);
 
-  const [{ error }, ferdigstillPlanAction, isPendingFerdigstillPlan] =
-    useActionState(innerFerdigstillPlanAction, initialFerdigstillState);
+  const initialFerdigstillState: SubmissionResult = {
+    error: null,
+    completedSubmission: null,
+  };
+
+  const [
+    { error, completedSubmission },
+    ferdigstillPlanAction,
+    isPendingFerdigstillPlan,
+  ] = useActionState(innerFerdigstillPlanAction, initialFerdigstillState);
+
+  useEffect(() => {
+    // Wait for React to commit the result. A newer, still-loading navigation
+    // may keep this wizard mounted after the save has already finished.
+    if (
+      completedSubmission &&
+      activeSubmission.current === completedSubmission
+    ) {
+      push(
+        getAGAktivPlanNyligOpprettetHref(completedSubmission.narmesteLederId),
+      );
+    }
+  }, [completedSubmission, push]);
 
   async function innerFerdigstillPlanAction(
-    _previousState: FetchUpdateResult,
+    _previousState: SubmissionResult,
     submission: Submission,
-  ): Promise<FetchUpdateResult> {
+  ): Promise<SubmissionResult> {
     const { attributes, narmesteLederId, payload } = submission;
     recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "forsok" });
     let result: FetchUpdateResult;
     try {
       result = await ferdigstillPlanServerAction(narmesteLederId, payload);
     } catch (error) {
-      submitted.current = false;
+      if (activeSubmission.current === submission) {
+        activeSubmission.current = null;
+      }
       recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "feilet" });
       throw error;
     }
     if (result.error) {
-      submitted.current = false;
+      if (activeSubmission.current === submission) {
+        activeSubmission.current = null;
+      }
       recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "feilet" });
-      return result;
+      return { ...result, completedSubmission: null };
     }
 
     recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "bekreftet" });
-    push(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
-    return result;
+    return { ...result, completedSubmission: submission };
   }
 
   function startFerdigstillPlanAction(payload: FerdigstillPlanActionPayload) {
     // React action queues allow repeated dispatches. Lock synchronously and
     // keep the lock after success until navigation unmounts the wizard.
-    if (submitted.current) return;
-    submitted.current = true;
+    if (activeSubmission.current) return;
     const submission = {
       narmesteLederId,
       payload,
       attributes: getAidPlanAttributes(tiltakspakke),
     };
+    activeSubmission.current = submission;
     startTransition(() => {
       ferdigstillPlanAction(submission);
     });
