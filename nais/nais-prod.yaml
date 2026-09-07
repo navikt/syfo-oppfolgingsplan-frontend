@@ -64,7 +64,7 @@ spec:
     - name: FLAGGSKIPET_CLIENT_ID
       value: "prod-gcp:team-esyfo:flaggskipet"
     - name: TILTAKSPAKKEVURDERING_FEATURE_TOGGLE
-      value: 'false'
+      value: 'true'
   accessPolicy:
     outbound:
       rules:
