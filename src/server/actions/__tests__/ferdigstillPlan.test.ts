@@ -75,7 +75,7 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
         schema_version: "1",
         tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
         gruppe: "tiltak",
-        variant: "aid",
+        skjemavariant: "tiltak",
         evaluering_paaminnelse: value ? "ja" : "nei",
       },
       "Opprettelse av plan bekreftet av backend",

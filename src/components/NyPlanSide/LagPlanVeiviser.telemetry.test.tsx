@@ -73,7 +73,7 @@ describe("plan wizard measurement wiring", () => {
     await waitFor(() =>
       expect(recordAidPlan).toHaveBeenLastCalledWith({
         gruppe: aid ? "tiltak" : "kontroll",
-        variant: aid ? "aid" : "standard",
+        skjemavariant: aid ? "tiltak" : "standard",
         hendelse: "opprett",
         utfall: "bekreftet",
         evaluering_paaminnelse: reminder === "Ja" ? "ja" : "nei",

@@ -29,7 +29,7 @@ test.each([
       schema_version: "1",
       tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
       gruppe,
-      variant: "standard",
+      skjemavariant: "standard",
       evaluering_paaminnelse: "ja",
     },
     "Opprettelse av plan bekreftet av backend",
