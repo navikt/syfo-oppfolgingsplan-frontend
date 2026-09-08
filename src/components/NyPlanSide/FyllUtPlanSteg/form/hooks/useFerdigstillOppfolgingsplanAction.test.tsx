@@ -19,7 +19,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import { recordAidPlan } from "@/instrumentation/aidPlanTelemetry";
 import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
-import { ferdigstillPlanServerAction } from "@/server/actions/ferdigstillPlan";
+import type { FerdigstillPlanAction } from "@/server/actions/FerdigstillPlanAction";
 import type { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
 import useFerdigstillOppfolgingsplanAction, {
   type FerdigstillPlanActionPayload,
@@ -33,16 +33,13 @@ vi.mock("next/navigation", () => ({
   useParams: () => params,
   useRouter: () => ({ push }),
 }));
-vi.mock("@/server/actions/ferdigstillPlan", () => ({
-  ferdigstillPlanServerAction: vi.fn(),
-}));
 vi.mock("@/instrumentation/aidPlanTelemetry", async (importOriginal) => ({
   ...(await importOriginal<
     typeof import("@/instrumentation/aidPlanTelemetry")
   >()),
   recordAidPlan: vi.fn(),
 }));
-const action = vi.mocked(ferdigstillPlanServerAction);
+const action = vi.fn<FerdigstillPlanAction>();
 const record = vi.mocked(recordAidPlan);
 const context: TiltakspakkeContext = {
   gruppe: "tiltak",
@@ -85,17 +82,17 @@ describe("confirmed plan creation", () => {
   }) => {
     const submittedPayload = { ...payload, evalueringPaaminnelse };
     const { result } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction({ ...context, erITiltaksgruppe }),
+      useFerdigstillOppfolgingsplanAction(
+        { ...context, erITiltaksgruppe },
+        action,
+      ),
     );
 
     await act(async () =>
       result.current.startFerdigstillPlanAction(submittedPayload),
     );
 
-    expect(action).toHaveBeenCalledExactlyOnceWith(
-      "leader-a",
-      submittedPayload,
-    );
+    expect(action).toHaveBeenCalledExactlyOnceWith(submittedPayload);
     expect(record.mock.calls.map(([event]) => event)).toEqual(
       ["forsok", "bekreftet"].map((utfall) => ({
         gruppe: "tiltak",
@@ -115,7 +112,7 @@ describe("confirmed plan creation", () => {
       }),
     );
     const { result } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(context),
+      useFerdigstillOppfolgingsplanAction(context, action),
     );
     act(() => {
       result.current.startFerdigstillPlanAction(payload);
@@ -147,7 +144,7 @@ describe("confirmed plan creation", () => {
     const error = { type: "FETCH_NETWORK_ERROR" } as const;
     action.mockResolvedValueOnce({ error });
     const { result } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(context),
+      useFerdigstillOppfolgingsplanAction(context, action),
     );
     await act(async () => result.current.startFerdigstillPlanAction(payload));
     expect(result.current.error).toEqual(error);
@@ -177,6 +174,9 @@ describe("confirmed plan creation", () => {
   });
 
   test("captures assignment, reminder preference and leader context before awaiting the response", async () => {
+    const nextAction = vi
+      .fn<FerdigstillPlanAction>()
+      .mockResolvedValue({ error: null });
     let complete!: (result: FetchUpdateResult) => void;
     action.mockReturnValue(
       new Promise((resolve) => {
@@ -184,18 +184,26 @@ describe("confirmed plan creation", () => {
       }),
     );
     const { result, rerender } = renderHook(
-      (tiltakspakke: TiltakspakkeContext) =>
-        useFerdigstillOppfolgingsplanAction(tiltakspakke),
-      { initialProps: context },
+      ({
+        tiltakspakke,
+        save,
+      }: {
+        tiltakspakke: TiltakspakkeContext;
+        save: FerdigstillPlanAction;
+      }) => useFerdigstillOppfolgingsplanAction(tiltakspakke, save),
+      { initialProps: { tiltakspakke: context, save: action } },
     );
     const submittedPayload = { ...payload, evalueringPaaminnelse: true };
     act(() => result.current.startFerdigstillPlanAction(submittedPayload));
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
     submittedPayload.evalueringPaaminnelse = false;
     params.narmesteLederId = "leader-b";
-    rerender({ gruppe: "kontroll", erITiltaksgruppe: false });
+    rerender({
+      tiltakspakke: { gruppe: "kontroll", erITiltaksgruppe: false },
+      save: nextAction,
+    });
     await act(async () => complete({ error: null }));
-    expect(action).toHaveBeenCalledWith("leader-a", submittedPayload);
+    expect(action).toHaveBeenCalledWith(submittedPayload);
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
       variant: "aid",
@@ -206,6 +214,13 @@ describe("confirmed plan creation", () => {
     expect(JSON.stringify(record.mock.calls)).not.toContain("leader-a");
     expect(JSON.stringify(record.mock.calls)).not.toContain("Kontor");
     expect(push).not.toHaveBeenCalled();
+    expect(nextAction).not.toHaveBeenCalled();
+    await act(async () => result.current.startFerdigstillPlanAction(payload));
+    expect(nextAction).toHaveBeenCalledExactlyOnceWith(payload);
+    expect(action).toHaveBeenCalledOnce();
+    expect(push).toHaveBeenCalledExactlyOnceWith(
+      getAGAktivPlanNyligOpprettetHref("leader-b"),
+    );
   });
 
   test("records a completed save without navigating after the wizard unmounts", async () => {
@@ -216,7 +231,7 @@ describe("confirmed plan creation", () => {
       }),
     );
     const { result, unmount } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(context),
+      useFerdigstillOppfolgingsplanAction(context, action),
     );
     act(() => result.current.startFerdigstillPlanAction(payload));
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
@@ -243,7 +258,7 @@ describe("confirmed plan creation", () => {
     );
     let visible = true;
     const { result, rerender } = renderHook(
-      () => useFerdigstillOppfolgingsplanAction(context),
+      () => useFerdigstillOppfolgingsplanAction(context, action),
       {
         wrapper: ({ children }) => (
           <StrictMode>
@@ -297,7 +312,7 @@ describe("confirmed plan creation", () => {
     }
     function Wizard() {
       const { startFerdigstillPlanAction } =
-        useFerdigstillOppfolgingsplanAction(context);
+        useFerdigstillOppfolgingsplanAction(context, action);
       return (
         <button
           onClick={() => startFerdigstillPlanAction(payload)}

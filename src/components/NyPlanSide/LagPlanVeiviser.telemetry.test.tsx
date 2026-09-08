@@ -83,6 +83,7 @@ describe("plan wizard measurement wiring", () => {
     expect(ferdigstillPlanServerAction).toHaveBeenCalledWith(
       "12345",
       expect.objectContaining({ evalueringPaaminnelse: reminder === "Ja" }),
+      { gruppe: aid ? "tiltak" : "kontroll", erITiltaksgruppe: aid },
     );
     expect(
       vi.mocked(recordAidPlan).mock.calls.map(([event]) => event.utfall),

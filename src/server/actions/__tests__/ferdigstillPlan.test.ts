@@ -6,12 +6,19 @@ import {
   RuntimeErrorEvent,
 } from "@/common/runtimeErrorEvent";
 import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
-import { ferdigstillPlanServerAction } from "../ferdigstillPlan";
+import type { FerdigstillPlanActionPayload } from "../FerdigstillPlanAction";
+import { ferdigstillPlanServerAction as ferdigstillPlan } from "../ferdigstillPlan";
+
+const tiltakspakke = { gruppe: "tiltak", erITiltaksgruppe: true } as const;
+const ferdigstillPlanServerAction = (
+  id: string,
+  payload: FerdigstillPlanActionPayload,
+) => ferdigstillPlan(id, payload, tiltakspakke);
 
 const tokenXFetchUpdateMock = vi.hoisted(() => vi.fn());
 
 vi.mock("@navikt/next-logger", () => ({
-  logger: { error: vi.fn() },
+  logger: { error: vi.fn(), info: vi.fn() },
 }));
 
 vi.mock("@/env-variables/envHelpers", () => ({
@@ -62,6 +69,20 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
       evalueringPaaminnelse: value,
     });
     expect(result).toEqual({ error: null });
+    expect(logger.info).toHaveBeenCalledExactlyOnceWith(
+      {
+        event_type: "aid_plan_opprettet",
+        schema_version: "1",
+        tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
+        gruppe: "tiltak",
+        variant: "aid",
+        evaluering_paaminnelse: value ? "ja" : "nei",
+      },
+      "Opprettelse av plan bekreftet av backend",
+    );
+    expect(vi.mocked(logger.info).mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(revalidatePath).mock.invocationCallOrder[0],
+    );
     expect(revalidatePath).toHaveBeenCalledWith(
       "/narmeste-leder-id/aktiv-plan",
     );
@@ -88,6 +109,7 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
       error: { type: "SERVER_ACTION_INPUT_VALIDATION_ERROR" },
     });
     expect(tokenXFetchUpdateMock).not.toHaveBeenCalled();
+    expect(logger.info).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
     expect(loggerErrorMock).toHaveBeenCalledOnce();
     expect(loggerErrorMock).toHaveBeenCalledWith(
@@ -114,7 +136,32 @@ describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
         evalueringPaaminnelse: false,
       }),
     ).resolves.toEqual(failure);
+    expect(logger.info).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  test("does not count an unconfirmed response, but counts before failed revalidation", async () => {
+    const payload: FerdigstillPlanActionPayload = {
+      formValues,
+      evalueringsDatoIsoString: formValues.evalueringsDato,
+      includeIkkeMedvirketBegrunnelseFieldInFormSnapshot: false,
+      evalueringPaaminnelse: false,
+    };
+    tokenXFetchUpdateMock.mockRejectedValueOnce(
+      new Error("connection interrupted"),
+    );
+    await expect(
+      ferdigstillPlanServerAction("leader", payload),
+    ).rejects.toThrow("connection interrupted");
+    expect(logger.info).not.toHaveBeenCalled();
+
+    vi.mocked(revalidatePath).mockImplementationOnce(() => {
+      throw new Error("cache unavailable");
+    });
+    await expect(
+      ferdigstillPlanServerAction("leader", payload),
+    ).rejects.toThrow("cache unavailable");
+    expect(logger.info).toHaveBeenCalledOnce();
   });
 
   test("logger trygg Zod-diagnostikk uten avvist payload", async () => {

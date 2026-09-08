@@ -1,23 +1,23 @@
 import { useParams, useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useRef } from "react";
-import type z from "zod";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
 import {
   getAidPlanAttributes,
   recordAidPlan,
 } from "@/instrumentation/aidPlanTelemetry";
 import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
-import { ferdigstillPlanServerAction } from "@/server/actions/ferdigstillPlan";
-import type { ferdigstillPlanActionPayloadSchema } from "@/server/actions/serverActionsInputValidation";
+import type {
+  FerdigstillPlanAction,
+  FerdigstillPlanActionPayload,
+} from "@/server/actions/FerdigstillPlanAction";
 import type { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
 
-export type FerdigstillPlanActionPayload = z.infer<
-  typeof ferdigstillPlanActionPayloadSchema
->;
+export type { FerdigstillPlanActionPayload } from "@/server/actions/FerdigstillPlanAction";
 
 type Submission = {
   narmesteLederId: string;
   payload: FerdigstillPlanActionPayload;
+  ferdigstillAction: FerdigstillPlanAction;
   attributes: ReturnType<typeof getAidPlanAttributes> & {
     evaluering_paaminnelse: "ja" | "nei";
   };
@@ -29,6 +29,7 @@ type SubmissionResult = FetchUpdateResult & {
 
 export default function useFerdigstillOppfolgingsplanAction(
   tiltakspakke: TiltakspakkeContext,
+  ferdigstillAction: FerdigstillPlanAction,
 ) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
   const { push } = useRouter();
@@ -72,11 +73,11 @@ export default function useFerdigstillOppfolgingsplanAction(
     _previousState: SubmissionResult,
     submission: Submission,
   ): Promise<SubmissionResult> {
-    const { attributes, narmesteLederId, payload } = submission;
+    const { attributes, payload } = submission;
     recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "forsok" });
     let result: FetchUpdateResult;
     try {
-      result = await ferdigstillPlanServerAction(narmesteLederId, payload);
+      result = await submission.ferdigstillAction(payload);
     } catch (error) {
       if (activeSubmission.current === submission) {
         activeSubmission.current = null;
@@ -103,6 +104,7 @@ export default function useFerdigstillOppfolgingsplanAction(
     const submission: Submission = {
       narmesteLederId,
       payload,
+      ferdigstillAction,
       attributes: {
         ...getAidPlanAttributes(tiltakspakke),
         evaluering_paaminnelse: payload.evalueringPaaminnelse ? "ja" : "nei",

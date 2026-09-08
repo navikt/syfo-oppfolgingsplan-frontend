@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 
 import { revalidatePath } from "next/cache";
 import type z from "zod";
@@ -6,10 +6,12 @@ import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
 import { getAGAktivPlanHref, getAGOversiktHref } from "@/common/route-hrefs";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
+import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
 import { getOppfolgingsplanFormShape } from "@/utils/getOppfolgingsplanFormShape";
 import { TokenXTargetApi } from "../auth/tokenXExchange";
 import { simulateBackendDelay } from "../fetchData/mockData/simulateBackendDelay";
+import { recordAidPlanCreated } from "../telemetry/recordAidPlanCreated";
 import type { FetchUpdateResult } from "../tokenXFetch/FetchResult";
 import { tokenXFetchUpdate } from "../tokenXFetch/tokenXFetchUpdate";
 import { FrontendErrorType } from "./FrontendErrorTypeEnum";
@@ -22,6 +24,7 @@ import {
 export async function ferdigstillPlanServerAction(
   narmesteLederId: string,
   payload: z.infer<typeof ferdigstillPlanActionPayloadSchema>,
+  tiltakspakke: TiltakspakkeContext,
 ): Promise<FetchUpdateResult> {
   if (isLocalOrDemo) {
     await simulateBackendDelay();
@@ -82,6 +85,7 @@ export async function ferdigstillPlanServerAction(
   });
 
   if (!fetchResult.error) {
+    recordAidPlanCreated(tiltakspakke, evalueringPaaminnelse);
     // The client now navigates after receiving confirmation. Invalidate visited
     // pages so its router cannot reuse an overview or active plan from before saving.
     // This also refreshes the current server page before the client navigates.
