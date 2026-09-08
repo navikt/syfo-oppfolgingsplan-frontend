@@ -10,14 +10,14 @@ export function usePlanDeliveryTelemetry(tiltakspakke: TiltakspakkeContext) {
   const elementRef = useRef<HTMLElement>(null);
   const decisionRecorded = useRef(false);
   const viewRecorded = useRef(false);
-  const { gruppe, variant } = getAidPlanAttributes(tiltakspakke);
+  const { gruppe, skjemavariant } = getAidPlanAttributes(tiltakspakke);
 
   useEffect(() => {
     if (!decisionRecorded.current) {
       decisionRecorded.current = true;
       recordAidPlan({
         gruppe,
-        variant,
+        skjemavariant,
         hendelse: "beslutning",
         utfall: "tilgjengelig",
       });
@@ -40,7 +40,7 @@ export function usePlanDeliveryTelemetry(tiltakspakke: TiltakspakkeContext) {
       viewRecorded.current = true;
       recordAidPlan({
         gruppe,
-        variant,
+        skjemavariant,
         hendelse: "vist",
         utfall: "tilgjengelig",
       });
@@ -51,7 +51,7 @@ export function usePlanDeliveryTelemetry(tiltakspakke: TiltakspakkeContext) {
       active = false;
       observer.disconnect();
     };
-  }, [gruppe, variant]);
+  }, [gruppe, skjemavariant]);
 
   return elementRef;
 }

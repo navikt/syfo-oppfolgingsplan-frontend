@@ -14,7 +14,7 @@ describe("AID plan event boundary", () => {
   });
   const event = {
     gruppe: "tiltak",
-    variant: "aid",
+    skjemavariant: "tiltak",
     hendelse: "opprett",
     utfall: "bekreftet",
   } as const;
@@ -53,12 +53,12 @@ describe("AID plan event boundary", () => {
     expect(pushEvent).not.toHaveBeenCalled();
   });
 
-  test("separates assignment from delivered variant", () => {
+  test("separates assignment from delivered skjemavariant", () => {
     expect(
       getAidPlanAttributes({ gruppe: "tiltak", erITiltaksgruppe: false }),
     ).toEqual({
       gruppe: "tiltak",
-      variant: "standard",
+      skjemavariant: "standard",
     });
   });
 

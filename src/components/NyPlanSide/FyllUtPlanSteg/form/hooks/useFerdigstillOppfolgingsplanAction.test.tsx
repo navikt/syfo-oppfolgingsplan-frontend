@@ -153,7 +153,7 @@ describe("confirmed plan creation", () => {
     expect(action).toHaveBeenCalledWith("leader-a", payload);
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
     });
@@ -180,7 +180,7 @@ describe("confirmed plan creation", () => {
 
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
     });
@@ -217,7 +217,7 @@ describe("confirmed plan creation", () => {
     await act(async () => complete({ error: null }));
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
     });
@@ -285,7 +285,7 @@ describe("confirmed plan creation", () => {
     await act(async () => completeSave({ error: null }));
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
     });

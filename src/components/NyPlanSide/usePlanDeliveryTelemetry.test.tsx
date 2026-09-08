@@ -51,12 +51,12 @@ describe("plan delivery", () => {
   });
 
   test.each([
-    ["tiltak", true, "aid"],
+    ["tiltak", true, "tiltak"],
     ["tiltak", false, "standard"],
     ["kontroll", false, "standard"],
     ["utenfor_scope", false, "standard"],
     ["ukjent", false, "standard"],
-  ] as const)("records %s independently of delivered %s", (gruppe, erITiltaksgruppe, variant) => {
+  ] as const)("records %s independently of delivered %s", (gruppe, erITiltaksgruppe, skjemavariant) => {
     const context = { gruppe, erITiltaksgruppe };
     const tree = (
       <StrictMode>
@@ -66,7 +66,7 @@ describe("plan delivery", () => {
     const { rerender } = render(tree);
     expect(record).toHaveBeenCalledExactlyOnceWith({
       gruppe,
-      variant,
+      skjemavariant,
       hendelse: "beslutning",
       utfall: "tilgjengelig",
     });
@@ -76,7 +76,7 @@ describe("plan delivery", () => {
     expect(record).toHaveBeenCalledTimes(2);
     expect(record).toHaveBeenLastCalledWith({
       gruppe,
-      variant,
+      skjemavariant,
       hendelse: "vist",
       utfall: "tilgjengelig",
     });
@@ -99,7 +99,7 @@ describe("plan delivery", () => {
     intersect();
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "kontroll",
-      variant: "standard",
+      skjemavariant: "standard",
       hendelse: "vist",
       utfall: "tilgjengelig",
     });

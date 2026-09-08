@@ -9,7 +9,7 @@ Hendelsesnavn: `aid_oppfolgingsplan`. Domene: `aid`. Faste felter: `schema_versi
 | Felt | Tillatte verdier og betydning |
 | --- | --- |
 | `gruppe` | `tiltak`, `kontroll`, `utenfor_scope`, `ukjent`. Tildelingen fra eksisterende vurdering for virksomheten, før funksjonsbryteren. Manglende vurdering og feil er ukjent, aldri kontroll. |
-| `variant` | `aid` eller `standard`. Skjemavarianten som faktisk leveres, etter funksjonsbryteren. Tiltak kan få standard når bryteren er av. |
+| `skjemavariant` | `tiltak` eller `standard`. Skjemavarianten som faktisk leveres, etter funksjonsbryteren. Tiltak kan få standard når bryteren er av. |
 | `hendelse` | `beslutning`, `vist` eller `opprett`. |
 | `utfall` | `tilgjengelig` for beslutning/visning. `forsok`, `bekreftet` eller `feilet` for opprettelse. |
 
