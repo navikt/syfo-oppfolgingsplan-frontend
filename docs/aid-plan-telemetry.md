@@ -9,7 +9,7 @@ Hendelsesnavn: `aid_oppfolgingsplan`. Domene: `aid`. Faste felter: `schema_versi
 | Felt | Tillatte verdier og betydning |
 | --- | --- |
 | `gruppe` | `tiltak`, `kontroll`, `utenfor_scope`, `ukjent`. Tildelingen fra eksisterende vurdering for virksomheten, før funksjonsbryteren. Manglende vurdering og feil er ukjent, aldri kontroll. |
-| `variant` | `aid` eller `standard`. Skjemavarianten som faktisk leveres, etter funksjonsbryteren. Tiltak kan få standard når bryteren er av. |
+| `skjemavariant` | `tiltak` eller `standard`. Skjemavarianten som faktisk leveres, etter funksjonsbryteren. Tiltak kan få standard når bryteren er av. |
 | `hendelse` | `beslutning`, `vist` eller `opprett`. |
 | `utfall` | `tilgjengelig` for beslutning/visning. `forsok`, `bekreftet` eller `feilet` for opprettelse. |
 | `evaluering_paaminnelse` | `ja` eller `nei`, bare ved `opprett`. Verdien av `evalueringPaaminnelse` i innsendingen, tatt vare på før serverkallet og brukt på både forsøk og resultat. |
@@ -30,7 +30,7 @@ En synkron sperre hindrer at gjentatte klikk køer flere opprettelser fra samme 
 - Miljø følger eksisterende NAIS APM-metadata. Grafana-spørringer må avgrense både tjenesten og `app_environment` til valgt dev/prod-miljø.
 - Opprettelse kan også være en ny versjon av en eksisterende plan. Det er ikke nødvendigvis personens første plan eller oppstart av utfylling.
 - Evalueringspåminnelsen gjelder evaluering av planen, ikke påminnelse om å lage plan i Dine sykmeldte. `ja` betyr at innsendingen ber om evalueringspåminnelse, ikke at en påminnelse er sendt eller at planen er evaluert. `bekreftet` gjelder fortsatt opprettelses-API-et, ikke en separat bekreftelse fra varslingstjenesten.
-- Bare `variant=aid` tilbyr ja/nei-valget i skjemaet. Bruk denne varianten når ønsket påminnelse skal analyseres; `nei` i standardvarianten er ikke et aktivt avslag. Innsendt verdi beholdes også i standardvarianten, slik at eventuelle gjenbrukte utkast ikke feilaktig måles som et annet API-ønske.
+- Bare `skjemavariant=tiltak` tilbyr ja/nei-valget i skjemaet. Bruk denne varianten når ønsket påminnelse skal analyseres; `nei` i standardvarianten er ikke et aktivt avslag. Innsendt verdi beholdes også i standardvarianten, slik at eventuelle gjenbrukte utkast ikke feilaktig måles som et annet API-ønske.
 - Feltet er en additiv utvidelse av versjon 1. Eldre opprettelseshendelser mangler det, og manglende felt skal ikke telles som `nei`. Eksisterende telling av opprettelser på tvers av påminnelsesvalg er uendret. Beslutning og visning har ikke et innsendt valg og får derfor ikke feltet.
 - Browserhendelser kan mangle på grunn av blokkering, nettverksfeil eller avbrutt navigasjon. De er ikke en fullstendig backendteller, og manglende data betyr ikke null bruk.
 - Hendelsene kan ikke kobles til personer eller forløp og skal ikke brukes til en personbasert konverteringsprosent mellom apper.

@@ -79,7 +79,7 @@ describe("confirmed plan creation", () => {
     { erITiltaksgruppe: true, evalueringPaaminnelse: false },
     { erITiltaksgruppe: false, evalueringPaaminnelse: true },
     { erITiltaksgruppe: false, evalueringPaaminnelse: false },
-  ])("records the submitted preference independently of the variant: %j", async ({
+  ])("records the submitted preference independently of the skjemavariant: %j", async ({
     erITiltaksgruppe,
     evalueringPaaminnelse,
   }) => {
@@ -99,7 +99,7 @@ describe("confirmed plan creation", () => {
     expect(record.mock.calls.map(([event]) => event)).toEqual(
       ["forsok", "bekreftet"].map((utfall) => ({
         gruppe: "tiltak",
-        variant: erITiltaksgruppe ? "aid" : "standard",
+        skjemavariant: erITiltaksgruppe ? "tiltak" : "standard",
         hendelse: "opprett",
         utfall,
         evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
@@ -198,7 +198,7 @@ describe("confirmed plan creation", () => {
     expect(action).toHaveBeenCalledWith("leader-a", submittedPayload);
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
       evaluering_paaminnelse: "ja",
@@ -226,7 +226,7 @@ describe("confirmed plan creation", () => {
 
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
       evaluering_paaminnelse: "nei",
@@ -264,7 +264,7 @@ describe("confirmed plan creation", () => {
     await act(async () => complete({ error: null }));
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
       evaluering_paaminnelse: "nei",
@@ -333,7 +333,7 @@ describe("confirmed plan creation", () => {
     await act(async () => completeSave({ error: null }));
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
-      variant: "aid",
+      skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
       evaluering_paaminnelse: "nei",

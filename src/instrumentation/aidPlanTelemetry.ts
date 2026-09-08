@@ -8,7 +8,7 @@ import { getBrowserObservability } from "./browser";
 
 const contextSchema = z.object({
   gruppe: tildelingsgruppeSchema,
-  variant: z.enum(["aid", "standard"]),
+  skjemavariant: z.enum(["tiltak", "standard"]),
 });
 const eventSchema = z.union([
   contextSchema.extend({
@@ -27,7 +27,7 @@ export function getAidPlanAttributes({
   gruppe,
   erITiltaksgruppe,
 }: TiltakspakkeContext): z.infer<typeof contextSchema> {
-  return { gruppe, variant: erITiltaksgruppe ? "aid" : "standard" };
+  return { gruppe, skjemavariant: erITiltaksgruppe ? "tiltak" : "standard" };
 }
 
 /** Closed categories only. Existing APM metadata/scrubbing stays in place. */
