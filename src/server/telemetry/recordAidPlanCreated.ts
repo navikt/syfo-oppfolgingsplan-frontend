@@ -4,7 +4,6 @@ import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { OPPFOLGINGSPLAN_TILTAKSPAKKE_1 } from "@/schema/flaggskipetSchemas";
 import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 
-/** Called only after the plan API confirms saving. Never log the form or IDs. */
 export function recordAidPlanCreated(
   tiltakspakke: TiltakspakkeContext,
   evalueringPaaminnelse: boolean,
