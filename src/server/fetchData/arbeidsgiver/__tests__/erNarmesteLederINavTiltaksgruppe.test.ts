@@ -1,93 +1,87 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { mockOversiktDataEmptyWithAccess } from "@/server/fetchData/mockData/mockOversiktDataVariants";
-import { erOrgINavTiltaksgruppe } from "@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe";
+import { hentTildelingsgrupper } from "@/server/fetchData/tiltakspakke/hentTildelingsgrupper";
 import { erNarmesteLederINavTiltaksgruppe } from "../erNarmesteLederINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "../fetchOppfolgingsplanOversikt";
+import { hentTiltakspakkeContext } from "../hentTiltakspakkeContext";
 
-const envMock = vi.hoisted(() => ({
-  tiltakspakkevurderingFeatureToggleEnabled: false,
+const envMock = vi.hoisted(() => ({ enabled: false }));
+vi.mock("@/env-variables/envHelpers", () => ({
+  isTiltakspakkevurderingFeatureToggleEnabled: () => envMock.enabled,
 }));
-
-vi.mock("@/env-variables/envHelpers", async () => {
-  const actual = await vi.importActual<
-    typeof import("@/env-variables/envHelpers")
-  >("@/env-variables/envHelpers");
-
-  return {
-    ...actual,
-    isTiltakspakkevurderingFeatureToggleEnabled: () =>
-      envMock.tiltakspakkevurderingFeatureToggleEnabled,
-  };
-});
-
-vi.mock("@/server/fetchData/tiltakspakke/erOrgINavTiltaksgruppe", () => ({
-  erOrgINavTiltaksgruppe: vi.fn(),
+vi.mock("@/server/fetchData/tiltakspakke/hentTildelingsgrupper", () => ({
+  hentTildelingsgrupper: vi.fn(),
 }));
-
 vi.mock("../fetchOppfolgingsplanOversikt", () => ({
   fetchOppfolgingsplanOversiktForAG: vi.fn(),
 }));
 
-const mockErOrgINavTiltaksgruppe = vi.mocked(erOrgINavTiltaksgruppe);
-const mockFetchOppfolgingsplanOversiktForAG = vi.mocked(
-  fetchOppfolgingsplanOversiktForAG,
-);
-
-describe("erNarmesteLederINavTiltaksgruppe", () => {
+describe("leader assignment and delivery", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = false;
-  });
-
-  test("gjør Flaggskipet-vurderingen, men returnerer false når feature toggle er av", async () => {
-    mockFetchOppfolgingsplanOversiktForAG.mockResolvedValue({
+    envMock.enabled = true;
+    vi.mocked(fetchOppfolgingsplanOversiktForAG).mockResolvedValue({
       error: null,
       data: mockOversiktDataEmptyWithAccess,
     });
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
-
-    await expect(
-      erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
-    ).resolves.toBe(false);
-
-    expect(mockFetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith(
-      "narmeste-leder-id",
-    );
-    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
   });
 
-  test("returnerer false når oversikten ikke kan hentes", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockFetchOppfolgingsplanOversiktForAG.mockResolvedValue({
-      error: {
-        type: "FETCH_NETWORK_ERROR",
-        message: "Network error",
-      },
+  test.each([
+    "tiltak",
+    "kontroll",
+    "utenfor_scope",
+    "ukjent",
+  ] as const)("preserves %s while only treatment opens the UI", async (gruppe) => {
+    vi.mocked(hentTildelingsgrupper).mockResolvedValue(
+      new Map([["123456789", gruppe]]),
+    );
+    await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
+      gruppe,
+      erITiltaksgruppe: gruppe === "tiltak",
+    });
+    expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
+      "123456789",
+    ]);
+  });
+
+  test("keeps treatment assignment with the toggle off", async () => {
+    envMock.enabled = false;
+    vi.mocked(hentTildelingsgrupper).mockResolvedValue(
+      new Map([["123456789", "tiltak"]]),
+    );
+    await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
+      gruppe: "tiltak",
+      erITiltaksgruppe: false,
+    });
+    expect(hentTildelingsgrupper).toHaveBeenCalledOnce();
+  });
+
+  test("fails closed without an extra lookup when the overview fails", async () => {
+    vi.mocked(fetchOppfolgingsplanOversiktForAG).mockResolvedValue({
+      error: { type: "FETCH_NETWORK_ERROR" },
       data: null,
     });
-
-    await expect(
-      erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
-    ).resolves.toBe(false);
-
-    expect(mockErOrgINavTiltaksgruppe).not.toHaveBeenCalled();
+    await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
+      gruppe: "ukjent",
+      erITiltaksgruppe: false,
+    });
+    expect(hentTildelingsgrupper).not.toHaveBeenCalled();
   });
 
-  test("bruker organisasjonsnummeret fra oversikten i Flaggskipet-vurderingen", async () => {
-    envMock.tiltakspakkevurderingFeatureToggleEnabled = true;
-    mockFetchOppfolgingsplanOversiktForAG.mockResolvedValue({
-      error: null,
-      data: mockOversiktDataEmptyWithAccess,
-    });
-    mockErOrgINavTiltaksgruppe.mockResolvedValue(true);
-
-    await expect(
-      erNarmesteLederINavTiltaksgruppe("narmeste-leder-id"),
-    ).resolves.toBe(true);
-
-    expect(mockFetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith(
-      "narmeste-leder-id",
+  test.each([
+    true,
+    false,
+  ])("preserves the existing boolean API with toggle %s", async (enabled) => {
+    envMock.enabled = enabled;
+    vi.mocked(hentTildelingsgrupper).mockResolvedValue(
+      new Map([["123456789", "tiltak"]]),
     );
-    expect(mockErOrgINavTiltaksgruppe).toHaveBeenCalledWith("123456789");
+    await expect(erNarmesteLederINavTiltaksgruppe("leader")).resolves.toBe(
+      enabled,
+    );
+    expect(fetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith("leader");
+    expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
+      "123456789",
+    ]);
   });
 });

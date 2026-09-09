@@ -1,9 +1,9 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import type z from "zod";
 import { getEndpointOppfolgingsplanerForAG } from "@/common/backend-endpoints";
-import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
+import { getAGAktivPlanHref, getAGOversiktHref } from "@/common/route-hrefs";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { createFormSnapshot } from "@/utils/FormSnapshot/createFormSnapshot";
@@ -26,7 +26,7 @@ export async function ferdigstillPlanServerAction(
   if (isLocalOrDemo) {
     await simulateBackendDelay();
 
-    return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
+    return { error: null };
   }
 
   // Input validation
@@ -81,10 +81,13 @@ export async function ferdigstillPlanServerAction(
     },
   });
 
-  if (fetchResult.error) {
-    return fetchResult;
-  } else {
-    // Redirect to aktiv plan page on success
-    return redirect(getAGAktivPlanNyligOpprettetHref(narmesteLederId));
+  if (!fetchResult.error) {
+    // The client now navigates after receiving confirmation. Invalidate visited
+    // pages so its router cannot reuse an overview or active plan from before saving.
+    // This also refreshes the current server page before the client navigates.
+    revalidatePath(getAGAktivPlanHref(narmesteLederId));
+    revalidatePath(getAGOversiktHref(narmesteLederId));
   }
+  // The caller records the confirmed result before navigating to the active plan.
+  return fetchResult;
 }

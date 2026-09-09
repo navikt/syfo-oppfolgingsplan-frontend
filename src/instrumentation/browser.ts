@@ -214,7 +214,12 @@ export const browserApmOptions = {
   tracing: true,
 } satisfies InitOptions;
 
+let browserObservability: ReturnType<typeof initNaisAPMClient>;
+
+export const getBrowserObservability = () => browserObservability;
+
 export function initBrowserObservability() {
   if (isLocalOrDemo) return undefined;
-  return initNaisAPMClient(browserApmOptions);
+  browserObservability ??= initNaisAPMClient(browserApmOptions);
+  return browserObservability;
 }
