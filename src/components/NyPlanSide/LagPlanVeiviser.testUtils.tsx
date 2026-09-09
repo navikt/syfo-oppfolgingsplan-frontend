@@ -2,7 +2,7 @@ import { act, render } from "@testing-library/react";
 import { vi } from "vitest";
 import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import type { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
-import LagPlanVeiviser from "./LagPlanVeiviser";
+import NyPlanSkjema from "./NyPlanSkjema";
 
 // Mock setup functions
 export function setupMocks() {
@@ -60,14 +60,14 @@ export async function renderLagPlanVeiviserComponent(
   });
 
   let renderResult: ReturnType<typeof render> | null = null;
+  const skjema = await NyPlanSkjema({
+    narmesteLederId: "12345",
+    lagretUtkastPromise,
+    tiltakspakkePromise,
+  });
 
   await act(async () => {
-    renderResult = render(
-      <LagPlanVeiviser
-        lagretUtkastPromise={lagretUtkastPromise}
-        tiltakspakkePromise={tiltakspakkePromise}
-      />,
-    );
+    renderResult = render(skjema);
   });
 
   if (!renderResult) {

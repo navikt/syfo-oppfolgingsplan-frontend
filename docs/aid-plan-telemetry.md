@@ -22,7 +22,43 @@ Hendelsesnavn: `aid_oppfolgingsplan`. Domene: `aid`. Faste felter: `schema_versi
 
 En synkron sperre hindrer at gjentatte klikk køer flere opprettelser fra samme aktive skjema. Feil åpner for et nytt forsøk; etter bekreftelse beholdes sperren frem til navigasjon. Dersom brukeren forlater skjemaet, registreres et eventuelt sent resultat fortsatt med opprinnelig tildeling, men det får ikke navigere brukeren tilbake. Dette gjelder også når Next skjuler og senere gjenbruker skjemaet. Dette er ikke backend-idempotens på tvers av faner, omlasting eller nettverksfeil.
 
-## Avgrensning
+## Serverbekreftet opprettelse
+
+Serverdelen skriver én strukturert INFO-hendelse `event_type=aid_plan_opprettet`
+etter at opprettelses-API-et har svart med suksess, før cache-invalidering.
+Feltene er `schema_version=1`, `tiltakspakke=OPPFOLGINGSPLAN_TILTAKSPAKKE_1`,
+`gruppe`, `skjemavariant` og `evaluering_paaminnelse`, med samme lukkede kategorier som over.
+Ingen identifikatorer, skjemaopplysninger, datoer eller fritekst legges til.
+Hendelsen går via eksisterende serverlogger til Loki, uten APM i nettleseren,
+ny backendintegrasjon, database eller avhengighet til `isyfo-analyse`.
+
+`NyPlanSkjema` gjenbruker den eksisterende vurderingen ved server-render og lager
+en Server Action som lukker over både lederkontekst og vurdering. Next beskytter
+denne konteksten; gruppe og leder er ikke argumenter klienten kan velge ved
+innsending. Den underliggende lagringsfunksjonen er `server-only`, ikke en egen
+offentlig Server Action. Innlogging, inputvalidering og backendens tilgangskontroll
+kjøres fortsatt ved hver innsending. En åpen fane beholder vurderingen som leverte
+skjemaet, også hvis funksjonsbryteren senere endres. Det gjøres ingen nye
+Flaggskipet-oppslag som del av målingen.
+
+Dette er bekreftede opprettelseskall gjennom dette skjemaet, ikke en fullstendig
+databasetelling: lagring kan lykkes selv om API-svaret eller loggleveransen mistes.
+Nye planversjoner og reelle gjentatte opprettelser teller hver for seg. Ingen
+historiske tall fylles inn. Lokal/demo skriver ikke denne hendelsen.
+
+Grafana må vise server- og nettlesermålinger separat, aldri legge dem sammen eller
+bruke forskjellen som en eksakt feilrate. Servermålingen kan overleve at nettleseren
+forsvinner før bekreftelsen kommer tilbake. `standard/nei` er fortsatt ikke et
+aktivt avslag, og dette er evalueringspåminnelsen, ikke 4-ukerspåminnelsen.
+Filtrer på valgt cluster, namespace `team-esyfo` og app
+`syfo-oppfolgingsplan-frontend` i serverloggene. Ingen direkte sykmeldingslengdeanalyse
+eller personbasert kobling gjøres her.
+
+Løsningen bruker [Next sine Server Actions med lukket serverkontekst](https://nextjs.org/docs/app/guides/data-security#closures-and-encryption).
+Som andre Server Actions kan gamle faner slutte å fungere etter en ny deploy.
+Kontroller dette ved dev-utrulling; ingen ny nøkkel eller hemmelighet introduseres.
+
+## Felles avgrensning
 
 - Ett orgnummer per skjema; ingen «blandet»-kategori.
 - Gruppene og evalueringspåminnelsen sendes som lukkede kategorier. Ingen leder-, virksomhets-, person- eller plan-ID, øvrige skjemaopplysninger, datoer eller fritekst legges til hendelsesfeltene. Ukjente felter fjernes og ugyldige kategorier forkastes.
@@ -37,7 +73,7 @@ En synkron sperre hindrer at gjentatte klikk køer flere opprettelser fra samme 
 
 ## Komposisjon
 
-`hentTildelingsgrupper` beholder kategoriene fra det eksisterende oppslaget. `hentTiltakspakkeContext` er delt med React cache per server-render; den eksisterende boolske hjelpefunksjonen bruker samme resultat. Siden sender bare gruppe og UI-flagg til skjemaet.
+`hentTildelingsgrupper` beholder kategoriene fra det eksisterende oppslaget. `hentTiltakspakkeContext` er delt med React cache per server-render; den eksisterende boolske hjelpefunksjonen bruker samme resultat. Siden sender gruppe, UI-flagg og en serverbundet lagringshandling til skjemaet.
 
 `usePlanDeliveryTelemetry` eier beslutning og viewport-visning. Opprettelseshooken eier innsending, resultat og navigasjon. Serverhandlingen beholder validering, TokenX og API-kall, returnerer resultatet og invaliderer berørte sider ved suksess. Klienten går deretter til samme aktive plan-side som før.
 

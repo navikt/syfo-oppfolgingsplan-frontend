@@ -11,6 +11,7 @@ import {
   oppfolgingsplanFormUtfylltSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
+import type { FerdigstillPlanAction } from "@/server/actions/FerdigstillPlanAction";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
 import { useAppForm } from "./form";
@@ -29,10 +30,12 @@ export default function useOppfolgingsplanForm({
   initialLagretUtkast,
   initialSistLagretTidspunkt,
   tiltakspakke,
+  ferdigstillAction,
 }: {
   initialLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
   initialSistLagretTidspunkt: string | null;
   tiltakspakke: TiltakspakkeContext;
+  ferdigstillAction: FerdigstillPlanAction;
 }) {
   const { erITiltaksgruppe } = tiltakspakke;
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
@@ -107,7 +110,7 @@ export default function useOppfolgingsplanForm({
     startFerdigstillPlanAction,
     isPendingFerdigstillPlan,
     error: ferdigstillPlanError,
-  } = useFerdigstillOppfolgingsplanAction(tiltakspakke);
+  } = useFerdigstillOppfolgingsplanAction(tiltakspakke, ferdigstillAction);
 
   function saveIfChangesAndProceedToOppsummering(
     values: OppfolgingsplanFormUnderArbeid,

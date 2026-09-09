@@ -8,6 +8,7 @@ import {
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import type { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
+import type { FerdigstillPlanAction } from "@/server/actions/FerdigstillPlanAction";
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";
@@ -21,11 +22,13 @@ export enum VeiviserSteg {
 interface Props {
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
   tiltakspakkePromise: Promise<TiltakspakkeContext>;
+  ferdigstillAction: FerdigstillPlanAction;
 }
 
 export default function LagPlanVeiviser({
   lagretUtkastPromise,
   tiltakspakkePromise,
+  ferdigstillAction,
 }: Props) {
   const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
   const tiltakspakke = use(tiltakspakkePromise);
@@ -52,6 +55,7 @@ export default function LagPlanVeiviser({
     initialLagretUtkast,
     initialSistLagretTidspunkt,
     tiltakspakke,
+    ferdigstillAction,
   });
 
   function handleFortsettTilOppsummering() {

@@ -1,7 +1,7 @@
 import { Heading } from "@navikt/ds-react";
 import { Suspense } from "react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
-import LagPlanVeiviser from "@/components/NyPlanSide/LagPlanVeiviser";
+import NyPlanSkjema from "@/components/NyPlanSide/NyPlanSkjema";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { hentTiltakspakkeContext } from "@/server/fetchData/arbeidsgiver/hentTiltakspakkeContext";
 import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner";
@@ -27,8 +27,9 @@ export default async function NyPlanPage({
       </Heading>
 
       <Suspense fallback={<BigLoadingSpinner />}>
-        <LagPlanVeiviser
+        <NyPlanSkjema
           key={narmesteLederId}
+          narmesteLederId={narmesteLederId}
           lagretUtkastPromise={convertedLagretUtkast}
           tiltakspakkePromise={tiltakspakkePromise}
         />
