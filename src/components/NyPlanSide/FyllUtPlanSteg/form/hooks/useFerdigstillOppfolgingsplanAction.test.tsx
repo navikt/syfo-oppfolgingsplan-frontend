@@ -74,6 +74,39 @@ describe("confirmed plan creation", () => {
   });
   afterEach(cleanup);
 
+  test.each([
+    { erITiltaksgruppe: true, evalueringPaaminnelse: true },
+    { erITiltaksgruppe: true, evalueringPaaminnelse: false },
+    { erITiltaksgruppe: false, evalueringPaaminnelse: true },
+    { erITiltaksgruppe: false, evalueringPaaminnelse: false },
+  ])("records the submitted preference independently of the skjemavariant: %j", async ({
+    erITiltaksgruppe,
+    evalueringPaaminnelse,
+  }) => {
+    const submittedPayload = { ...payload, evalueringPaaminnelse };
+    const { result } = renderHook(() =>
+      useFerdigstillOppfolgingsplanAction({ ...context, erITiltaksgruppe }),
+    );
+
+    await act(async () =>
+      result.current.startFerdigstillPlanAction(submittedPayload),
+    );
+
+    expect(action).toHaveBeenCalledExactlyOnceWith(
+      "leader-a",
+      submittedPayload,
+    );
+    expect(record.mock.calls.map(([event]) => event)).toEqual(
+      ["forsok", "bekreftet"].map((utfall) => ({
+        gruppe: "tiltak",
+        skjemavariant: erITiltaksgruppe ? "tiltak" : "standard",
+        hendelse: "opprett",
+        utfall,
+        evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
+      })),
+    );
+  });
+
   test("records success only after the response, before navigation, and ignores duplicate submissions", async () => {
     let complete!: (result: FetchUpdateResult) => void;
     action.mockReturnValue(
@@ -123,7 +156,12 @@ describe("confirmed plan creation", () => {
       "forsok",
       "feilet",
     ]);
-    await act(async () => result.current.startFerdigstillPlanAction(payload));
+    await act(async () =>
+      result.current.startFerdigstillPlanAction({
+        ...payload,
+        evalueringPaaminnelse: true,
+      }),
+    );
     expect(record.mock.calls.map(([event]) => event.utfall)).toEqual([
       "forsok",
       "feilet",
@@ -131,9 +169,14 @@ describe("confirmed plan creation", () => {
       "bekreftet",
     ]);
     expect(result.current.error).toBeNull();
+    expect(
+      record.mock.calls.map(([event]) =>
+        event.hendelse === "opprett" ? event.evaluering_paaminnelse : null,
+      ),
+    ).toEqual(["nei", "nei", "ja", "ja"]);
   });
 
-  test("captures assignment and leader context before awaiting the response", async () => {
+  test("captures assignment, reminder preference and leader context before awaiting the response", async () => {
     let complete!: (result: FetchUpdateResult) => void;
     action.mockReturnValue(
       new Promise((resolve) => {
@@ -145,17 +188,20 @@ describe("confirmed plan creation", () => {
         useFerdigstillOppfolgingsplanAction(tiltakspakke),
       { initialProps: context },
     );
-    act(() => result.current.startFerdigstillPlanAction(payload));
+    const submittedPayload = { ...payload, evalueringPaaminnelse: true };
+    act(() => result.current.startFerdigstillPlanAction(submittedPayload));
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
+    submittedPayload.evalueringPaaminnelse = false;
     params.narmesteLederId = "leader-b";
     rerender({ gruppe: "kontroll", erITiltaksgruppe: false });
     await act(async () => complete({ error: null }));
-    expect(action).toHaveBeenCalledWith("leader-a", payload);
+    expect(action).toHaveBeenCalledWith("leader-a", submittedPayload);
     expect(record).toHaveBeenLastCalledWith({
       gruppe: "tiltak",
       skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
+      evaluering_paaminnelse: "ja",
     });
     expect(JSON.stringify(record.mock.calls)).not.toContain("leader-a");
     expect(JSON.stringify(record.mock.calls)).not.toContain("Kontor");
@@ -183,6 +229,7 @@ describe("confirmed plan creation", () => {
       skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
+      evaluering_paaminnelse: "nei",
     });
     expect(push).not.toHaveBeenCalled();
   });
@@ -220,6 +267,7 @@ describe("confirmed plan creation", () => {
       skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
+      evaluering_paaminnelse: "nei",
     });
     expect(push).not.toHaveBeenCalled();
 
@@ -288,6 +336,7 @@ describe("confirmed plan creation", () => {
       skjemavariant: "tiltak",
       hendelse: "opprett",
       utfall: "bekreftet",
+      evaluering_paaminnelse: "nei",
     });
     expect(push).not.toHaveBeenCalled();
     await act(async () => completeNavigation());

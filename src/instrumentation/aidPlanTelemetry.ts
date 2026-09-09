@@ -18,6 +18,7 @@ const eventSchema = z.union([
   contextSchema.extend({
     hendelse: z.literal("opprett"),
     utfall: z.enum(["forsok", "bekreftet", "feilet"]),
+    evaluering_paaminnelse: z.enum(["ja", "nei"]),
   }),
 ]);
 type AidPlanEvent = z.infer<typeof eventSchema>;

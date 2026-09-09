@@ -1,9 +1,10 @@
-import { cleanup, screen, waitFor } from "@testing-library/react";
+import { cleanup, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { recordAidPlan } from "@/instrumentation/aidPlanTelemetry";
 import { ferdigstillPlanServerAction } from "@/server/actions/ferdigstillPlan";
 import { mockUtfyltLagretUtkastResponse } from "@/server/fetchData/mockData/mockUtkastData";
+import { formLabels } from "./form-labels";
 import {
   createMockLagretUtkastResponse,
   renderLagPlanVeiviserComponent,
@@ -40,8 +41,23 @@ describe("plan wizard measurement wiring", () => {
     ).toEqual(["beslutning"]);
   });
 
-  test("records confirmed creation from the actual wizard without measuring draft or summary as success", async () => {
-    await renderLagPlanVeiviserComponent(mockUtfyltLagretUtkastResponse, false);
+  test.each([
+    { aid: false, reminder: "Nei" },
+    { aid: true, reminder: "Ja" },
+    { aid: true, reminder: "Nei" },
+  ] as const)("records submitted preference at creation, not draft or summary: %j", async ({
+    aid,
+    reminder,
+  }) => {
+    await renderLagPlanVeiviserComponent(mockUtfyltLagretUtkastResponse, aid);
+    if (aid) {
+      const reminderGroup = screen.getByRole("radiogroup", {
+        name: formLabels.evalueringPaaminnelse.label,
+      });
+      await userEvent.click(
+        within(reminderGroup).getByRole("radio", { name: reminder }),
+      );
+    }
     await userEvent.click(
       screen.getByRole("button", { name: /gå til oppsummering/i }),
     );
@@ -56,13 +72,18 @@ describe("plan wizard measurement wiring", () => {
     );
     await waitFor(() =>
       expect(recordAidPlan).toHaveBeenLastCalledWith({
-        gruppe: "kontroll",
-        skjemavariant: "standard",
+        gruppe: aid ? "tiltak" : "kontroll",
+        skjemavariant: aid ? "tiltak" : "standard",
         hendelse: "opprett",
         utfall: "bekreftet",
+        evaluering_paaminnelse: reminder === "Ja" ? "ja" : "nei",
       }),
     );
     expect(ferdigstillPlanServerAction).toHaveBeenCalledOnce();
+    expect(ferdigstillPlanServerAction).toHaveBeenCalledWith(
+      "12345",
+      expect.objectContaining({ evalueringPaaminnelse: reminder === "Ja" }),
+    );
     expect(
       vi.mocked(recordAidPlan).mock.calls.map(([event]) => event.utfall),
     ).toEqual(["tilgjengelig", "forsok", "bekreftet"]);
