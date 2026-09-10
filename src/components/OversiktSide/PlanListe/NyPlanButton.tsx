@@ -8,8 +8,10 @@ import { TrackedButton } from "@/ui/TrackedButton";
 
 export function LagNyOppfolgingsplanButton({
   narmesteLederId,
+  onClick,
 }: {
   narmesteLederId: string;
+  onClick?: () => void;
 }) {
   return (
     <HStack>
@@ -18,6 +20,7 @@ export function LagNyOppfolgingsplanButton({
         as={NextLink}
         href={getAGOpprettNyPlanHref(narmesteLederId)}
         tracking={knappKlikket.oversiktSide.lagNyOppfolgingsplan}
+        onClick={onClick}
       >
         Lag en ny oppfølgingsplan
       </TrackedButton>

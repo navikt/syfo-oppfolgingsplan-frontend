@@ -1,6 +1,6 @@
-import { Box, VStack } from "@navikt/ds-react";
+import { Box } from "@navikt/ds-react";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
-import MeldUnntakSection from "../MeldUnntak/MeldUnntakSection";
+import NyPlanOgUnntak from "../MeldUnntak/NyPlanOgUnntak";
 import { LagNyOppfolgingsplanButton } from "./NyPlanButton";
 
 export default async function NyPlanButtonHvisTomListe({
@@ -37,9 +37,10 @@ export default async function NyPlanButtonHvisTomListe({
   }
 
   return (
-    <VStack gap="space-32" marginBlock="space-0 space-32">
-      <LagNyOppfolgingsplanButton narmesteLederId={narmesteLederId} />
-      <MeldUnntakSection ansattNavn={employee.name} />
-    </VStack>
+    <NyPlanOgUnntak
+      key={narmesteLederId}
+      narmesteLederId={narmesteLederId}
+      ansattNavn={employee.name}
+    />
   );
 }

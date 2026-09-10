@@ -12,9 +12,15 @@ import MeldUnntakForm from "./MeldUnntakForm";
 
 interface Props {
   ansattNavn: string;
+  onOpen?: () => void;
+  onSubmit?: () => void;
 }
 
-export default function MeldUnntakSection({ ansattNavn }: Props) {
+export default function MeldUnntakSection({
+  ansattNavn,
+  onOpen,
+  onSubmit,
+}: Props) {
   const [erSendt, setErSendt] = useState(false);
 
   if (!erSendt) {
@@ -22,6 +28,8 @@ export default function MeldUnntakSection({ ansattNavn }: Props) {
       <MeldUnntakForm
         ansattNavn={ansattNavn}
         onSuccess={() => setErSendt(true)}
+        onOpen={onOpen}
+        onSubmit={onSubmit}
       />
     );
   }
