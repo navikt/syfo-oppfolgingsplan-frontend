@@ -23,9 +23,16 @@ const BEKREFTELSE_CHECKBOX_ID = "meld-unntak-bekreftelse";
 interface Props {
   ansattNavn: string;
   onSuccess: () => void;
+  onOpen?: () => void;
+  onSubmit?: () => void;
 }
 
-export default function MeldUnntakForm({ ansattNavn, onSuccess }: Props) {
+export default function MeldUnntakForm({
+  ansattNavn,
+  onSuccess,
+  onOpen,
+  onSubmit,
+}: Props) {
   const [erBekreftet, setErBekreftet] = useState(false);
   const [visValideringsfeil, setVisValideringsfeil] = useState(false);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
@@ -39,6 +46,7 @@ export default function MeldUnntakForm({ ansattNavn, onSuccess }: Props) {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    onSubmit?.();
 
     if (!erBekreftet) {
       if (visValideringsfeil) {
@@ -65,6 +73,9 @@ export default function MeldUnntakForm({ ansattNavn, onSuccess }: Props) {
       aria-label={`Unntak fra oppfølgingsplan for ${ansattNavn}`}
       data-color="neutral"
       size="small"
+      onToggle={(open) => {
+        if (open) onOpen?.();
+      }}
     >
       <ExpansionCardHeader>
         <ExpansionCardTitle as="h3" size="small">
