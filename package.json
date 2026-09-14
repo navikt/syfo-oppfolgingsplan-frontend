@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@grafana/faro-react": "2.11.0",
-    "@nais/apm": "0.6.0",
+    "@nais/apm": "0.6.3",
     "@navikt/aksel-icons": "^8.16.2",
     "@navikt/analytics-types": "^0.0.9",
     "@navikt/dinesykmeldte-sidemeny": "^8.0.1",
