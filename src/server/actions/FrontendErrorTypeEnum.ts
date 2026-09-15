@@ -9,6 +9,7 @@ export enum FrontendErrorType {
   /** When a fetch call returns a non-ok response with an unrecognized error response body. */
   FETCH_UNKNOWN_ERROR_RESPONSE = "FETCH_UNKNOWN_ERROR_RESPONSE",
   /** @deprecated Source-compatible alias. Legacy wire values are still accepted by the schema. */
+  // biome-ignore lint/suspicious/noDuplicateEnumValues: The alias must share the corrected value for source compatibility.
   FETCH_UNKOWN_ERROR_RESPONSE = "FETCH_UNKNOWN_ERROR_RESPONSE",
   /** When a fetch call throws before a response for a reason other than its configured timeout. */
   FETCH_NETWORK_ERROR = "FETCH_NETWORK_ERROR",

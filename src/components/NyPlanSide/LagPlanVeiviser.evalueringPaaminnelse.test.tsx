@@ -76,22 +76,25 @@ describe("evalueringspåminnelse", () => {
   test.each([
     ["true", "Ja"],
     ["false", "Nei"],
-  ] as const)("bevarer lagret verdi %s når et utkast åpnes igjen", async (evalueringPaaminnelse, radioName) => {
-    await renderLagPlanVeiviserComponent(
-      createMockLagretUtkastResponse({
-        ...validFormContent,
-        evalueringPaaminnelse,
-      }),
-      true,
-    );
+  ] as const)(
+    "bevarer lagret verdi %s når et utkast åpnes igjen",
+    async (evalueringPaaminnelse, radioName) => {
+      await renderLagPlanVeiviserComponent(
+        createMockLagretUtkastResponse({
+          ...validFormContent,
+          evalueringPaaminnelse,
+        }),
+        true,
+      );
 
-    const reminderGroup = screen.getByRole("radiogroup", {
-      name: formLabels.evalueringPaaminnelse.label,
-    });
-    expect(
-      within(reminderGroup).getByRole("radio", { name: radioName }),
-    ).toBeChecked();
-  });
+      const reminderGroup = screen.getByRole("radiogroup", {
+        name: formLabels.evalueringPaaminnelse.label,
+      });
+      expect(
+        within(reminderGroup).getByRole("radio", { name: radioName }),
+      ).toBeChecked();
+    },
+  );
 
   test("krever et aktivt valg før brukeren kan gå til oppsummeringen", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
@@ -118,36 +121,39 @@ describe("evalueringspåminnelse", () => {
   test.each([
     ["Ja", "true", "Ja"],
     ["Nei", "false", "Nei"],
-  ] as const)("lagrer %s som %s i utkastet", async (_label, value, radioName) => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-    const lagreUtkastSpy = vi.spyOn(
-      lagreUtkastModule,
-      "lagreUtkastServerAction",
-    );
+  ] as const)(
+    "lagrer %s som %s i utkastet",
+    async (_label, value, radioName) => {
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const lagreUtkastSpy = vi.spyOn(
+        lagreUtkastModule,
+        "lagreUtkastServerAction",
+      );
 
-    await renderLagPlanVeiviserComponent(
-      createMockLagretUtkastResponse(),
-      true,
-    );
+      await renderLagPlanVeiviserComponent(
+        createMockLagretUtkastResponse(),
+        true,
+      );
 
-    const reminderGroup = screen.getByRole("radiogroup", {
-      name: formLabels.evalueringPaaminnelse.label,
-    });
-    await user.click(
-      within(reminderGroup).getByRole("radio", { name: radioName }),
-    );
+      const reminderGroup = screen.getByRole("radiogroup", {
+        name: formLabels.evalueringPaaminnelse.label,
+      });
+      await user.click(
+        within(reminderGroup).getByRole("radio", { name: radioName }),
+      );
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
-    });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(SAVE_UTKAST_DEBOUNCE_DELAY + 100);
+      });
 
-    expect(lagreUtkastSpy).toHaveBeenCalledWith(
-      "12345",
-      expect.objectContaining({ evalueringPaaminnelse: value }),
-    );
+      expect(lagreUtkastSpy).toHaveBeenCalledWith(
+        "12345",
+        expect.objectContaining({ evalueringPaaminnelse: value }),
+      );
 
-    lagreUtkastSpy.mockRestore();
-  });
+      lagreUtkastSpy.mockRestore();
+    },
+  );
 
   test.each([
     ["true", "Ja"],

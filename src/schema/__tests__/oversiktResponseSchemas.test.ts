@@ -63,22 +63,22 @@ describe("OppfolgingsplanerOversiktResponseSchemaForAG – unntaksvurderinger", 
     ).toBeNull();
   });
 
-  test.each([
-    "unntaksvurderinger",
-    "gjeldendeStatus",
-  ])("avviser respons uten påkrevd felt %s", (felt) => {
-    const oversikt: Record<string, unknown> = {
-      ...gyldigOversikt.oversikt,
-    };
-    delete oversikt[felt];
+  test.each(["unntaksvurderinger", "gjeldendeStatus"])(
+    "avviser respons uten påkrevd felt %s",
+    (felt) => {
+      const oversikt: Record<string, unknown> = {
+        ...gyldigOversikt.oversikt,
+      };
+      delete oversikt[felt];
 
-    const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
-      ...gyldigOversikt,
-      oversikt,
-    });
+      const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({
+        ...gyldigOversikt,
+        oversikt,
+      });
 
-    expect(result.success).toBe(false);
-  });
+      expect(result.success).toBe(false);
+    },
+  );
 
   test("avviser ukjent rolle", () => {
     const result = OppfolgingsplanerOversiktResponseSchemaForAG.safeParse({

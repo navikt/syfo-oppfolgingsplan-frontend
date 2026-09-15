@@ -56,31 +56,34 @@ describe("plan delivery", () => {
     ["kontroll", false, "standard"],
     ["utenfor_scope", false, "standard"],
     ["ukjent", false, "standard"],
-  ] as const)("records %s independently of delivered %s", (gruppe, erITiltaksgruppe, skjemavariant) => {
-    const context = { gruppe, erITiltaksgruppe };
-    const tree = (
-      <StrictMode>
-        <Form context={context} />
-      </StrictMode>
-    );
-    const { rerender } = render(tree);
-    expect(record).toHaveBeenCalledExactlyOnceWith({
-      gruppe,
-      skjemavariant,
-      hendelse: "beslutning",
-      utfall: "tilgjengelig",
-    });
-    intersect();
-    intersect();
-    rerender(tree);
-    expect(record).toHaveBeenCalledTimes(2);
-    expect(record).toHaveBeenLastCalledWith({
-      gruppe,
-      skjemavariant,
-      hendelse: "vist",
-      utfall: "tilgjengelig",
-    });
-  });
+  ] as const)(
+    "records %s independently of delivered %s",
+    (gruppe, erITiltaksgruppe, skjemavariant) => {
+      const context = { gruppe, erITiltaksgruppe };
+      const tree = (
+        <StrictMode>
+          <Form context={context} />
+        </StrictMode>
+      );
+      const { rerender } = render(tree);
+      expect(record).toHaveBeenCalledExactlyOnceWith({
+        gruppe,
+        skjemavariant,
+        hendelse: "beslutning",
+        utfall: "tilgjengelig",
+      });
+      intersect();
+      intersect();
+      rerender(tree);
+      expect(record).toHaveBeenCalledTimes(2);
+      expect(record).toHaveBeenLastCalledWith({
+        gruppe,
+        skjemavariant,
+        hendelse: "vist",
+        utfall: "tilgjengelig",
+      });
+    },
+  );
 
   test("ignores old observer callbacks after a context is unmounted", () => {
     const { rerender } = render(

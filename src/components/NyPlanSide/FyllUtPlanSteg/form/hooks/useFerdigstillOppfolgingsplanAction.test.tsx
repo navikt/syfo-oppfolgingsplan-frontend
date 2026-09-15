@@ -76,33 +76,33 @@ describe("confirmed plan creation", () => {
     { erITiltaksgruppe: true, evalueringPaaminnelse: false },
     { erITiltaksgruppe: false, evalueringPaaminnelse: true },
     { erITiltaksgruppe: false, evalueringPaaminnelse: false },
-  ])("records the submitted preference independently of the skjemavariant: %j", async ({
-    erITiltaksgruppe,
-    evalueringPaaminnelse,
-  }) => {
-    const submittedPayload = { ...payload, evalueringPaaminnelse };
-    const { result } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(
-        { ...context, erITiltaksgruppe },
-        action,
-      ),
-    );
+  ])(
+    "records the submitted preference independently of the skjemavariant: %j",
+    async ({ erITiltaksgruppe, evalueringPaaminnelse }) => {
+      const submittedPayload = { ...payload, evalueringPaaminnelse };
+      const { result } = renderHook(() =>
+        useFerdigstillOppfolgingsplanAction(
+          { ...context, erITiltaksgruppe },
+          action,
+        ),
+      );
 
-    await act(async () =>
-      result.current.startFerdigstillPlanAction(submittedPayload),
-    );
+      await act(async () =>
+        result.current.startFerdigstillPlanAction(submittedPayload),
+      );
 
-    expect(action).toHaveBeenCalledExactlyOnceWith(submittedPayload);
-    expect(record.mock.calls.map(([event]) => event)).toEqual(
-      ["forsok", "bekreftet"].map((utfall) => ({
-        gruppe: "tiltak",
-        skjemavariant: erITiltaksgruppe ? "tiltak" : "standard",
-        hendelse: "opprett",
-        utfall,
-        evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
-      })),
-    );
-  });
+      expect(action).toHaveBeenCalledExactlyOnceWith(submittedPayload);
+      expect(record.mock.calls.map(([event]) => event)).toEqual(
+        ["forsok", "bekreftet"].map((utfall) => ({
+          gruppe: "tiltak",
+          skjemavariant: erITiltaksgruppe ? "tiltak" : "standard",
+          hendelse: "opprett",
+          utfall,
+          evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
+        })),
+      );
+    },
+  );
 
   test("records success only after the response, before navigation, and ignores duplicate submissions", async () => {
     let complete!: (result: FetchUpdateResult) => void;
