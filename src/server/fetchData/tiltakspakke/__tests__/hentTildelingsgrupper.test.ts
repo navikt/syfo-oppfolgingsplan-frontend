@@ -49,24 +49,23 @@ describe("assignment categories from the existing lookup", () => {
     ]);
   });
 
-  test.each([
-    "error",
-    "empty",
-    "missing_package",
-  ] as const)("keeps %s unknown, not control", async (scenario) => {
-    fetchVurdering.mockResolvedValue(
-      scenario === "error"
-        ? { error: { type: "FETCH_NETWORK_ERROR" }, data: null }
-        : {
-            error: null,
-            data:
-              scenario === "empty"
-                ? []
-                : [{ tiltakspakkeId: "another-package", virksomheter: [] }],
-          },
-    );
-    expect(await hentTildelingsgrupper(["a"])).toEqual(
-      new Map([["a", "ukjent"]]),
-    );
-  });
+  test.each(["error", "empty", "missing_package"] as const)(
+    "keeps %s unknown, not control",
+    async (scenario) => {
+      fetchVurdering.mockResolvedValue(
+        scenario === "error"
+          ? { error: { type: "FETCH_NETWORK_ERROR" }, data: null }
+          : {
+              error: null,
+              data:
+                scenario === "empty"
+                  ? []
+                  : [{ tiltakspakkeId: "another-package", virksomheter: [] }],
+            },
+      );
+      expect(await hentTildelingsgrupper(["a"])).toEqual(
+        new Map([["a", "ukjent"]]),
+      );
+    },
+  );
 });

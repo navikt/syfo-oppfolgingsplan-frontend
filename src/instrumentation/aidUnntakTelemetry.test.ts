@@ -12,32 +12,31 @@ beforeEach(() => {
   getBrowserObservability.mockReturnValue({ api: { pushEvent } });
 });
 
-test.each([
-  "aapnet",
-  "send",
-  "lag_plan",
-] as const)("emits only the closed contract for %s and preserves repeated actions", (hendelse) => {
-  const event = {
-    hendelse,
-    ansattNavn: "synthetic",
-    narmesteLederId: "test-id",
-  };
-  recordAidUnntak(event);
-  recordAidUnntak(event);
-  expect(pushEvent).toHaveBeenCalledTimes(2);
-  expect(pushEvent).toHaveBeenCalledWith(
-    "aid_unntaksvurdering",
-    {
+test.each(["aapnet", "send", "lag_plan"] as const)(
+  "emits only the closed contract for %s and preserves repeated actions",
+  (hendelse) => {
+    const event = {
       hendelse,
-      gruppe: "tiltak",
-      tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
-      flate: "oversikt_arbeidsgiver",
-      schema_version: "1",
-    },
-    "aid",
-    { skipDedupe: true },
-  );
-});
+      ansattNavn: "synthetic",
+      narmesteLederId: "test-id",
+    };
+    recordAidUnntak(event);
+    recordAidUnntak(event);
+    expect(pushEvent).toHaveBeenCalledTimes(2);
+    expect(pushEvent).toHaveBeenCalledWith(
+      "aid_unntaksvurdering",
+      {
+        hendelse,
+        gruppe: "tiltak",
+        tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
+        flate: "oversikt_arbeidsgiver",
+        schema_version: "1",
+      },
+      "aid",
+      { skipDedupe: true },
+    );
+  },
+);
 
 test("rejects unsupported observations", () => {
   // @ts-expect-error This contract measures behaviour, not API results.

@@ -45,48 +45,48 @@ describe("plan wizard measurement wiring", () => {
     { aid: false, reminder: "Nei" },
     { aid: true, reminder: "Ja" },
     { aid: true, reminder: "Nei" },
-  ] as const)("records submitted preference at creation, not draft or summary: %j", async ({
-    aid,
-    reminder,
-  }) => {
-    await renderLagPlanVeiviserComponent(mockUtfyltLagretUtkastResponse, aid);
-    if (aid) {
-      const reminderGroup = screen.getByRole("radiogroup", {
-        name: formLabels.evalueringPaaminnelse.label,
-      });
+  ] as const)(
+    "records submitted preference at creation, not draft or summary: %j",
+    async ({ aid, reminder }) => {
+      await renderLagPlanVeiviserComponent(mockUtfyltLagretUtkastResponse, aid);
+      if (aid) {
+        const reminderGroup = screen.getByRole("radiogroup", {
+          name: formLabels.evalueringPaaminnelse.label,
+        });
+        await userEvent.click(
+          within(reminderGroup).getByRole("radio", { name: reminder }),
+        );
+      }
       await userEvent.click(
-        within(reminderGroup).getByRole("radio", { name: reminder }),
+        screen.getByRole("button", { name: /gå til oppsummering/i }),
       );
-    }
-    await userEvent.click(
-      screen.getByRole("button", { name: /gå til oppsummering/i }),
-    );
-    await screen.findByRole("heading", { name: "Oppsummering" });
-    expect(
-      vi.mocked(recordAidPlan).mock.calls.map(([event]) => event.hendelse),
-    ).toEqual(["beslutning"]);
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: "Ferdigstill og del med den ansatte",
-      }),
-    );
-    await waitFor(() =>
-      expect(recordAidPlan).toHaveBeenLastCalledWith({
-        gruppe: aid ? "tiltak" : "kontroll",
-        skjemavariant: aid ? "tiltak" : "standard",
-        hendelse: "opprett",
-        utfall: "bekreftet",
-        evaluering_paaminnelse: reminder === "Ja" ? "ja" : "nei",
-      }),
-    );
-    expect(ferdigstillPlanServerAction).toHaveBeenCalledOnce();
-    expect(ferdigstillPlanServerAction).toHaveBeenCalledWith(
-      "12345",
-      expect.objectContaining({ evalueringPaaminnelse: reminder === "Ja" }),
-      { gruppe: aid ? "tiltak" : "kontroll", erITiltaksgruppe: aid },
-    );
-    expect(
-      vi.mocked(recordAidPlan).mock.calls.map(([event]) => event.utfall),
-    ).toEqual(["tilgjengelig", "forsok", "bekreftet"]);
-  });
+      await screen.findByRole("heading", { name: "Oppsummering" });
+      expect(
+        vi.mocked(recordAidPlan).mock.calls.map(([event]) => event.hendelse),
+      ).toEqual(["beslutning"]);
+      await userEvent.click(
+        screen.getByRole("button", {
+          name: "Ferdigstill og del med den ansatte",
+        }),
+      );
+      await waitFor(() =>
+        expect(recordAidPlan).toHaveBeenLastCalledWith({
+          gruppe: aid ? "tiltak" : "kontroll",
+          skjemavariant: aid ? "tiltak" : "standard",
+          hendelse: "opprett",
+          utfall: "bekreftet",
+          evaluering_paaminnelse: reminder === "Ja" ? "ja" : "nei",
+        }),
+      );
+      expect(ferdigstillPlanServerAction).toHaveBeenCalledOnce();
+      expect(ferdigstillPlanServerAction).toHaveBeenCalledWith(
+        "12345",
+        expect.objectContaining({ evalueringPaaminnelse: reminder === "Ja" }),
+        { gruppe: aid ? "tiltak" : "kontroll", erITiltaksgruppe: aid },
+      );
+      expect(
+        vi.mocked(recordAidPlan).mock.calls.map(([event]) => event.utfall),
+      ).toEqual(["tilgjengelig", "forsok", "bekreftet"]);
+    },
+  );
 });

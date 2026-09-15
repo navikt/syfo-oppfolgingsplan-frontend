@@ -45,18 +45,18 @@ beforeEach(() => {
 });
 
 describe("validateIdPortenToken", () => {
-  test.each([
-    undefined,
-    null,
-  ])("returns a closed missing-token reason for %s", async (token) => {
-    getTokenMock.mockReturnValue(token as string | null);
+  test.each([undefined, null])(
+    "returns a closed missing-token reason for %s",
+    async (token) => {
+      getTokenMock.mockReturnValue(token as string | null);
 
-    await expect(validateIdPortenToken()).resolves.toEqual({
-      success: false,
-      reason: TokenValidationFailureReason.MISSING_TOKEN,
-    });
-    expectNoLogging();
-  });
+      await expect(validateIdPortenToken()).resolves.toEqual({
+        success: false,
+        reason: TokenValidationFailureReason.MISSING_TOKEN,
+      });
+      expectNoLogging();
+    },
+  );
 
   test("returns a closed invalid-token reason without Oasis details", async () => {
     getTokenMock.mockReturnValue(VALID_TOKEN);

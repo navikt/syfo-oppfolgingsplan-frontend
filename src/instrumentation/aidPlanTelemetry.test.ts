@@ -59,34 +59,34 @@ describe("AID plan event boundary", () => {
     expect(pushEvent).not.toHaveBeenCalled();
   });
 
-  test.each([
-    "ja",
-    "nei",
-  ] as const)("preserves submitted reminder preference %s", (evaluering_paaminnelse) => {
-    recordAidPlan({ ...event, evaluering_paaminnelse });
-    expect(pushEvent.mock.calls[0][1]).toEqual({
-      ...event,
-      evaluering_paaminnelse,
-      tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
-      flate: "ny_plan",
-      schema_version: "1",
-    });
-  });
+  test.each(["ja", "nei"] as const)(
+    "preserves submitted reminder preference %s",
+    (evaluering_paaminnelse) => {
+      recordAidPlan({ ...event, evaluering_paaminnelse });
+      expect(pushEvent.mock.calls[0][1]).toEqual({
+        ...event,
+        evaluering_paaminnelse,
+        tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
+        flate: "ny_plan",
+        schema_version: "1",
+      });
+    },
+  );
 
-  test.each([
-    "beslutning",
-    "vist",
-  ] as const)("does not attach reminder preferences to %s", (hendelse) => {
-    const view = {
-      ...event,
-      hendelse,
-      utfall: "tilgjengelig" as const,
-    };
-    recordAidPlan(view);
-    expect(pushEvent.mock.calls[0][1]).not.toHaveProperty(
-      "evaluering_paaminnelse",
-    );
-  });
+  test.each(["beslutning", "vist"] as const)(
+    "does not attach reminder preferences to %s",
+    (hendelse) => {
+      const view = {
+        ...event,
+        hendelse,
+        utfall: "tilgjengelig" as const,
+      };
+      recordAidPlan(view);
+      expect(pushEvent.mock.calls[0][1]).not.toHaveProperty(
+        "evaluering_paaminnelse",
+      );
+    },
+  );
 
   test("separates assignment from delivered skjemavariant", () => {
     expect(

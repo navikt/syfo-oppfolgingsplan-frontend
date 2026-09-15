@@ -26,23 +26,21 @@ describe("leader assignment and delivery", () => {
     });
   });
 
-  test.each([
-    "tiltak",
-    "kontroll",
-    "utenfor_scope",
-    "ukjent",
-  ] as const)("preserves %s while only treatment opens the UI", async (gruppe) => {
-    vi.mocked(hentTildelingsgrupper).mockResolvedValue(
-      new Map([["123456789", gruppe]]),
-    );
-    await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
-      gruppe,
-      erITiltaksgruppe: gruppe === "tiltak",
-    });
-    expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
-      "123456789",
-    ]);
-  });
+  test.each(["tiltak", "kontroll", "utenfor_scope", "ukjent"] as const)(
+    "preserves %s while only treatment opens the UI",
+    async (gruppe) => {
+      vi.mocked(hentTildelingsgrupper).mockResolvedValue(
+        new Map([["123456789", gruppe]]),
+      );
+      await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
+        gruppe,
+        erITiltaksgruppe: gruppe === "tiltak",
+      });
+      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
+        "123456789",
+      ]);
+    },
+  );
 
   test("keeps treatment assignment with the toggle off", async () => {
     envMock.enabled = false;
@@ -68,20 +66,20 @@ describe("leader assignment and delivery", () => {
     expect(hentTildelingsgrupper).not.toHaveBeenCalled();
   });
 
-  test.each([
-    true,
-    false,
-  ])("preserves the existing boolean API with toggle %s", async (enabled) => {
-    envMock.enabled = enabled;
-    vi.mocked(hentTildelingsgrupper).mockResolvedValue(
-      new Map([["123456789", "tiltak"]]),
-    );
-    await expect(erNarmesteLederINavTiltaksgruppe("leader")).resolves.toBe(
-      enabled,
-    );
-    expect(fetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith("leader");
-    expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
-      "123456789",
-    ]);
-  });
+  test.each([true, false])(
+    "preserves the existing boolean API with toggle %s",
+    async (enabled) => {
+      envMock.enabled = enabled;
+      vi.mocked(hentTildelingsgrupper).mockResolvedValue(
+        new Map([["123456789", "tiltak"]]),
+      );
+      await expect(erNarmesteLederINavTiltaksgruppe("leader")).resolves.toBe(
+        enabled,
+      );
+      expect(fetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith("leader");
+      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
+        "123456789",
+      ]);
+    },
+  );
 });

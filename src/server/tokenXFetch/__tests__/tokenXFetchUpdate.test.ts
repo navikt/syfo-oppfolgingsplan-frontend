@@ -187,53 +187,53 @@ describe("tokenXFetchUpdateWithResponse", () => {
         RuntimeErrorEvent.OPPFOLGINGSPLAN_ARBEIDSGIVER_OVERSIKT_FETCH_FAILED,
       expectedErrorCode: "SYKMELDT_NOT_FOUND" as const,
     },
-  ])("keeps expected $expectedErrorCode for its domain operation at info level", async ({
-    expectedEventType,
-    expectedErrorCode,
-  }) => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn<typeof fetch>().mockResolvedValue(
-        jsonResponse(
-          {
-            type: expectedErrorCode,
-            message: "Sensitive backend detail for 12345678901",
-          },
-          { status: 404, statusText: "Not Found" },
+  ])(
+    "keeps expected $expectedErrorCode for its domain operation at info level",
+    async ({ expectedEventType, expectedErrorCode }) => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn<typeof fetch>().mockResolvedValue(
+          jsonResponse(
+            {
+              type: expectedErrorCode,
+              message: "Sensitive backend detail for 12345678901",
+            },
+            { status: 404, statusText: "Not Found" },
+          ),
         ),
-      ),
-    );
+      );
 
-    const result = await tokenXFetchUpdateWithResponse({
-      eventType: expectedEventType,
-      targetApi: TokenXTargetApi.FLAGGSKIPET,
-      endpoint,
-      responseDataSchema,
-    });
+      const result = await tokenXFetchUpdateWithResponse({
+        eventType: expectedEventType,
+        targetApi: TokenXTargetApi.FLAGGSKIPET,
+        endpoint,
+        responseDataSchema,
+      });
 
-    expect(result.error).toEqual({
-      type: expectedErrorCode,
-      message: "Sensitive backend detail for 12345678901",
-    });
-    expect(loggerErrorMock).not.toHaveBeenCalled();
-    expect(loggerInfoMock).toHaveBeenCalledWith(
-      {
-        event_type: expectedEventType,
-        operation: getRuntimeErrorOperation(expectedEventType),
-        error_code: expectedErrorCode,
-        upstream_status: 404,
-        method: "POST",
-      },
-      "TokenX fetch returned a non-OK response",
-    );
-    expect(loggerInfoMock).toHaveBeenCalledOnce();
-    expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
-      "12345678901",
-    );
-    expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
-      endpoint,
-    );
-  });
+      expect(result.error).toEqual({
+        type: expectedErrorCode,
+        message: "Sensitive backend detail for 12345678901",
+      });
+      expect(loggerErrorMock).not.toHaveBeenCalled();
+      expect(loggerInfoMock).toHaveBeenCalledWith(
+        {
+          event_type: expectedEventType,
+          operation: getRuntimeErrorOperation(expectedEventType),
+          error_code: expectedErrorCode,
+          upstream_status: 404,
+          method: "POST",
+        },
+        "TokenX fetch returned a non-OK response",
+      );
+      expect(loggerInfoMock).toHaveBeenCalledOnce();
+      expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
+        "12345678901",
+      );
+      expect(JSON.stringify(loggerInfoMock.mock.calls[0])).not.toContain(
+        endpoint,
+      );
+    },
+  );
 
   test("does not downgrade a domain error code for an unrelated operation", async () => {
     vi.stubGlobal(
@@ -292,44 +292,43 @@ describe("tokenXFetchUpdateWithResponse", () => {
       expectedErrorCode: "SYKMELDT_NOT_FOUND" as const,
       status: 503,
     },
-  ])("keeps $expectedErrorCode at error level for unexpected status $status", async ({
-    expectedEventType,
-    expectedErrorCode,
-    status,
-  }) => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn<typeof fetch>().mockResolvedValue(
-        jsonResponse(
-          {
-            type: expectedErrorCode,
-            message: "Sensitive backend detail for 12345678901",
-          },
-          { status },
+  ])(
+    "keeps $expectedErrorCode at error level for unexpected status $status",
+    async ({ expectedEventType, expectedErrorCode, status }) => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn<typeof fetch>().mockResolvedValue(
+          jsonResponse(
+            {
+              type: expectedErrorCode,
+              message: "Sensitive backend detail for 12345678901",
+            },
+            { status },
+          ),
         ),
-      ),
-    );
+      );
 
-    await tokenXFetchUpdateWithResponse({
-      eventType: expectedEventType,
-      targetApi: TokenXTargetApi.FLAGGSKIPET,
-      endpoint,
-      responseDataSchema,
-    });
+      await tokenXFetchUpdateWithResponse({
+        eventType: expectedEventType,
+        targetApi: TokenXTargetApi.FLAGGSKIPET,
+        endpoint,
+        responseDataSchema,
+      });
 
-    expect(loggerInfoMock).not.toHaveBeenCalled();
-    expect(loggerErrorMock).toHaveBeenCalledWith(
-      {
-        event_type: expectedEventType,
-        operation: getRuntimeErrorOperation(expectedEventType),
-        error_code: expectedErrorCode,
-        upstream_status: status,
-        method: "POST",
-      },
-      "TokenX fetch returned a non-OK response",
-    );
-    expect(loggerErrorMock).toHaveBeenCalledOnce();
-  });
+      expect(loggerInfoMock).not.toHaveBeenCalled();
+      expect(loggerErrorMock).toHaveBeenCalledWith(
+        {
+          event_type: expectedEventType,
+          operation: getRuntimeErrorOperation(expectedEventType),
+          error_code: expectedErrorCode,
+          upstream_status: status,
+          method: "POST",
+        },
+        "TokenX fetch returned a non-OK response",
+      );
+      expect(loggerErrorMock).toHaveBeenCalledOnce();
+    },
+  );
 
   test("owns a typed token-validation failure exactly once", async () => {
     const privateDetail = "private-auth-detail-fnr-12345678901";

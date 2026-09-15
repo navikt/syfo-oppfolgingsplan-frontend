@@ -44,20 +44,21 @@ describe("browser error ownership", () => {
     console.error = nativeConsoleError;
   });
 
-  it.each(
-    errorPages,
-  )("%s-fallbacken lar browser-instrumenteringen eie rapporteringen", (_, ErrorPage) => {
-    const error = new Error("syntetisk renderfeil");
+  it.each(errorPages)(
+    "%s-fallbacken lar browser-instrumenteringen eie rapporteringen",
+    (_, ErrorPage) => {
+      const error = new Error("syntetisk renderfeil");
 
-    // React 19 reports a caught boundary error through console.error. This is
-    // the production capture path installed by initNaisAPMClient.
-    console.error(error);
-    expect(pushError).toHaveBeenCalledOnce();
-    expect(pushError).toHaveBeenCalledWith(error, undefined);
+      // React 19 reports a caught boundary error through console.error. This is
+      // the production capture path installed by initNaisAPMClient.
+      console.error(error);
+      expect(pushError).toHaveBeenCalledOnce();
+      expect(pushError).toHaveBeenCalledWith(error, undefined);
 
-    render(<ErrorPage error={error} reset={vi.fn()} />);
+      render(<ErrorPage error={error} reset={vi.fn()} />);
 
-    expect(screen.getByRole("status")).toBeInTheDocument();
-    expect(pushError).toHaveBeenCalledOnce();
-  });
+      expect(screen.getByRole("status")).toBeInTheDocument();
+      expect(pushError).toHaveBeenCalledOnce();
+    },
+  );
 });

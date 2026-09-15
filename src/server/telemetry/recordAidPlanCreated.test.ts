@@ -11,30 +11,28 @@ beforeEach(() => {
   environment.isLocalOrDemo = false;
 });
 
-test.each([
-  "tiltak",
-  "kontroll",
-  "utenfor_scope",
-  "ukjent",
-] as const)("keeps %s separate and projects only approved fields", (gruppe) => {
-  const context = {
-    gruppe,
-    erITiltaksgruppe: false,
-    orgnummer: "sensitive-canary",
-  };
-  recordAidPlanCreated(context, true);
-  expect(logger.info).toHaveBeenCalledExactlyOnceWith(
-    {
-      event_type: "aid_plan_opprettet",
-      schema_version: "1",
-      tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
+test.each(["tiltak", "kontroll", "utenfor_scope", "ukjent"] as const)(
+  "keeps %s separate and projects only approved fields",
+  (gruppe) => {
+    const context = {
       gruppe,
-      skjemavariant: "standard",
-      evaluering_paaminnelse: "ja",
-    },
-    "Opprettelse av plan bekreftet av backend",
-  );
-});
+      erITiltaksgruppe: false,
+      orgnummer: "sensitive-canary",
+    };
+    recordAidPlanCreated(context, true);
+    expect(logger.info).toHaveBeenCalledExactlyOnceWith(
+      {
+        event_type: "aid_plan_opprettet",
+        schema_version: "1",
+        tiltakspakke: "OPPFOLGINGSPLAN_TILTAKSPAKKE_1",
+        gruppe,
+        skjemavariant: "standard",
+        evaluering_paaminnelse: "ja",
+      },
+      "Opprettelse av plan bekreftet av backend",
+    );
+  },
+);
 
 test("does not turn logging failure into saving failure", () => {
   vi.mocked(logger.info).mockImplementation(() => {
