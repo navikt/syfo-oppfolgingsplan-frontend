@@ -4,26 +4,21 @@ import type { OppfolgingsplanFormUnderArbeid } from "@/schema/oppfolgingsplanFor
 import type { ConvertedLagretUtkastResponse } from "@/schema/utkastResponseSchema";
 import NyPlanSkjema from "./NyPlanSkjema";
 
-// Mock setup functions
-export function setupMocks() {
-  vi.mock("next/navigation", () => ({
-    useParams: () => ({ narmesteLederId: "12345" }),
-    useRouter: () => ({
-      push: vi.fn(),
-    }),
-  }));
+vi.mock("next/navigation", () => ({
+  useParams: () => ({ narmesteLederId: "12345" }),
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+}));
 
-  // Mock the analytics event logging
-  vi.mock("@/common/logTaxonomyEvent", () => ({
-    logTaxonomyEvent: vi.fn(),
-  }));
+vi.mock("@/common/logTaxonomyEvent", () => ({
+  logTaxonomyEvent: vi.fn(),
+}));
 
-  // Mock scrollToAppTop to avoid issues in test environment
-  vi.mock("@/utils/scrollToAppTop", () => ({
-    scrollToAppTopForAG: vi.fn(),
-    scrollToAppTopForSM: vi.fn(),
-  }));
-}
+vi.mock("@/utils/scrollToAppTop", () => ({
+  scrollToAppTopForAG: vi.fn(),
+  scrollToAppTopForSM: vi.fn(),
+}));
 
 export function createMockLagretUtkastResponse(
   alreadyLagretUtkast?: OppfolgingsplanFormUnderArbeid,
