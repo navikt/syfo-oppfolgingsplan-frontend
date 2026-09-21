@@ -73,8 +73,8 @@ importers:
         specifier: 2.5.13
         version: 2.5.13
       '@next/env':
-        specifier: ^16.3.4
-        version: 16.3.4
+        specifier: ^16.3.5
+        version: 16.3.5
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.1
@@ -593,6 +593,9 @@ packages:
 
   '@next/env@16.3.4':
     resolution: {integrity: sha512-cjWZnUUa6jZq2kFaNe/ZyJdZonOZ/QoN0Zka2nz/FLOrfx14pQuM9c5RaSVkWMqgdt4ksgPAMWPyHSs/CyV48Q==}
+
+  '@next/env@16.3.5':
+    resolution: {integrity: sha512-NWEXVDMqoEo0ktmU6u0sE2Vg0LOcsD7NnOTJNo3/fEaTfsg+F1bMIxuDmQbda4e3yTIQwVdUREF2yIuMOusKtg==}
 
   '@next/swc-darwin-arm64@16.3.4':
     resolution: {integrity: sha512-iBr3I5LZNk5/bgl5//iTgD2tcym14MX0Xo7fD//u9dYAEgGzza1y9oywluPtf74YnOswVdH1908aK9xVz7zQTw==}
@@ -2469,6 +2472,8 @@ snapshots:
   '@navikt/texas@4.2.2': {}
 
   '@next/env@16.3.4': {}
+
+  '@next/env@16.3.5': {}
 
   '@next/swc-darwin-arm64@16.3.4':
     optional: true
