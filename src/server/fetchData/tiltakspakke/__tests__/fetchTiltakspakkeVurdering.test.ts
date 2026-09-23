@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { DEMO_TILTAKSPAKKE_VARIANT_COOKIE } from "@/common/demoScenario";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
-import { mockFlaggskipetVurderingTiltaksgruppe } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
+import {
+  mockFlaggskipetVurderingStandard,
+  mockFlaggskipetVurderingTiltaksgruppe,
+} from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 
 const tokenXFetchUpdateWithResponseMock = vi.hoisted(() => vi.fn());
 
@@ -11,7 +15,13 @@ vi.mock("@/server/tokenXFetch/tokenXFetchUpdate", () => ({
 const flaggskipetHost = "http://flaggskipet";
 const endpoint = `${flaggskipetHost}/api/v1/tiltakspakker/vurdering`;
 
-async function importFetcher({ isLocalOrDemo }: { isLocalOrDemo: boolean }) {
+async function importFetcher({
+  isLocalOrDemo,
+  demoTiltakspakkeVariant,
+}: {
+  isLocalOrDemo: boolean;
+  demoTiltakspakkeVariant?: string;
+}) {
   vi.resetModules();
   vi.doMock("@/env-variables/envHelpers", async () => {
     const actual = await vi.importActual<
@@ -26,6 +36,15 @@ async function importFetcher({ isLocalOrDemo }: { isLocalOrDemo: boolean }) {
   vi.doMock("@/env-variables/serverEnv", () => ({
     getServerEnv: () => ({
       FLAGGSKIPET_HOST: flaggskipetHost,
+    }),
+  }));
+  vi.doMock("next/headers", () => ({
+    cookies: async () => ({
+      get: (name: string) =>
+        name === DEMO_TILTAKSPAKKE_VARIANT_COOKIE &&
+        demoTiltakspakkeVariant !== undefined
+          ? { value: demoTiltakspakkeVariant }
+          : undefined,
     }),
   }));
 
@@ -44,6 +63,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     vi.resetModules();
     vi.doUnmock("@/env-variables/envHelpers");
     vi.doUnmock("@/env-variables/serverEnv");
+    vi.doUnmock("next/headers");
   });
 
   test("delegates valid orgnummer to tokenXFetchUpdateWithResponse with Flaggskipet target and 5-second timeout", async () => {
@@ -134,9 +154,10 @@ describe("fetchTiltakspakkeVurdering", () => {
     });
   });
 
-  test("returns mock data in local or demo without calling Flaggskipet", async () => {
+  test("returns the treatment-package mock for Tiltakspakke 1 in local or demo", async () => {
     const { fetchTiltakspakkeVurdering } = await importFetcher({
       isLocalOrDemo: true,
+      demoTiltakspakkeVariant: "tiltakspakke-1",
     });
 
     const result = await fetchTiltakspakkeVurdering(["123456789"]);
@@ -147,4 +168,26 @@ describe("fetchTiltakspakkeVurdering", () => {
       data: mockFlaggskipetVurderingTiltaksgruppe,
     });
   });
+
+  test.each([
+    ["missing", undefined],
+    ["invalid", "ugyldig-verdi"],
+    ["Standard", "standard"],
+  ])(
+    "returns the standard mock for %s variant in local or demo",
+    async (_description, demoTiltakspakkeVariant) => {
+      const { fetchTiltakspakkeVurdering } = await importFetcher({
+        isLocalOrDemo: true,
+        demoTiltakspakkeVariant,
+      });
+
+      const result = await fetchTiltakspakkeVurdering(["123456789"]);
+
+      expect(tokenXFetchUpdateWithResponseMock).not.toHaveBeenCalled();
+      expect(result).toEqual({
+        error: null,
+        data: mockFlaggskipetVurderingStandard,
+      });
+    },
+  );
 });

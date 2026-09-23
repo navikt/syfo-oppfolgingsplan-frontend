@@ -1,4 +1,5 @@
 export const DEMO_SCENARIO_COOKIE = "demo-scenario";
+export const DEMO_TILTAKSPAKKE_VARIANT_COOKIE = "demo-tiltakspakke-variant";
 
 const VALID_SCENARIOS = [
   "tom",
@@ -23,10 +24,49 @@ export function parseDemoScenario(
   return DEFAULT_DEMO_SCENARIO;
 }
 
+const VALID_TILTAKSPAKKE_VARIANTS = ["standard", "tiltakspakke-1"] as const;
+
+export type DemoTiltakspakkeVariant =
+  (typeof VALID_TILTAKSPAKKE_VARIANTS)[number];
+
+export const DEFAULT_DEMO_TILTAKSPAKKE_VARIANT: DemoTiltakspakkeVariant =
+  "standard";
+
+export function parseDemoTiltakspakkeVariant(
+  value: string | string[] | undefined,
+): DemoTiltakspakkeVariant {
+  if (
+    typeof value === "string" &&
+    (VALID_TILTAKSPAKKE_VARIANTS as readonly string[]).includes(value)
+  ) {
+    return value as DemoTiltakspakkeVariant;
+  }
+  return DEFAULT_DEMO_TILTAKSPAKKE_VARIANT;
+}
+
 export type DemoScenarioOption = {
   value: DemoScenario;
   label: string;
 };
+
+export function getAvailableDemoScenarioOptions(
+  scenarios: readonly DemoScenarioOption[],
+  variant: DemoTiltakspakkeVariant,
+): DemoScenarioOption[] {
+  if (variant === "tiltakspakke-1") {
+    return [...scenarios];
+  }
+
+  return scenarios.filter((scenario) => scenario.value !== "unntak-meldt");
+}
+
+export const DEMO_TILTAKSPAKKE_VARIANT_OPTIONS = [
+  { value: "standard", label: "Standard" },
+  { value: "tiltakspakke-1", label: "Tiltakspakke 1" },
+] as const satisfies readonly {
+  value: DemoTiltakspakkeVariant;
+  label: string;
+}[];
 
 export const AG_SCENARIO_OPTIONS: DemoScenarioOption[] = [
   { value: "tom", label: "Tom" },
