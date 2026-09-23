@@ -1,7 +1,11 @@
 import {
   DEMO_SCENARIO_COOKIE,
+  DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
   type DemoScenario,
   parseDemoScenario,
+  parseDemoTiltakspakkeVariant,
+  resolveDemoScenario,
+  SM_SCENARIO_OPTIONS,
 } from "@/common/demoScenario";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
@@ -40,8 +44,14 @@ export function getMockDataForScenarioSM(scenario: DemoScenario) {
 export async function fetchOppfolgingsplanOversiktForSM(): Promise<OppfolgingsplanerOversiktForSM> {
   if (isLocalOrDemo) {
     const { cookies } = await import("next/headers");
-    const scenario = parseDemoScenario(
-      (await cookies()).get(DEMO_SCENARIO_COOKIE)?.value,
+    const cookieStore = await cookies();
+    const variant = parseDemoTiltakspakkeVariant(
+      cookieStore.get(DEMO_TILTAKSPAKKE_VARIANT_COOKIE)?.value,
+    );
+    const scenario = resolveDemoScenario(
+      SM_SCENARIO_OPTIONS,
+      parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
+      variant,
     );
     await simulateBackendDelay();
     return getMockDataForScenarioSM(scenario);

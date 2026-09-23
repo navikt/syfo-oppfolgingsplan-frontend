@@ -6,6 +6,9 @@ import { mockOrganization } from "./mockEmployeeDetails";
 
 const mockOrgnummer = mockOrganization.orgNumber;
 
+export const mockFlaggskipetVurderingStandard: FlaggskipetVurderingResponse =
+  [];
+
 export const mockFlaggskipetVurderingTiltaksgruppe: FlaggskipetVurderingResponse =
   [
     {

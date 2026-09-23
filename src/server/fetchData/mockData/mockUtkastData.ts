@@ -16,6 +16,11 @@ export const mockUtkastResponse: ConvertedLagretUtkastResponse = {
   },
 };
 
+export const mockTomtUtkastResponse: ConvertedLagretUtkastResponse = {
+  ...mockCommonAGResponseFields,
+  utkast: null,
+};
+
 const mockUtfyltLagretUtkast: OppfolgingsplanFormUnderArbeid = {
   typiskArbeidshverdag:
     "Dette skrev jeg forrige gang. Kjekt at det blir lagret i et utkast.",

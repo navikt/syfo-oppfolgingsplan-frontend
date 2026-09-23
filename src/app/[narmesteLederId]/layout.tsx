@@ -2,11 +2,19 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "@navikt/dinesykmeldte-sidemeny/dist/dinesykmeldte-sidemeny.css";
 import { Theme } from "@navikt/ds-react";
-import { Suspense } from "react";
 import "@/app/globals.css";
 import { NaisMetaTags } from "@nais/apm/react";
-import { AG_SCENARIO_OPTIONS } from "@/common/demoScenario";
-import { DemoScenarioPicker } from "@/components/DemoScenarioPicker/DemoScenarioPicker";
+import {
+  AG_SCENARIO_OPTIONS,
+  DEFAULT_DEMO_SCENARIO,
+  DEFAULT_DEMO_TILTAKSPAKKE_VARIANT,
+  DEMO_SCENARIO_COOKIE,
+  DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
+  parseDemoScenario,
+  parseDemoTiltakspakkeVariant,
+  resolveDemoScenario,
+} from "@/common/demoScenario";
+import { DemoBanner } from "@/components/DemoBanner/DemoBanner";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { fetchOppfolgingsplanOversiktForAG } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 import { ArbeidsgiverPageContainer } from "@/ui/layout/ArbeidsgiverPageContainer";
@@ -22,6 +30,21 @@ export default async function RootLayoutForAG({
   children,
 }: LayoutProps<"/[narmesteLederId]">) {
   const { narmesteLederId } = await params;
+  let initialVariant = DEFAULT_DEMO_TILTAKSPAKKE_VARIANT;
+  let initialScenario = DEFAULT_DEMO_SCENARIO;
+
+  if (isLocalOrDemo) {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    initialVariant = parseDemoTiltakspakkeVariant(
+      cookieStore.get(DEMO_TILTAKSPAKKE_VARIANT_COOKIE)?.value,
+    );
+    initialScenario = resolveDemoScenario(
+      AG_SCENARIO_OPTIONS,
+      parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
+      initialVariant,
+    );
+  }
 
   // This fetch is also done in server components for the oversikt page. The
   // function is wrapped in React cache(), so all calls made from different
@@ -46,20 +69,22 @@ export default async function RootLayoutForAG({
       <body>
         <Decorator.Header />
         <Instrumentation>
-          <ArbeidsgiverPageContainer
-            narmesteLederId={narmesteLederId}
-            employeeFnr={oversiktResult.data?.employee.fnr || ""}
-            employeeName={employeeName}
-          >
-            <Theme>
+          <Theme>
+            {isLocalOrDemo && (
+              <DemoBanner
+                initialScenario={initialScenario}
+                initialVariant={initialVariant}
+                scenarios={AG_SCENARIO_OPTIONS}
+              />
+            )}
+            <ArbeidsgiverPageContainer
+              narmesteLederId={narmesteLederId}
+              employeeFnr={oversiktResult.data?.employee.fnr || ""}
+              employeeName={employeeName}
+            >
               <main className="max-w-[730px]">{children}</main>
-              {isLocalOrDemo && (
-                <Suspense fallback={null}>
-                  <DemoScenarioPicker scenarios={AG_SCENARIO_OPTIONS} />
-                </Suspense>
-              )}
-            </Theme>
-          </ArbeidsgiverPageContainer>
+            </ArbeidsgiverPageContainer>
+          </Theme>
         </Instrumentation>
 
         <Decorator.Footer />

@@ -1,5 +1,9 @@
-import { describe, expect, test, vi } from "vitest";
-import type { DemoScenario } from "@/common/demoScenario";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import {
+  DEMO_SCENARIO_COOKIE,
+  DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
+  type DemoScenario,
+} from "@/common/demoScenario";
 import {
   mockOversiktDataMedPlanerForAG,
   mockOversiktDataTom,
@@ -11,7 +15,57 @@ vi.unmock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
 
 import { getMockDataForScenario } from "@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt";
 
+async function importFetcher({
+  demoScenario,
+  demoTiltakspakkeVariant,
+}: {
+  demoScenario?: string;
+  demoTiltakspakkeVariant?: string;
+}) {
+  vi.resetModules();
+  vi.doMock("@/env-variables/envHelpers", async () => {
+    const actual = await vi.importActual<
+      typeof import("@/env-variables/envHelpers")
+    >("@/env-variables/envHelpers");
+
+    return {
+      ...actual,
+      isLocalOrDemo: true,
+    };
+  });
+  vi.doMock("next/headers", () => ({
+    cookies: async () => ({
+      get: (name: string) => {
+        if (name === DEMO_SCENARIO_COOKIE && demoScenario !== undefined) {
+          return { value: demoScenario };
+        }
+
+        if (
+          name === DEMO_TILTAKSPAKKE_VARIANT_COOKIE &&
+          demoTiltakspakkeVariant !== undefined
+        ) {
+          return { value: demoTiltakspakkeVariant };
+        }
+
+        return undefined;
+      },
+    }),
+  }));
+  vi.doMock("@/server/fetchData/mockData/simulateBackendDelay", () => ({
+    simulateBackendDelay: vi.fn(),
+  }));
+
+  return await import("../fetchOppfolgingsplanOversikt");
+}
+
 describe("getMockDataForScenario", () => {
+  afterEach(() => {
+    vi.resetModules();
+    vi.doUnmock("@/env-variables/envHelpers");
+    vi.doUnmock("next/headers");
+    vi.doUnmock("@/server/fetchData/mockData/simulateBackendDelay");
+  });
+
   test("returns empty oversikt for the 'tom' scenario", () => {
     const result = getMockDataForScenario("tom");
 
@@ -53,5 +107,19 @@ describe("getMockDataForScenario", () => {
     expect(() => getMockDataForScenario("ukjent" as DemoScenario)).toThrow(
       "Unknown demo scenario",
     );
+  });
+
+  test("uses the default data when a persisted Standard variant has unntak-meldt", async () => {
+    const { fetchOppfolgingsplanOversiktForAG } = await importFetcher({
+      demoScenario: "unntak-meldt",
+      demoTiltakspakkeVariant: "standard",
+    });
+
+    const result = await fetchOppfolgingsplanOversiktForAG("narmeste-leder-id");
+
+    expect(result).toEqual({
+      error: null,
+      data: mockOversiktDataAktivOgTidligere,
+    });
   });
 });
