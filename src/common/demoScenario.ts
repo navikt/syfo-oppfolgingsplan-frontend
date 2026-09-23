@@ -60,6 +60,33 @@ export function getAvailableDemoScenarioOptions(
   return scenarios.filter((scenario) => scenario.value !== "unntak-meldt");
 }
 
+export function resolveDemoScenario(
+  scenarios: readonly DemoScenarioOption[],
+  scenario: DemoScenario,
+  variant: DemoTiltakspakkeVariant,
+): DemoScenario {
+  const availableScenarios = getAvailableDemoScenarioOptions(
+    scenarios,
+    variant,
+  );
+
+  if (
+    availableScenarios.some(
+      (availableScenario) => availableScenario.value === scenario,
+    )
+  ) {
+    return scenario;
+  }
+
+  return (
+    availableScenarios.find(
+      (availableScenario) => availableScenario.value === DEFAULT_DEMO_SCENARIO,
+    )?.value ??
+    availableScenarios[0]?.value ??
+    DEFAULT_DEMO_SCENARIO
+  );
+}
+
 export const DEMO_TILTAKSPAKKE_VARIANT_OPTIONS = [
   { value: "standard", label: "Standard" },
   { value: "tiltakspakke-1", label: "Tiltakspakke 1" },

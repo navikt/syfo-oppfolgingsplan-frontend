@@ -6,6 +6,7 @@ import {
   getAvailableDemoScenarioOptions,
   parseDemoScenario,
   parseDemoTiltakspakkeVariant,
+  resolveDemoScenario,
 } from "@/common/demoScenario";
 
 describe("parseDemoScenario", () => {
@@ -78,5 +79,33 @@ describe("getAvailableDemoScenarioOptions", () => {
         "tiltakspakke-1",
       ).map(({ value }) => value),
     ).toContain("unntak-meldt");
+  });
+});
+
+describe("resolveDemoScenario", () => {
+  it("keeps a scenario that is available for the selected variant", () => {
+    expect(
+      resolveDemoScenario(
+        AG_SCENARIO_OPTIONS,
+        "unntak-meldt",
+        "tiltakspakke-1",
+      ),
+    ).toBe("unntak-meldt");
+  });
+
+  it("falls back to the default scenario when Standard cannot show unntak-meldt", () => {
+    expect(
+      resolveDemoScenario(AG_SCENARIO_OPTIONS, "unntak-meldt", "standard"),
+    ).toBe(DEFAULT_DEMO_SCENARIO);
+  });
+
+  it("falls back to the first available scenario when the default is unavailable", () => {
+    expect(
+      resolveDemoScenario(
+        [{ value: "tom", label: "Tom" }],
+        "aktiv-og-tidligere",
+        "standard",
+      ),
+    ).toBe("tom");
   });
 });

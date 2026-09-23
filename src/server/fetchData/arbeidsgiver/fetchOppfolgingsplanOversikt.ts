@@ -1,9 +1,13 @@
 import { cache } from "react";
 import { getEndpointOversiktForAG } from "@/common/backend-endpoints";
 import {
+  AG_SCENARIO_OPTIONS,
   DEMO_SCENARIO_COOKIE,
+  DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
   type DemoScenario,
   parseDemoScenario,
+  parseDemoTiltakspakkeVariant,
+  resolveDemoScenario,
 } from "@/common/demoScenario";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import { isLocalOrDemo } from "@/env-variables/envHelpers";
@@ -55,8 +59,14 @@ export const fetchOppfolgingsplanOversiktForAG = cache(
   ): Promise<FetchGetResult<OppfolgingsplanerOversiktForAG>> => {
     if (isLocalOrDemo) {
       const { cookies } = await import("next/headers");
-      const scenario = parseDemoScenario(
-        (await cookies()).get(DEMO_SCENARIO_COOKIE)?.value,
+      const cookieStore = await cookies();
+      const variant = parseDemoTiltakspakkeVariant(
+        cookieStore.get(DEMO_TILTAKSPAKKE_VARIANT_COOKIE)?.value,
+      );
+      const scenario = resolveDemoScenario(
+        AG_SCENARIO_OPTIONS,
+        parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
+        variant,
       );
       await simulateBackendDelay();
 
