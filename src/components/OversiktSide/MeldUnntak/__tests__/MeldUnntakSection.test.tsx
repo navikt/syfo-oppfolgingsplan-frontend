@@ -64,7 +64,11 @@ describe("MeldUnntakSection", () => {
         name: /bekrefter at en oppfølgingsplan ikke er nødvendig for Kreativ Hatt/i,
       }),
     ).not.toBeChecked();
-    expect(screen.getByText(/arbeidsmiljøloven § 4-6/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Unntakene følger av arbeidsmiljøloven § 4-6: Planen skal utarbeides «med mindre det er åpenbart unødvendig».",
+      ),
+    ).toBeInTheDocument();
   });
 
   test("sendeknappen er aldri disabled", async () => {

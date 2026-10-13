@@ -116,7 +116,7 @@ export default function MeldUnntakForm({
               checked={erBekreftet}
               onChange={handleBekreftelseChange}
               error={visValideringsfeil}
-              description="Unntakene følger av arbeidsmiljøloven § 4-6: Planen kan utelates «med mindre det er åpenbart unødvendig»."
+              description="Unntakene følger av arbeidsmiljøloven § 4-6: Planen skal utarbeides «med mindre det er åpenbart unødvendig»."
             >
               Jeg bekrefter at en oppfølgingsplan ikke er nødvendig for{" "}
               {ansattNavn} slik situasjonen er nå.
