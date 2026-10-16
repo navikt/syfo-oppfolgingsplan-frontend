@@ -1,6 +1,6 @@
 import { logger } from "@navikt/next-logger";
 import { revalidatePath } from "next/cache";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   getRuntimeErrorOperation,
   RuntimeErrorEvent,
@@ -53,9 +53,15 @@ const formValues: OppfolgingsplanFormUtfyllt = {
 
 describe("ferdigstillPlanServerAction evalueringspåminnelse", () => {
   beforeEach(() => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-10-01T12:00:00"));
     vi.clearAllMocks();
     tokenXFetchUpdateMock.mockReset();
     tokenXFetchUpdateMock.mockResolvedValue({ error: null });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test.each([
