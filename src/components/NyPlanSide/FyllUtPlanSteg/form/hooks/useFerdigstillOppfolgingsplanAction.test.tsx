@@ -63,6 +63,52 @@ const payload: FerdigstillPlanActionPayload = {
   evalueringPaaminnelse: false,
 };
 
+function SlowDestination({
+  destinationReady,
+}: {
+  destinationReady: Promise<void>;
+}) {
+  use(destinationReady);
+  return <p>Other page</p>;
+}
+
+function SaveWizard() {
+  const { startFerdigstillPlanAction } = useFerdigstillOppfolgingsplanAction(
+    context,
+    action,
+  );
+  return (
+    <button onClick={() => startFerdigstillPlanAction(payload)} type="button">
+      Save
+    </button>
+  );
+}
+
+function LeaveWizardApp({
+  destinationReady,
+}: {
+  destinationReady: Promise<void>;
+}) {
+  const [leftWizard, setLeftWizard] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => startTransition(() => setLeftWizard(true))}
+        type="button"
+      >
+        Leave
+      </button>
+      <Suspense fallback={<p>Loading</p>}>
+        {leftWizard ? (
+          <SlowDestination destinationReady={destinationReady} />
+        ) : (
+          <SaveWizard />
+        )}
+      </Suspense>
+    </>
+  );
+}
+
 describe("confirmed plan creation", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -306,39 +352,7 @@ describe("confirmed plan creation", () => {
     const destinationReady = new Promise<void>((resolve) => {
       completeNavigation = resolve;
     });
-    function SlowDestination() {
-      use(destinationReady);
-      return <p>Other page</p>;
-    }
-    function Wizard() {
-      const { startFerdigstillPlanAction } =
-        useFerdigstillOppfolgingsplanAction(context, action);
-      return (
-        <button
-          onClick={() => startFerdigstillPlanAction(payload)}
-          type="button"
-        >
-          Save
-        </button>
-      );
-    }
-    function App() {
-      const [leftWizard, setLeftWizard] = useState(false);
-      return (
-        <>
-          <button
-            onClick={() => startTransition(() => setLeftWizard(true))}
-            type="button"
-          >
-            Leave
-          </button>
-          <Suspense fallback={<p>Loading</p>}>
-            {leftWizard ? <SlowDestination /> : <Wizard />}
-          </Suspense>
-        </>
-      );
-    }
-    render(<App />);
+    render(<LeaveWizardApp destinationReady={destinationReady} />);
     fireEvent.click(screen.getByText("Save"));
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
     fireEvent.click(screen.getByText("Leave"));

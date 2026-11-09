@@ -6,13 +6,13 @@ Dette er produkttelemetri for arbeidsgivers «Lag oppfølgingsplan»-skjema, ikk
 
 Hendelsesnavn: `aid_oppfolgingsplan`. Domene: `aid`. Faste felter: `schema_version=1`, `tiltakspakke=OPPFOLGINGSPLAN_TILTAKSPAKKE_1`, `flate=ny_plan`.
 
-| Felt | Tillatte verdier og betydning |
-| --- | --- |
-| `gruppe` | `tiltak`, `kontroll`, `utenfor_scope`, `ukjent`. Tildelingen fra eksisterende vurdering for virksomheten, før funksjonsbryteren. Manglende vurdering og feil er ukjent, aldri kontroll. |
-| `skjemavariant` | `tiltak` eller `standard`. Skjemavarianten som faktisk leveres, etter funksjonsbryteren. Tiltak kan få standard når bryteren er av. |
-| `hendelse` | `beslutning`, `vist` eller `opprett`. |
-| `utfall` | `tilgjengelig` for beslutning/visning. `forsok`, `bekreftet` eller `feilet` for opprettelse. |
-| `evaluering_paaminnelse` | `ja` eller `nei`, bare ved `opprett`. Verdien av `evalueringPaaminnelse` i innsendingen, tatt vare på før serverkallet og brukt på både forsøk og resultat. |
+| Felt                     | Tillatte verdier og betydning                                                                                                                                                           |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gruppe`                 | `tiltak`, `kontroll`, `utenfor_scope`, `ukjent`. Tildelingen fra eksisterende vurdering for virksomheten, før funksjonsbryteren. Manglende vurdering og feil er ukjent, aldri kontroll. |
+| `skjemavariant`          | `tiltak` eller `standard`. Skjemavarianten som faktisk leveres, etter funksjonsbryteren. Tiltak kan få standard når bryteren er av.                                                     |
+| `hendelse`               | `beslutning`, `vist` eller `opprett`.                                                                                                                                                   |
+| `utfall`                 | `tilgjengelig` for beslutning/visning. `forsok`, `bekreftet` eller `feilet` for opprettelse.                                                                                            |
+| `evaluering_paaminnelse` | `ja` eller `nei`, bare ved `opprett`. Verdien av `evalueringPaaminnelse` i innsendingen, tatt vare på før serverkallet og brukt på både forsøk og resultat.                             |
 
 - `beslutning` sendes når skjema og vurdering er lastet. Det telles én gang per montering/lederkontekst, ikke per rerender.
 - `vist` krever at skjemabeholderen kommer inn i skjermbildet. Det betyr ikke at hele skjemaet, et bestemt AID-felt eller innholdet er lest. Ingen visning konstrueres dersom IntersectionObserver mangler. Stegbytte teller ikke et nytt besøk.

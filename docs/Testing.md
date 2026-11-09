@@ -17,8 +17,8 @@ expect(button).toBeDisabled();
 Without it (using only Vitest):
 
 ```typescript
-expect(screen.getByText("Lagrer utkast...")).toBeTruthy(); // less clear
-expect(document.body.contains(element)).toBe(true); // verbose
+expect(screen.getByText("Lagrer utkast...")).toBeTruthy(); // less clear
+expect(document.body.contains(element)).toBe(true); // verbose
 expect(element.value).toBe("some text");
 expect(button.disabled).toBe(true);
 ```
