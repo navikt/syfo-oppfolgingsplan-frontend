@@ -24,11 +24,15 @@ test("uses the same assignment for the form and saving, including an older open 
     narmesteLederId: "first-leader",
     lagretUtkastPromise: Promise.resolve(mockUtfyltLagretUtkastResponse),
     tiltakspakkePromise: Promise.resolve(original),
+    isDialogmoteTiltakspakkeActivePromise: Promise.resolve(false),
+    isFirstPlanPromise: Promise.resolve(false),
   });
   const second = await NyPlanSkjema({
     narmesteLederId: "second-leader",
     lagretUtkastPromise: Promise.resolve(mockUtfyltLagretUtkastResponse),
     tiltakspakkePromise: Promise.resolve(current),
+    isDialogmoteTiltakspakkeActivePromise: Promise.resolve(false),
+    isFirstPlanPromise: Promise.resolve(false),
   });
   // The wrapper delegates payload validation and authorization to the save path.
   // Extra client fields cannot replace the closed-over context or leader.
