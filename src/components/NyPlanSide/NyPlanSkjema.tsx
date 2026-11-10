@@ -8,10 +8,14 @@ export default async function NyPlanSkjema({
   narmesteLederId,
   lagretUtkastPromise,
   tiltakspakkePromise,
+  isDialogmoteTiltakspakkeActivePromise,
+  isFirstPlanPromise,
 }: {
   narmesteLederId: string;
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
   tiltakspakkePromise: Promise<TiltakspakkeContext>;
+  isDialogmoteTiltakspakkeActivePromise: Promise<boolean>;
+  isFirstPlanPromise: Promise<boolean>;
 }) {
   const tiltakspakke = await tiltakspakkePromise;
 
@@ -28,6 +32,10 @@ export default async function NyPlanSkjema({
       lagretUtkastPromise={lagretUtkastPromise}
       tiltakspakkePromise={tiltakspakkePromise}
       ferdigstillAction={ferdigstillAction}
+      isDialogmoteTiltakspakkeActive={
+        await isDialogmoteTiltakspakkeActivePromise
+      }
+      isFirstPlan={await isFirstPlanPromise}
     />
   );
 }

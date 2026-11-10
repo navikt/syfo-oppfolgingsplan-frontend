@@ -14,6 +14,7 @@ const grupper = {
 /** Preserve assignment from the same response used for UI gating. */
 export async function hentTildelingsgrupper(
   orgnumre: Iterable<string>,
+  tiltakspakkeId: string = OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
 ): Promise<ReadonlyMap<string, Tildelingsgruppe>> {
   const unikeOrgnumre = [...new Set(orgnumre)];
   const tildelinger = new Map<string, Tildelingsgruppe>(
@@ -27,7 +28,7 @@ export async function hentTildelingsgrupper(
     logger.info(
       {
         event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
-        tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+        tiltakspakkeId,
         antallVirksomheter: unikeOrgnumre.length,
         errorType: result.error.type,
       },
@@ -37,7 +38,7 @@ export async function hentTildelingsgrupper(
   }
 
   const tiltakspakke = result.data.find(
-    (vurdering) => vurdering.tiltakspakkeId === OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+    (vurdering) => vurdering.tiltakspakkeId === tiltakspakkeId,
   );
   for (const virksomhet of tiltakspakke?.virksomheter ?? []) {
     if (tildelinger.has(virksomhet.orgnummer)) {
@@ -48,7 +49,7 @@ export async function hentTildelingsgrupper(
   logger.info(
     {
       event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
-      tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+      tiltakspakkeId,
       antallVirksomheter: unikeOrgnumre.length,
       antallITiltaksgruppe: [...tildelinger.values()].filter(
         (gruppe) => gruppe === "tiltak",

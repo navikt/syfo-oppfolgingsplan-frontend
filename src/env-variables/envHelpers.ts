@@ -13,6 +13,11 @@ export function isTiltakspakkevurderingFeatureToggleEnabled(): boolean {
   return process.env.TILTAKSPAKKEVURDERING_FEATURE_TOGGLE === "true";
 }
 
+/** Release-toggle for dialogmøte-informasjon i tiltakspakke 2. */
+export function isTiltakspakke2FeatureToggleEnabled(): boolean {
+  return process.env.TILTAKSPAKKE_2_FEATURE_TOGGLE === "true";
+}
+
 export function throwEnvSchemaParsingError(e: unknown): never {
   if (e instanceof z.ZodError) {
     throw new Error(

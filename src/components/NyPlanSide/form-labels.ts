@@ -60,3 +60,12 @@ export const formHeadings = {
   arbeidsoppgaver: "Arbeidsoppgaver",
   tilrettelegging: "Tilrettelegging",
 } as const;
+
+export const tiltakspakke2Labels = {
+  evalueringsDato: {
+    description:
+      "Vi anbefaler at dere går gjennom planen og vurderer å oppdatere den innen fire uker etter at planen er laget. Dette gir nok tid til å erfare hva som fungerer og hva som kanskje må endres.",
+    infoMessage:
+      "Dialogmøte 1 er en god anledning til å gå gjennom planen. Er den ansatte 100 prosent sykmeldt, skal du kalle inn til møtet senest 7 uker etter at sykefraværet startet.",
+  },
+} as const;

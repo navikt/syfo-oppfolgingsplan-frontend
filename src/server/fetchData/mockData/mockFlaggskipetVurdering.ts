@@ -1,4 +1,5 @@
 import {
+  DIALOGMOTE_TILTAKSPAKKE_2,
   type FlaggskipetVurderingResponse,
   OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
 } from "@/schema/flaggskipetSchemas";
@@ -43,6 +44,19 @@ export const mockFlaggskipetVurderingUtenforScope: FlaggskipetVurderingResponse 
         {
           orgnummer: mockOrgnummer,
           deltakelse: "UTENFOR_SCOPE",
+        },
+      ],
+    },
+  ];
+
+export const mockFlaggskipetVurderingTiltakspakke2: FlaggskipetVurderingResponse =
+  [
+    {
+      tiltakspakkeId: DIALOGMOTE_TILTAKSPAKKE_2,
+      virksomheter: [
+        {
+          orgnummer: mockOrgnummer,
+          deltakelse: "TILTAKSGRUPPE",
         },
       ],
     },

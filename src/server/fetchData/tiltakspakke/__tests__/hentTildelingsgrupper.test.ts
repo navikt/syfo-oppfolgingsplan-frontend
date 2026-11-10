@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { OPPFOLGINGSPLAN_TILTAKSPAKKE_1 } from "@/schema/flaggskipetSchemas";
+import {
+  DIALOGMOTE_TILTAKSPAKKE_2,
+  OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+} from "@/schema/flaggskipetSchemas";
 import { fetchTiltakspakkeVurdering } from "../fetchTiltakspakkeVurdering";
 import { hentTildelingsgrupper } from "../hentTildelingsgrupper";
 
@@ -68,4 +71,23 @@ describe("assignment categories from the existing lookup", () => {
       );
     },
   );
+
+  test("reads the requested tiltakspakke", async () => {
+    fetchVurdering.mockResolvedValue({
+      error: null,
+      data: [
+        {
+          tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+          virksomheter: [{ orgnummer: "a", deltakelse: "KONTROLLGRUPPE" }],
+        },
+        {
+          tiltakspakkeId: DIALOGMOTE_TILTAKSPAKKE_2,
+          virksomheter: [{ orgnummer: "a", deltakelse: "TILTAKSGRUPPE" }],
+        },
+      ],
+    });
+    expect(
+      await hentTildelingsgrupper(["a"], DIALOGMOTE_TILTAKSPAKKE_2),
+    ).toEqual(new Map([["a", "tiltak"]]));
+  });
 });
