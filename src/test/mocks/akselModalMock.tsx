@@ -16,6 +16,14 @@ interface ModalSectionProps {
   children: ReactNode;
 }
 
+function ModalBody({ children }: ModalSectionProps) {
+  return <div>{children}</div>;
+}
+
+function ModalFooter({ children }: ModalSectionProps) {
+  return <div>{children}</div>;
+}
+
 export async function mockAkselModal() {
   const actual =
     await vi.importActual<typeof import("@navikt/ds-react")>(
@@ -43,8 +51,8 @@ export async function mockAkselModal() {
       </div>
     ),
     {
-      Body: ({ children }: ModalSectionProps) => <div>{children}</div>,
-      Footer: ({ children }: ModalSectionProps) => <div>{children}</div>,
+      Body: ModalBody,
+      Footer: ModalFooter,
     },
   );
 

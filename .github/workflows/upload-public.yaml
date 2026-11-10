@@ -2,9 +2,9 @@ name: Upload rarely changed public files to NAV CDN
 on:
   push:
     branches-ignore:
-      - 'gh-readonly-queue/**'
+      - "gh-readonly-queue/**"
     tags:
-      - '**'
+      - "**"
     paths:
       - public/**
 
@@ -13,8 +13,8 @@ jobs:
     name: upload public files to NAV CDN
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Upload public files to NAV CDN
@@ -22,6 +22,6 @@ jobs:
         with:
           team: team-esyfo
           source: ./public
-          destination: '/syfo-oppfolgingsplan-frontend'
+          destination: "/syfo-oppfolgingsplan-frontend"
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}

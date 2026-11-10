@@ -7,11 +7,7 @@ export function AllTheProviders({ children }: { children: ReactNode }) {
 }
 
 export function customRender(ui: ReactElement) {
-  const Wrapper = ({ children }: { children: ReactNode }) => {
-    return <AllTheProviders>{children}</AllTheProviders>;
-  };
-
-  return render(ui, { wrapper: Wrapper });
+  return render(ui, { wrapper: AllTheProviders });
 }
 
 /**

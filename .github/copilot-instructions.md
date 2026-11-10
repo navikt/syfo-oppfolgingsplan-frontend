@@ -1,8 +1,7 @@
 # syfo-oppfolgingsplan-frontend
 
-
-
 ## Team
+
 - **Team**: team-esyfo, NAV IT
 - **Org**: navikt
 
@@ -15,17 +14,20 @@ pnpm run lint      # Lint
 ```
 
 ## NAV Principles
+
 - **Team First**: Autonomous teams with circles of autonomy
 - **Product Development**: Continuous development over ad hoc approaches
 - **Essential Complexity**: Focus on essential, avoid accidental complexity
 - **DORA Metrics**: Measure and improve team performance
 
 ## Platform & Auth
+
 - **Platform**: NAIS (Kubernetes on GCP)
 - **Auth**: Azure AD (internal users), TokenX (on-behalf-of token exchange), ID-porten (citizens), Maskinporten (machine-to-machine)
 - **Observability**: Prometheus metrics, Grafana Loki logs, Tempo tracing (OpenTelemetry)
 
 ## Conventions
+
 - English code and comments — Norwegian for user-facing text and domain terms (e.g. dialogmote, sykmelding, oppfolgingsplan)
 - **Documentation lookup strategy** (prioritert rekkefølge):
   1. **Repo first**: Sjekk eksisterende kode og denne filen
@@ -46,15 +48,16 @@ pnpm run lint      # Lint
 
 ## Documentation and Working Notes
 
-| Tier | Location | Purpose | Persists | Checked in |
-|------|----------|---------|----------|------------|
-| **Session** | `~/.copilot/session-state/` | Scratch work for one task | No | No |
-| **Local notes** | `.local-notes/` | Plans, architecture drafts, research, AI reviews | Yes | No |
-| **Permanent docs** | `docs/` | Finalized documentation (ADRs, API docs) | Yes | Yes |
+| Tier               | Location                    | Purpose                                          | Persists | Checked in |
+| ------------------ | --------------------------- | ------------------------------------------------ | -------- | ---------- |
+| **Session**        | `~/.copilot/session-state/` | Scratch work for one task                        | No       | No         |
+| **Local notes**    | `.local-notes/`             | Plans, architecture drafts, research, AI reviews | Yes      | No         |
+| **Permanent docs** | `docs/`                     | Finalized documentation (ADRs, API docs)         | Yes      | Yes        |
 
 **Defaults**: Planning/research/drafts → `.local-notes/`. Finalized docs → `docs/`. Task tracking → session state.
 
 ## Tech Stack
+
 - **Language**: TypeScript
 - **Framework**: Next.js
 - **UI Library**: NAV Aksel Design System (`@navikt/ds-react`, `@navikt/aksel-icons`)
@@ -62,33 +65,39 @@ pnpm run lint      # Lint
 - **Bundler**: Next.js (built-in)
 
 ## Frontend Patterns
+
 - Check `package.json` for actual dependencies before suggesting libraries
 - Use Aksel components — never raw HTML for UI elements that Aksel provides
 - Follow existing code patterns in the repository
 - Mobile-first responsive design with breakpoints: `xs`, `sm`, `md`, `lg`, `xl`
 
 ## Aksel Spacing
+
 - **Prefer** Aksel spacing tokens with `space-` prefix (`space-4`, `space-8`, `space-12`, `space-16`, `space-20`, `space-24`, `space-32`, `space-40`) over Tailwind `p-*`/`m-*` utilities
 - Use `Box` with `paddingBlock`/`paddingInline` for directional spacing
 - Use `VStack`/`HStack` with `gap` for layout, `HGrid` for responsive grids
 
 ## Number Formatting
+
 - Always use Norwegian locale for numbers (space as thousand separator)
 - Never use `toLocaleString()` without explicit locale
 
 ## Boundaries
 
 ### ✅ Always
+
 - Run `pnpm run build` after changes to verify the build
 - Use Aksel components and spacing tokens
 - Handle loading, error, and empty states explicitly
 - Test keyboard navigation for interactive components
 
 ### ⚠️ Ask First
+
 - Adding new npm packages or dependencies — check `package.json` for existing alternatives first
 - Adding custom Tailwind utilities or deviating from Aksel patterns
 - Changing authentication flow or data fetching strategy
 
 ### 🚫 Never
+
 - Skip responsive props
 - Ignore accessibility requirements
