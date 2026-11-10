@@ -1,6 +1,11 @@
 "use client";
 
-import { DatePicker, useDatepicker } from "@navikt/ds-react";
+import {
+  Box,
+  DatePicker,
+  InlineMessage,
+  useDatepicker,
+} from "@navikt/ds-react";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
 import { toDateStringInIsoFormat } from "@/utils/dateAndTime/dateUtils";
 import { useFieldContext } from "../hooks/form-context";
@@ -14,6 +19,7 @@ interface Props {
   isChangeDisabled?: boolean;
   isReadOnly?: boolean;
   className?: string;
+  infoMessage?: React.ReactNode;
 }
 
 export default function FormDatePicker({
@@ -25,8 +31,10 @@ export default function FormDatePicker({
   isChangeDisabled = false,
   isReadOnly = false,
   className,
+  infoMessage,
 }: Props) {
   const field = useFieldContext<string | undefined>();
+  const infoId = infoMessage ? `${field.name}-info` : undefined;
 
   const { datepickerProps, inputProps } = useDatepicker({
     fromDate,
@@ -62,18 +70,28 @@ export default function FormDatePicker({
   }
 
   return (
-    <DatePicker {...datepickerProps}>
-      <DatePicker.Input
-        {...inputProps}
-        id={field.name}
-        onBlur={field.handleBlur}
-        label={label}
-        description={description}
-        error={errorMessages}
-        className={className}
-        readOnly={isReadOnly}
-        aria-required={isRequired}
-      />
-    </DatePicker>
+    <Box className={className}>
+      <DatePicker {...datepickerProps}>
+        <DatePicker.Input
+          {...inputProps}
+          id={field.name}
+          onBlur={field.handleBlur}
+          label={label}
+          description={description}
+          error={errorMessages}
+          readOnly={isReadOnly}
+          aria-required={isRequired}
+          // Aksel appends its own description and error ids to this value.
+          aria-describedby={infoId}
+        />
+        {infoId && (
+          <Box marginBlock="space-8 space-0">
+            <InlineMessage status="info" id={infoId}>
+              {infoMessage}
+            </InlineMessage>
+          </Box>
+        )}
+      </DatePicker>
+    </Box>
   );
 }

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const OPPFOLGINGSPLAN_TILTAKSPAKKE_1 = "OPPFOLGINGSPLAN_TILTAKSPAKKE_1";
+export const DIALOGMOTE_TILTAKSPAKKE_2 = "DIALOGMOTE_TILTAKSPAKKE_2";
 
 export const deltakelseSchema = z.enum([
   "TILTAKSGRUPPE",
