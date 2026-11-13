@@ -18,6 +18,8 @@ interface Props {
   isFormReadOnly: boolean;
   lagreUtkastError: FetchResultError | null;
   erITiltaksgruppe: boolean;
+  isDialogmoteTiltakspakkeActive: boolean;
+  isFirstPlan: boolean;
 }
 
 const FyllUtPlanSteg = withForm({
@@ -35,6 +37,8 @@ const FyllUtPlanSteg = withForm({
     isFormReadOnly,
     lagreUtkastError,
     erITiltaksgruppe,
+    isDialogmoteTiltakspakkeActive,
+    isFirstPlan,
   }) => {
     return (
       <section>
@@ -43,6 +47,8 @@ const FyllUtPlanSteg = withForm({
           isChangeDisabled={isPendingProceedToOppsummering}
           isReadOnly={isFormReadOnly}
           erITiltaksgruppe={erITiltaksgruppe}
+          isDialogmoteTiltakspakkeActive={isDialogmoteTiltakspakkeActive}
+          isFirstPlan={isFirstPlan}
         />
 
         <FormErrorSummary form={form} errorSummaryRef={errorSummaryRef} />
