@@ -1,3 +1,4 @@
+import { logger } from "@navikt/next-logger";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import {
   DIALOGMOTE_TILTAKSPAKKE_2,
@@ -77,6 +78,29 @@ describe("assignment categories from the existing lookup", () => {
       );
     },
   );
+
+  test("logs a fail-closed outcome per requested tiltakspakke", async () => {
+    fetchVurdering.mockResolvedValue({
+      error: { type: "FETCH_NETWORK_ERROR" },
+      data: null,
+    });
+    const tildelinger = await hentTildelingsgrupper(
+      ["a"],
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2],
+    );
+    expect(tildelinger.get(DIALOGMOTE_TILTAKSPAKKE_2)).toEqual(
+      new Map([["a", "ukjent"]]),
+    );
+    expect(vi.mocked(logger.info).mock.calls.map(([fields]) => fields)).toEqual(
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2].map(
+        (tiltakspakkeId) =>
+          expect.objectContaining({
+            tiltakspakkeId,
+            errorType: "FETCH_NETWORK_ERROR",
+          }),
+      ),
+    );
+  });
 
   test("reads every requested tiltakspakke from one call", async () => {
     fetchVurdering.mockResolvedValue({

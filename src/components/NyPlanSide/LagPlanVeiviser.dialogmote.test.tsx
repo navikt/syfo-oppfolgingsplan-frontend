@@ -10,16 +10,17 @@ import {
 afterEach(cleanup);
 
 test.each([
-  [false, true],
-  [true, true],
-  [true, false],
+  [false, true, true],
+  [true, true, true],
+  [true, true, false],
+  [true, false, false],
 ])(
-  "date guidance with package 2 active=%s and first plan=%s",
-  async (isDialogmoteTiltakspakkeActive, isFirstPlan) => {
+  "date guidance with package 2 active=%s, first plan=%s and package 1 active=%s",
+  async (isDialogmoteTiltakspakkeActive, isFirstPlan, isOppfolgingsplanTiltakspakkeActive) => {
     const user = userEvent.setup();
     await renderLagPlanVeiviserComponent(
       createMockLagretUtkastResponse(),
-      true,
+      isOppfolgingsplanTiltakspakkeActive,
       { isDialogmoteTiltakspakkeActive, isFirstPlan },
     );
 
@@ -30,11 +31,14 @@ test.each([
       name: formLabels.evalueringsDato.label,
     });
     expect(screen.getByText(description)).toBeVisible();
-    expect(
-      screen.getByRole("radiogroup", {
-        name: formLabels.evalueringPaaminnelse.label,
-      }),
-    ).toBeVisible();
+    const reminder = screen.queryByRole("radiogroup", {
+      name: formLabels.evalueringPaaminnelse.label,
+    });
+    if (isOppfolgingsplanTiltakspakkeActive) {
+      expect(reminder).toBeVisible();
+    } else {
+      expect(reminder).not.toBeInTheDocument();
+    }
 
     const message = document.getElementById("evalueringsDato-info");
     if (isDialogmoteTiltakspakkeActive && isFirstPlan) {
@@ -42,7 +46,6 @@ test.each([
       expect(
         screen.getByText(tiltakspakke2Labels.evalueringsDato.infoMessage),
       ).toBeVisible();
-      expect(message).toHaveAttribute("id", "evalueringsDato-info");
       expect(input.getAttribute("aria-describedby")?.split(" ")).toContain(
         "evalueringsDato-info",
       );
@@ -63,7 +66,6 @@ test.each([
       const describedBy = input.getAttribute("aria-describedby")?.split(" ");
       expect(describedBy).toContain(message?.id);
       expect(describedBy).toContain(screen.getByText(description).id);
-      expect(describedBy).toHaveLength(3);
       const errorId = describedBy?.find(
         (id) => id !== message?.id && id !== screen.getByText(description).id,
       );

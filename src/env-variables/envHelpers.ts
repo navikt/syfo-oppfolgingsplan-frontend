@@ -13,8 +13,8 @@ export function isTiltakspakkevurderingFeatureToggleEnabled(): boolean {
   return process.env.TILTAKSPAKKEVURDERING_FEATURE_TOGGLE === "true";
 }
 
-/** Release-toggle for dialogmøte-informasjon i tiltakspakke 2. */
-export function isTiltakspakke2FeatureToggleEnabled(): boolean {
+/** Release toggle for the tiltakspakke 2 dialogmøte information. */
+export function isDialogmoteTiltakspakkeFeatureToggleEnabled(): boolean {
   return process.env.TILTAKSPAKKE_2_FEATURE_TOGGLE === "true";
 }
 
