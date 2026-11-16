@@ -16,7 +16,9 @@ export function recordAidPlanCreated(
         schema_version: "1",
         tiltakspakke: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
         gruppe: tiltakspakke.gruppe,
-        skjemavariant: tiltakspakke.erITiltaksgruppe ? "tiltak" : "standard",
+        skjemavariant: tiltakspakke.isOppfolgingsplanTiltakspakkeActive
+          ? "tiltak"
+          : "standard",
         evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
       },
       "Opprettelse av plan bekreftet av backend",

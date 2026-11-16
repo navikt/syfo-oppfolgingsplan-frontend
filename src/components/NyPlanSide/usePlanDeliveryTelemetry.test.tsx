@@ -58,8 +58,12 @@ describe("plan delivery", () => {
     ["ukjent", false, "standard"],
   ] as const)(
     "records %s independently of delivered %s",
-    (gruppe, erITiltaksgruppe, skjemavariant) => {
-      const context = { gruppe, erITiltaksgruppe };
+    (gruppe, isOppfolgingsplanTiltakspakkeActive, skjemavariant) => {
+      const context = {
+        gruppe,
+        isOppfolgingsplanTiltakspakkeActive,
+        isDialogmoteTiltakspakkeActive: false,
+      };
       const tree = (
         <StrictMode>
           <Form context={context} />
@@ -87,12 +91,23 @@ describe("plan delivery", () => {
 
   test("ignores old observer callbacks after a context is unmounted", () => {
     const { rerender } = render(
-      <Form key="a" context={{ gruppe: "tiltak", erITiltaksgruppe: true }} />,
+      <Form
+        key="a"
+        context={{
+          gruppe: "tiltak",
+          isOppfolgingsplanTiltakspakkeActive: true,
+          isDialogmoteTiltakspakkeActive: false,
+        }}
+      />,
     );
     rerender(
       <Form
         key="b"
-        context={{ gruppe: "kontroll", erITiltaksgruppe: false }}
+        context={{
+          gruppe: "kontroll",
+          isOppfolgingsplanTiltakspakkeActive: false,
+          isDialogmoteTiltakspakkeActive: false,
+        }}
       />,
     );
     intersect(0);
@@ -110,7 +125,15 @@ describe("plan delivery", () => {
 
   test("does not invent viewport evidence without IntersectionObserver", () => {
     vi.stubGlobal("IntersectionObserver", undefined);
-    render(<Form context={{ gruppe: "tiltak", erITiltaksgruppe: true }} />);
+    render(
+      <Form
+        context={{
+          gruppe: "tiltak",
+          isOppfolgingsplanTiltakspakkeActive: true,
+          isDialogmoteTiltakspakkeActive: false,
+        }}
+      />,
+    );
     expect(record.mock.calls.map(([event]) => event.hendelse)).toEqual([
       "beslutning",
     ]);

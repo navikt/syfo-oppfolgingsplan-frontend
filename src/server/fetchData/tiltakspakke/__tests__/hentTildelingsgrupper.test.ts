@@ -34,9 +34,11 @@ describe("assignment categories from the existing lookup", () => {
         },
       ],
     });
-    expect(
-      await hentTildelingsgrupper(["a", "b", "c", "missing", "a"]),
-    ).toEqual(
+    const tildelinger = await hentTildelingsgrupper(
+      ["a", "b", "c", "missing", "a"],
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
+    );
+    expect(tildelinger.get(OPPFOLGINGSPLAN_TILTAKSPAKKE_1)).toEqual(
       new Map([
         ["a", "tiltak"],
         ["b", "kontroll"],
@@ -66,13 +68,17 @@ describe("assignment categories from the existing lookup", () => {
                   : [{ tiltakspakkeId: "another-package", virksomheter: [] }],
             },
       );
-      expect(await hentTildelingsgrupper(["a"])).toEqual(
+      const tildelinger = await hentTildelingsgrupper(
+        ["a"],
+        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
+      );
+      expect(tildelinger.get(OPPFOLGINGSPLAN_TILTAKSPAKKE_1)).toEqual(
         new Map([["a", "ukjent"]]),
       );
     },
   );
 
-  test("reads the requested tiltakspakke", async () => {
+  test("reads every requested tiltakspakke from one call", async () => {
     fetchVurdering.mockResolvedValue({
       error: null,
       data: [
@@ -86,8 +92,16 @@ describe("assignment categories from the existing lookup", () => {
         },
       ],
     });
-    expect(
-      await hentTildelingsgrupper(["a"], DIALOGMOTE_TILTAKSPAKKE_2),
-    ).toEqual(new Map([["a", "tiltak"]]));
+    const tildelinger = await hentTildelingsgrupper(
+      ["a"],
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2],
+    );
+    expect(tildelinger).toEqual(
+      new Map([
+        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, new Map([["a", "kontroll"]])],
+        [DIALOGMOTE_TILTAKSPAKKE_2, new Map([["a", "tiltak"]])],
+      ]),
+    );
+    expect(fetchVurdering).toHaveBeenCalledOnce();
   });
 });

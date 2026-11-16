@@ -9,7 +9,11 @@ import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/fo
 import type { FerdigstillPlanActionPayload } from "../FerdigstillPlanAction";
 import { ferdigstillPlanServerAction as ferdigstillPlan } from "../ferdigstillPlan";
 
-const tiltakspakke = { gruppe: "tiltak", erITiltaksgruppe: true } as const;
+const tiltakspakke = {
+  gruppe: "tiltak",
+  isOppfolgingsplanTiltakspakkeActive: true,
+  isDialogmoteTiltakspakkeActive: false,
+} as const;
 const ferdigstillPlanServerAction = (
   id: string,
   payload: FerdigstillPlanActionPayload,

@@ -25,9 +25,12 @@ type AidPlanEvent = z.infer<typeof eventSchema>;
 
 export function getAidPlanAttributes({
   gruppe,
-  erITiltaksgruppe,
+  isOppfolgingsplanTiltakspakkeActive,
 }: TiltakspakkeContext): z.infer<typeof contextSchema> {
-  return { gruppe, skjemavariant: erITiltaksgruppe ? "tiltak" : "standard" };
+  return {
+    gruppe,
+    skjemavariant: isOppfolgingsplanTiltakspakkeActive ? "tiltak" : "standard",
+  };
 }
 
 /** Closed categories only. Existing APM metadata/scrubbing stays in place. */

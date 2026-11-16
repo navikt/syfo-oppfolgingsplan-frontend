@@ -4,7 +4,6 @@ import { getAGOversiktHref } from "@/common/route-hrefs";
 import NyPlanSkjema from "@/components/NyPlanSide/NyPlanSkjema";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { hentTiltakspakkeContext } from "@/server/fetchData/arbeidsgiver/hentTiltakspakkeContext";
-import { isDialogmoteTiltakspakkeActive } from "@/server/fetchData/arbeidsgiver/isDialogmoteTiltakspakkeActive";
 import { isFirstPlan } from "@/server/fetchData/arbeidsgiver/isFirstPlan";
 import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner";
 import Breadcrumbs from "@/ui/Breadcrumbs";
@@ -34,9 +33,6 @@ export default async function NyPlanPage({
           narmesteLederId={narmesteLederId}
           lagretUtkastPromise={convertedLagretUtkast}
           tiltakspakkePromise={tiltakspakkePromise}
-          isDialogmoteTiltakspakkeActivePromise={isDialogmoteTiltakspakkeActive(
-            narmesteLederId,
-          )}
           isFirstPlanPromise={isFirstPlan(narmesteLederId)}
         />
       </Suspense>
