@@ -1,6 +1,5 @@
 import "server-only";
 import { logger } from "@navikt/next-logger";
-import { OPPFOLGINGSPLAN_TILTAKSPAKKE_1 } from "@/schema/flaggskipetSchemas";
 import type { Tildelingsgruppe } from "@/schema/tiltakspakkeContext";
 import { fetchTiltakspakkeVurdering } from "./fetchTiltakspakkeVurdering";
 
@@ -11,51 +10,63 @@ const grupper = {
   UTENFOR_SCOPE: "utenfor_scope",
 } as const;
 
-/** Preserve assignment from the same response used for UI gating. */
-export async function hentTildelingsgrupper(
+export type Tildelinger = ReadonlyMap<string, Tildelingsgruppe>;
+
+/**
+ * Reads every requested tiltakspakke from one Flaggskipet response.
+ * Organisations missing from a tiltakspakke stay "ukjent".
+ */
+export async function hentTildelingsgrupper<Id extends string>(
   orgnumre: Iterable<string>,
-  tiltakspakkeId: string = OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
-): Promise<ReadonlyMap<string, Tildelingsgruppe>> {
+  tiltakspakkeIder: readonly Id[],
+): Promise<ReadonlyMap<Id, Tildelinger>> {
   const unikeOrgnumre = [...new Set(orgnumre)];
-  const tildelinger = new Map<string, Tildelingsgruppe>(
-    unikeOrgnumre.map((orgnummer) => [orgnummer, "ukjent"]),
+  const tildelingerPerPakke = new Map(
+    tiltakspakkeIder.map((id) => [
+      id,
+      new Map<string, Tildelingsgruppe>(
+        unikeOrgnumre.map((orgnummer) => [orgnummer, "ukjent"]),
+      ),
+    ]),
   );
-  if (unikeOrgnumre.length === 0) return tildelinger;
+  if (unikeOrgnumre.length === 0) return tildelingerPerPakke;
 
   const result = await fetchTiltakspakkeVurdering(unikeOrgnumre);
-  if (result.error) {
-    // TokenX owns the terminal error log; this records the fail-closed outcome.
+  for (const [tiltakspakkeId, tildelinger] of tildelingerPerPakke) {
+    if (result.error) {
+      // TokenX owns the terminal error log; this records the fail-closed outcome.
+      logger.info(
+        {
+          event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
+          tiltakspakkeId,
+          antallVirksomheter: unikeOrgnumre.length,
+          errorType: result.error.type,
+        },
+        FLAGGSKIPET_VURDERING_EVENT_TYPE,
+      );
+      continue;
+    }
+
+    const tiltakspakke = result.data.find(
+      (vurdering) => vurdering.tiltakspakkeId === tiltakspakkeId,
+    );
+    for (const virksomhet of tiltakspakke?.virksomheter ?? []) {
+      if (tildelinger.has(virksomhet.orgnummer)) {
+        tildelinger.set(virksomhet.orgnummer, grupper[virksomhet.deltakelse]);
+      }
+    }
+
     logger.info(
       {
         event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
         tiltakspakkeId,
         antallVirksomheter: unikeOrgnumre.length,
-        errorType: result.error.type,
+        antallITiltaksgruppe: [...tildelinger.values()].filter(
+          (gruppe) => gruppe === "tiltak",
+        ).length,
       },
       FLAGGSKIPET_VURDERING_EVENT_TYPE,
     );
-    return tildelinger;
   }
-
-  const tiltakspakke = result.data.find(
-    (vurdering) => vurdering.tiltakspakkeId === tiltakspakkeId,
-  );
-  for (const virksomhet of tiltakspakke?.virksomheter ?? []) {
-    if (tildelinger.has(virksomhet.orgnummer)) {
-      tildelinger.set(virksomhet.orgnummer, grupper[virksomhet.deltakelse]);
-    }
-  }
-
-  logger.info(
-    {
-      event_type: FLAGGSKIPET_VURDERING_EVENT_TYPE,
-      tiltakspakkeId,
-      antallVirksomheter: unikeOrgnumre.length,
-      antallITiltaksgruppe: [...tildelinger.values()].filter(
-        (gruppe) => gruppe === "tiltak",
-      ).length,
-    },
-    FLAGGSKIPET_VURDERING_EVENT_TYPE,
-  );
-  return tildelinger;
+  return tildelingerPerPakke;
 }

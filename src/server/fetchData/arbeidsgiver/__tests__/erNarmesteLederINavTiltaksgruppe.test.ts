@@ -1,13 +1,19 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import {
+  DIALOGMOTE_TILTAKSPAKKE_2,
+  OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+} from "@/schema/flaggskipetSchemas";
+import type { Tildelingsgruppe } from "@/schema/tiltakspakkeContext";
 import { mockOversiktDataEmptyWithAccess } from "@/server/fetchData/mockData/mockOversiktDataVariants";
 import { hentTildelingsgrupper } from "@/server/fetchData/tiltakspakke/hentTildelingsgrupper";
 import { erNarmesteLederINavTiltaksgruppe } from "../erNarmesteLederINavTiltaksgruppe";
 import { fetchOppfolgingsplanOversiktForAG } from "../fetchOppfolgingsplanOversikt";
 import { hentTiltakspakkeContext } from "../hentTiltakspakkeContext";
 
-const envMock = vi.hoisted(() => ({ enabled: false }));
+const envMock = vi.hoisted(() => ({ enabled: false, tiltakspakke2: false }));
 vi.mock("@/env-variables/envHelpers", () => ({
   isTiltakspakkevurderingFeatureToggleEnabled: () => envMock.enabled,
+  isTiltakspakke2FeatureToggleEnabled: () => envMock.tiltakspakke2,
 }));
 vi.mock("@/server/fetchData/tiltakspakke/hentTildelingsgrupper", () => ({
   hentTildelingsgrupper: vi.fn(),
@@ -16,10 +22,24 @@ vi.mock("../fetchOppfolgingsplanOversikt", () => ({
   fetchOppfolgingsplanOversiktForAG: vi.fn(),
 }));
 
+const orgnummer = "123456789";
+function mockTildelinger(
+  pakke1: Tildelingsgruppe,
+  pakke2: Tildelingsgruppe = "ukjent",
+) {
+  vi.mocked(hentTildelingsgrupper).mockResolvedValue(
+    new Map([
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, new Map([[orgnummer, pakke1]])],
+      [DIALOGMOTE_TILTAKSPAKKE_2, new Map([[orgnummer, pakke2]])],
+    ]),
+  );
+}
+
 describe("leader assignment and delivery", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     envMock.enabled = true;
+    envMock.tiltakspakke2 = false;
     vi.mocked(fetchOppfolgingsplanOversiktForAG).mockResolvedValue({
       error: null,
       data: mockOversiktDataEmptyWithAccess,
@@ -29,39 +49,62 @@ describe("leader assignment and delivery", () => {
   test.each(["tiltak", "kontroll", "utenfor_scope", "ukjent"] as const)(
     "preserves %s while only treatment opens the UI",
     async (gruppe) => {
-      vi.mocked(hentTildelingsgrupper).mockResolvedValue(
-        new Map([["123456789", gruppe]]),
-      );
+      mockTildelinger(gruppe);
       await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
         gruppe,
-        erITiltaksgruppe: gruppe === "tiltak",
+        isOppfolgingsplanTiltakspakkeActive: gruppe === "tiltak",
+        isDialogmoteTiltakspakkeActive: false,
       });
-      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
-        "123456789",
-      ]);
+      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith(
+        [orgnummer],
+        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
+      );
     },
   );
 
   test("keeps treatment assignment with the toggle off", async () => {
     envMock.enabled = false;
-    vi.mocked(hentTildelingsgrupper).mockResolvedValue(
-      new Map([["123456789", "tiltak"]]),
-    );
+    mockTildelinger("tiltak");
     await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
       gruppe: "tiltak",
-      erITiltaksgruppe: false,
+      isOppfolgingsplanTiltakspakkeActive: false,
+      isDialogmoteTiltakspakkeActive: false,
     });
     expect(hentTildelingsgrupper).toHaveBeenCalledOnce();
   });
 
+  test.each([
+    ["tiltak", true],
+    ["kontroll", false],
+    ["utenfor_scope", false],
+    ["ukjent", false],
+  ] as const)(
+    "reads tiltakspakke 2 (%s) from the same lookup",
+    async (pakke2, expected) => {
+      envMock.tiltakspakke2 = true;
+      mockTildelinger("kontroll", pakke2);
+      await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
+        gruppe: "kontroll",
+        isOppfolgingsplanTiltakspakkeActive: false,
+        isDialogmoteTiltakspakkeActive: expected,
+      });
+      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith(
+        [orgnummer],
+        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2],
+      );
+    },
+  );
+
   test("fails closed without an extra lookup when the overview fails", async () => {
+    envMock.tiltakspakke2 = true;
     vi.mocked(fetchOppfolgingsplanOversiktForAG).mockResolvedValue({
       error: { type: "FETCH_NETWORK_ERROR" },
       data: null,
     });
     await expect(hentTiltakspakkeContext("leader")).resolves.toEqual({
       gruppe: "ukjent",
-      erITiltaksgruppe: false,
+      isOppfolgingsplanTiltakspakkeActive: false,
+      isDialogmoteTiltakspakkeActive: false,
     });
     expect(hentTildelingsgrupper).not.toHaveBeenCalled();
   });
@@ -70,16 +113,12 @@ describe("leader assignment and delivery", () => {
     "preserves the existing boolean API with toggle %s",
     async (enabled) => {
       envMock.enabled = enabled;
-      vi.mocked(hentTildelingsgrupper).mockResolvedValue(
-        new Map([["123456789", "tiltak"]]),
-      );
+      mockTildelinger("tiltak");
       await expect(erNarmesteLederINavTiltaksgruppe("leader")).resolves.toBe(
         enabled,
       );
       expect(fetchOppfolgingsplanOversiktForAG).toHaveBeenCalledWith("leader");
-      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
-        "123456789",
-      ]);
+      expect(hentTildelingsgrupper).toHaveBeenCalledOnce();
     },
   );
 });
