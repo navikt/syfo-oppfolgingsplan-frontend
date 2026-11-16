@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import {
-  isTiltakspakke2FeatureToggleEnabled,
+  isDialogmoteTiltakspakkeFeatureToggleEnabled,
   isTiltakspakkevurderingFeatureToggleEnabled,
 } from "@/env-variables/envHelpers";
 import {
@@ -25,11 +25,12 @@ export const hentTiltakspakkeContext = cache(
     if (oversikt.error) return ukjentContext;
 
     const orgnummer = oversikt.data.organization.orgNumber;
-    const isTiltakspakke2Enabled = isTiltakspakke2FeatureToggleEnabled();
+    const isDialogmoteToggleEnabled =
+      isDialogmoteTiltakspakkeFeatureToggleEnabled();
     // Pakke 1 assignment still runs with the toggle off, as before the pilot launch.
     const tildelinger = await hentTildelingsgrupper(
       [orgnummer],
-      isTiltakspakke2Enabled
+      isDialogmoteToggleEnabled
         ? [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2]
         : [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
     );
@@ -41,7 +42,7 @@ export const hentTiltakspakkeContext = cache(
       isOppfolgingsplanTiltakspakkeActive:
         isTiltakspakkevurderingFeatureToggleEnabled() && gruppe === "tiltak",
       isDialogmoteTiltakspakkeActive:
-        isTiltakspakke2Enabled &&
+        isDialogmoteToggleEnabled &&
         tildelinger.get(DIALOGMOTE_TILTAKSPAKKE_2)?.get(orgnummer) === "tiltak",
     };
   },

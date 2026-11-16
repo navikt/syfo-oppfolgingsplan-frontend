@@ -13,7 +13,7 @@ import { hentTiltakspakkeContext } from "../hentTiltakspakkeContext";
 const envMock = vi.hoisted(() => ({ enabled: false, tiltakspakke2: false }));
 vi.mock("@/env-variables/envHelpers", () => ({
   isTiltakspakkevurderingFeatureToggleEnabled: () => envMock.enabled,
-  isTiltakspakke2FeatureToggleEnabled: () => envMock.tiltakspakke2,
+  isDialogmoteTiltakspakkeFeatureToggleEnabled: () => envMock.tiltakspakke2,
 }));
 vi.mock("@/server/fetchData/tiltakspakke/hentTildelingsgrupper", () => ({
   hentTildelingsgrupper: vi.fn(),
