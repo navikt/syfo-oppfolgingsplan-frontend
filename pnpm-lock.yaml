@@ -73,8 +73,8 @@ importers:
         specifier: 2.6.6
         version: 2.6.6
       '@next/env':
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.6
+        version: 16.4.6
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.1
@@ -611,9 +611,6 @@ packages:
   '@navikt/texas@4.2.2':
     resolution: {integrity: sha512-w/iTWLSdmvn2j2U3M+sJX9bSBvoV5UcMk+FuKs9EKz1QuaCoUksZrEfqX9/FtqyTUaOhwDnm/1iIuR6BudzFAg==, tarball: https://npm.pkg.github.com/download/@navikt/texas/4.2.2/862d743a1df21630a007a0d2d2a36a74dd8b5187}
     engines: {node: ^20.19.0 || >= 22.12.0 || 24.x || 25.x}
-
-  '@next/env@16.4.5':
-    resolution: {integrity: sha512-JwSPwpdkZL5VMl2jA/q+JI8MZdweAL3xmw5/tb9y/TLtmS0YXZnmYDzSihwk8xTj1OL+WM53gTqaj96yuLp6Xw==}
 
   '@next/env@16.4.6':
     resolution: {integrity: sha512-SunBjJ6t+oBtecS3dTjdVuMhUogP5wD/vrGL5EVuQYM1iS4O5ilL51HkiJ3sPjMzRHiCChvr4dbaSJbR7F3lxA==}
@@ -2530,8 +2527,6 @@ snapshots:
       pino-socket: 8.0.0
 
   '@navikt/texas@4.2.2': {}
-
-  '@next/env@16.4.5': {}
 
   '@next/env@16.4.6': {}
 
