@@ -18,6 +18,10 @@ const TRACE_URL_ATTRIBUTES = new Set([
   "url.full",
   "url.path",
 ]);
+// Dekoratøren logs these when its request to the login session API throws,
+// for example after network loss or in a suspended tab. They are not app errors.
+const DECORATOR_SESSION_FAILURE =
+  /^console\.error: \[ERROR\] Failed to (?:fetch|renew) session\./;
 
 const pageRoute = (pattern: string, pageId: string) =>
   [new RegExp(pattern, "i"), `${BASE_PATH}${pageId}`] as const;
@@ -192,6 +196,8 @@ const sanitizePage = (url: string): { id: string; url: string } => {
 type BeforeSend = NonNullable<InitOptions["beforeSend"]>;
 
 export const sanitizeBrowserTelemetry: BeforeSend = (item) => {
+  if (isDecoratorSessionFailure(item.type, item.payload)) return null;
+
   const page = item.meta.page;
 
   return {
@@ -222,4 +228,11 @@ export function initBrowserObservability() {
   if (isLocalOrDemo) return undefined;
   browserObservability ??= initNaisAPMClient(browserApmOptions);
   return browserObservability;
+}
+
+function isDecoratorSessionFailure(type: string, payload: unknown): boolean {
+  return (
+    type === "exception" &&
+    DECORATOR_SESSION_FAILURE.test((payload as ExceptionPayload)?.value ?? "")
+  );
 }
