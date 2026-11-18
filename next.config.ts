@@ -58,6 +58,9 @@ const nextConfig: NextConfig = {
   output: "standalone",
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
   assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX || "",
+  // Assets load from the CDN. Without CORS mode, the browser hides script
+  // errors from them, and Faro reports only "Script error.".
+  crossOrigin: "anonymous",
   productionBrowserSourceMaps: true,
   serverExternalPackages: ["@navikt/next-logger", "next-logger", "pino"],
   experimental: {
