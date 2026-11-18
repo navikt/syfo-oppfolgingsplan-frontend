@@ -196,6 +196,19 @@ describe("browser-observability", () => {
     });
   });
 
+  it.each([
+    'console.error: [ERROR] Failed to renew session. {"error":"TypeError: Load failed"}',
+    'console.error: [ERROR] Failed to fetch session. {"error":"TypeError: Failed to fetch"}',
+  ])("dropper Dekoratørens sesjonsfeil: %s", (value) => {
+    expect(sanitizeBrowserTelemetry(exception(value))).toBeNull();
+  });
+
+  it("beholder appens egne nettverksfeil", () => {
+    expect(
+      sanitizeBrowserTelemetry(exception("TypeError: Failed to fetch")),
+    ).toMatchObject({ payload: { value: "TypeError: Failed to fetch" } });
+  });
+
   it("bruker normaliserte page ID-er og tracing", () => {
     expect(
       browserApmOptions.faro.pageTracking?.generatePageId?.({
@@ -205,3 +218,11 @@ describe("browser-observability", () => {
     expect(browserApmOptions.tracing).toBe(true);
   });
 });
+
+function exception(value: string) {
+  return {
+    type: "exception",
+    payload: { type: "Error", value },
+    meta: {},
+  } as Parameters<typeof sanitizeBrowserTelemetry>[0];
+}
