@@ -35,11 +35,14 @@ describe("assignment categories from the existing lookup", () => {
         },
       ],
     });
-    const tildelinger = await hentTildelingsgrupper(
-      ["a", "b", "c", "missing", "a"],
-      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
-    );
-    expect(tildelinger.get(OPPFOLGINGSPLAN_TILTAKSPAKKE_1)).toEqual(
+    const tildelinger = await hentTildelingsgrupper([
+      "a",
+      "b",
+      "c",
+      "missing",
+      "a",
+    ]);
+    expect(tildelinger[OPPFOLGINGSPLAN_TILTAKSPAKKE_1]).toEqual(
       new Map([
         ["a", "tiltak"],
         ["b", "kontroll"],
@@ -69,26 +72,20 @@ describe("assignment categories from the existing lookup", () => {
                   : [{ tiltakspakkeId: "another-package", virksomheter: [] }],
             },
       );
-      const tildelinger = await hentTildelingsgrupper(
-        ["a"],
-        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
-      );
-      expect(tildelinger.get(OPPFOLGINGSPLAN_TILTAKSPAKKE_1)).toEqual(
+      const tildelinger = await hentTildelingsgrupper(["a"]);
+      expect(tildelinger[OPPFOLGINGSPLAN_TILTAKSPAKKE_1]).toEqual(
         new Map([["a", "ukjent"]]),
       );
     },
   );
 
-  test("logs a fail-closed outcome per requested tiltakspakke", async () => {
+  test("logs a fail-closed outcome per known tiltakspakke", async () => {
     fetchVurdering.mockResolvedValue({
       error: { type: "FETCH_NETWORK_ERROR" },
       data: null,
     });
-    const tildelinger = await hentTildelingsgrupper(
-      ["a"],
-      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2],
-    );
-    expect(tildelinger.get(DIALOGMOTE_TILTAKSPAKKE_2)).toEqual(
+    const tildelinger = await hentTildelingsgrupper(["a"]);
+    expect(tildelinger[DIALOGMOTE_TILTAKSPAKKE_2]).toEqual(
       new Map([["a", "ukjent"]]),
     );
     expect(vi.mocked(logger.info).mock.calls.map(([fields]) => fields)).toEqual(
@@ -102,7 +99,7 @@ describe("assignment categories from the existing lookup", () => {
     );
   });
 
-  test("reads every requested tiltakspakke from one call", async () => {
+  test("reads every known tiltakspakke from one call", async () => {
     fetchVurdering.mockResolvedValue({
       error: null,
       data: [
@@ -116,16 +113,11 @@ describe("assignment categories from the existing lookup", () => {
         },
       ],
     });
-    const tildelinger = await hentTildelingsgrupper(
-      ["a"],
-      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2],
-    );
-    expect(tildelinger).toEqual(
-      new Map([
-        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, new Map([["a", "kontroll"]])],
-        [DIALOGMOTE_TILTAKSPAKKE_2, new Map([["a", "tiltak"]])],
-      ]),
-    );
+    const tildelinger = await hentTildelingsgrupper(["a"]);
+    expect(tildelinger).toEqual({
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1]: new Map([["a", "kontroll"]]),
+      [DIALOGMOTE_TILTAKSPAKKE_2]: new Map([["a", "tiltak"]]),
+    });
     expect(fetchVurdering).toHaveBeenCalledOnce();
   });
 });

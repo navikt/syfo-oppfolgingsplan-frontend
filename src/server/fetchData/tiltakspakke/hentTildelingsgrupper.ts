@@ -1,5 +1,9 @@
 import "server-only";
 import { logger } from "@navikt/next-logger";
+import {
+  TILTAKSPAKKE_IDER,
+  type TiltakspakkeId,
+} from "@/schema/flaggskipetSchemas";
 import type { Tildelingsgruppe } from "@/schema/tiltakspakkeContext";
 import { fetchTiltakspakkeVurdering } from "./fetchTiltakspakkeVurdering";
 
@@ -13,26 +17,26 @@ const grupper = {
 export type Tildelinger = ReadonlyMap<string, Tildelingsgruppe>;
 
 /**
- * Reads every requested tiltakspakke from one Flaggskipet response.
+ * Reads every known tiltakspakke from one Flaggskipet response.
  * Organisations missing from a tiltakspakke stay "ukjent".
  */
-export async function hentTildelingsgrupper<Id extends string>(
+export async function hentTildelingsgrupper(
   orgnumre: Iterable<string>,
-  tiltakspakkeIder: readonly Id[],
-): Promise<ReadonlyMap<Id, Tildelinger>> {
+): Promise<Readonly<Record<TiltakspakkeId, Tildelinger>>> {
   const unikeOrgnumre = [...new Set(orgnumre)];
-  const tildelingerPerPakke = new Map(
-    tiltakspakkeIder.map((id) => [
+  const tildelingerPerPakke = Object.fromEntries(
+    TILTAKSPAKKE_IDER.map((id) => [
       id,
       new Map<string, Tildelingsgruppe>(
         unikeOrgnumre.map((orgnummer) => [orgnummer, "ukjent"]),
       ),
     ]),
-  );
+  ) as Record<TiltakspakkeId, Map<string, Tildelingsgruppe>>;
   if (unikeOrgnumre.length === 0) return tildelingerPerPakke;
 
   const result = await fetchTiltakspakkeVurdering(unikeOrgnumre);
-  for (const [tiltakspakkeId, tildelinger] of tildelingerPerPakke) {
+  for (const tiltakspakkeId of TILTAKSPAKKE_IDER) {
+    const tildelinger = tildelingerPerPakke[tiltakspakkeId];
     if (result.error) {
       // TokenX owns the terminal error log; this records the fail-closed outcome.
       logger.info(
@@ -50,6 +54,7 @@ export async function hentTildelingsgrupper<Id extends string>(
     const tiltakspakke = result.data.find(
       (vurdering) => vurdering.tiltakspakkeId === tiltakspakkeId,
     );
+
     for (const virksomhet of tiltakspakke?.virksomheter ?? []) {
       if (tildelinger.has(virksomhet.orgnummer)) {
         tildelinger.set(virksomhet.orgnummer, grupper[virksomhet.deltakelse]);

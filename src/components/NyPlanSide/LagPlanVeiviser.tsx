@@ -23,14 +23,14 @@ interface Props {
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
   tiltakspakkePromise: Promise<TiltakspakkeContext>;
   ferdigstillAction: FerdigstillPlanAction;
-  isFirstPlan: boolean;
+  showDialogmoteInfo: boolean;
 }
 
 export default function LagPlanVeiviser({
   lagretUtkastPromise,
   tiltakspakkePromise,
   ferdigstillAction,
-  isFirstPlan,
+  showDialogmoteInfo,
 }: Props) {
   const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
   const tiltakspakke = use(tiltakspakkePromise);
@@ -92,7 +92,7 @@ export default function LagPlanVeiviser({
           isDialogmoteTiltakspakkeActive={
             tiltakspakke.isDialogmoteTiltakspakkeActive
           }
-          isFirstPlan={isFirstPlan}
+          showDialogmoteInfo={showDialogmoteInfo}
         />
       </Activity>
 

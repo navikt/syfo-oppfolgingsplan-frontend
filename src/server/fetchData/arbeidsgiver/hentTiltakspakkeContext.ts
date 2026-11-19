@@ -25,25 +25,19 @@ export const hentTiltakspakkeContext = cache(
     if (oversikt.error) return ukjentContext;
 
     const orgnummer = oversikt.data.organization.orgNumber;
-    const isDialogmoteToggleEnabled =
-      isDialogmoteTiltakspakkeFeatureToggleEnabled();
-    // Pakke 1 assignment still runs with the toggle off, as before the pilot launch.
-    const tildelinger = await hentTildelingsgrupper(
-      [orgnummer],
-      isDialogmoteToggleEnabled
-        ? [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2]
-        : [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
-    );
+    // Assignments are read with the toggles off too; the toggles only gate the UI.
+    const tildelinger = await hentTildelingsgrupper([orgnummer]);
     const gruppe =
-      tildelinger.get(OPPFOLGINGSPLAN_TILTAKSPAKKE_1)?.get(orgnummer) ??
-      "ukjent";
+      tildelinger[OPPFOLGINGSPLAN_TILTAKSPAKKE_1].get(orgnummer) ?? "ukjent";
+
     return {
       gruppe,
       isOppfolgingsplanTiltakspakkeActive:
-        isTiltakspakkevurderingFeatureToggleEnabled() && gruppe === "tiltak",
+        isTiltakspakkevurderingFeatureToggleEnabled() &&
+        tildelinger[OPPFOLGINGSPLAN_TILTAKSPAKKE_1].get(orgnummer) === "tiltak",
       isDialogmoteTiltakspakkeActive:
-        isDialogmoteToggleEnabled &&
-        tildelinger.get(DIALOGMOTE_TILTAKSPAKKE_2)?.get(orgnummer) === "tiltak",
+        isDialogmoteTiltakspakkeFeatureToggleEnabled() &&
+        tildelinger[DIALOGMOTE_TILTAKSPAKKE_2].get(orgnummer) === "tiltak",
     };
   },
 );
