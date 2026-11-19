@@ -1,7 +1,7 @@
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, expect, test } from "vitest";
-import { formLabels, tiltakspakke2Labels } from "./form-labels";
+import { dialogmoteTiltakspakkeLabels, formLabels } from "./form-labels";
 import {
   createMockLagretUtkastResponse,
   renderLagPlanVeiviserComponent,
@@ -15,17 +15,17 @@ test.each([
   [true, true, false],
   [true, false, false],
 ])(
-  "date guidance with package 2 active=%s, first plan=%s and package 1 active=%s",
-  async (isDialogmoteTiltakspakkeActive, isFirstPlan, isOppfolgingsplanTiltakspakkeActive) => {
+  "date guidance with package 2 active=%s, no plans in virksomhet=%s and package 1 active=%s",
+  async (isDialogmoteTiltakspakkeActive, hasNoPlansInVirksomhet, isOppfolgingsplanTiltakspakkeActive) => {
     const user = userEvent.setup();
     await renderLagPlanVeiviserComponent(
       createMockLagretUtkastResponse(),
       isOppfolgingsplanTiltakspakkeActive,
-      { isDialogmoteTiltakspakkeActive, isFirstPlan },
+      { isDialogmoteTiltakspakkeActive, hasNoPlansInVirksomhet },
     );
 
     const description = isDialogmoteTiltakspakkeActive
-      ? tiltakspakke2Labels.evalueringsDato.description
+      ? dialogmoteTiltakspakkeLabels.evalueringsDato.description
       : formLabels.evalueringsDato.description;
     const input = screen.getByRole("textbox", {
       name: formLabels.evalueringsDato.label,
@@ -41,17 +41,19 @@ test.each([
     }
 
     const message = document.getElementById("evalueringsDato-info");
-    if (isDialogmoteTiltakspakkeActive && isFirstPlan) {
+    if (isDialogmoteTiltakspakkeActive && hasNoPlansInVirksomhet) {
       expect(message).toBeVisible();
       expect(
-        screen.getByText(tiltakspakke2Labels.evalueringsDato.infoMessage),
+        screen.getByText(
+          dialogmoteTiltakspakkeLabels.evalueringsDato.infoMessage,
+        ),
       ).toBeVisible();
       expect(input.getAttribute("aria-describedby")?.split(" ")).toContain(
         "evalueringsDato-info",
       );
       expect(input).toHaveAccessibleDescription(
         expect.stringContaining(
-          tiltakspakke2Labels.evalueringsDato.infoMessage,
+          dialogmoteTiltakspakkeLabels.evalueringsDato.infoMessage,
         ),
       );
       expect(input).toHaveAccessibleDescription(
@@ -73,7 +75,9 @@ test.each([
     } else {
       expect(message).not.toBeInTheDocument();
       expect(
-        screen.queryByText(tiltakspakke2Labels.evalueringsDato.infoMessage),
+        screen.queryByText(
+          dialogmoteTiltakspakkeLabels.evalueringsDato.infoMessage,
+        ),
       ).not.toBeInTheDocument();
       expect(input).toHaveAccessibleDescription(description);
       expect(input.getAttribute("aria-describedby")?.split(" ")).not.toContain(

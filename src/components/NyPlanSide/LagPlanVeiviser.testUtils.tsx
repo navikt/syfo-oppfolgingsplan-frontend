@@ -47,7 +47,10 @@ export function createMockLagretUtkastResponse(
 export async function renderLagPlanVeiviserComponent(
   mockData: ConvertedLagretUtkastResponse,
   isOppfolgingsplanTiltakspakkeActive = false,
-  { isDialogmoteTiltakspakkeActive = false, isFirstPlan = false } = {},
+  {
+    isDialogmoteTiltakspakkeActive = false,
+    hasNoPlansInVirksomhet = false,
+  } = {},
 ) {
   const lagretUtkastPromise = Promise.resolve(mockData);
   const tiltakspakkePromise = Promise.resolve({
@@ -63,7 +66,7 @@ export async function renderLagPlanVeiviserComponent(
     narmesteLederId: "12345",
     lagretUtkastPromise,
     tiltakspakkePromise,
-    isFirstPlanPromise: Promise.resolve(isFirstPlan),
+    hasNoPlansInVirksomhetPromise: Promise.resolve(hasNoPlansInVirksomhet),
   });
 
   await act(async () => {

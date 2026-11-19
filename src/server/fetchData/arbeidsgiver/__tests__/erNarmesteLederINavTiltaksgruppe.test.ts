@@ -27,12 +27,10 @@ function mockTildelinger(
   pakke1: Tildelingsgruppe,
   pakke2: Tildelingsgruppe = "ukjent",
 ) {
-  vi.mocked(hentTildelingsgrupper).mockResolvedValue(
-    new Map([
-      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, new Map([[orgnummer, pakke1]])],
-      [DIALOGMOTE_TILTAKSPAKKE_2, new Map([[orgnummer, pakke2]])],
-    ]),
-  );
+  vi.mocked(hentTildelingsgrupper).mockResolvedValue({
+    [OPPFOLGINGSPLAN_TILTAKSPAKKE_1]: new Map([[orgnummer, pakke1]]),
+    [DIALOGMOTE_TILTAKSPAKKE_2]: new Map([[orgnummer, pakke2]]),
+  });
 }
 
 describe("leader assignment and delivery", () => {
@@ -55,12 +53,18 @@ describe("leader assignment and delivery", () => {
         isOppfolgingsplanTiltakspakkeActive: gruppe === "tiltak",
         isDialogmoteTiltakspakkeActive: false,
       });
-      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith(
-        [orgnummer],
-        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1],
-      );
+      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith([
+        orgnummer,
+      ]);
     },
   );
+
+  test("hides tiltakspakke 2 when its toggle is off", async () => {
+    mockTildelinger("kontroll", "tiltak");
+    await expect(hentTiltakspakkeContext("leader")).resolves.toMatchObject({
+      isDialogmoteTiltakspakkeActive: false,
+    });
+  });
 
   test("keeps treatment assignment with the toggle off", async () => {
     envMock.enabled = false;
@@ -88,10 +92,6 @@ describe("leader assignment and delivery", () => {
         isOppfolgingsplanTiltakspakkeActive: false,
         isDialogmoteTiltakspakkeActive: expected,
       });
-      expect(hentTildelingsgrupper).toHaveBeenCalledExactlyOnceWith(
-        [orgnummer],
-        [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2],
-      );
     },
   );
 

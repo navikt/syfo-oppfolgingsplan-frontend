@@ -13,9 +13,9 @@ import {
   getTomorrowDayDate,
 } from "@/utils/dateAndTime/dateUtils";
 import {
+  dialogmoteTiltakspakkeLabels,
   formHeadings,
   formLabels,
-  tiltakspakke2Labels,
 } from "../../form-labels";
 import { oppfolgingsplanFormDefaultValues } from "./form-options";
 import { withForm } from "./hooks/form";
@@ -31,7 +31,7 @@ interface Props {
   isReadOnly: boolean;
   erITiltaksgruppe: boolean;
   isDialogmoteTiltakspakkeActive: boolean;
-  isFirstPlan: boolean;
+  showDialogmoteInfo: boolean;
 }
 
 const OPFormFields = withForm({
@@ -43,7 +43,7 @@ const OPFormFields = withForm({
     isReadOnly,
     erITiltaksgruppe,
     isDialogmoteTiltakspakkeActive,
-    isFirstPlan,
+    showDialogmoteInfo,
   }) => (
     <>
       <BodyLong spacing>Alle felt må fylles ut.</BodyLong>
@@ -174,12 +174,12 @@ const OPFormFields = withForm({
             label={formLabels.evalueringsDato.label}
             description={
               isDialogmoteTiltakspakkeActive
-                ? tiltakspakke2Labels.evalueringsDato.description
+                ? dialogmoteTiltakspakkeLabels.evalueringsDato.description
                 : formLabels.evalueringsDato.description
             }
             infoMessage={
-              isDialogmoteTiltakspakkeActive && isFirstPlan
-                ? tiltakspakke2Labels.evalueringsDato.infoMessage
+              showDialogmoteInfo
+                ? dialogmoteTiltakspakkeLabels.evalueringsDato.infoMessage
                 : undefined
             }
             fromDate={getTomorrowDayDate()}
