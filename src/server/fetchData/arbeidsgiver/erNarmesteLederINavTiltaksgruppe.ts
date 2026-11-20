@@ -3,5 +3,6 @@ import { hentTiltakspakkeContext } from "./hentTiltakspakkeContext";
 export async function erNarmesteLederINavTiltaksgruppe(
   narmesteLederId: string,
 ): Promise<boolean> {
-  return (await hentTiltakspakkeContext(narmesteLederId)).erITiltaksgruppe;
+  return (await hentTiltakspakkeContext(narmesteLederId))
+    .isOppfolgingsplanTiltakspakkeActive;
 }

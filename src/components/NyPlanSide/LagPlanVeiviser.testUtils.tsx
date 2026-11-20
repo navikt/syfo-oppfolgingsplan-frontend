@@ -46,12 +46,19 @@ export function createMockLagretUtkastResponse(
 
 export async function renderLagPlanVeiviserComponent(
   mockData: ConvertedLagretUtkastResponse,
-  erITiltaksgruppe = false,
+  isOppfolgingsplanTiltakspakkeActive = false,
+  {
+    isDialogmoteTiltakspakkeActive = false,
+    hasNoPlansInVirksomhet = false,
+  } = {},
 ) {
   const lagretUtkastPromise = Promise.resolve(mockData);
   const tiltakspakkePromise = Promise.resolve({
-    gruppe: erITiltaksgruppe ? ("tiltak" as const) : ("kontroll" as const),
-    erITiltaksgruppe,
+    gruppe: isOppfolgingsplanTiltakspakkeActive
+      ? ("tiltak" as const)
+      : ("kontroll" as const),
+    isOppfolgingsplanTiltakspakkeActive,
+    isDialogmoteTiltakspakkeActive,
   });
 
   let renderResult: ReturnType<typeof render> | null = null;
@@ -59,6 +66,7 @@ export async function renderLagPlanVeiviserComponent(
     narmesteLederId: "12345",
     lagretUtkastPromise,
     tiltakspakkePromise,
+    hasNoPlansInVirksomhetPromise: Promise.resolve(hasNoPlansInVirksomhet),
   });
 
   await act(async () => {

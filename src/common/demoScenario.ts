@@ -24,7 +24,11 @@ export function parseDemoScenario(
   return DEFAULT_DEMO_SCENARIO;
 }
 
-const VALID_TILTAKSPAKKE_VARIANTS = ["standard", "tiltakspakke-1"] as const;
+const VALID_TILTAKSPAKKE_VARIANTS = [
+  "standard",
+  "tiltakspakke-1",
+  "tiltakspakke-2",
+] as const;
 
 export type DemoTiltakspakkeVariant =
   (typeof VALID_TILTAKSPAKKE_VARIANTS)[number];
@@ -90,6 +94,7 @@ export function resolveDemoScenario(
 export const DEMO_TILTAKSPAKKE_VARIANT_OPTIONS = [
   { value: "standard", label: "Standard" },
   { value: "tiltakspakke-1", label: "Tiltakspakke 1" },
+  { value: "tiltakspakke-2", label: "Tiltakspakke 2" },
 ] as const satisfies readonly {
   value: DemoTiltakspakkeVariant;
   label: string;

@@ -37,7 +37,7 @@ export default function useOppfolgingsplanForm({
   tiltakspakke: TiltakspakkeContext;
   ferdigstillAction: FerdigstillPlanAction;
 }) {
-  const { erITiltaksgruppe } = tiltakspakke;
+  const { isOppfolgingsplanTiltakspakkeActive } = tiltakspakke;
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [veiviserSteg, setVeiviserSteg] = useState(VeiviserSteg.FYLL_UT_PLAN);
@@ -60,7 +60,7 @@ export default function useOppfolgingsplanForm({
     defaultValues: initialFormValues,
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: erITiltaksgruppe
+      onDynamic: isOppfolgingsplanTiltakspakkeActive
         ? oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema
         : oppfolgingsplanFormUtfylltSchema,
     },

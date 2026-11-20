@@ -90,7 +90,11 @@ describe("AID plan event boundary", () => {
 
   test("separates assignment from delivered skjemavariant", () => {
     expect(
-      getAidPlanAttributes({ gruppe: "tiltak", erITiltaksgruppe: false }),
+      getAidPlanAttributes({
+        gruppe: "tiltak",
+        isOppfolgingsplanTiltakspakkeActive: false,
+        isDialogmoteTiltakspakkeActive: false,
+      }),
     ).toEqual({
       gruppe: "tiltak",
       skjemavariant: "standard",
