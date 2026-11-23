@@ -1,4 +1,5 @@
-import { cleanup, screen } from "@testing-library/react";
+import { cleanup, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import OversiktInnholdForSykmeldt from "@/components/OversiktSide/Sykmeldt/OversiktInnholdForSykmeldt";
 import {
@@ -77,6 +78,27 @@ describe("OversiktInnholdForSykmeldt", () => {
       "data-color",
       "meta-purple",
     );
+  });
+
+  test("viser bidragene i et ekspansjonskort som kan brukes med tastatur", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(mockOversiktDataTomForSM, new Set(["123456789"])),
+    );
+    const user = userEvent.setup();
+
+    await renderAsync(OversiktInnholdForSykmeldt());
+
+    const kort = within(
+      screen.getByRole("region", { name: /dette kan du bidra med/i }),
+    );
+    expect(kort.queryByRole("list")).not.toBeInTheDocument();
+
+    kort.getByRole("button").focus();
+    await user.keyboard("{Enter}");
+    expect(kort.getByRole("list")).toBeVisible();
+
+    await user.keyboard(" ");
+    expect(kort.queryByRole("list")).not.toBeInTheDocument();
   });
 
   test("viser nyeste plan som aktiv og resten under vedtatt heading", async () => {

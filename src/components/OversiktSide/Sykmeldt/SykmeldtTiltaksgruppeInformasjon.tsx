@@ -1,18 +1,10 @@
-import { HandHeartIcon } from "@navikt/aksel-icons";
+import { BodyLong, Heading, LinkCard, Tag, VStack } from "@navikt/ds-react";
 import {
-  BodyLong,
-  Heading,
-  Link,
-  LinkCard,
-  Tag,
-  VStack,
-} from "@navikt/ds-react";
-import {
-  InfoCard,
-  InfoCardContent,
-  InfoCardHeader,
-  InfoCardTitle,
-} from "@navikt/ds-react/InfoCard";
+  ExpansionCard,
+  ExpansionCardContent,
+  ExpansionCardHeader,
+  ExpansionCardTitle,
+} from "@navikt/ds-react/ExpansionCard";
 import {
   LinkCardAnchor,
   LinkCardDescription,
@@ -56,11 +48,15 @@ const forberedelseInnhold = {
 
 export function DetteKanDuBidraMed() {
   return (
-    <InfoCard data-color="info" className="mb-8">
-      <InfoCardHeader icon={<HandHeartIcon aria-hidden />}>
-        <InfoCardTitle as="h3">Dette kan du bidra med</InfoCardTitle>
-      </InfoCardHeader>
-      <InfoCardContent>
+    <ExpansionCard
+      aria-label="Dette kan du bidra med"
+      data-color="neutral"
+      className="mb-8"
+    >
+      <ExpansionCardHeader>
+        <ExpansionCardTitle as="h3">Dette kan du bidra med</ExpansionCardTitle>
+      </ExpansionCardHeader>
+      <ExpansionCardContent>
         <VStack gap="space-16">
           <List>
             <ListItem>
@@ -84,15 +80,9 @@ export function DetteKanDuBidraMed() {
             Du trenger ikke forklare hvorfor du er syk. Det holder å si hva som
             er mulig å få til, slik at lederen din kan legge til rette for deg.
           </BodyLong>
-          <BodyLong>
-            Er det vanskelig å snakke med lederen din, kan du ta kontakt med Nav
-            ved å{" "}
-            <Link href="https://www.nav.no/kontaktoss">skrive til oss</Link>{" "}
-            eller på telefon 55 55 33 33.
-          </BodyLong>
         </VStack>
-      </InfoCardContent>
-    </InfoCard>
+      </ExpansionCardContent>
+    </ExpansionCard>
   );
 }
 
