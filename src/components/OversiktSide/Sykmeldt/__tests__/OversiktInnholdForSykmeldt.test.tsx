@@ -1,4 +1,5 @@
-import { cleanup, screen } from "@testing-library/react";
+import { cleanup, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import OversiktInnholdForSykmeldt from "@/components/OversiktSide/Sykmeldt/OversiktInnholdForSykmeldt";
 import {
@@ -77,6 +78,52 @@ describe("OversiktInnholdForSykmeldt", () => {
       "data-color",
       "meta-purple",
     );
+  });
+
+  test("viser bidragene i et ekspansjonskort som kan brukes med tastatur", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(mockOversiktDataTomForSM, new Set(["123456789"])),
+    );
+    const user = userEvent.setup();
+
+    await renderAsync(OversiktInnholdForSykmeldt());
+
+    const kontakt = screen.getByRole("link", { name: "skrive til oss" });
+    expect(kontakt).toHaveAttribute("href", "https://www.nav.no/kontaktoss");
+    expect(kontakt.closest("p")).toHaveTextContent(
+      "Er det vanskelig å snakke med lederen din, kan du ta kontakt med Nav ved å skrive til oss eller på telefon 55 55 33 33.",
+    );
+    const region = screen.getByRole("region", {
+      name: "Dette kan du bidra med",
+    });
+    expect(
+      kontakt.compareDocumentPosition(region) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    const kort = within(region).getByRole("button", { name: "Vis mer" });
+    expect(kort).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
+
+    kontakt.focus();
+    await user.tab();
+    expect(kort).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(kort).toHaveAttribute("aria-expanded", "true");
+    expect(within(region).getAllByRole("listitem")).toHaveLength(5);
+    for (const text of [
+      "Ha kontakt med og delta i møter med lederen din.",
+      "Si om det er enkelte arbeidsoppgaver du klarer å gjennomføre nå.",
+      "Vær med på å lage og oppdatere oppfølgingsplanen.",
+      "Foreslå tilrettelegging som kan fungere for deg.",
+      "Prøv ut tiltakene som du og lederen din kommer frem til, eller som Nav foreslår.",
+      "Du trenger ikke forklare hvorfor du er syk. Det holder å si hva som er mulig å få til, slik at lederen din kan legge til rette for deg.",
+    ]) {
+      expect(screen.getByText(text)).toBeVisible();
+    }
+
+    await user.keyboard(" ");
+    expect(kort).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
 
   test("viser nyeste plan som aktiv og resten under vedtatt heading", async () => {
