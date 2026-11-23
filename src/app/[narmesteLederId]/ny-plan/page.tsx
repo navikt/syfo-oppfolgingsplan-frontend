@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { getAGOversiktHref } from "@/common/route-hrefs";
 import NyPlanSkjema from "@/components/NyPlanSide/NyPlanSkjema";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
+import { hasNoPlansInVirksomhet } from "@/server/fetchData/arbeidsgiver/hasNoPlansInVirksomhet";
 import { hentTiltakspakkeContext } from "@/server/fetchData/arbeidsgiver/hentTiltakspakkeContext";
 import { BigLoadingSpinner } from "@/ui/BigLoadingSpinner";
 import Breadcrumbs from "@/ui/Breadcrumbs";
@@ -32,6 +33,9 @@ export default async function NyPlanPage({
           narmesteLederId={narmesteLederId}
           lagretUtkastPromise={convertedLagretUtkast}
           tiltakspakkePromise={tiltakspakkePromise}
+          hasNoPlansInVirksomhetPromise={hasNoPlansInVirksomhet(
+            narmesteLederId,
+          )}
         />
       </Suspense>
     </section>

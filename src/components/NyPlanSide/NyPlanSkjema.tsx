@@ -8,12 +8,17 @@ export default async function NyPlanSkjema({
   narmesteLederId,
   lagretUtkastPromise,
   tiltakspakkePromise,
+  hasNoPlansInVirksomhetPromise,
 }: {
   narmesteLederId: string;
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
   tiltakspakkePromise: Promise<TiltakspakkeContext>;
+  hasNoPlansInVirksomhetPromise: Promise<boolean>;
 }) {
   const tiltakspakke = await tiltakspakkePromise;
+  const showDialogmoteInfo =
+    tiltakspakke.isDialogmoteTiltakspakkeActive &&
+    (await hasNoPlansInVirksomhetPromise);
 
   async function ferdigstillAction(payload: FerdigstillPlanActionPayload) {
     "use server";
@@ -28,6 +33,7 @@ export default async function NyPlanSkjema({
       lagretUtkastPromise={lagretUtkastPromise}
       tiltakspakkePromise={tiltakspakkePromise}
       ferdigstillAction={ferdigstillAction}
+      showDialogmoteInfo={showDialogmoteInfo}
     />
   );
 }

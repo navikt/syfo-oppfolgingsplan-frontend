@@ -16,7 +16,8 @@ test.each(["tiltak", "kontroll", "utenfor_scope", "ukjent"] as const)(
   (gruppe) => {
     const context = {
       gruppe,
-      erITiltaksgruppe: false,
+      isOppfolgingsplanTiltakspakkeActive: false,
+      isDialogmoteTiltakspakkeActive: false,
       orgnummer: "sensitive-canary",
     };
     recordAidPlanCreated(context, true);
@@ -39,12 +40,26 @@ test("does not turn logging failure into saving failure", () => {
     throw new Error("logger unavailable");
   });
   expect(() =>
-    recordAidPlanCreated({ gruppe: "tiltak", erITiltaksgruppe: true }, false),
+    recordAidPlanCreated(
+      {
+        gruppe: "tiltak",
+        isOppfolgingsplanTiltakspakkeActive: true,
+        isDialogmoteTiltakspakkeActive: false,
+      },
+      false,
+    ),
   ).not.toThrow();
 });
 
 test("does not publish local or demo data", () => {
   environment.isLocalOrDemo = true;
-  recordAidPlanCreated({ gruppe: "tiltak", erITiltaksgruppe: true }, true);
+  recordAidPlanCreated(
+    {
+      gruppe: "tiltak",
+      isOppfolgingsplanTiltakspakkeActive: true,
+      isDialogmoteTiltakspakkeActive: false,
+    },
+    true,
+  );
   expect(logger.info).not.toHaveBeenCalled();
 });

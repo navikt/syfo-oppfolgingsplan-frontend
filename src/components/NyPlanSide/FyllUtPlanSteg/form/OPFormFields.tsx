@@ -12,7 +12,11 @@ import {
   getOneYearFromNowDayDate,
   getTomorrowDayDate,
 } from "@/utils/dateAndTime/dateUtils";
-import { formHeadings, formLabels } from "../../form-labels";
+import {
+  dialogmoteTiltakspakkeLabels,
+  formHeadings,
+  formLabels,
+} from "../../form-labels";
 import { oppfolgingsplanFormDefaultValues } from "./form-options";
 import { withForm } from "./hooks/form";
 
@@ -26,12 +30,21 @@ interface Props {
   isChangeDisabled: boolean;
   isReadOnly: boolean;
   erITiltaksgruppe: boolean;
+  isDialogmoteTiltakspakkeActive: boolean;
+  showDialogmoteInfo: boolean;
 }
 
 const OPFormFields = withForm({
   defaultValues: oppfolgingsplanFormDefaultValues,
   props: {} as Props,
-  render: ({ form, isChangeDisabled, isReadOnly, erITiltaksgruppe }) => (
+  render: ({
+    form,
+    isChangeDisabled,
+    isReadOnly,
+    erITiltaksgruppe,
+    isDialogmoteTiltakspakkeActive,
+    showDialogmoteInfo,
+  }) => (
     <>
       <BodyLong spacing>Alle felt må fylles ut.</BodyLong>
 
@@ -159,7 +172,16 @@ const OPFormFields = withForm({
         {(field) => (
           <field.FormDatePicker
             label={formLabels.evalueringsDato.label}
-            description={formLabels.evalueringsDato.description}
+            description={
+              isDialogmoteTiltakspakkeActive
+                ? dialogmoteTiltakspakkeLabels.evalueringsDato.description
+                : formLabels.evalueringsDato.description
+            }
+            infoMessage={
+              showDialogmoteInfo
+                ? dialogmoteTiltakspakkeLabels.evalueringsDato.infoMessage
+                : undefined
+            }
             fromDate={getTomorrowDayDate()}
             toDate={getOneYearFromNowDayDate()}
             isRequired

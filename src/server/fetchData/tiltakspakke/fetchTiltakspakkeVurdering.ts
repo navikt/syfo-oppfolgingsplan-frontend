@@ -2,6 +2,7 @@ import "server-only";
 import { getEndpointFlaggskipetVurdering } from "@/common/backend-endpoints";
 import {
   DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
+  type DemoTiltakspakkeVariant,
   parseDemoTiltakspakkeVariant,
 } from "@/common/demoScenario";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
@@ -14,12 +15,22 @@ import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import {
   mockFlaggskipetVurderingStandard,
   mockFlaggskipetVurderingTiltaksgruppe,
+  mockFlaggskipetVurderingTiltakspakke2,
 } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 import { simulateBackendDelay } from "@/server/fetchData/mockData/simulateBackendDelay";
 import type { FetchGetResult } from "@/server/tokenXFetch/FetchResult";
 import { tokenXFetchUpdateWithResponse } from "@/server/tokenXFetch/tokenXFetchUpdate";
 
 const FLAGGSKIPET_FETCH_TIMEOUT_MS = 5000;
+
+const demoVurderinger: Record<
+  DemoTiltakspakkeVariant,
+  FlaggskipetVurderingResponse
+> = {
+  standard: mockFlaggskipetVurderingStandard,
+  "tiltakspakke-1": mockFlaggskipetVurderingTiltaksgruppe,
+  "tiltakspakke-2": mockFlaggskipetVurderingTiltakspakke2,
+};
 
 export async function fetchTiltakspakkeVurdering(
   orgnumre: readonly string[],
@@ -32,10 +43,7 @@ export async function fetchTiltakspakkeVurdering(
     await simulateBackendDelay();
     return {
       error: null,
-      data:
-        variant === "tiltakspakke-1"
-          ? mockFlaggskipetVurderingTiltaksgruppe
-          : mockFlaggskipetVurderingStandard,
+      data: demoVurderinger[variant],
     };
   }
 

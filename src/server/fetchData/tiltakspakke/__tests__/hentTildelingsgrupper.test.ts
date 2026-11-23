@@ -1,5 +1,9 @@
+import { logger } from "@navikt/next-logger";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { OPPFOLGINGSPLAN_TILTAKSPAKKE_1 } from "@/schema/flaggskipetSchemas";
+import {
+  DIALOGMOTE_TILTAKSPAKKE_2,
+  OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+} from "@/schema/flaggskipetSchemas";
 import { fetchTiltakspakkeVurdering } from "../fetchTiltakspakkeVurdering";
 import { hentTildelingsgrupper } from "../hentTildelingsgrupper";
 
@@ -31,9 +35,14 @@ describe("assignment categories from the existing lookup", () => {
         },
       ],
     });
-    expect(
-      await hentTildelingsgrupper(["a", "b", "c", "missing", "a"]),
-    ).toEqual(
+    const tildelinger = await hentTildelingsgrupper([
+      "a",
+      "b",
+      "c",
+      "missing",
+      "a",
+    ]);
+    expect(tildelinger[OPPFOLGINGSPLAN_TILTAKSPAKKE_1]).toEqual(
       new Map([
         ["a", "tiltak"],
         ["b", "kontroll"],
@@ -63,9 +72,52 @@ describe("assignment categories from the existing lookup", () => {
                   : [{ tiltakspakkeId: "another-package", virksomheter: [] }],
             },
       );
-      expect(await hentTildelingsgrupper(["a"])).toEqual(
+      const tildelinger = await hentTildelingsgrupper(["a"]);
+      expect(tildelinger[OPPFOLGINGSPLAN_TILTAKSPAKKE_1]).toEqual(
         new Map([["a", "ukjent"]]),
       );
     },
   );
+
+  test("logs a fail-closed outcome per known tiltakspakke", async () => {
+    fetchVurdering.mockResolvedValue({
+      error: { type: "FETCH_NETWORK_ERROR" },
+      data: null,
+    });
+    const tildelinger = await hentTildelingsgrupper(["a"]);
+    expect(tildelinger[DIALOGMOTE_TILTAKSPAKKE_2]).toEqual(
+      new Map([["a", "ukjent"]]),
+    );
+    expect(vi.mocked(logger.info).mock.calls.map(([fields]) => fields)).toEqual(
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1, DIALOGMOTE_TILTAKSPAKKE_2].map(
+        (tiltakspakkeId) =>
+          expect.objectContaining({
+            tiltakspakkeId,
+            errorType: "FETCH_NETWORK_ERROR",
+          }),
+      ),
+    );
+  });
+
+  test("reads every known tiltakspakke from one call", async () => {
+    fetchVurdering.mockResolvedValue({
+      error: null,
+      data: [
+        {
+          tiltakspakkeId: OPPFOLGINGSPLAN_TILTAKSPAKKE_1,
+          virksomheter: [{ orgnummer: "a", deltakelse: "KONTROLLGRUPPE" }],
+        },
+        {
+          tiltakspakkeId: DIALOGMOTE_TILTAKSPAKKE_2,
+          virksomheter: [{ orgnummer: "a", deltakelse: "TILTAKSGRUPPE" }],
+        },
+      ],
+    });
+    const tildelinger = await hentTildelingsgrupper(["a"]);
+    expect(tildelinger).toEqual({
+      [OPPFOLGINGSPLAN_TILTAKSPAKKE_1]: new Map([["a", "kontroll"]]),
+      [DIALOGMOTE_TILTAKSPAKKE_2]: new Map([["a", "tiltak"]]),
+    });
+    expect(fetchVurdering).toHaveBeenCalledOnce();
+  });
 });

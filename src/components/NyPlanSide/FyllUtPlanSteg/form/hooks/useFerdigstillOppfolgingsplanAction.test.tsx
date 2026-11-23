@@ -43,7 +43,8 @@ const action = vi.fn<FerdigstillPlanAction>();
 const record = vi.mocked(recordAidPlan);
 const context: TiltakspakkeContext = {
   gruppe: "tiltak",
-  erITiltaksgruppe: true,
+  isOppfolgingsplanTiltakspakkeActive: true,
+  isDialogmoteTiltakspakkeActive: false,
 };
 const payload: FerdigstillPlanActionPayload = {
   formValues: {
@@ -118,17 +119,20 @@ describe("confirmed plan creation", () => {
   afterEach(cleanup);
 
   test.each([
-    { erITiltaksgruppe: true, evalueringPaaminnelse: true },
-    { erITiltaksgruppe: true, evalueringPaaminnelse: false },
-    { erITiltaksgruppe: false, evalueringPaaminnelse: true },
-    { erITiltaksgruppe: false, evalueringPaaminnelse: false },
+    { isOppfolgingsplanTiltakspakkeActive: true, evalueringPaaminnelse: true },
+    { isOppfolgingsplanTiltakspakkeActive: true, evalueringPaaminnelse: false },
+    { isOppfolgingsplanTiltakspakkeActive: false, evalueringPaaminnelse: true },
+    {
+      isOppfolgingsplanTiltakspakkeActive: false,
+      evalueringPaaminnelse: false,
+    },
   ])(
     "records the submitted preference independently of the skjemavariant: %j",
-    async ({ erITiltaksgruppe, evalueringPaaminnelse }) => {
+    async ({ isOppfolgingsplanTiltakspakkeActive, evalueringPaaminnelse }) => {
       const submittedPayload = { ...payload, evalueringPaaminnelse };
       const { result } = renderHook(() =>
         useFerdigstillOppfolgingsplanAction(
-          { ...context, erITiltaksgruppe },
+          { ...context, isOppfolgingsplanTiltakspakkeActive },
           action,
         ),
       );
@@ -141,7 +145,9 @@ describe("confirmed plan creation", () => {
       expect(record.mock.calls.map(([event]) => event)).toEqual(
         ["forsok", "bekreftet"].map((utfall) => ({
           gruppe: "tiltak",
-          skjemavariant: erITiltaksgruppe ? "tiltak" : "standard",
+          skjemavariant: isOppfolgingsplanTiltakspakkeActive
+            ? "tiltak"
+            : "standard",
           hendelse: "opprett",
           utfall,
           evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
@@ -245,7 +251,11 @@ describe("confirmed plan creation", () => {
     submittedPayload.evalueringPaaminnelse = false;
     params.narmesteLederId = "leader-b";
     rerender({
-      tiltakspakke: { gruppe: "kontroll", erITiltaksgruppe: false },
+      tiltakspakke: {
+        gruppe: "kontroll",
+        isOppfolgingsplanTiltakspakkeActive: false,
+        isDialogmoteTiltakspakkeActive: false,
+      },
       save: nextAction,
     });
     await act(async () => complete({ error: null }));

@@ -23,16 +23,18 @@ interface Props {
   lagretUtkastPromise: Promise<ConvertedLagretUtkastResponse>;
   tiltakspakkePromise: Promise<TiltakspakkeContext>;
   ferdigstillAction: FerdigstillPlanAction;
+  showDialogmoteInfo: boolean;
 }
 
 export default function LagPlanVeiviser({
   lagretUtkastPromise,
   tiltakspakkePromise,
   ferdigstillAction,
+  showDialogmoteInfo,
 }: Props) {
   const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
   const tiltakspakke = use(tiltakspakkePromise);
-  const { erITiltaksgruppe } = tiltakspakke;
+  const { isOppfolgingsplanTiltakspakkeActive } = tiltakspakke;
   const telemetryRef = usePlanDeliveryTelemetry(tiltakspakke);
 
   const initialLagretUtkast = utkast?.content || null;
@@ -86,7 +88,11 @@ export default function LagPlanVeiviser({
           onGoToOppsummeringClick={handleFortsettTilOppsummering}
           isFormReadOnly={!userHasEditAccess}
           lagreUtkastError={lagreUtkastError}
-          erITiltaksgruppe={erITiltaksgruppe}
+          erITiltaksgruppe={isOppfolgingsplanTiltakspakkeActive}
+          isDialogmoteTiltakspakkeActive={
+            tiltakspakke.isDialogmoteTiltakspakkeActive
+          }
+          showDialogmoteInfo={showDialogmoteInfo}
         />
       </Activity>
 
@@ -99,7 +105,7 @@ export default function LagPlanVeiviser({
           onGoBack={goBackToFyllUtPlanSteg}
           onFerdigstillPlanClick={handleFerdigstillPlan}
           ferdigstillPlanError={ferdigstillPlanError}
-          erITiltaksgruppe={erITiltaksgruppe}
+          erITiltaksgruppe={isOppfolgingsplanTiltakspakkeActive}
         />
       </Activity>
     </section>
