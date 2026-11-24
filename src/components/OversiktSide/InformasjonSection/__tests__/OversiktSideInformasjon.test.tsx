@@ -33,6 +33,9 @@ describe("OversiktSideInformasjon", () => {
         "Det beste er at du og den ansatte lager en oppfølgingsplan sammen. Du har ansvaret samtidig som den ansatte også har et eget ansvar til å bidra.",
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /samtaleguiden/i }),
+    ).toBeInTheDocument();
 
     expect(
       screen.getByRole("heading", {

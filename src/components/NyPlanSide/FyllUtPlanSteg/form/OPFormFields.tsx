@@ -4,9 +4,11 @@ import {
   BodyShort,
   Box,
   Heading,
+  InfoCard,
   Link,
   ReadMore,
 } from "@navikt/ds-react";
+import { SAMTALEGUIDE_URL } from "@/common/app-config";
 import TextContentBox from "@/components/layout/TextContentBox";
 import {
   getOneYearFromNowDayDate,
@@ -47,6 +49,23 @@ const OPFormFields = withForm({
   }) => (
     <>
       <BodyLong spacing>Alle felt må fylles ut.</BodyLong>
+
+      {erITiltaksgruppe && (
+        <Box paddingBlock="space-0 space-24">
+          <InfoCard data-color="info">
+            <InfoCard.Header>
+              <InfoCard.Title as="h2">Bruk samtaleguiden</InfoCard.Title>
+            </InfoCard.Header>
+            <InfoCard.Content>
+              Samtaler rundt sykefravær kan være vanskelige. Bruk samtaleguiden
+              for å få gode tips og veiledning til samtalen med den ansatte.{" "}
+              <Link href={SAMTALEGUIDE_URL} target="_blank" inlineText>
+                Gå til samtaleguiden (åpner i ny fane)
+              </Link>
+            </InfoCard.Content>
+          </InfoCard>
+        </Box>
+      )}
 
       {isReadOnly && (
         <Alert variant="info" size="small" className="mb-12">

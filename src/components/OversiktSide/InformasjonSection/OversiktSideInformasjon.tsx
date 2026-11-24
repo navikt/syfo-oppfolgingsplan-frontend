@@ -1,4 +1,5 @@
 import { BodyLong, Heading, Link } from "@navikt/ds-react";
+import { SAMTALEGUIDE_URL } from "@/common/app-config";
 import {
   CHAT_BUBBLE_SVG,
   CLIPBOARD_SVG,
@@ -15,10 +16,17 @@ export function TiltaksgruppeInformasjon() {
         illustrationSrc={CHAT_BUBBLE_SVG}
         heading="Samarbeid med den ansatte"
       >
-        <BodyLong>
+        <BodyLong spacing>
           Det beste er at du og den ansatte lager en oppfølgingsplan sammen. Du
           har ansvaret samtidig som den ansatte også har et eget ansvar til å
           bidra.
+        </BodyLong>
+        <BodyLong>
+          Bruk{" "}
+          <Link href={SAMTALEGUIDE_URL} target="_blank" inlineText>
+            samtaleguiden (åpner i ny fane)
+          </Link>{" "}
+          for å få gode tips og veiledning til samtalen med den ansatte.
         </BodyLong>
       </InformasjonListItem>
 
