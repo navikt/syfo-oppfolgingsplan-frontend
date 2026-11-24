@@ -1,5 +1,7 @@
 export const SAVE_UTKAST_DEBOUNCE_DELAY = 1200;
 export const TEXT_FIELD_MAX_LENGTH = 2000;
+export const SAMTALEGUIDE_URL =
+  "https://idebanken.no/folge-opp-sykefravaer/samtaler-ved-sykefravaer";
 
 export const TIMEZONE_FOR_DISPLAY = "Europe/Oslo";
 export const LOCALE = "nb-NO";
