@@ -1,9 +1,7 @@
 import {
   DEMO_SCENARIO_COOKIE,
-  DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
   type DemoScenario,
   parseDemoScenario,
-  parseDemoTiltakspakkeVariant,
   resolveDemoScenario,
   SM_SCENARIO_OPTIONS,
 } from "@/common/demoScenario";
@@ -45,13 +43,9 @@ export async function fetchOppfolgingsplanOversiktForSM(): Promise<Oppfolgingspl
   if (isLocalOrDemo) {
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
-    const variant = parseDemoTiltakspakkeVariant(
-      cookieStore.get(DEMO_TILTAKSPAKKE_VARIANT_COOKIE)?.value,
-    );
     const scenario = resolveDemoScenario(
       SM_SCENARIO_OPTIONS,
       parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
-      variant,
     );
     await simulateBackendDelay();
     return getMockDataForScenarioSM(scenario);

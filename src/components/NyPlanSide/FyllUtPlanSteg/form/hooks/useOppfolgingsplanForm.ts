@@ -8,9 +8,7 @@ import { VeiviserSteg } from "@/components/NyPlanSide/LagPlanVeiviser";
 import {
   type OppfolgingsplanFormUnderArbeid,
   oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema,
-  oppfolgingsplanFormUtfylltSchema,
 } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
-import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import type { FerdigstillPlanAction } from "@/server/actions/FerdigstillPlanAction";
 import { scrollToAppTopForAG } from "@/utils/scrollToAppTop";
 import { oppfolgingsplanFormDefaultValues } from "../form-options";
@@ -29,15 +27,12 @@ const defaultMeta: FormMeta = {
 export default function useOppfolgingsplanForm({
   initialLagretUtkast,
   initialSistLagretTidspunkt,
-  tiltakspakke,
   ferdigstillAction,
 }: {
   initialLagretUtkast: OppfolgingsplanFormUnderArbeid | null;
   initialSistLagretTidspunkt: string | null;
-  tiltakspakke: TiltakspakkeContext;
   ferdigstillAction: FerdigstillPlanAction;
 }) {
-  const { isOppfolgingsplanTiltakspakkeActive } = tiltakspakke;
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
 
   const [veiviserSteg, setVeiviserSteg] = useState(VeiviserSteg.FYLL_UT_PLAN);
@@ -60,9 +55,7 @@ export default function useOppfolgingsplanForm({
     defaultValues: initialFormValues,
     validationLogic: revalidateLogic(),
     validators: {
-      onDynamic: isOppfolgingsplanTiltakspakkeActive
-        ? oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema
-        : oppfolgingsplanFormUtfylltSchema,
+      onDynamic: oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema,
     },
     listeners: {
       onChange: ({ formApi }) =>
@@ -85,7 +78,9 @@ export default function useOppfolgingsplanForm({
         startFerdigstillPlanAction({
           // We know the form is valid when onSubmit runs, so we can
           // safely assert the type, and that evalueringsDato is defined
-          formValues: value as z.infer<typeof oppfolgingsplanFormUtfylltSchema>,
+          formValues: value as z.infer<
+            typeof oppfolgingsplanFormUtfylltMedEvalueringPaaminnelseSchema
+          >,
           // biome-ignore lint/style/noNonNullAssertion: evalueringsDato is guaranteed to be defined when form is valid
           evalueringsDatoIsoString: value.evalueringsDato!,
           includeIkkeMedvirketBegrunnelseFieldInFormSnapshot:
@@ -110,7 +105,7 @@ export default function useOppfolgingsplanForm({
     startFerdigstillPlanAction,
     isPendingFerdigstillPlan,
     error: ferdigstillPlanError,
-  } = useFerdigstillOppfolgingsplanAction(tiltakspakke, ferdigstillAction);
+  } = useFerdigstillOppfolgingsplanAction(ferdigstillAction);
 
   function saveIfChangesAndProceedToOppsummering(
     values: OppfolgingsplanFormUnderArbeid,

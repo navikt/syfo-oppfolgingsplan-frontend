@@ -14,7 +14,6 @@ interface Props {
   onGoBack: () => void;
   onFerdigstillPlanClick: () => void;
   ferdigstillPlanError: FetchResultError | null;
-  erITiltaksgruppe: boolean;
 }
 
 const OppsummeringSteg = withForm({
@@ -26,7 +25,6 @@ const OppsummeringSteg = withForm({
     onGoBack,
     onFerdigstillPlanClick,
     ferdigstillPlanError,
-    erITiltaksgruppe,
   }) => {
     return (
       <section>
@@ -47,7 +45,6 @@ const OppsummeringSteg = withForm({
               }
               onEditPlan={onGoBack}
               className="mb-8"
-              erITiltaksgruppe={erITiltaksgruppe}
             />
           )}
         </form.Subscribe>

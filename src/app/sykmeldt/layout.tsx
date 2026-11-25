@@ -45,7 +45,6 @@ export default async function RootLayoutForSM({
     initialScenario = resolveDemoScenario(
       SM_SCENARIO_OPTIONS,
       parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
-      initialVariant,
     );
   }
 

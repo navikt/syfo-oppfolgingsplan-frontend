@@ -42,7 +42,6 @@ export default async function RootLayoutForAG({
     initialScenario = resolveDemoScenario(
       AG_SCENARIO_OPTIONS,
       parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
-      initialVariant,
     );
   }
 

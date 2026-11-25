@@ -1,7 +1,6 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { FerdigstiltPlanResponse } from "@/schema/ferdigstiltPlanResponseSchemas";
-import { erNarmesteLederINavTiltaksgruppe } from "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe";
 import { fetchAktivPlanForAG } from "@/server/fetchData/arbeidsgiver/fetchAktivPlan";
 import { fetchUtkastDataForAG } from "@/server/fetchData/arbeidsgiver/fetchUtkastPlan";
 import { getMockFerdigstiltPlanData } from "@/server/fetchData/mockData/mockHelpers";
@@ -12,10 +11,8 @@ import AktivPlanForAG from "../AktivPlanForAG";
 
 const MOCK_LEDER_ID = "test-leder-123";
 
-const STANDARD_OVERSKRIFT = "Hvem vil du sende planen til";
-const STANDARD_KNAPP = "Send planen";
-const TILTAKSGRUPPE_OVERSKRIFT = "Del oppfølgingsplanen med fastlege og Nav";
-const TILTAKSGRUPPE_KNAPP = "Del planen";
+const DELING_OVERSKRIFT = "Del oppfølgingsplanen med fastlege og Nav";
+const DELING_KNAPP = "Del planen";
 
 vi.mock("next/navigation", async () => {
   const { mockNextNavigation } = await import(
@@ -33,18 +30,8 @@ vi.mock("@/server/fetchData/arbeidsgiver/fetchUtkastPlan", () => ({
   fetchUtkastDataForAG: vi.fn(),
 }));
 
-vi.mock(
-  "@/server/fetchData/arbeidsgiver/erNarmesteLederINavTiltaksgruppe",
-  () => ({
-    erNarmesteLederINavTiltaksgruppe: vi.fn(),
-  }),
-);
-
 const mockFetchAktivPlan = vi.mocked(fetchAktivPlanForAG);
 const mockFetchUtkast = vi.mocked(fetchUtkastDataForAG);
-const mockErNarmesteLederINavTiltaksgruppe = vi.mocked(
-  erNarmesteLederINavTiltaksgruppe,
-);
 
 function lagPlanResponse({
   userHasEditAccess = true,
@@ -77,81 +64,41 @@ function renderAktivPlan() {
   );
 }
 
-describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
+describe("AktivPlanForAG og delingsboksen", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockFetchAktivPlan.mockResolvedValue(lagPlanResponse());
     mockFetchUtkast.mockResolvedValue(mockUtkastResponse);
-    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(false);
   });
 
   afterEach(() => {
     cleanup();
   });
 
-  test("viser dagens tekster når nærmeste leder ikke er i tiltaksgruppen", async () => {
-    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(false);
-
+  test("viser tekstene fra tiltakspakken når planen ikke er delt", async () => {
     await renderAktivPlan();
 
-    expect(mockErNarmesteLederINavTiltaksgruppe).toHaveBeenCalledWith(
-      MOCK_LEDER_ID,
-    );
     expect(
-      screen.getByRole("heading", { name: STANDARD_OVERSKRIFT, level: 2 }),
+      screen.getByRole("heading", { name: DELING_OVERSKRIFT, level: 2 }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: STANDARD_KNAPP }),
+      screen.getByRole("button", { name: DELING_KNAPP }),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: TILTAKSGRUPPE_KNAPP }),
-    ).not.toBeInTheDocument();
   });
 
-  test("viser tekstene fra tiltakspakken når nærmeste leder er i tiltaksgruppen", async () => {
-    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
-
-    await renderAktivPlan();
-
-    expect(mockErNarmesteLederINavTiltaksgruppe).toHaveBeenCalledWith(
-      MOCK_LEDER_ID,
-    );
-    expect(
-      screen.getByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT, level: 2 }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: TILTAKSGRUPPE_KNAPP }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: STANDARD_OVERSKRIFT }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: STANDARD_KNAPP }),
-    ).not.toBeInTheDocument();
-  });
-
-  test("slår ikke opp tiltaksgruppen når brukeren mangler redigeringstilgang", async () => {
-    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
+  test("skjuler delingsboksen når brukeren mangler redigeringstilgang", async () => {
     mockFetchAktivPlan.mockResolvedValue(
       lagPlanResponse({ userHasEditAccess: false }),
     );
 
     await renderAktivPlan();
 
-    expect(mockErNarmesteLederINavTiltaksgruppe).not.toHaveBeenCalled();
     expect(
-      screen.queryByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: STANDARD_OVERSKRIFT }),
+      screen.queryByRole("heading", { name: DELING_OVERSKRIFT }),
     ).not.toBeInTheDocument();
   });
 
-  test("slår ikke opp tiltaksgruppen når planen allerede er delt med begge mottakerne", async () => {
-    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
+  test("skjuler delingsboksen når planen allerede er delt med begge mottakerne", async () => {
     mockFetchAktivPlan.mockResolvedValue(
       lagPlanResponse({
         deltMedLegeTidspunkt: "2026-01-15T10:00:00Z",
@@ -161,31 +108,8 @@ describe("AktivPlanForAG og tiltakspakke-tekstene", () => {
 
     await renderAktivPlan();
 
-    expect(mockErNarmesteLederINavTiltaksgruppe).not.toHaveBeenCalled();
     expect(
-      screen.queryByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT }),
+      screen.queryByRole("heading", { name: DELING_OVERSKRIFT }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: STANDARD_OVERSKRIFT }),
-    ).not.toBeInTheDocument();
-  });
-
-  test("slår opp tiltaksgruppen når bare én mottaker har fått planen", async () => {
-    mockErNarmesteLederINavTiltaksgruppe.mockResolvedValue(true);
-    mockFetchAktivPlan.mockResolvedValue(
-      lagPlanResponse({ deltMedLegeTidspunkt: "2026-01-15T10:00:00Z" }),
-    );
-
-    await renderAktivPlan();
-
-    expect(mockErNarmesteLederINavTiltaksgruppe).toHaveBeenCalledWith(
-      MOCK_LEDER_ID,
-    );
-    expect(
-      screen.getByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT, level: 2 }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: TILTAKSGRUPPE_KNAPP }),
-    ).toBeInTheDocument();
   });
 });

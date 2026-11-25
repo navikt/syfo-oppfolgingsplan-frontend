@@ -14,7 +14,6 @@ import {
 import { TokenXTargetApi } from "@/server/auth/tokenXExchange";
 import {
   mockFlaggskipetVurderingStandard,
-  mockFlaggskipetVurderingTiltaksgruppe,
   mockFlaggskipetVurderingTiltakspakke2,
 } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 import { simulateBackendDelay } from "@/server/fetchData/mockData/simulateBackendDelay";
@@ -28,7 +27,6 @@ const demoVurderinger: Record<
   FlaggskipetVurderingResponse
 > = {
   standard: mockFlaggskipetVurderingStandard,
-  "tiltakspakke-1": mockFlaggskipetVurderingTiltaksgruppe,
   "tiltakspakke-2": mockFlaggskipetVurderingTiltakspakke2,
 };
 

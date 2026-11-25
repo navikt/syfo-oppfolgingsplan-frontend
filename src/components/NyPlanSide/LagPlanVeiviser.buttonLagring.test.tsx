@@ -5,7 +5,7 @@ import {
   DEMO_SIMULATED_BACKEND_DELAY_MS,
   SAVE_UTKAST_DEBOUNCE_DELAY,
 } from "@/common/app-config";
-import type { OppfolgingsplanFormUtfyllt } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
+import type { OppfolgingsplanFormUtfylltMedEvalueringPaaminnelse } from "@/schema/oppfolgingsplanForm/formValidationSchemas";
 import * as lagreUtkastModule from "@/server/actions/lagreUtkast";
 import { formLabels } from "./form-labels";
 import {
@@ -19,7 +19,7 @@ const mockCurrentTime = new Date("2026-01-14T12:00:00Z");
 // Must be between one day and one year after mockCurrentTime for form to be valid.
 const mockEvalueringsDatoFormValue = "2026-03-15";
 
-function createValidFormContent(): OppfolgingsplanFormUtfyllt {
+function createValidFormContent(): OppfolgingsplanFormUtfylltMedEvalueringPaaminnelse {
   return {
     typiskArbeidshverdag: "Kontorarbeid med møter",
     arbeidsoppgaverSomKanUtfores: "Skrivearbeid og telefonmøter",
@@ -31,6 +31,7 @@ function createValidFormContent(): OppfolgingsplanFormUtfyllt {
     evalueringsDato: mockEvalueringsDatoFormValue,
     harDenAnsatteMedvirket: "ja",
     denAnsatteHarIkkeMedvirketBegrunnelse: "",
+    evalueringPaaminnelse: "false",
   };
 }
 

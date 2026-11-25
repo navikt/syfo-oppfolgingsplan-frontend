@@ -46,7 +46,6 @@ export function createMockLagretUtkastResponse(
 
 export async function renderLagPlanVeiviserComponent(
   mockData: ConvertedLagretUtkastResponse,
-  isOppfolgingsplanTiltakspakkeActive = false,
   {
     isDialogmoteTiltakspakkeActive = false,
     hasNoPlansInVirksomhet = false,
@@ -54,10 +53,6 @@ export async function renderLagPlanVeiviserComponent(
 ) {
   const lagretUtkastPromise = Promise.resolve(mockData);
   const tiltakspakkePromise = Promise.resolve({
-    gruppe: isOppfolgingsplanTiltakspakkeActive
-      ? ("tiltak" as const)
-      : ("kontroll" as const),
-    isOppfolgingsplanTiltakspakkeActive,
     isDialogmoteTiltakspakkeActive,
   });
 

@@ -17,7 +17,6 @@ interface Props {
   onGoToOppsummeringClick: () => void;
   isFormReadOnly: boolean;
   lagreUtkastError: FetchResultError | null;
-  erITiltaksgruppe: boolean;
   isDialogmoteTiltakspakkeActive: boolean;
   showDialogmoteInfo: boolean;
 }
@@ -36,7 +35,6 @@ const FyllUtPlanSteg = withForm({
     onGoToOppsummeringClick,
     isFormReadOnly,
     lagreUtkastError,
-    erITiltaksgruppe,
     isDialogmoteTiltakspakkeActive,
     showDialogmoteInfo,
   }) => {
@@ -46,7 +44,6 @@ const FyllUtPlanSteg = withForm({
           form={form}
           isChangeDisabled={isPendingProceedToOppsummering}
           isReadOnly={isFormReadOnly}
-          erITiltaksgruppe={erITiltaksgruppe}
           isDialogmoteTiltakspakkeActive={isDialogmoteTiltakspakkeActive}
           showDialogmoteInfo={showDialogmoteInfo}
         />

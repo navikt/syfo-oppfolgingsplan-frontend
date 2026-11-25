@@ -10,7 +10,6 @@ import {
   type DemoScenario,
   type DemoScenarioOption,
   type DemoTiltakspakkeVariant,
-  getAvailableDemoScenarioOptions,
   parseDemoScenario,
   parseDemoTiltakspakkeVariant,
   resolveDemoScenario,
@@ -32,11 +31,6 @@ export function DemoBanner({
   const [variant, setVariant] = useState(initialVariant);
   const [isPending, startTransition] = useTransition();
 
-  const availableScenarios = getAvailableDemoScenarioOptions(
-    scenarios,
-    variant,
-  );
-
   function applySelection(
     nextScenario: DemoScenario,
     nextVariant: DemoTiltakspakkeVariant,
@@ -56,20 +50,14 @@ export function DemoBanner({
   }
 
   function handleVariantChange(value: string) {
-    const nextVariant = parseDemoTiltakspakkeVariant(value);
-    const nextScenario = resolveDemoScenario(scenarios, scenario, nextVariant);
-
-    applySelection(nextScenario, nextVariant);
+    applySelection(scenario, parseDemoTiltakspakkeVariant(value));
   }
 
   function handleScenarioChange(value: string) {
-    const nextScenario = resolveDemoScenario(
-      scenarios,
-      parseDemoScenario(value),
+    applySelection(
+      resolveDemoScenario(scenarios, parseDemoScenario(value)),
       variant,
     );
-
-    applySelection(nextScenario, variant);
   }
 
   return (
@@ -104,7 +92,7 @@ export function DemoBanner({
                 size="small"
                 value={scenario}
               >
-                {availableScenarios.map(({ value, label }) => (
+                {scenarios.map(({ value, label }) => (
                   <option key={value} value={value}>
                     {label}
                   </option>

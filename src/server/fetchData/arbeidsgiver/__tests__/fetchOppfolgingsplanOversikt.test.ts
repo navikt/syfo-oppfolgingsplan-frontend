@@ -8,7 +8,10 @@ import {
   mockOversiktDataMedPlanerForAG,
   mockOversiktDataTom,
 } from "@/server/fetchData/mockData/mockOversiktData";
-import { mockOversiktDataAktivOgTidligere } from "@/server/fetchData/mockData/mockOversiktDataVariants";
+import {
+  mockOversiktDataAktivOgTidligere,
+  mockOversiktDataMedUnntak,
+} from "@/server/fetchData/mockData/mockOversiktDataVariants";
 
 // Remove global mock from vitest-setup.ts so we can test the actual implementation
 vi.unmock("@/server/fetchData/arbeidsgiver/fetchOppfolgingsplanOversikt");
@@ -109,7 +112,7 @@ describe("getMockDataForScenario", () => {
     );
   });
 
-  test("uses the default data when a persisted Standard variant has unntak-meldt", async () => {
+  test("uses unntak-meldt data also for a persisted Standard variant", async () => {
     const { fetchOppfolgingsplanOversiktForAG } = await importFetcher({
       demoScenario: "unntak-meldt",
       demoTiltakspakkeVariant: "standard",
@@ -119,7 +122,7 @@ describe("getMockDataForScenario", () => {
 
     expect(result).toEqual({
       error: null,
-      data: mockOversiktDataAktivOgTidligere,
+      data: mockOversiktDataMedUnntak,
     });
   });
 });

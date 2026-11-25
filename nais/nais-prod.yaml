@@ -63,8 +63,6 @@ spec:
       value: http://flaggskipet
     - name: FLAGGSKIPET_CLIENT_ID
       value: "prod-gcp:team-esyfo:flaggskipet"
-    - name: TILTAKSPAKKEVURDERING_FEATURE_TOGGLE
-      value: 'true'
     - name: TILTAKSPAKKE_2_FEATURE_TOGGLE
       value: 'false'
   accessPolicy:

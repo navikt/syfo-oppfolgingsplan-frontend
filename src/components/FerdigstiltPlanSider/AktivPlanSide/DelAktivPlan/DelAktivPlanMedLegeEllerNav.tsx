@@ -17,33 +17,17 @@ import { getFormattedDateAndTimeString } from "@/ui-helpers/dateAndTime.ts";
 
 interface Props {
   planId: string;
-  /**
-   * Styres av det eksisterende flaggskip-oppsettet. Når arbeidsgiveren er med i
-   * Nav-tiltaksgruppen, vises tekstene fra tiltakspakken. Alle andre beholder
-   * dagens tekster.
-   */
-  erITiltaksgruppe?: boolean;
 }
 
-const TEKSTER = {
-  standard: {
-    overskrift: "Hvem vil du sende planen til",
-    beskrivelse:
-      "Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært helt eller delvis borte fra jobben i 4 uker. I tillegg kan du sende planen til Nav når du selv ønsker, når Nav ber om den, eller senest én uke før et dialogmøte med Nav.",
-    knapp: "Send planen",
-    fastlegeHjelpetekst: undefined,
-    veilederHjelpetekst: undefined,
-  },
-  tiltaksgruppe: {
-    overskrift: "Del oppfølgingsplanen med fastlege og Nav",
-    beskrivelse:
-      "Det er et krav om å dele oppfølgingsplanen med fastlegen innen de første 4 ukene av sykefraværsperioden. I tillegg kan du dele den med Nav når du selv ønsker eller senest én uke før dialogmøte med Nav (Nav kan også be om å få den tilsendt).",
-    knapp: "Del planen",
-    fastlegeHjelpetekst:
-      "Hensikten er at fastlegen har innsikt i arbeidssituasjonen før neste konsultasjon med den som er sykmeldt.",
-    veilederHjelpetekst:
-      "Hensikten er at Nav har riktig informasjon for å bidra på best mulig måte i sykefraværet.",
-  },
+const tekster = {
+  overskrift: "Del oppfølgingsplanen med fastlege og Nav",
+  beskrivelse:
+    "Det er et krav om å dele oppfølgingsplanen med fastlegen innen de første 4 ukene av sykefraværsperioden. I tillegg kan du dele den med Nav når du selv ønsker eller senest én uke før dialogmøte med Nav (Nav kan også be om å få den tilsendt).",
+  knapp: "Del planen",
+  fastlegeHjelpetekst:
+    "Hensikten er at fastlegen har innsikt i arbeidssituasjonen før neste konsultasjon med den som er sykmeldt.",
+  veilederHjelpetekst:
+    "Hensikten er at Nav har riktig informasjon for å bidra på best mulig måte i sykefraværet.",
 } as const;
 
 interface RecipientSectionProps {
@@ -98,10 +82,7 @@ function RecipientCheckbox({
   );
 }
 
-function DelAktivPlanMedLegeEllerNav({
-  planId,
-  erITiltaksgruppe = false,
-}: Props) {
+function DelAktivPlanMedLegeEllerNav({ planId }: Props) {
   const {
     deltMedLegeTidspunkt,
     deltMedVeilederTidspunkt,
@@ -121,7 +102,6 @@ function DelAktivPlanMedLegeEllerNav({
   const sentToFastlege = Boolean(deltMedLegeTidspunkt);
   const sentToVeileder = Boolean(deltMedVeilederTidspunkt);
   const hasUnsentRecipients = !sentToFastlege || !sentToVeileder;
-  const tekster = erITiltaksgruppe ? TEKSTER.tiltaksgruppe : TEKSTER.standard;
 
   const handleSubmit = (formData: FormData) => {
     const sendToFastlege = formData.get("sendToFastlege") === "on";

@@ -1,7 +1,7 @@
 import { BodyLong, Link, VStack } from "@navikt/ds-react";
 import TextContentBox from "@/components/layout/TextContentBox";
 
-export function SykmeldtTiltaksgruppeIntroduksjon() {
+export function SykmeldtIntroduksjon() {
   return (
     <TextContentBox>
       <VStack gap="space-8" paddingBlock="space-0 space-16">
@@ -19,24 +19,6 @@ export function SykmeldtTiltaksgruppeIntroduksjon() {
           eller på telefon 55 55 33 33.
         </BodyLong>
       </VStack>
-    </TextContentBox>
-  );
-}
-
-export function SykmeldtKontrollgruppeIntroduksjon() {
-  return (
-    <TextContentBox>
-      <BodyLong size="large" className="mb-4">
-        På denne siden finner du oppfølgingsplanene du og lederen din lager
-        sammen. Lederen din er lovpålagt å lage oppfølgingsplanen, og dele den
-        med fastlegen din innen fire ukers sykefravær.
-      </BodyLong>
-      <BodyLong size="large" spacing>
-        Du har ansvar for å bidra med innhold til planen. Oppfølgingsplanen skal
-        hjelpe deg tilbake i jobb på en trygg og tilpasset måte. For at planen
-        skal bli best mulig tilpasset deg og din arbeidssituasjon, er det viktig
-        at du snakker med lederen din om hva du trenger.
-      </BodyLong>
     </TextContentBox>
   );
 }

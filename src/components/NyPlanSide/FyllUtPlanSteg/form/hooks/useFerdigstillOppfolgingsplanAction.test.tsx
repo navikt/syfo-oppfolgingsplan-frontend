@@ -17,8 +17,6 @@ import {
 } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
-import { recordAidPlan } from "@/instrumentation/aidPlanTelemetry";
-import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import type { FerdigstillPlanAction } from "@/server/actions/FerdigstillPlanAction";
 import type { FetchUpdateResult } from "@/server/tokenXFetch/FetchResult";
 import useFerdigstillOppfolgingsplanAction, {
@@ -33,19 +31,7 @@ vi.mock("next/navigation", () => ({
   useParams: () => params,
   useRouter: () => ({ push }),
 }));
-vi.mock("@/instrumentation/aidPlanTelemetry", async (importOriginal) => ({
-  ...(await importOriginal<
-    typeof import("@/instrumentation/aidPlanTelemetry")
-  >()),
-  recordAidPlan: vi.fn(),
-}));
 const action = vi.fn<FerdigstillPlanAction>();
-const record = vi.mocked(recordAidPlan);
-const context: TiltakspakkeContext = {
-  gruppe: "tiltak",
-  isOppfolgingsplanTiltakspakkeActive: true,
-  isDialogmoteTiltakspakkeActive: false,
-};
 const payload: FerdigstillPlanActionPayload = {
   formValues: {
     typiskArbeidshverdag: "Kontor",
@@ -74,10 +60,8 @@ function SlowDestination({
 }
 
 function SaveWizard() {
-  const { startFerdigstillPlanAction } = useFerdigstillOppfolgingsplanAction(
-    context,
-    action,
-  );
+  const { startFerdigstillPlanAction } =
+    useFerdigstillOppfolgingsplanAction(action);
   return (
     <button onClick={() => startFerdigstillPlanAction(payload)} type="button">
       Save
@@ -118,45 +102,7 @@ describe("confirmed plan creation", () => {
   });
   afterEach(cleanup);
 
-  test.each([
-    { isOppfolgingsplanTiltakspakkeActive: true, evalueringPaaminnelse: true },
-    { isOppfolgingsplanTiltakspakkeActive: true, evalueringPaaminnelse: false },
-    { isOppfolgingsplanTiltakspakkeActive: false, evalueringPaaminnelse: true },
-    {
-      isOppfolgingsplanTiltakspakkeActive: false,
-      evalueringPaaminnelse: false,
-    },
-  ])(
-    "records the submitted preference independently of the skjemavariant: %j",
-    async ({ isOppfolgingsplanTiltakspakkeActive, evalueringPaaminnelse }) => {
-      const submittedPayload = { ...payload, evalueringPaaminnelse };
-      const { result } = renderHook(() =>
-        useFerdigstillOppfolgingsplanAction(
-          { ...context, isOppfolgingsplanTiltakspakkeActive },
-          action,
-        ),
-      );
-
-      await act(async () =>
-        result.current.startFerdigstillPlanAction(submittedPayload),
-      );
-
-      expect(action).toHaveBeenCalledExactlyOnceWith(submittedPayload);
-      expect(record.mock.calls.map(([event]) => event)).toEqual(
-        ["forsok", "bekreftet"].map((utfall) => ({
-          gruppe: "tiltak",
-          skjemavariant: isOppfolgingsplanTiltakspakkeActive
-            ? "tiltak"
-            : "standard",
-          hendelse: "opprett",
-          utfall,
-          evaluering_paaminnelse: evalueringPaaminnelse ? "ja" : "nei",
-        })),
-      );
-    },
-  );
-
-  test("records success only after the response, before navigation, and ignores duplicate submissions", async () => {
+  test("navigates only after the response and ignores duplicate submissions", async () => {
     let complete!: (result: FetchUpdateResult) => void;
     action.mockReturnValue(
       new Promise((resolve) => {
@@ -164,29 +110,19 @@ describe("confirmed plan creation", () => {
       }),
     );
     const { result } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(context, action),
+      useFerdigstillOppfolgingsplanAction(action),
     );
     act(() => {
       result.current.startFerdigstillPlanAction(payload);
       result.current.startFerdigstillPlanAction(payload);
     });
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
-    expect(record.mock.calls.map(([event]) => event.utfall)).toEqual([
-      "forsok",
-    ]);
     expect(push).not.toHaveBeenCalled();
     expect(result.current.isPendingFerdigstillPlan).toBe(true);
 
     await act(async () => complete({ error: null }));
-    expect(record.mock.calls.map(([event]) => event.utfall)).toEqual([
-      "forsok",
-      "bekreftet",
-    ]);
     expect(push).toHaveBeenCalledExactlyOnceWith(
       getAGAktivPlanNyligOpprettetHref("leader-a"),
-    );
-    expect(record.mock.invocationCallOrder[1]).toBeLessThan(
-      push.mock.invocationCallOrder[0],
     );
     act(() => result.current.startFerdigstillPlanAction(payload));
     expect(action).toHaveBeenCalledTimes(1);
@@ -196,36 +132,20 @@ describe("confirmed plan creation", () => {
     const error = { type: "FETCH_NETWORK_ERROR" } as const;
     action.mockResolvedValueOnce({ error });
     const { result } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(context, action),
+      useFerdigstillOppfolgingsplanAction(action),
     );
     await act(async () => result.current.startFerdigstillPlanAction(payload));
     expect(result.current.error).toEqual(error);
     expect(push).not.toHaveBeenCalled();
-    expect(record.mock.calls.map(([event]) => event.utfall)).toEqual([
-      "forsok",
-      "feilet",
-    ]);
-    await act(async () =>
-      result.current.startFerdigstillPlanAction({
-        ...payload,
-        evalueringPaaminnelse: true,
-      }),
-    );
-    expect(record.mock.calls.map(([event]) => event.utfall)).toEqual([
-      "forsok",
-      "feilet",
-      "forsok",
-      "bekreftet",
-    ]);
+    await act(async () => result.current.startFerdigstillPlanAction(payload));
+    expect(action).toHaveBeenCalledTimes(2);
     expect(result.current.error).toBeNull();
-    expect(
-      record.mock.calls.map(([event]) =>
-        event.hendelse === "opprett" ? event.evaluering_paaminnelse : null,
-      ),
-    ).toEqual(["nei", "nei", "ja", "ja"]);
+    expect(push).toHaveBeenCalledExactlyOnceWith(
+      getAGAktivPlanNyligOpprettetHref("leader-a"),
+    );
   });
 
-  test("captures assignment, reminder preference and leader context before awaiting the response", async () => {
+  test("captures the payload and leader context before awaiting the response", async () => {
     const nextAction = vi
       .fn<FerdigstillPlanAction>()
       .mockResolvedValue({ error: null });
@@ -236,39 +156,18 @@ describe("confirmed plan creation", () => {
       }),
     );
     const { result, rerender } = renderHook(
-      ({
-        tiltakspakke,
-        save,
-      }: {
-        tiltakspakke: TiltakspakkeContext;
-        save: FerdigstillPlanAction;
-      }) => useFerdigstillOppfolgingsplanAction(tiltakspakke, save),
-      { initialProps: { tiltakspakke: context, save: action } },
+      ({ save }: { save: FerdigstillPlanAction }) =>
+        useFerdigstillOppfolgingsplanAction(save),
+      { initialProps: { save: action } },
     );
     const submittedPayload = { ...payload, evalueringPaaminnelse: true };
     act(() => result.current.startFerdigstillPlanAction(submittedPayload));
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
     submittedPayload.evalueringPaaminnelse = false;
     params.narmesteLederId = "leader-b";
-    rerender({
-      tiltakspakke: {
-        gruppe: "kontroll",
-        isOppfolgingsplanTiltakspakkeActive: false,
-        isDialogmoteTiltakspakkeActive: false,
-      },
-      save: nextAction,
-    });
+    rerender({ save: nextAction });
     await act(async () => complete({ error: null }));
     expect(action).toHaveBeenCalledWith(submittedPayload);
-    expect(record).toHaveBeenLastCalledWith({
-      gruppe: "tiltak",
-      skjemavariant: "tiltak",
-      hendelse: "opprett",
-      utfall: "bekreftet",
-      evaluering_paaminnelse: "ja",
-    });
-    expect(JSON.stringify(record.mock.calls)).not.toContain("leader-a");
-    expect(JSON.stringify(record.mock.calls)).not.toContain("Kontor");
     expect(push).not.toHaveBeenCalled();
     expect(nextAction).not.toHaveBeenCalled();
     await act(async () => result.current.startFerdigstillPlanAction(payload));
@@ -279,7 +178,7 @@ describe("confirmed plan creation", () => {
     );
   });
 
-  test("records a completed save without navigating after the wizard unmounts", async () => {
+  test("does not navigate when a save completes after the wizard unmounts", async () => {
     let complete!: (result: FetchUpdateResult) => void;
     action.mockReturnValue(
       new Promise((resolve) => {
@@ -287,7 +186,7 @@ describe("confirmed plan creation", () => {
       }),
     );
     const { result, unmount } = renderHook(() =>
-      useFerdigstillOppfolgingsplanAction(context, action),
+      useFerdigstillOppfolgingsplanAction(action),
     );
     act(() => result.current.startFerdigstillPlanAction(payload));
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
@@ -295,13 +194,6 @@ describe("confirmed plan creation", () => {
     unmount();
     await act(async () => complete({ error: null }));
 
-    expect(record).toHaveBeenLastCalledWith({
-      gruppe: "tiltak",
-      skjemavariant: "tiltak",
-      hendelse: "opprett",
-      utfall: "bekreftet",
-      evaluering_paaminnelse: "nei",
-    });
     expect(push).not.toHaveBeenCalled();
   });
 
@@ -314,7 +206,7 @@ describe("confirmed plan creation", () => {
     );
     let visible = true;
     const { result, rerender } = renderHook(
-      () => useFerdigstillOppfolgingsplanAction(context, action),
+      () => useFerdigstillOppfolgingsplanAction(action),
       {
         wrapper: ({ children }) => (
           <StrictMode>
@@ -333,13 +225,6 @@ describe("confirmed plan creation", () => {
     rerender();
 
     await act(async () => complete({ error: null }));
-    expect(record).toHaveBeenLastCalledWith({
-      gruppe: "tiltak",
-      skjemavariant: "tiltak",
-      hendelse: "opprett",
-      utfall: "bekreftet",
-      evaluering_paaminnelse: "nei",
-    });
     expect(push).not.toHaveBeenCalled();
 
     // A fresh submission still works after returning; StrictMode does not
@@ -370,13 +255,6 @@ describe("confirmed plan creation", () => {
     expect(screen.getByText("Save")).toBeVisible();
 
     await act(async () => completeSave({ error: null }));
-    expect(record).toHaveBeenLastCalledWith({
-      gruppe: "tiltak",
-      skjemavariant: "tiltak",
-      hendelse: "opprett",
-      utfall: "bekreftet",
-      evaluering_paaminnelse: "nei",
-    });
     expect(push).not.toHaveBeenCalled();
     await act(async () => completeNavigation());
     expect(screen.getByText("Other page")).toBeVisible();

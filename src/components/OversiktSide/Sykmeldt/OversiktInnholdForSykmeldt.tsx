@@ -16,66 +16,20 @@ import { UnntaksvurderingInfoCard } from "@/components/OversiktSide/PlanListe/Un
 import { hentSykmeldtPlanoversikt } from "@/server/fetchData/sykmeldt/hentSykmeldtPlanoversikt";
 import type { SykmeldtPlanoversikt } from "@/server/fetchData/sykmeldt/lagSykmeldtPlanoversikt";
 import {
-  SykmeldtKontrollgruppeIntroduksjon,
-  SykmeldtTiltaksgruppeIntroduksjon,
-} from "./SykmeldtOversiktIntroduksjon";
-import {
   DetteKanDuBidraMed,
   ForberedelseTilSamtale,
   type ForberedelseTilSamtaleVariant,
-} from "./SykmeldtTiltaksgruppeInformasjon";
-
-type SykmeldtOversiktVariant = "kontrollgruppe" | "tiltaksgruppe";
-
-const ingenAktivPlanInnhold = {
-  kontrollgruppe: {
-    title: "Du har ikke en oppfølgingsplan",
-    description:
-      "Du kan når som helst be arbeidsgiveren din om å lage en plan.",
-  },
-  tiltaksgruppe: {
-    title: "Du har ikke en aktiv oppfølgingsplan",
-    description:
-      "Dersom du og lederen din ikke har laget en plan ennå, kan du be om at dere gjør det sammen.",
-  },
-} satisfies Record<
-  SykmeldtOversiktVariant,
-  { title: string; description: string }
->;
+} from "./SykmeldtInformasjon";
+import { SykmeldtIntroduksjon } from "./SykmeldtOversiktIntroduksjon";
 
 export default async function OversiktInnholdForSykmeldt() {
   const oversikt = await hentSykmeldtPlanoversikt();
 
-  return oversikt.harMinstEnVirksomhetITiltaksgruppe ? (
-    <TiltaksgruppeOversikt oversikt={oversikt} />
-  ) : (
-    <KontrollgruppeOversikt oversikt={oversikt} />
-  );
-}
-
-function KontrollgruppeOversikt({
-  oversikt,
-}: {
-  oversikt: SykmeldtPlanoversikt;
-}) {
   return (
     <>
-      <SykmeldtKontrollgruppeIntroduksjon />
-      <SykmeldtPlanListe oversikt={oversikt} variant="kontrollgruppe" />
-    </>
-  );
-}
-
-function TiltaksgruppeOversikt({
-  oversikt,
-}: {
-  oversikt: SykmeldtPlanoversikt;
-}) {
-  return (
-    <>
-      <SykmeldtTiltaksgruppeIntroduksjon />
+      <SykmeldtIntroduksjon />
       <DetteKanDuBidraMed />
-      <SykmeldtPlanListe oversikt={oversikt} variant="tiltaksgruppe" />
+      <SykmeldtPlanListe oversikt={oversikt} />
       <ForberedelseTilSamtale variant={finnForberedelseVariant(oversikt)} />
     </>
   );
@@ -93,16 +47,12 @@ function finnForberedelseVariant({
 
 function SykmeldtPlanListe({
   oversikt: { gjeldendeHendelser, tidligereHendelser, harFerdigstiltePlaner },
-  variant,
 }: {
   oversikt: SykmeldtPlanoversikt;
-  variant: SykmeldtOversiktVariant;
 }) {
   return (
     <section className="mb-8">
-      {gjeldendeHendelser.length === 0 && (
-        <IngenAktivPlanAlert variant={variant} />
-      )}
+      {gjeldendeHendelser.length === 0 && <IngenAktivPlanAlert />}
       {gjeldendeHendelser.length > 0 && (
         <PlanListeDel>
           <VStack gap="space-16">
@@ -157,20 +107,17 @@ function SykmeldtPlanListe({
   );
 }
 
-function IngenAktivPlanAlert({
-  variant,
-}: {
-  variant: SykmeldtOversiktVariant;
-}) {
+function IngenAktivPlanAlert() {
   return (
     <LocalAlert status="announcement" className="mb-8">
       <LocalAlertHeader>
         <LocalAlertTitle as="h3">
-          {ingenAktivPlanInnhold[variant].title}
+          Du har ikke en aktiv oppfølgingsplan
         </LocalAlertTitle>
       </LocalAlertHeader>
       <LocalAlertContent>
-        {ingenAktivPlanInnhold[variant].description}
+        Dersom du og lederen din ikke har laget en plan ennå, kan du be om at
+        dere gjør det sammen.
       </LocalAlertContent>
     </LocalAlert>
   );

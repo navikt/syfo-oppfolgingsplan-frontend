@@ -10,19 +10,17 @@ import {
 afterEach(cleanup);
 
 test.each([
-  [false, true, true],
-  [true, true, true],
-  [true, true, false],
-  [true, false, false],
+  [false, true],
+  [true, true],
+  [true, false],
 ])(
-  "date guidance with package 2 active=%s, no plans in virksomhet=%s and package 1 active=%s",
-  async (isDialogmoteTiltakspakkeActive, hasNoPlansInVirksomhet, isOppfolgingsplanTiltakspakkeActive) => {
+  "date guidance with package 2 active=%s and no plans in virksomhet=%s",
+  async (isDialogmoteTiltakspakkeActive, hasNoPlansInVirksomhet) => {
     const user = userEvent.setup();
-    await renderLagPlanVeiviserComponent(
-      createMockLagretUtkastResponse(),
-      isOppfolgingsplanTiltakspakkeActive,
-      { isDialogmoteTiltakspakkeActive, hasNoPlansInVirksomhet },
-    );
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse(), {
+      isDialogmoteTiltakspakkeActive,
+      hasNoPlansInVirksomhet,
+    });
 
     const description = isDialogmoteTiltakspakkeActive
       ? dialogmoteTiltakspakkeLabels.evalueringsDato.description
@@ -31,14 +29,11 @@ test.each([
       name: formLabels.evalueringsDato.label,
     });
     expect(screen.getByText(description)).toBeVisible();
-    const reminder = screen.queryByRole("radiogroup", {
-      name: formLabels.evalueringPaaminnelse.label,
-    });
-    if (isOppfolgingsplanTiltakspakkeActive) {
-      expect(reminder).toBeVisible();
-    } else {
-      expect(reminder).not.toBeInTheDocument();
-    }
+    expect(
+      screen.getByRole("radiogroup", {
+        name: formLabels.evalueringPaaminnelse.label,
+      }),
+    ).toBeVisible();
 
     const message = document.getElementById("evalueringsDato-info");
     if (isDialogmoteTiltakspakkeActive && hasNoPlansInVirksomhet) {

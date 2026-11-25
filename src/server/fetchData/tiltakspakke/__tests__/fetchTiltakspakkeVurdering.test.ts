@@ -3,7 +3,7 @@ import { DEMO_TILTAKSPAKKE_VARIANT_COOKIE } from "@/common/demoScenario";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
 import {
   mockFlaggskipetVurderingStandard,
-  mockFlaggskipetVurderingTiltaksgruppe,
+  mockFlaggskipetVurderingTiltakspakke2,
 } from "@/server/fetchData/mockData/mockFlaggskipetVurdering";
 
 const tokenXFetchUpdateWithResponseMock = vi.hoisted(() => vi.fn());
@@ -70,7 +70,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     const timeoutSpy = vi.spyOn(AbortSignal, "timeout");
     tokenXFetchUpdateWithResponseMock.mockResolvedValue({
       error: null,
-      data: mockFlaggskipetVurderingTiltaksgruppe,
+      data: mockFlaggskipetVurderingTiltakspakke2,
     });
     const { fetchTiltakspakkeVurdering } = await importFetcher({
       isLocalOrDemo: false,
@@ -80,7 +80,7 @@ describe("fetchTiltakspakkeVurdering", () => {
 
     expect(result).toEqual({
       error: null,
-      data: mockFlaggskipetVurderingTiltaksgruppe,
+      data: mockFlaggskipetVurderingTiltakspakke2,
     });
     expect(tokenXFetchUpdateWithResponseMock).toHaveBeenCalledOnce();
 
@@ -96,7 +96,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     });
     expect(
       request.responseDataSchema.safeParse(
-        mockFlaggskipetVurderingTiltaksgruppe,
+        mockFlaggskipetVurderingTiltakspakke2,
       ).success,
     ).toBe(true);
     expect(timeoutSpy).toHaveBeenCalledWith(5000);
@@ -154,10 +154,10 @@ describe("fetchTiltakspakkeVurdering", () => {
     });
   });
 
-  test("returns the treatment-package mock for Tiltakspakke 1 in local or demo", async () => {
+  test("returns the Tiltakspakke 2 mock in local or demo", async () => {
     const { fetchTiltakspakkeVurdering } = await importFetcher({
       isLocalOrDemo: true,
-      demoTiltakspakkeVariant: "tiltakspakke-1",
+      demoTiltakspakkeVariant: "tiltakspakke-2",
     });
 
     const result = await fetchTiltakspakkeVurdering(["123456789"]);
@@ -165,7 +165,7 @@ describe("fetchTiltakspakkeVurdering", () => {
     expect(tokenXFetchUpdateWithResponseMock).not.toHaveBeenCalled();
     expect(result).toEqual({
       error: null,
-      data: mockFlaggskipetVurderingTiltaksgruppe,
+      data: mockFlaggskipetVurderingTiltakspakke2,
     });
   });
 

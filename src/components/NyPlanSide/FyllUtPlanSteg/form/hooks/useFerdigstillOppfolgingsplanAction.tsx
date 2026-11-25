@@ -1,11 +1,6 @@
 import { useParams, useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useRef } from "react";
 import { getAGAktivPlanNyligOpprettetHref } from "@/common/route-hrefs";
-import {
-  getAidPlanAttributes,
-  recordAidPlan,
-} from "@/instrumentation/aidPlanTelemetry";
-import type { TiltakspakkeContext } from "@/schema/tiltakspakkeContext";
 import type {
   FerdigstillPlanAction,
   FerdigstillPlanActionPayload,
@@ -18,9 +13,6 @@ type Submission = {
   narmesteLederId: string;
   payload: FerdigstillPlanActionPayload;
   ferdigstillAction: FerdigstillPlanAction;
-  attributes: ReturnType<typeof getAidPlanAttributes> & {
-    evaluering_paaminnelse: "ja" | "nei";
-  };
 };
 
 type SubmissionResult = FetchUpdateResult & {
@@ -28,7 +20,6 @@ type SubmissionResult = FetchUpdateResult & {
 };
 
 export default function useFerdigstillOppfolgingsplanAction(
-  tiltakspakke: TiltakspakkeContext,
   ferdigstillAction: FerdigstillPlanAction,
 ) {
   const { narmesteLederId } = useParams<{ narmesteLederId: string }>();
@@ -37,8 +28,8 @@ export default function useFerdigstillOppfolgingsplanAction(
 
   useEffect(() => {
     return () => {
-      // A save may finish after the user leaves. Keep its telemetry, but do not
-      // let its response navigate a different or newly mounted wizard.
+      // A save may finish after the user leaves. Do not let its response
+      // navigate a different or newly mounted wizard.
       if (activeSubmission.current?.narmesteLederId === narmesteLederId) {
         activeSubmission.current = null;
       }
@@ -73,27 +64,22 @@ export default function useFerdigstillOppfolgingsplanAction(
     _previousState: SubmissionResult,
     submission: Submission,
   ): Promise<SubmissionResult> {
-    const { attributes, payload } = submission;
-    recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "forsok" });
     let result: FetchUpdateResult;
     try {
-      result = await submission.ferdigstillAction(payload);
+      result = await submission.ferdigstillAction(submission.payload);
     } catch (error) {
       if (activeSubmission.current === submission) {
         activeSubmission.current = null;
       }
-      recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "feilet" });
       throw error;
     }
     if (result.error) {
       if (activeSubmission.current === submission) {
         activeSubmission.current = null;
       }
-      recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "feilet" });
       return { ...result, completedSubmission: null };
     }
 
-    recordAidPlan({ ...attributes, hendelse: "opprett", utfall: "bekreftet" });
     return { ...result, completedSubmission: submission };
   }
 
@@ -105,10 +91,6 @@ export default function useFerdigstillOppfolgingsplanAction(
       narmesteLederId,
       payload,
       ferdigstillAction,
-      attributes: {
-        ...getAidPlanAttributes(tiltakspakke),
-        evaluering_paaminnelse: payload.evalueringPaaminnelse ? "ja" : "nei",
-      },
     };
     activeSubmission.current = submission;
     startTransition(() => {

@@ -1,9 +1,7 @@
 import { cleanup, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test } from "vitest";
 import { render } from "@/test/test-utils";
-import OversiktSideInformasjon, {
-  TiltaksgruppeInformasjon,
-} from "../OversiktSideInformasjon";
+import OversiktSideInformasjon from "../OversiktSideInformasjon";
 import OversiktSideIntroduksjon from "../OversiktSideIntroduksjon";
 
 describe("OversiktSideInformasjon", () => {
@@ -11,11 +9,11 @@ describe("OversiktSideInformasjon", () => {
     cleanup();
   });
 
-  test("viser Figma-teksten for tiltaksgruppen", () => {
+  test("viser veiledningsteksten fra Figma", () => {
     render(
       <>
-        <OversiktSideIntroduksjon erITiltaksgruppe={true} />
-        <TiltaksgruppeInformasjon />
+        <OversiktSideIntroduksjon />
+        <OversiktSideInformasjon />
       </>,
     );
 
@@ -68,40 +66,6 @@ describe("OversiktSideInformasjon", () => {
 
     expect(
       screen.queryByText("Hjelp til å lage og bruke oppfølgingsplaner"),
-    ).not.toBeInTheDocument();
-  });
-
-  test("beholder dagens innhold utenfor tiltaksgruppen", () => {
-    render(
-      <>
-        <OversiktSideIntroduksjon erITiltaksgruppe={false} />
-        <OversiktSideInformasjon />
-      </>,
-    );
-
-    expect(
-      screen.getByText(
-        /Oppfølgingsplanen er et verktøy som brukes i sykefraværsoppfølgingen/i,
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Hjelp til å lage og bruke oppfølgingsplaner"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", {
-        name: "Oppfølgingsplanen sendes til Altinn",
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /Du kan når som helst dele en oppfølgingsplan med medarbeiderens fastlege og Nav/i,
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Samarbeid med den ansatte" }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/Ha dialog om hva som fungerer/i),
     ).not.toBeInTheDocument();
   });
 });

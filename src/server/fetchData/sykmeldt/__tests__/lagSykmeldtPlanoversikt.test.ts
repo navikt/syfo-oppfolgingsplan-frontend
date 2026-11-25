@@ -30,82 +30,29 @@ function oversiktMed(
 }
 
 describe("lagSykmeldtPlanoversikt", () => {
-  test("velger tiltaksinnhold når minst én relevant virksomhet er i tiltaksgruppen", () => {
+  test("tar med gjeldende hendelser fra alle virksomheter", () => {
     const annenOrganization = {
       orgNumber: "987654321",
       orgName: "Bjørk skole",
     };
-    const resultat = lagSykmeldtPlanoversikt(
-      {
-        virksomhetsnumreMedAktivSykmelding: [
-          organization.orgNumber,
-          annenOrganization.orgNumber,
-        ],
-        virksomheter: [
-          {
-            virksomhet: organization,
-            oppfolgingsplanhendelser: [plan],
-          },
-          {
-            virksomhet: annenOrganization,
-            oppfolgingsplanhendelser: [{ ...plan, id: "annen-plan" }],
-          },
-        ],
-      },
-      new Set([organization.orgNumber]),
-    );
+    const resultat = lagSykmeldtPlanoversikt({
+      virksomhetsnumreMedAktivSykmelding: [organization.orgNumber],
+      virksomheter: [
+        { virksomhet: organization, oppfolgingsplanhendelser: [plan] },
+        {
+          virksomhet: annenOrganization,
+          oppfolgingsplanhendelser: [{ ...plan, id: "annen-plan" }],
+        },
+      ],
+    });
 
-    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
-    expect(resultat.gjeldendeHendelser).toHaveLength(2);
-  });
-
-  test("velger tiltaksinnhold når aktiv virksomhet i tiltaksgruppen ikke finnes i planoversikten", () => {
-    const resultat = lagSykmeldtPlanoversikt(
-      {
-        virksomhetsnumreMedAktivSykmelding: ["987654321"],
-        virksomheter: [],
-      },
-      new Set(["987654321"]),
-    );
-
-    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
-    expect(resultat.gjeldendeHendelser).toEqual([]);
-  });
-
-  test("beholder plan utenfor tiltaksgruppen når en annen aktiv virksomhet er i tiltaksgruppen", () => {
-    const resultat = lagSykmeldtPlanoversikt(
-      {
-        virksomhetsnumreMedAktivSykmelding: ["987654321"],
-        virksomheter: [
-          {
-            virksomhet: organization,
-            oppfolgingsplanhendelser: [plan],
-          },
-        ],
-      },
-      new Set(["987654321"]),
-    );
-
-    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(true);
     expect(
       resultat.gjeldendeHendelser.map(({ hendelse }) => hendelse.id),
-    ).toEqual([plan.id]);
-  });
-
-  test("velger ikke tiltaksinnhold når ingen aktiv virksomhet er i tiltaksgruppen", () => {
-    const resultat = lagSykmeldtPlanoversikt(
-      oversiktMed(plan),
-      new Set(["987654321"]),
-    );
-
-    expect(resultat.harMinstEnVirksomhetITiltaksgruppe).toBe(false);
+    ).toEqual([plan.id, "annen-plan"]);
   });
 
   test("bruker første synlige hendelse som gjeldende uten egen statusutledning", () => {
-    const resultat = lagSykmeldtPlanoversikt(
-      oversiktMed(plan, unntak),
-      new Set([organization.orgNumber]),
-    );
+    const resultat = lagSykmeldtPlanoversikt(oversiktMed(plan, unntak));
 
     expect(
       resultat.gjeldendeHendelser.map(({ hendelse }) => hendelse.id),
@@ -120,24 +67,11 @@ describe("lagSykmeldtPlanoversikt", () => {
       ...unntak,
       meldtTidspunkt: "2026-03-01T10:00:00Z",
     };
-    const resultat = lagSykmeldtPlanoversikt(
-      oversiktMed(nyereUnntak, plan),
-      new Set([organization.orgNumber]),
-    );
+    const resultat = lagSykmeldtPlanoversikt(oversiktMed(nyereUnntak, plan));
 
     expect(resultat.gjeldendeHendelser[0]?.hendelse.id).toBe(nyereUnntak.id);
     expect(
       resultat.tidligereHendelser.map(({ hendelse }) => hendelse.id),
     ).toEqual([nyereUnntak.id, plan.id]);
-  });
-
-  test("lar første gjenværende hendelse bli gjeldende når et tiltak er skjult", () => {
-    const resultat = lagSykmeldtPlanoversikt(
-      oversiktMed({ ...unntak, meldtTidspunkt: "2026-03-01T10:00:00Z" }, plan),
-      new Set(),
-    );
-
-    expect(resultat.gjeldendeHendelser[0]?.hendelse.id).toBe(plan.id);
-    expect(resultat.tidligereHendelser).toEqual([]);
   });
 });

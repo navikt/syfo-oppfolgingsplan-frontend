@@ -44,17 +44,13 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
   function renderComponent(
     initialDeltMedLegeTidspunkt: string | null = null,
     initialDeltMedVeilederTidspunkt: string | null = null,
-    erITiltaksgruppe = false,
   ) {
     return render(
       <PlanDelingProvider
         initialDeltMedLegeTidspunkt={initialDeltMedLegeTidspunkt}
         initialDeltMedVeilederTidspunkt={initialDeltMedVeilederTidspunkt}
       >
-        <DelAktivPlanMedLegeEllerNav
-          planId={MOCK_PLAN_ID}
-          erITiltaksgruppe={erITiltaksgruppe}
-        />
+        <DelAktivPlanMedLegeEllerNav planId={MOCK_PLAN_ID} />
       </PlanDelingProvider>,
     );
   }
@@ -65,14 +61,14 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
 
       expect(
         screen.getByRole("heading", {
-          name: /hvem vil du sende planen til/i,
+          name: /del oppfølgingsplanen med fastlege og nav/i,
           level: 2,
         }),
       ).toBeInTheDocument();
 
       expect(
         screen.getByText(
-          /Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært helt eller delvis borte fra jobben i 4 uker./i,
+          /Det er et krav om å dele oppfølgingsplanen med fastlegen innen de første 4 ukene av sykefraværsperioden./i,
         ),
       ).toBeInTheDocument();
     });
@@ -92,7 +88,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       renderComponent();
 
       expect(
-        screen.getByRole("button", { name: /send planen/i }),
+        screen.getByRole("button", { name: /del planen/i }),
       ).toBeInTheDocument();
     });
 
@@ -101,12 +97,12 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
 
       expect(
         screen.getByRole("heading", {
-          name: /hvem vil du sende planen til/i,
+          name: /del oppfølgingsplanen med fastlege og nav/i,
           level: 2,
         }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /send planen/i }),
+        screen.getByRole("button", { name: /del planen/i }),
       ).toBeInTheDocument();
     });
 
@@ -115,11 +111,11 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
 
       expect(
         screen.queryByRole("heading", {
-          name: /hvem vil du sende planen til/i,
+          name: /del oppfølgingsplanen med fastlege og nav/i,
         }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole("button", { name: /send planen/i }),
+        screen.queryByRole("button", { name: /del planen/i }),
       ).not.toBeInTheDocument();
       expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
       expect(screen.queryByText(/sendt til fastlege/i)).not.toBeInTheDocument();
@@ -168,7 +164,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       const user = userEvent.setup();
       renderComponent();
 
-      const sendButton = screen.getByRole("button", { name: /send planen/i });
+      const sendButton = screen.getByRole("button", { name: /del planen/i });
       await user.click(sendButton);
 
       await waitFor(() => {
@@ -187,7 +183,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       const user = userEvent.setup();
       renderComponent();
 
-      const sendButton = screen.getByRole("button", { name: /send planen/i });
+      const sendButton = screen.getByRole("button", { name: /del planen/i });
       await user.click(sendButton);
 
       await waitFor(() => {
@@ -213,7 +209,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       });
       await user.click(fastlegeCheckbox);
 
-      const sendButton = screen.getByRole("button", { name: /send planen/i });
+      const sendButton = screen.getByRole("button", { name: /del planen/i });
       await user.click(sendButton);
 
       await waitFor(() => {
@@ -237,7 +233,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       });
       await user.click(veilederCheckbox);
 
-      const sendButton = screen.getByRole("button", { name: /send planen/i });
+      const sendButton = screen.getByRole("button", { name: /del planen/i });
       await user.click(sendButton);
 
       await waitFor(() => {
@@ -273,7 +269,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       await user.click(fastlegeCheckbox);
       await user.click(veilederCheckbox);
 
-      const sendButton = screen.getByRole("button", { name: /send planen/i });
+      const sendButton = screen.getByRole("button", { name: /del planen/i });
       await user.click(sendButton);
 
       await waitFor(() => {
@@ -298,104 +294,33 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
         name: /nav-veileder/i,
       });
       await user.click(veilederCheckbox);
-      await user.click(screen.getByRole("button", { name: /send planen/i }));
+      await user.click(screen.getByRole("button", { name: /del planen/i }));
 
       await waitFor(() => {
         expect(
           screen.queryByRole("heading", {
-            name: /hvem vil du sende planen til/i,
+            name: /del oppfølgingsplanen med fastlege og nav/i,
           }),
         ).not.toBeInTheDocument();
       });
     });
   });
 
-  describe("Tekstvarianter styrt av flaggskip-oppsettet", () => {
-    const TILTAKSGRUPPE_OVERSKRIFT =
-      "Del oppfølgingsplanen med fastlege og Nav";
-    const TILTAKSGRUPPE_BESKRIVELSE =
-      "Det er et krav om å dele oppfølgingsplanen med fastlegen innen de første 4 ukene av sykefraværsperioden. I tillegg kan du dele den med Nav når du selv ønsker eller senest én uke før dialogmøte med Nav (Nav kan også be om å få den tilsendt).";
-    const STANDARD_OVERSKRIFT = "Hvem vil du sende planen til";
-    const STANDARD_BESKRIVELSE =
-      "Du skal sende oppfølgingsplanen til fastlegen innen den ansatte har vært helt eller delvis borte fra jobben i 4 uker. I tillegg kan du sende planen til Nav når du selv ønsker, når Nav ber om den, eller senest én uke før et dialogmøte med Nav.";
+  describe("Hjelpetekster", () => {
     const FASTLEGE_HJELPETEKST =
       "Hensikten er at fastlegen har innsikt i arbeidssituasjonen før neste konsultasjon med den som er sykmeldt.";
     const VEILEDER_HJELPETEKST =
       "Hensikten er at Nav har riktig informasjon for å bidra på best mulig måte i sykefraværet.";
 
-    test("viser dagens tekster og knappnavn for brukere utenfor tiltaksgruppen", () => {
-      renderComponent(null, null, false);
-
-      expect(
-        screen.getByRole("heading", { name: STANDARD_OVERSKRIFT, level: 2 }),
-      ).toBeInTheDocument();
-      expect(screen.getByText(STANDARD_BESKRIVELSE)).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Send planen" }),
-      ).toBeInTheDocument();
-
-      expect(
-        screen.queryByRole("heading", { name: TILTAKSGRUPPE_OVERSKRIFT }),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByText(TILTAKSGRUPPE_BESKRIVELSE),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole("button", { name: "Del planen" }),
-      ).not.toBeInTheDocument();
-    });
-
-    test("viser tekster og knappnavn fra tiltakspakken for brukere i tiltaksgruppen", () => {
-      renderComponent(null, null, true);
-
-      expect(
-        screen.getByRole("heading", {
-          name: TILTAKSGRUPPE_OVERSKRIFT,
-          level: 2,
-        }),
-      ).toBeInTheDocument();
-      expect(screen.getByText(TILTAKSGRUPPE_BESKRIVELSE)).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Del planen" }),
-      ).toBeInTheDocument();
-
-      expect(
-        screen.queryByRole("heading", { name: STANDARD_OVERSKRIFT }),
-      ).not.toBeInTheDocument();
-      expect(screen.queryByText(STANDARD_BESKRIVELSE)).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole("button", { name: "Send planen" }),
-      ).not.toBeInTheDocument();
-    });
-
-    test("beholder avkrysningsbokser og delingsflyt i tiltaksgruppen", async () => {
-      const user = userEvent.setup();
-      delMedLegeSpy.mockResolvedValue({
-        deltMedLegeTidspunkt: "2026-01-15T10:00:00Z",
-        errorDelMedLege: null,
-      });
-
-      renderComponent(null, null, true);
-
-      await user.click(
-        screen.getByRole("checkbox", { name: /fastlegen til den ansatte/i }),
-      );
-      await user.click(screen.getByRole("button", { name: "Del planen" }));
-
-      await waitFor(() => {
-        expect(delMedLegeSpy).toHaveBeenCalledWith(MOCK_LEDER_ID, MOCK_PLAN_ID);
-      });
-    });
-
-    test("viser hjelpetekst under begge avkrysningsboksene i tiltaksgruppen", () => {
-      renderComponent(null, null, true);
+    test("viser hjelpetekst under begge avkrysningsboksene", () => {
+      renderComponent();
 
       expect(screen.getByText(FASTLEGE_HJELPETEKST)).toBeInTheDocument();
       expect(screen.getByText(VEILEDER_HJELPETEKST)).toBeInTheDocument();
     });
 
     test("knytter hjelpetekstene til riktig avkrysningsboks for skjermlesere", () => {
-      renderComponent(null, null, true);
+      renderComponent();
 
       expect(
         screen.getByRole("checkbox", { name: /fastlegen til den ansatte/i }),
@@ -405,32 +330,8 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       ).toHaveAccessibleDescription(VEILEDER_HJELPETEKST);
     });
 
-    test("beholder dagens labels på avkrysningsboksene i tiltaksgruppen", () => {
-      renderComponent(null, null, true);
-
-      expect(
-        screen.getByRole("checkbox", { name: /fastlegen til den ansatte/i }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("checkbox", { name: /nav-veilederen/i }),
-      ).toBeInTheDocument();
-    });
-
-    test("viser ingen hjelpetekster for brukere utenfor tiltaksgruppen", () => {
-      renderComponent(null, null, false);
-
-      expect(screen.queryByText(FASTLEGE_HJELPETEKST)).not.toBeInTheDocument();
-      expect(screen.queryByText(VEILEDER_HJELPETEKST)).not.toBeInTheDocument();
-      expect(
-        screen.getByRole("checkbox", { name: /fastlegen til den ansatte/i }),
-      ).toHaveAccessibleDescription("");
-      expect(
-        screen.getByRole("checkbox", { name: /nav-veileder/i }),
-      ).toHaveAccessibleDescription("");
-    });
-
     test("viser ikke hjelpetekst for en mottaker som allerede har fått planen", () => {
-      renderComponent("2026-01-15T10:00:00Z", null, true);
+      renderComponent("2026-01-15T10:00:00Z", null);
 
       expect(
         screen.queryByRole("checkbox", { name: /fastlegen til den ansatte/i }),
@@ -467,7 +368,7 @@ describe("DelAktivPlanMedLegeEllerNav", () => {
       const user = userEvent.setup();
       renderComponent();
 
-      const sendButton = screen.getByRole("button", { name: /send planen/i });
+      const sendButton = screen.getByRole("button", { name: /del planen/i });
       await user.click(sendButton);
 
       await waitFor(() => {

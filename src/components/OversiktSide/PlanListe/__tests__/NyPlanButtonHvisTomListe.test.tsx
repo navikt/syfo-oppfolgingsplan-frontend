@@ -44,7 +44,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "test-123",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -60,7 +59,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -78,7 +76,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -96,7 +93,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -114,7 +110,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -132,7 +127,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -150,7 +144,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -171,7 +164,6 @@ describe("NyPlanButtonHvisTomListe", () => {
     await renderAsync(
       NyPlanButtonHvisTomListe({
         narmesteLederId: "12345",
-        erITiltaksgruppe: false,
       }),
     );
 
@@ -180,8 +172,8 @@ describe("NyPlanButtonHvisTomListe", () => {
     ).not.toBeInTheDocument();
   });
 
-  describe("tiltaksgruppeinnhold", () => {
-    test("viser unntaksvalget sammen med hovedvalget når org er i tiltaksgruppen", async () => {
+  describe("unntaksvalg", () => {
+    test("viser unntaksvalget sammen med hovedvalget", async () => {
       mockFetch.mockResolvedValue({
         error: null,
         data: mockOversiktDataEmptyWithAccess,
@@ -190,7 +182,6 @@ describe("NyPlanButtonHvisTomListe", () => {
       await renderAsync(
         NyPlanButtonHvisTomListe({
           narmesteLederId: "12345",
-          erITiltaksgruppe: true,
         }),
       );
 
@@ -200,29 +191,6 @@ describe("NyPlanButtonHvisTomListe", () => {
       expect(
         screen.getByText(/Det finnes noen unntak fra å lage oppfølgingsplan/i),
       ).toBeInTheDocument();
-    });
-
-    test("viser ikke unntaksvalget når org ikke er i tiltaksgruppen", async () => {
-      mockFetch.mockResolvedValue({
-        error: null,
-        data: mockOversiktDataEmptyWithAccess,
-      });
-
-      await renderAsync(
-        NyPlanButtonHvisTomListe({
-          narmesteLederId: "12345",
-          erITiltaksgruppe: false,
-        }),
-      );
-
-      expect(
-        screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i }),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByText(
-          /Det finnes noen unntak fra å lage oppfølgingsplan/i,
-        ),
-      ).not.toBeInTheDocument();
     });
   });
 });

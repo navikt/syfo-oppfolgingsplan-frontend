@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { Activity, StrictMode } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { logAnalyticsEvent } from "@/common/analytics/logAnalyticsEvent";
-import { recordAidUnntak } from "@/instrumentation/aidUnntakTelemetry";
+import { recordUnntak } from "@/instrumentation/unntakTelemetry";
 import { FrontendErrorType } from "@/server/actions/FrontendErrorTypeEnum";
 import { meldUnntaksvurderingServerAction } from "@/server/actions/meldUnntaksvurdering";
 import { render } from "@/test/test-utils";
@@ -15,8 +15,8 @@ vi.mock("next/navigation", async () => {
   );
   return mockNextNavigation();
 });
-vi.mock("@/instrumentation/aidUnntakTelemetry", () => ({
-  recordAidUnntak: vi.fn(),
+vi.mock("@/instrumentation/unntakTelemetry", () => ({
+  recordUnntak: vi.fn(),
 }));
 vi.mock("@/common/analytics/logAnalyticsEvent", () => ({
   logAnalyticsEvent: vi.fn(),
@@ -29,7 +29,7 @@ const flow = (id = "test-leder-id") => (
   <NyPlanOgUnntak key={id} narmesteLederId={id} ansattNavn="Kreativ Hatt" />
 );
 const events = () =>
-  vi.mocked(recordAidUnntak).mock.calls.map(([event]) => event.hendelse);
+  vi.mocked(recordUnntak).mock.calls.map(([event]) => event.hendelse);
 const openButton = () => screen.getByRole("button", { name: /Vis mer/i });
 const planButton = () =>
   screen.getByRole("button", { name: /Lag en ny oppfølgingsplan/i });
