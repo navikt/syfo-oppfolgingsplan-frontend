@@ -6,7 +6,7 @@ import {
 } from "@/common/demoScenario";
 import {
   mockOversiktDataMedPlanerForSM,
-  mockOversiktDataMedUnntaksvurderingerForSM,
+  mockOversiktDataMedUnntakForSM,
   mockOversiktDataTomForSM,
 } from "@/server/fetchData/mockData/mockOversiktData";
 import { getMockDataForScenarioSM } from "@/server/fetchData/sykmeldt/fetchOppfolgingsplanOversiktForSM";
@@ -83,7 +83,7 @@ describe("getMockDataForScenarioSM", () => {
   test("returns plan events for the 'unntak-meldt' scenario", () => {
     const result = getMockDataForScenarioSM("unntak-meldt");
 
-    expect(result).toEqual(mockOversiktDataMedUnntaksvurderingerForSM);
+    expect(result).toEqual(mockOversiktDataMedUnntakForSM);
     expect(
       result.virksomheter.some(({ oppfolgingsplanhendelser }) =>
         oppfolgingsplanhendelser.some(
@@ -107,13 +107,13 @@ describe("getMockDataForScenarioSM", () => {
     );
   });
 
-  test("uses the default data for a persisted scenario that is unavailable on SM", async () => {
+  test("uses the unntak data for a persisted unntak-meldt scenario on SM", async () => {
     const { fetchOppfolgingsplanOversiktForSM } = await importFetcher({
       demoScenario: "unntak-meldt",
     });
 
     const result = await fetchOppfolgingsplanOversiktForSM();
 
-    expect(result).toEqual(mockOversiktDataMedPlanerForSM);
+    expect(result).toEqual(mockOversiktDataMedUnntakForSM);
   });
 });
