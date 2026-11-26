@@ -1,15 +1,15 @@
 import type { SurveyDocumentV1 } from "@navikt/lumi-survey";
 
-// Surveyverksted revision 9dada0e2-f1fb-4299-adcb-4e61e74a938f (issue #1199).
+// Shared version from Surveyverksted for issue #1199.
 // Copied unchanged with «Kopier TypeScript».
 export const unntakSurvey = {
   authoringSchemaVersion: 1,
   pages: [
     {
-      id: "side-6fc624ac-bbb2-48e2-b549-5a21009d7ba9",
+      id: "sporsmal",
       questions: [
         {
-          id: "rating",
+          id: "sporsmal",
           maxLength: 1000,
           minRows: 4,
           prompt:
@@ -20,22 +20,17 @@ export const unntakSurvey = {
       ],
     },
     {
-      id: "opplevelse",
+      id: "side-d110a9fc-cacc-4f53-98c9-6bc0b7a44aae",
       questions: [
         {
-          id: "kommentar",
+          id: "text-68dfd32f",
           maxLength: 1000,
           minRows: 4,
           prompt: "Hva kan vi gjøre bedre?",
-          required: false,
           type: "text",
-          visibleIf: {
-            operator: "EXISTS",
-            questionId: "rating",
-          },
         },
       ],
     },
   ],
-  type: "rating",
+  type: "custom",
 } satisfies SurveyDocumentV1;

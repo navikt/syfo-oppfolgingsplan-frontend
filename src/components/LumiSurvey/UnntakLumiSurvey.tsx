@@ -5,7 +5,7 @@ import { unntakSurvey } from "./unntakSurvey";
 export function UnntakLumiSurvey() {
   return (
     <LumiSurveyDock
-      surveyId="oppfolgingsplan-sykmeldt-unntak"
+      surveyId="sykmeldt-unntak-fra-oppfolgingsplanen"
       survey={unntakSurvey}
       transport={{
         endpoint: `${publicEnv.NEXT_PUBLIC_BASE_PATH}/api/lumi/feedback`,
