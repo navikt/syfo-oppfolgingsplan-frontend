@@ -10,6 +10,7 @@ export function UnntakLumiSurvey() {
       transport={{
         endpoint: `${publicEnv.NEXT_PUBLIC_BASE_PATH}/api/lumi/feedback`,
       }}
+      behavior={{ showProgress: true }}
     />
   );
 }
