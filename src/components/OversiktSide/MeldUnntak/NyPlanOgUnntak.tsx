@@ -2,7 +2,7 @@
 
 import { VStack } from "@navikt/ds-react";
 import { useLayoutEffect, useRef } from "react";
-import { recordAidUnntak } from "@/instrumentation/aidUnntakTelemetry";
+import { recordUnntak } from "@/instrumentation/unntakTelemetry";
 import { LagNyOppfolgingsplanButton } from "../PlanListe/NyPlanButton";
 import MeldUnntakSection from "./MeldUnntakSection";
 
@@ -11,7 +11,7 @@ interface Props {
   ansattNavn: string;
 }
 
-/** Mounted only when the exception offer is available in the treatment UI. */
+/** Mounted only when the exception offer is available. */
 export default function NyPlanOgUnntak({ narmesteLederId, ansattNavn }: Props) {
   const opened = useRef(false);
 
@@ -27,11 +27,11 @@ export default function NyPlanOgUnntak({ narmesteLederId, ansattNavn }: Props) {
   function recordOpening() {
     if (opened.current) return;
     opened.current = true;
-    recordAidUnntak({ hendelse: "aapnet" });
+    recordUnntak({ hendelse: "aapnet" });
   }
 
   function recordAction(hendelse: "send" | "lag_plan") {
-    if (opened.current) recordAidUnntak({ hendelse });
+    if (opened.current) recordUnntak({ hendelse });
   }
 
   return (

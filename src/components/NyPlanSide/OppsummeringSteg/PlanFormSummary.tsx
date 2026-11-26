@@ -9,14 +9,9 @@ interface Props {
   };
   onEditPlan: () => void;
   className?: string;
-  erITiltaksgruppe: boolean;
 }
 
-export default function PlanFormSummary({
-  formValues,
-  className,
-  erITiltaksgruppe,
-}: Props) {
+export default function PlanFormSummary({ formValues, className }: Props) {
   const evalueringsDatoFormatted = formValues.evalueringsDato ? (
     getFormattedDateString(formValues.evalueringsDato)
   ) : (
@@ -111,16 +106,14 @@ export default function PlanFormSummary({
             <FormSummary.Value>{evalueringsDatoFormatted}</FormSummary.Value>
           </FormSummary.Answer>
 
-          {erITiltaksgruppe && (
-            <FormSummary.Answer>
-              <FormSummary.Label>
-                {formLabels.evalueringPaaminnelse.label}
-              </FormSummary.Label>
-              <FormSummary.Value>
-                {formValues.evalueringPaaminnelse === "true" ? "Ja" : "Nei"}
-              </FormSummary.Value>
-            </FormSummary.Answer>
-          )}
+          <FormSummary.Answer>
+            <FormSummary.Label>
+              {formLabels.evalueringPaaminnelse.label}
+            </FormSummary.Label>
+            <FormSummary.Value>
+              {formValues.evalueringPaaminnelse === "true" ? "Ja" : "Nei"}
+            </FormSummary.Value>
+          </FormSummary.Answer>
 
           <FormSummary.Answer>
             <FormSummary.Label>

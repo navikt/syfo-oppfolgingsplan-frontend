@@ -12,7 +12,6 @@ import type { FerdigstillPlanAction } from "@/server/actions/FerdigstillPlanActi
 import FyllUtPlanSteg from "./FyllUtPlanSteg/FyllUtPlanSteg";
 import useOppfolgingsplanForm from "./FyllUtPlanSteg/form/hooks/useOppfolgingsplanForm";
 import OppsummeringSteg from "./OppsummeringSteg/OppsummeringSteg";
-import { usePlanDeliveryTelemetry } from "./usePlanDeliveryTelemetry";
 
 export enum VeiviserSteg {
   FYLL_UT_PLAN = "FYLL_UT_PLAN",
@@ -33,9 +32,7 @@ export default function LagPlanVeiviser({
   showDialogmoteInfo,
 }: Props) {
   const { userHasEditAccess, utkast } = use(lagretUtkastPromise);
-  const tiltakspakke = use(tiltakspakkePromise);
-  const { isOppfolgingsplanTiltakspakkeActive } = tiltakspakke;
-  const telemetryRef = usePlanDeliveryTelemetry(tiltakspakke);
+  const { isDialogmoteTiltakspakkeActive } = use(tiltakspakkePromise);
 
   const initialLagretUtkast = utkast?.content || null;
   const initialSistLagretTidspunkt = utkast?.sistLagretTidspunkt || null;
@@ -56,7 +53,6 @@ export default function LagPlanVeiviser({
   } = useOppfolgingsplanForm({
     initialLagretUtkast,
     initialSistLagretTidspunkt,
-    tiltakspakke,
     ferdigstillAction,
   });
 
@@ -71,7 +67,7 @@ export default function LagPlanVeiviser({
   }
 
   return (
-    <section ref={telemetryRef}>
+    <section>
       <Activity
         mode={veiviserSteg === VeiviserSteg.FYLL_UT_PLAN ? "visible" : "hidden"}
       >
@@ -88,10 +84,7 @@ export default function LagPlanVeiviser({
           onGoToOppsummeringClick={handleFortsettTilOppsummering}
           isFormReadOnly={!userHasEditAccess}
           lagreUtkastError={lagreUtkastError}
-          erITiltaksgruppe={isOppfolgingsplanTiltakspakkeActive}
-          isDialogmoteTiltakspakkeActive={
-            tiltakspakke.isDialogmoteTiltakspakkeActive
-          }
+          isDialogmoteTiltakspakkeActive={isDialogmoteTiltakspakkeActive}
           showDialogmoteInfo={showDialogmoteInfo}
         />
       </Activity>
@@ -105,7 +98,6 @@ export default function LagPlanVeiviser({
           onGoBack={goBackToFyllUtPlanSteg}
           onFerdigstillPlanClick={handleFerdigstillPlan}
           ferdigstillPlanError={ferdigstillPlanError}
-          erITiltaksgruppe={isOppfolgingsplanTiltakspakkeActive}
         />
       </Activity>
     </section>

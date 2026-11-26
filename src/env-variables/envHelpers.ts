@@ -4,15 +4,6 @@ export const isLocalOrDemo =
   process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT === "local" ||
   process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT === "demo";
 
-/**
- * Release-toggle for observasjonsmodus mot Flaggskipet.
- * Bevisst utenfor serverEnvSchema, slik at manglende env feiler lukket uten å
- * stoppe appen under oppstart.
- */
-export function isTiltakspakkevurderingFeatureToggleEnabled(): boolean {
-  return process.env.TILTAKSPAKKEVURDERING_FEATURE_TOGGLE === "true";
-}
-
 /** Release toggle for the tiltakspakke 2 dialogmøte information. */
 export function isDialogmoteTiltakspakkeFeatureToggleEnabled(): boolean {
   return process.env.TILTAKSPAKKE_2_FEATURE_TOGGLE === "true";

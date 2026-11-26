@@ -24,11 +24,7 @@ export function parseDemoScenario(
   return DEFAULT_DEMO_SCENARIO;
 }
 
-const VALID_TILTAKSPAKKE_VARIANTS = [
-  "standard",
-  "tiltakspakke-1",
-  "tiltakspakke-2",
-] as const;
+const VALID_TILTAKSPAKKE_VARIANTS = ["standard", "tiltakspakke-2"] as const;
 
 export type DemoTiltakspakkeVariant =
   (typeof VALID_TILTAKSPAKKE_VARIANTS)[number];
@@ -53,47 +49,23 @@ export type DemoScenarioOption = {
   label: string;
 };
 
-export function getAvailableDemoScenarioOptions(
-  scenarios: readonly DemoScenarioOption[],
-  variant: DemoTiltakspakkeVariant,
-): DemoScenarioOption[] {
-  if (variant === "tiltakspakke-1") {
-    return [...scenarios];
-  }
-
-  return scenarios.filter((scenario) => scenario.value !== "unntak-meldt");
-}
-
 export function resolveDemoScenario(
   scenarios: readonly DemoScenarioOption[],
   scenario: DemoScenario,
-  variant: DemoTiltakspakkeVariant,
 ): DemoScenario {
-  const availableScenarios = getAvailableDemoScenarioOptions(
-    scenarios,
-    variant,
-  );
-
-  if (
-    availableScenarios.some(
-      (availableScenario) => availableScenario.value === scenario,
-    )
-  ) {
+  if (scenarios.some((option) => option.value === scenario)) {
     return scenario;
   }
 
   return (
-    availableScenarios.find(
-      (availableScenario) => availableScenario.value === DEFAULT_DEMO_SCENARIO,
-    )?.value ??
-    availableScenarios[0]?.value ??
+    scenarios.find((option) => option.value === DEFAULT_DEMO_SCENARIO)?.value ??
+    scenarios[0]?.value ??
     DEFAULT_DEMO_SCENARIO
   );
 }
 
 export const DEMO_TILTAKSPAKKE_VARIANT_OPTIONS = [
   { value: "standard", label: "Standard" },
-  { value: "tiltakspakke-1", label: "Tiltakspakke 1" },
   { value: "tiltakspakke-2", label: "Tiltakspakke 2" },
 ] as const satisfies readonly {
   value: DemoTiltakspakkeVariant;

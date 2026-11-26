@@ -11,33 +11,25 @@ vi.mock("@/server/actions/ferdigstillPlan", () => ({
 
 beforeEach(() => vi.clearAllMocks());
 
-test("uses the same assignment for the form and saving, including an older open form", async () => {
-  const original: TiltakspakkeContext = {
-    gruppe: "tiltak",
-    isOppfolgingsplanTiltakspakkeActive: true,
-    isDialogmoteTiltakspakkeActive: false,
-  };
-  const current: TiltakspakkeContext = {
-    gruppe: "kontroll",
-    isOppfolgingsplanTiltakspakkeActive: false,
+test("binds saving to the leader of each form, including an older open form", async () => {
+  const tiltakspakke: TiltakspakkeContext = {
     isDialogmoteTiltakspakkeActive: false,
   };
   const first = await NyPlanSkjema({
     narmesteLederId: "first-leader",
     lagretUtkastPromise: Promise.resolve(mockUtfyltLagretUtkastResponse),
-    tiltakspakkePromise: Promise.resolve(original),
+    tiltakspakkePromise: Promise.resolve(tiltakspakke),
     hasNoPlansInVirksomhetPromise: Promise.resolve(false),
   });
   const second = await NyPlanSkjema({
     narmesteLederId: "second-leader",
     lagretUtkastPromise: Promise.resolve(mockUtfyltLagretUtkastResponse),
-    tiltakspakkePromise: Promise.resolve(current),
+    tiltakspakkePromise: Promise.resolve(tiltakspakke),
     hasNoPlansInVirksomhetPromise: Promise.resolve(false),
   });
   // The wrapper delegates payload validation and authorization to the save path.
-  // Extra client fields cannot replace the closed-over context or leader.
+  // Extra client fields cannot replace the closed-over leader.
   const payload = {
-    gruppe: "kontroll",
     narmesteLederId: "other-leader",
   } as unknown as FerdigstillPlanActionPayload;
   await first.props.ferdigstillAction(payload);
@@ -46,14 +38,10 @@ test("uses the same assignment for the form and saving, including an older open 
     1,
     "first-leader",
     payload,
-    original,
   );
   expect(ferdigstillPlanServerAction).toHaveBeenNthCalledWith(
     2,
     "second-leader",
     payload,
-    current,
   );
-  await expect(first.props.tiltakspakkePromise).resolves.toEqual(original);
-  await expect(second.props.tiltakspakkePromise).resolves.toEqual(current);
 });

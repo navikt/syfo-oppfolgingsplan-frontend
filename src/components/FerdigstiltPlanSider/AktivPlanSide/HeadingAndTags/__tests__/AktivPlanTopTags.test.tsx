@@ -91,7 +91,7 @@ describe("AktivPlanTopTags", () => {
     expect(screen.getByText("Ikke sendt til Nav")).toBeInTheDocument();
 
     await user.click(screen.getByRole("checkbox", { name: /nav-veileder/i }));
-    await user.click(screen.getByRole("button", { name: /send planen/i }));
+    await user.click(screen.getByRole("button", { name: /del planen/i }));
 
     await waitFor(() => {
       expect(screen.getByText(SENDT_TIL_NAV_MED_DATO)).toBeInTheDocument();

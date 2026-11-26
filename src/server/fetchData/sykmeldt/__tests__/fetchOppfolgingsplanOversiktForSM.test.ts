@@ -110,7 +110,6 @@ describe("getMockDataForScenarioSM", () => {
   test("uses the default data for a persisted scenario that is unavailable on SM", async () => {
     const { fetchOppfolgingsplanOversiktForSM } = await importFetcher({
       demoScenario: "unntak-meldt",
-      demoTiltakspakkeVariant: "tiltakspakke-1",
     });
 
     const result = await fetchOppfolgingsplanOversiktForSM();

@@ -68,18 +68,8 @@ describe("DemoBanner", () => {
     expect(screen.getByRole("combobox", { name: "Variant" })).toHaveFocus();
   });
 
-  test("hides Unntak meldt for Standard", () => {
+  test("shows Unntak meldt for arbeidsgiver regardless of variant", () => {
     renderBanner();
-
-    expect(
-      screen.queryByRole("option", {
-        name: "Unntak meldt (plan ikke aktuell nå)",
-      }),
-    ).not.toBeInTheDocument();
-  });
-
-  test("shows Unntak meldt for Tiltakspakke 1", () => {
-    renderBanner({ initialVariant: "tiltakspakke-1" });
 
     expect(
       screen.getByRole("option", {
@@ -120,11 +110,11 @@ describe("DemoBanner", () => {
     expect(mockRouter.refresh).toHaveBeenCalledOnce();
   });
 
-  test("switching to Standard resets Unntak meldt and saves both cookies", async () => {
+  test("switching variant keeps Unntak meldt and saves both cookies", async () => {
     const user = userEvent.setup();
     renderBanner({
       initialScenario: "unntak-meldt",
-      initialVariant: "tiltakspakke-1",
+      initialVariant: "tiltakspakke-2",
     });
 
     await user.selectOptions(
@@ -133,11 +123,9 @@ describe("DemoBanner", () => {
     );
 
     expect(screen.getByRole("combobox", { name: "Scenario" })).toHaveValue(
-      DEFAULT_DEMO_SCENARIO,
+      "unntak-meldt",
     );
-    expect(document.cookie).toContain(
-      `${DEMO_SCENARIO_COOKIE}=${DEFAULT_DEMO_SCENARIO}`,
-    );
+    expect(document.cookie).toContain(`${DEMO_SCENARIO_COOKIE}=unntak-meldt`);
     expect(document.cookie).toContain(
       `${DEMO_TILTAKSPAKKE_VARIANT_COOKIE}=standard`,
     );

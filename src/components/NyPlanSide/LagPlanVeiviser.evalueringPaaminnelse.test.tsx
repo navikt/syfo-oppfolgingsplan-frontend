@@ -38,24 +38,8 @@ describe("evalueringspåminnelse", () => {
     cleanup();
   });
 
-  test("vises bare for nærmeste ledere i tiltaksgruppen", async () => {
-    await renderLagPlanVeiviserComponent(
-      createMockLagretUtkastResponse(),
-      false,
-    );
-
-    expect(
-      screen.queryByRole("radiogroup", {
-        name: formLabels.evalueringPaaminnelse.label,
-      }),
-    ).not.toBeInTheDocument();
-
-    cleanup();
-
-    await renderLagPlanVeiviserComponent(
-      createMockLagretUtkastResponse(),
-      true,
-    );
+  test("vises uten forhåndsvalgt svar", async () => {
+    await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
     expect(
       screen.getByRole("radiogroup", {
@@ -84,7 +68,6 @@ describe("evalueringspåminnelse", () => {
           ...validFormContent,
           evalueringPaaminnelse,
         }),
-        true,
       );
 
       const reminderGroup = screen.getByRole("radiogroup", {
@@ -101,7 +84,6 @@ describe("evalueringspåminnelse", () => {
 
     await renderLagPlanVeiviserComponent(
       createMockLagretUtkastResponse(validFormContent),
-      true,
     );
 
     await user.click(
@@ -130,10 +112,7 @@ describe("evalueringspåminnelse", () => {
         "lagreUtkastServerAction",
       );
 
-      await renderLagPlanVeiviserComponent(
-        createMockLagretUtkastResponse(),
-        true,
-      );
+      await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
       const reminderGroup = screen.getByRole("radiogroup", {
         name: formLabels.evalueringPaaminnelse.label,
@@ -171,7 +150,6 @@ describe("evalueringspåminnelse", () => {
           }
         }
         onEditPlan={vi.fn()}
-        erITiltaksgruppe
       />,
     );
     expect(

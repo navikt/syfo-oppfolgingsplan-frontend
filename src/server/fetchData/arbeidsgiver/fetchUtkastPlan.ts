@@ -2,9 +2,7 @@ import { getEndpointUtkastForAG } from "@/common/backend-endpoints";
 import {
   AG_SCENARIO_OPTIONS,
   DEMO_SCENARIO_COOKIE,
-  DEMO_TILTAKSPAKKE_VARIANT_COOKIE,
   parseDemoScenario,
-  parseDemoTiltakspakkeVariant,
   resolveDemoScenario,
 } from "@/common/demoScenario";
 import { RuntimeErrorEvent } from "@/common/runtimeErrorEvent";
@@ -29,13 +27,9 @@ export async function fetchUtkastDataForAG(
   if (isLocalOrDemo) {
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
-    const variant = parseDemoTiltakspakkeVariant(
-      cookieStore.get(DEMO_TILTAKSPAKKE_VARIANT_COOKIE)?.value,
-    );
     const scenario = resolveDemoScenario(
       AG_SCENARIO_OPTIONS,
       parseDemoScenario(cookieStore.get(DEMO_SCENARIO_COOKIE)?.value),
-      variant,
     );
     await simulateBackendDelay();
 

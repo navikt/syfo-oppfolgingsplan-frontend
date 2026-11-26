@@ -22,10 +22,10 @@ export default async function NyPlanSkjema({
 
   async function ferdigstillAction(payload: FerdigstillPlanActionPayload) {
     "use server";
-    // Next protects the server-rendered snapshot in this closure. Neither the
-    // leader nor the assignment is accepted as a client-supplied action argument.
-    // The backend still authorizes the current user on every submission.
-    return ferdigstillPlanServerAction(narmesteLederId, payload, tiltakspakke);
+    // Next protects the server-rendered leader in this closure, so it is not
+    // accepted as a client-supplied action argument. The backend still
+    // authorizes the current user on every submission.
+    return ferdigstillPlanServerAction(narmesteLederId, payload);
   }
 
   return (

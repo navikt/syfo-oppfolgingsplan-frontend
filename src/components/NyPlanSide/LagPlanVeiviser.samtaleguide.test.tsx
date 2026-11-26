@@ -8,20 +8,12 @@ import {
 
 afterEach(cleanup);
 
-test("samtaleguiden er tilgjengelig med tastatur for tiltaksgruppen", async () => {
-  await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse(), true);
+test("samtaleguiden er tilgjengelig med tastatur", async () => {
+  await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse());
 
   const link = screen.getByRole("link", {
     name: /samtaleguiden/i,
   });
   await userEvent.tab();
   expect(link).toHaveFocus();
-});
-
-test("viser ikke det nye kortet for kontrollgruppen", async () => {
-  await renderLagPlanVeiviserComponent(createMockLagretUtkastResponse(), false);
-
-  expect(
-    screen.queryByRole("link", { name: /samtaleguiden/i }),
-  ).not.toBeInTheDocument();
 });
