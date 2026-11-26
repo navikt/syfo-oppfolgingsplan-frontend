@@ -285,4 +285,28 @@ describe("OversiktInnholdForSykmeldt", () => {
       screen.getByRole("heading", { name: "Dette kan du bidra med" }),
     ).toBeInTheDocument();
   });
+
+  test("viser Lumi-surveyen når den sykmeldte har et gjeldende unntak", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(mockOversiktDataMedUnntaksvurderingerForSM),
+    );
+
+    await renderAsync(OversiktInnholdForSykmeldt());
+
+    expect(
+      await screen.findByRole("button", { name: "Gi tilbakemelding" }),
+    ).toBeInTheDocument();
+  });
+
+  test("viser ikke Lumi-surveyen uten gjeldende unntak", async () => {
+    mockHentSykmeldtPlanoversikt.mockResolvedValue(
+      lagSykmeldtPlanoversikt(mockOversiktDataMedPlanerForSM),
+    );
+
+    await renderAsync(OversiktInnholdForSykmeldt());
+
+    expect(
+      screen.queryByRole("button", { name: "Gi tilbakemelding" }),
+    ).not.toBeInTheDocument();
+  });
 });

@@ -85,4 +85,5 @@ export const AG_SCENARIO_OPTIONS: DemoScenarioOption[] = [
 export const SM_SCENARIO_OPTIONS: DemoScenarioOption[] = [
   { value: "tom", label: "Tom" },
   { value: "aktiv-og-tidligere", label: "Aktiv plan + tidligere planer" },
+  { value: "unntak-meldt", label: "Unntak meldt (plan ikke aktuell nå)" },
 ];

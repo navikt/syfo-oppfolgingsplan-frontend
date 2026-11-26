@@ -6,7 +6,6 @@ import {
   parseDemoScenario,
   parseDemoTiltakspakkeVariant,
   resolveDemoScenario,
-  SM_SCENARIO_OPTIONS,
 } from "@/common/demoScenario";
 
 describe("parseDemoScenario", () => {
@@ -71,9 +70,18 @@ describe("resolveDemoScenario", () => {
   });
 
   it("falls back to the default scenario when the scenario is unavailable", () => {
-    expect(resolveDemoScenario(SM_SCENARIO_OPTIONS, "unntak-meldt")).toBe(
-      DEFAULT_DEMO_SCENARIO,
-    );
+    expect(
+      resolveDemoScenario(
+        [
+          { value: "tom", label: "Tom" },
+          {
+            value: "aktiv-og-tidligere",
+            label: "Aktiv plan + tidligere planer",
+          },
+        ],
+        "unntak-meldt",
+      ),
+    ).toBe(DEFAULT_DEMO_SCENARIO);
   });
 
   it("falls back to the first available scenario when the default is unavailable", () => {

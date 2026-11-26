@@ -8,41 +8,45 @@ import {
   getSMAktivPlanHref,
   getSMTidligerePlanHref,
 } from "@/common/route-hrefs";
+import { UnntakLumiSurvey } from "@/components/LumiSurvey/UnntakLumiSurvey";
 import PlanIkkeNodvendigInnslag from "@/components/OversiktSide/PlanListe/PlanIkkeNodvendigInnslag";
 import AktivPlanLinkCard from "@/components/OversiktSide/PlanListe/PlanLinkCard/AktivPlanLinkCard";
 import TidligerePlanLinkCard from "@/components/OversiktSide/PlanListe/PlanLinkCard/TidligerePlanLinkCard";
 import PlanListeDel from "@/components/OversiktSide/PlanListe/PlanListeDel";
 import { UnntaksvurderingInfoCard } from "@/components/OversiktSide/PlanListe/UnntaksvurderingInfoCard";
+import { isLocalOrDemo } from "@/env-variables/envHelpers";
 import { hentSykmeldtPlanoversikt } from "@/server/fetchData/sykmeldt/hentSykmeldtPlanoversikt";
 import type { SykmeldtPlanoversikt } from "@/server/fetchData/sykmeldt/lagSykmeldtPlanoversikt";
 import {
   DetteKanDuBidraMed,
   ForberedelseTilSamtale,
-  type ForberedelseTilSamtaleVariant,
 } from "./SykmeldtInformasjon";
 import { SykmeldtIntroduksjon } from "./SykmeldtOversiktIntroduksjon";
 
 export default async function OversiktInnholdForSykmeldt() {
   const oversikt = await hentSykmeldtPlanoversikt();
+  const harUnntak = harGjeldendeUnntak(oversikt);
 
   return (
     <>
       <SykmeldtIntroduksjon />
       <DetteKanDuBidraMed />
       <SykmeldtPlanListe oversikt={oversikt} />
-      <ForberedelseTilSamtale variant={finnForberedelseVariant(oversikt)} />
+      <ForberedelseTilSamtale
+        variant={harUnntak ? "gjeldende-unntak" : "standard"}
+      />
+      {/* Lumi API is not connected yet, so the survey is local and demo only. */}
+      {isLocalOrDemo && harUnntak && <UnntakLumiSurvey />}
     </>
   );
 }
 
-function finnForberedelseVariant({
+function harGjeldendeUnntak({
   gjeldendeHendelser,
-}: SykmeldtPlanoversikt): ForberedelseTilSamtaleVariant {
+}: SykmeldtPlanoversikt): boolean {
   return gjeldendeHendelser.some(
     ({ hendelse }) => hendelse.type === "PLAN_IKKE_NODVENDIG",
-  )
-    ? "gjeldende-unntak"
-    : "standard";
+  );
 }
 
 function SykmeldtPlanListe({

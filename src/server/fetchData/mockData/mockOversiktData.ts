@@ -90,6 +90,21 @@ export const mockOversiktDataMedUnntaksvurderingerForSM: OppfolgingsplanerOversi
     ],
   };
 
+/** Demo scenario: one employer has reported that a plan is not needed. */
+export const mockOversiktDataMedUnntakForSM: OppfolgingsplanerOversiktForSM = {
+  virksomhetsnumreMedAktivSykmelding: [
+    mockUnntaksvurdering.organization.orgNumber,
+  ],
+  virksomheter: [
+    {
+      virksomhet: mockUnntaksvurdering.organization,
+      oppfolgingsplanhendelser: [
+        tilPlanIkkeNodvendigHendelse(mockUnntaksvurdering),
+      ],
+    },
+  ],
+};
+
 export const mockOversiktDataOnlyActiveForSM: OppfolgingsplanerOversiktForSM = {
   virksomhetsnumreMedAktivSykmelding: [
     mockAktivPlanData.organization.orgNumber,
